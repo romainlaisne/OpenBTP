@@ -235,9 +235,36 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(devis, { status: 201 })
   } catch (error) {
-    console.error('Erreur lors de la création du devis:', error)
+    const errorId = crypto.randomUUID()
+    const prismaCode =
+      typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string'
+        ? error.code
+        : undefined
+    const messages: Record<string, string> = {
+      P2000: 'Une des valeurs saisies est trop longue. Vérifiez les champs du devis.',
+      P2002: 'Un devis avec un numéro déjà utilisé existe. Actualisez la page puis réessayez.',
+      P2003: 'Le client, le chantier ou l’utilisateur sélectionné est introuvable. Actualisez les données puis réessayez.',
+      P2006: 'Certaines valeurs du devis ne sont pas valides. Vérifiez les montants et les lignes.',
+      P2007: 'Certaines valeurs du devis ne sont pas valides. Vérifiez les montants et les lignes.',
+      P2021: 'La base de données ne contient pas une table requise. Contactez le support.',
+      P2022: 'La base de données doit être mise à jour. Contactez le support.',
+      P1001: 'La base de données est momentanément inaccessible. Réessayez dans quelques instants.',
+      P1002: 'La base de données met trop de temps à répondre. Réessayez dans quelques instants.',
+      P1017: 'La connexion à la base de données a été interrompue. Réessayez dans quelques instants.',
+    }
+    const message = prismaCode
+      ? messages[prismaCode] || 'Une erreur de base de données empêche la création du devis. Contactez le support.'
+      : 'Une erreur inattendue empêche la création du devis. Réessayez ou contactez le support.'
+
+    console.error(`[devis:create:${errorId}] Erreur lors de la création du devis:`, error)
     return NextResponse.json(
-      { error: 'Erreur lors de la création du devis' },
+      {
+        error: message,
+        reference: errorId,
+        ...(process.env.NODE_ENV === 'development' && error instanceof Error
+          ? { details: error.message }
+          : {}),
+      },
       { status: 500 }
     )
   }
