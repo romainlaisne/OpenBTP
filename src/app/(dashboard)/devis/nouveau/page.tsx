@@ -312,10 +312,24 @@ export default function NouveauDevisPage() {
         const devis = await response.json()
         router.push(`/devis/${devis.id}`)
       } else {
-        const error = await response.json()
+        const payload: unknown = await response.json().catch(() => null)
+        const errorMessage =
+          typeof payload === 'object' &&
+          payload !== null &&
+          'error' in payload &&
+          typeof payload.error === 'string'
+            ? payload.error
+            : `La création du devis a échoué (HTTP ${response.status}). Réessayez dans quelques instants.`
+        const reference =
+          typeof payload === 'object' &&
+          payload !== null &&
+          'reference' in payload &&
+          typeof payload.reference === 'string'
+            ? `\nRéférence : ${payload.reference}`
+            : ''
         showConfirmation({
           title: 'Erreur',
-          message: error.error || 'Erreur lors de la création du devis',
+          message: `${errorMessage}${reference}`,
           type: 'error',
           confirmText: 'OK',
           showCancel: false,
@@ -326,7 +340,10 @@ export default function NouveauDevisPage() {
       console.error('Erreur:', error)
       showConfirmation({
         title: 'Erreur',
-        message: 'Erreur lors de la création du devis',
+        message:
+          error instanceof TypeError
+            ? 'Impossible de joindre le serveur. Vérifiez votre connexion puis réessayez.'
+            : 'Une erreur inattendue est survenue pendant la création du devis. Réessayez.',
         type: 'error',
         confirmText: 'OK',
         showCancel: false,
