@@ -1,6 +1,26 @@
 -- Insertion/mise à jour des modules de fonctionnalités
 -- Utilise INSERT ... ON DUPLICATE KEY UPDATE pour être idempotent
 
+CREATE TABLE IF NOT EXISTS `feature_modules` (
+  `id` VARCHAR(191) NOT NULL,
+  `code` VARCHAR(191) NOT NULL,
+  `name` VARCHAR(191) NOT NULL,
+  `description` TEXT NULL,
+  `category` VARCHAR(191) NOT NULL DEFAULT 'general',
+  `icon` VARCHAR(191) NULL,
+  `isActive` BOOLEAN NOT NULL DEFAULT true,
+  `isSystem` BOOLEAN NOT NULL DEFAULT false,
+  `dependencies` TEXT NULL,
+  `ordre` INTEGER NOT NULL DEFAULT 0,
+  `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updatedAt` DATETIME(3) NOT NULL,
+
+  UNIQUE INDEX `feature_modules_code_key`(`code`),
+  INDEX `feature_modules_isActive_idx`(`isActive`),
+  INDEX `feature_modules_category_idx`(`category`),
+  PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 INSERT INTO feature_modules (id, code, name, description, category, icon, isActive, isSystem, ordre, createdAt, updatedAt)
 VALUES
   (UUID(), 'dashboard',            'Dashboard',                 'Page d\'accueil avec statistiques et vue d\'ensemble',     'system',        'ChartBarIcon',                  1, 1,  0, NOW(), NOW()),

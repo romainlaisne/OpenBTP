@@ -20,7 +20,9 @@ import { prisma } from '@/lib/prisma/client'
 import { TYPES_DOCUMENT_OUVRIER, TYPES_DOCUMENT_SOCIETE, typeDocumentOuvrierCorrige } from './types'
 
 const RACINE_UPLOADS = join(process.cwd(), 'public')
-const racineNas = () => (process.env.NAS_DOCUMENTS_PATH || '').trim()
+const racineNas = () => process.env.NAS_DOCUMENTS_ENABLED
+  ? '/app/nas-documents'
+  : (process.env.NAS_DOCUMENTS_PATH || '').trim()
 
 /** Nom de fichier / dossier sûr sur le NAS (Windows et macOS compris). */
 export function nettoyerNom(s: string): string {

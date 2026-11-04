@@ -62,7 +62,7 @@ services:
       OPENBTP_AGENT_NOTES_USER_EMAIL: ${OPENBTP_AGENT_NOTES_USER_EMAIL:-}
       # Miroir NAS des documents sous-traitants : actif seulement si
       # NAS_DOCUMENTS_HOST_PATH est défini dans .env (voir volume ci-dessous)
-      NAS_DOCUMENTS_PATH: ${NAS_DOCUMENTS_HOST_PATH:+/app/nas-documents}
+      NAS_DOCUMENTS_ENABLED: ${NAS_DOCUMENTS_HOST_PATH:-}
     extra_hosts:
       # Permet d'accéder aux services du NAS (PDF, Ollama) depuis le container
       - "nas-host:host-gateway"
