@@ -4,6 +4,8 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useLocale } from '@/contexts/LocaleContext'
+import { LanguageSwitch } from '@/components/LanguageSwitch'
 import {
   EyeIcon,
   EyeSlashIcon,
@@ -14,6 +16,7 @@ import {
 
 function LoginForm() {
   const searchParams = useSearchParams()
+  const { locale, t } = useLocale()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -48,7 +51,7 @@ function LoginForm() {
       // Validation côté client
       if (!email || !password) {
         console.error('❌ Champs manquants')
-        setError('Veuillez remplir tous les champs')
+        setError(t('login.fillRequired'))
         setLoading(false)
         return
       }
@@ -91,13 +94,13 @@ function LoginForm() {
         console.error('❌ Erreur de connexion:', response.error)
         
         // Messages d'erreur plus détaillés
-        let errorMessage = 'Identifiants invalides. Vérifiez votre email et mot de passe.'
+        let errorMessage = t('login.invalid')
         if (response.error === 'CredentialsSignin') {
-          errorMessage = 'Email ou mot de passe incorrect.'
+          errorMessage = t('login.incorrect')
         } else if (response.error.includes('fetch')) {
-          errorMessage = 'Erreur de connexion au serveur. Vérifiez votre connexion internet.'
+          errorMessage = t('login.serverError')
         } else {
-          errorMessage = `Erreur: ${response.error}`
+          errorMessage = `${t('login.errorPrefix')}: ${response.error}`
         }
         
         setError(errorMessage)
@@ -145,12 +148,12 @@ function LoginForm() {
         return
       } else {
         console.error('⚠️ Réponse inattendue:', response)
-        setError('Une erreur est survenue lors de la connexion. Veuillez réessayer.')
+        setError(t('login.retry'))
         setLoading(false)
       }
     } catch (error) {
       console.error('❌ Erreur de connexion (catch):', error)
-      setError('Une erreur est survenue. Vérifiez votre connexion internet et réessayez.')
+      setError(t('login.connectionError'))
       setLoading(false)
     }
   }
@@ -168,7 +171,8 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+    <div className="relative min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+    <div className="absolute right-4 top-4 z-20"><LanguageSwitch /></div>
       {/* Section gauche avec branding moderne */}
       <div className="hidden lg:flex lg:w-3/5 relative overflow-hidden">
         {/* Fond avec dégradé et motifs */}
@@ -214,17 +218,17 @@ function LoginForm() {
               Open<span className="text-orange-400">BTP</span>
             </h1>
             <p className="text-xl text-white/90 max-w-lg leading-relaxed drop-shadow-sm">
-              La plateforme complète de gestion pour les professionnels du bâtiment et des travaux publics
+              {t('login.platform')}
             </p>
           </div>
           
           {/* Features avec icônes */}
           <div className={`mt-12 grid grid-cols-1 gap-4 transform transition-all duration-1000 delay-500 ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
             {[
-              'Gestion des chantiers et projets',
-              'Suivi financier en temps réel',
-              'Planification et calendrier',
-              'Gestion documentaire'
+              t('login.featureProjects'),
+              t('login.featureFinance'),
+              t('login.featurePlanning'),
+              t('login.featureDocuments')
             ].map((feature, index) => (
               <div key={index} className="flex items-center text-white/80 text-sm">
                 <CheckCircleIcon className="h-5 w-5 mr-3 text-green-300" />
@@ -244,10 +248,10 @@ function LoginForm() {
               <LockClosedIcon className="h-10 w-10 text-white" />
             </div>
             <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-              Bienvenue !
+              {t('login.welcome')}
             </h2>
             <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Connectez-vous à votre espace de travail
+              {t('login.subtitle')}
             </p>
           </div>
 
@@ -276,7 +280,7 @@ function LoginForm() {
               {/* Champ email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Adresse email
+                  {t('login.email')}
                 </label>
                 <div className="relative">
                   <input
@@ -289,7 +293,7 @@ function LoginForm() {
                     inputMode="email"
                     required
                     className="appearance-none block w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white transition-all duration-200 hover:border-gray-400"
-                    placeholder="votre.email@entreprise.com"
+                    placeholder={locale === 'en' ? 'you@company.com' : 'votre.email@entreprise.com'}
                     onKeyDown={(e) => {
                       // Permettre la soumission avec Enter
                       if (e.key === 'Enter') {
@@ -311,7 +315,7 @@ function LoginForm() {
               {/* Champ mot de passe */}
               <div>
                 <label htmlFor="password" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Mot de passe
+                  {t('login.password')}
                 </label>
                 <div className="relative">
                   <input
@@ -359,12 +363,12 @@ function LoginForm() {
                     onChange={() => setRememberMe(!rememberMe)}
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                    Se souvenir de moi
+                    {t('login.remember')}
                   </label>
                 </div>
                 <div className="text-sm">
                   <Link href="/reset-password" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200">
-                    Mot de passe oublié ?
+                    {t('login.forgot')}
                   </Link>
                 </div>
               </div>
@@ -386,12 +390,12 @@ function LoginForm() {
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Connexion en cours...
+                      {t('login.signingIn')}
                     </>
                   ) : (
                     <>
                       <LockClosedIcon className="h-5 w-5 mr-2" />
-                      Se connecter
+                      {t('nav.signIn')}
                     </>
                   )}
                 </button>
@@ -401,10 +405,10 @@ function LoginForm() {
             {/* Footer */}
             <div className="mt-8 text-center">
               <p className="text-xs text-gray-500 dark:text-gray-500">
-                &copy; {new Date().getFullYear()} OpenBTP. Tous droits réservés.
+                &copy; {new Date().getFullYear()} OpenBTP. {t('login.rights')}
               </p>
               <p className="text-xs text-gray-400 dark:text-gray-600 mt-1">
-                Plateforme sécurisée pour professionnels
+                {t('login.securePlatform')}
               </p>
             </div>
           </div>

@@ -33,11 +33,14 @@ import { Menu, Transition } from '@headlessui/react'
 import ThemeToggle from './ThemeToggle'
 import { NotificationBell } from './NotificationBell'
 import { useFeatures } from '@/hooks/useFeatures'
+import { useLocale } from '@/contexts/LocaleContext'
+import { LanguageSwitch } from './LanguageSwitch'
 
 export function Navbar() {
   const pathname = usePathname()
   const { data: session } = useSession()
   const { isEnabled, error: modulesError } = useFeatures()
+  const { t } = useLocale()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [companyLogo, setCompanyLogo] = useState<string | null>(null)
   const [logoLoadStatus, setLogoLoadStatus] = useState<'loading' | 'loaded' | 'error' | 'none'>('loading')
@@ -73,45 +76,45 @@ export function Navbar() {
 
   const allNavigationItems = [
     {
-      name: 'Gestion',
+      name: t('nav.management'),
       items: [
-        { name: 'CRM Prospects', href: '/crm', icon: BuildingOffice2Icon, moduleCode: 'chantiers' },
-        { name: 'Clients', href: '/clients', icon: UserGroupIcon, moduleCode: 'clients' },
-        { name: 'Devis', href: '/devis', icon: DocumentTextIcon, moduleCode: 'devis' },
-        { name: 'Sous-traitants et ouvriers', href: '/sous-traitants', icon: UserGroupIcon, moduleCode: 'sous_traitants' },
-        { name: 'Chantiers', href: '/chantiers', icon: BuildingOfficeIcon, moduleCode: 'chantiers' },
-        { name: 'Planning chantiers', href: '/planning-v2', icon: CalendarIcon, moduleCode: 'planning' },
-        { name: 'Planning ressources', href: '/planning-ressources', icon: CalendarIcon, moduleCode: 'planning' },
-        { name: 'Journal', href: '/journal', icon: CalendarDaysIcon, moduleCode: 'journal' },
+        { name: t('nav.crm'), href: '/crm', icon: BuildingOffice2Icon, moduleCode: 'chantiers' },
+        { name: t('nav.clients'), href: '/clients', icon: UserGroupIcon, moduleCode: 'clients' },
+        { name: t('nav.quotes'), href: '/devis', icon: DocumentTextIcon, moduleCode: 'devis' },
+        { name: t('nav.subcontractors'), href: '/sous-traitants', icon: UserGroupIcon, moduleCode: 'sous_traitants' },
+        { name: t('nav.projects'), href: '/chantiers', icon: BuildingOfficeIcon, moduleCode: 'chantiers' },
+        { name: t('nav.projectPlanning'), href: '/planning-v2', icon: CalendarIcon, moduleCode: 'planning' },
+        { name: t('nav.resourcePlanning'), href: '/planning-ressources', icon: CalendarIcon, moduleCode: 'planning' },
+        { name: t('nav.journal'), href: '/journal', icon: CalendarDaysIcon, moduleCode: 'journal' },
       ]
     },
     {
-      name: 'Documents',
+      name: t('nav.documents'),
       items: [
-        { name: 'Administratifs', href: '/administratif/documents', icon: DocumentTextIcon, moduleCode: 'documents' },
-        { name: 'Photothèque', href: '/mediatheque', icon: PhotoIcon, moduleCode: null },
-        { name: 'Bons de régie', href: '/bons-regie', icon: ClipboardDocumentListIcon, moduleCode: 'bons_regie' },
-        { name: 'Choix client', href: '/choix-clients', icon: SwatchIcon, moduleCode: 'choix_clients' },
-        { name: 'SAV', href: '/sav', icon: DocumentDuplicateIcon, moduleCode: 'sav' },
-        { name: 'Métrés soumis', href: '/metres', icon: ChartBarIcon, moduleCode: 'metres' },
+        { name: t('nav.administrativeDocuments'), href: '/administratif/documents', icon: DocumentTextIcon, moduleCode: 'documents' },
+        { name: t('nav.mediaLibrary'), href: '/mediatheque', icon: PhotoIcon, moduleCode: null },
+        { name: t('nav.workOrders'), href: '/bons-regie', icon: ClipboardDocumentListIcon, moduleCode: 'bons_regie' },
+        { name: t('nav.clientChoices'), href: '/choix-clients', icon: SwatchIcon, moduleCode: 'choix_clients' },
+        { name: t('nav.afterSales'), href: '/sav', icon: DocumentDuplicateIcon, moduleCode: 'sav' },
+        { name: t('nav.submittedMeasurements'), href: '/metres', icon: ChartBarIcon, moduleCode: 'metres' },
       ]
     },
     {
-      name: 'Organisation',
+      name: t('nav.organization'),
       items: [
-        { name: 'Logistique', href: '/logistique', icon: ArchiveBoxIcon, moduleCode: 'logistique' },
-        { name: 'Outillage', href: '/outillage', icon: WrenchScrewdriverIcon, moduleCode: 'outillage' },
-        { name: 'Inventaire', href: '/inventory', icon: CubeIcon, moduleCode: 'inventory' },
+        { name: t('nav.logistics'), href: '/logistique', icon: ArchiveBoxIcon, moduleCode: 'logistique' },
+        { name: t('nav.tools'), href: '/outillage', icon: WrenchScrewdriverIcon, moduleCode: 'outillage' },
+        { name: t('nav.inventory'), href: '/inventory', icon: CubeIcon, moduleCode: 'inventory' },
         ...(session?.user?.role === 'ADMIN' || session?.user?.role === 'MANAGER' 
-          ? [{ name: 'Planification chargements', href: '/planification-chargements', icon: TruckIcon, moduleCode: 'planning_chargements' }]
+          ? [{ name: t('nav.loadPlanning'), href: '/planification-chargements', icon: TruckIcon, moduleCode: 'planning_chargements' }]
           : []
         ),
       ]
     },
     {
-      name: 'Outils',
+      name: t('nav.tools'),
       items: [
-        { name: 'Métré sur plan', href: '/metres-plan', icon: PencilSquareIcon, moduleCode: 'metres_plan' },
+        { name: t('nav.planMeasurement'), href: '/metres-plan', icon: PencilSquareIcon, moduleCode: 'metres_plan' },
       ]
     }
   ]
@@ -277,6 +280,7 @@ export function Navbar() {
 
             {/* Actions à droite */}
             <div className="flex items-center space-x-2">
+              <LanguageSwitch />
               {session ? (
                 <>
 
@@ -318,7 +322,7 @@ export function Navbar() {
                           </div>
                           <div className="hidden sm:block text-left">
                             <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                              {session.user?.name || 'Utilisateur'}
+                              {session.user?.name || t('nav.user')}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
                               {session.user?.email}
@@ -382,7 +386,7 @@ export function Navbar() {
                                     }`}>
                                       <Cog6ToothIcon className="h-4 w-4" />
                                     </div>
-                                    Configuration
+                                    {t('nav.configuration')}
                                   </Link>
                                 )}
                               </Menu.Item>
@@ -404,7 +408,7 @@ export function Navbar() {
                                       }`}>
                                         <Cog6ToothIcon className="h-4 w-4" />
                                       </div>
-                                      Modules
+                                      {t('nav.modules')}
                                     </Link>
                                   )}
                                 </Menu.Item>
@@ -426,7 +430,7 @@ export function Navbar() {
                                     }`}>
                                       <ArrowRightOnRectangleIcon className="h-4 w-4" />
                                     </div>
-                                    Déconnexion
+                                    {t('nav.signOut')}
                                   </button>
                                 )}
                               </Menu.Item>
@@ -442,7 +446,7 @@ export function Navbar() {
                   href="/login"
                   className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                 >
-                  Connexion
+                  {t('nav.signIn')}
                 </Link>
               )}
 
@@ -452,7 +456,7 @@ export function Navbar() {
                 className="lg:hidden p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-300 relative group"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
-                <span className="sr-only">Ouvrir le menu</span>
+                <span className="sr-only">{t('nav.openMenu')}</span>
                 {mobileMenuOpen ? (
                   <XMarkIcon className="h-6 w-6 relative z-10" />
                 ) : (
@@ -492,7 +496,7 @@ export function Navbar() {
                     </div>
                   </div>
                   <h2 className="text-xl font-black bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                    Menu
+                    {t('nav.menu')}
                   </h2>
                 </div>
                 <button
@@ -554,7 +558,7 @@ export function Navbar() {
                       }`}>
                         <Cog6ToothIcon className="h-4 w-4" />
                       </div>
-                      Configuration
+                      {t('nav.configuration')}
                     </Link>
 
                     {session?.user?.role && ['ADMIN', 'MANAGER'].includes(session.user.role as string) && (
@@ -574,7 +578,7 @@ export function Navbar() {
                         }`}>
                           <UserCircleIcon className="h-4 w-4" />
                         </div>
-                        Utilisateurs
+                        {t('nav.users')}
                       </Link>
                     )}
 
@@ -585,7 +589,7 @@ export function Navbar() {
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
                         <ArrowRightOnRectangleIcon className="h-4 w-4" />
                       </div>
-                      Déconnexion
+                      {t('nav.signOut')}
                     </button>
                   </div>
                 </div>

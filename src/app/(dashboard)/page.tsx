@@ -27,14 +27,15 @@ import QuickActionsWidget from '@/components/dashboard/QuickActionsWidget'
 import RecentEtatsList from '@/components/dashboard/RecentEtatsList'
 import MetresEnAttenteWidget from '@/components/dashboard/MetresEnAttenteWidget'
 import RecentSAVWidget from '@/components/dashboard/RecentSAVWidget'
+import { useLocale } from '@/contexts/LocaleContext'
 
 // Types
 // (Types inutilisés supprimés)
 
 
 // Fonctions utilitaires
-const formatEuros = (amount: number) => {
-  return new Intl.NumberFormat('fr-FR', {
+const formatEuros = (amount: number, locale: 'fr' | 'en') => {
+  return new Intl.NumberFormat(locale === 'en' ? 'en-GB' : 'fr-FR', {
     style: 'currency',
     currency: 'EUR',
     maximumFractionDigits: 0
@@ -71,6 +72,7 @@ async function getDashboardData() {
 
 export default function DashboardPage() {
   const { data: session, status } = useSession()
+  const { locale, t } = useLocale()
   const [isCompact, setIsCompact] = useState(false)
 
   useEffect(() => {
@@ -187,7 +189,7 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Chargement...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">{t('auth.loading')}</p>
         </div>
       </div>
     )
@@ -228,7 +230,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h1 className={`font-black text-blue-600 dark:text-blue-400 flex flex-col sm:flex-row sm:items-center gap-2 transition-all duration-300 ${isCompact ? 'text-sm sm:text-base' : 'text-xl sm:text-2xl'}`}>
-                      <span className="truncate">Tableau de bord</span>
+                      <span className="truncate">{t('dashboard.title')}</span>
                       {!isCompact && (
                         <span className="px-3 py-1 bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-700/20 backdrop-blur-sm rounded-xl text-sm font-semibold border border-blue-600/30 dark:border-blue-400/30 text-blue-700 dark:text-blue-300 whitespace-nowrap">
                           Dashboard
@@ -237,7 +239,7 @@ export default function DashboardPage() {
                     </h1>
                     {!isCompact && (
                       <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 font-medium transition-opacity duration-300">
-                        👋 Bienvenue {session?.user?.name}, voici un aperçu de votre activité
+                        {t('dashboard.welcome', { name: session?.user?.name ?? '' })}
                       </p>
                     )}
                   </div>
@@ -245,9 +247,9 @@ export default function DashboardPage() {
               {!isCompact && (
                 <div className="text-left sm:text-right">
                   <div className="px-4 py-2 bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-700/10 backdrop-blur-sm rounded-xl border border-blue-600/20 dark:border-blue-400/20 shadow-lg">
-                    <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">Aujourd'hui</div>
+                    <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">{t('dashboard.today')}</div>
                     <div className="text-sm font-bold text-gray-900 dark:text-white">
-                      {new Date().toLocaleDateString('fr-FR', { 
+                      {new Date().toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', {
                         weekday: 'long', 
                         year: 'numeric', 
                         month: 'long', 
@@ -278,9 +280,9 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <h2 id="actions-title" className="text-xl font-black text-gray-900 dark:text-white">
-                    Actions rapides
+                    {t('dashboard.quickActions')}
                   </h2>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Accès direct aux fonctionnalités</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.quickActionsDescription')}</p>
                 </div>
               </div>
               <QuickActionsWidget />
@@ -295,9 +297,9 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <h2 id="notepad-title" className="text-xl font-black text-gray-900 dark:text-white">
-                      Mon Espace de Travail
+                      {t('dashboard.workspace')}
                     </h2>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Notes et mémos personnels</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.notes')}</p>
                   </div>
                 </div>
                 <button
@@ -314,12 +316,12 @@ export default function DashboardPage() {
                   {isNotepadOpen ? (
                     <>
                       <ChevronUpIcon className="h-4 w-4" />
-                      Masquer
+                      {t('dashboard.hide')}
                     </>
                   ) : (
                     <>
                       <ChevronDownIcon className="h-4 w-4" />
-                      Afficher
+                      {t('dashboard.show')}
                     </>
                   )}
                 </button>
@@ -342,9 +344,9 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <h2 id="sav-title" className="text-xl font-black text-gray-900 dark:text-white">
-                      Derniers SAV
+                      {t('dashboard.latestAfterSales')}
                     </h2>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">10 derniers tickets encodés</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.latestTickets')}</p>
                   </div>
                 </div>
                 <button
@@ -361,12 +363,12 @@ export default function DashboardPage() {
                   {isSavOpen ? (
                     <>
                       <ChevronUpIcon className="h-4 w-4" />
-                      Masquer
+                      {t('dashboard.hide')}
                     </>
                   ) : (
                     <>
                       <ChevronDownIcon className="h-4 w-4" />
-                      Afficher
+                      {t('dashboard.show')}
                     </>
                   )}
                 </button>
@@ -388,9 +390,9 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <h2 id="charts-title" className="text-xl font-black text-gray-900 dark:text-white">
-                      Statistiques des états d'avancements
+                      {t('dashboard.progressStatistics')}
                     </h2>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Analyse visuelle de vos activités</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.activityAnalysis')}</p>
                   </div>
                 </div>
                 <button
@@ -407,12 +409,12 @@ export default function DashboardPage() {
                   {isGraphiquesOpen ? (
                     <>
                       <ChevronUpIcon className="h-4 w-4" />
-                      Masquer
+                      {t('dashboard.hide')}
                     </>
                   ) : (
                     <>
                       <ChevronDownIcon className="h-4 w-4" />
-                      Afficher
+                      {t('dashboard.show')}
                     </>
                   )}
                 </button>
@@ -439,9 +441,9 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <h2 id="suivis-importants-title" className="text-xl font-black text-gray-900 dark:text-white">
-                      Suivis Importants
+                      {t('dashboard.importantFollowUps')}
                     </h2>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Alertes et éléments nécessitant votre attention</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.alerts')}</p>
                   </div>
                 </div>
                 <button
@@ -458,12 +460,12 @@ export default function DashboardPage() {
                   {isSuivisOpen ? (
                     <>
                       <ChevronUpIcon className="h-4 w-4" />
-                      Masquer
+                      {t('dashboard.hide')}
                     </>
                   ) : (
                     <>
                       <ChevronDownIcon className="h-4 w-4" />
-                      Afficher
+                      {t('dashboard.show')}
                     </>
                   )}
                 </button>
@@ -495,29 +497,29 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <h2 id="kpi-title" className="text-xl font-black text-gray-900 dark:text-white">
-                    Indicateurs Clés
+                    {t('dashboard.keyIndicators')}
                   </h2>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Vue d'ensemble de vos activités</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{t('dashboard.overview')}</p>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <KPICard 
-                  title="Total Chantiers" 
+                  title={t('dashboard.totalProjects')}
                   value={kpis.totalChantiers} 
                   icon={<BuildingOfficeIcon className="w-full h-full" />} 
                   accentColor="blue"
                   href="/chantiers"
                 />
                 <KPICard 
-                  title="Chantiers en cours" 
+                  title={t('dashboard.activeProjects')}
                   value={kpis.chantiersEnCours} 
                   icon={<PlayIcon className="w-full h-full" />} 
                   accentColor="green"
                 />
                 <div className="flex flex-col gap-1.5">
                   <KPICard
-                    title="Chiffre d'affaires à venir"
-                    value={formatEuros(kpis.chiffreAffaires)}
+                    title={t('dashboard.upcomingRevenue')}
+                    value={formatEuros(kpis.chiffreAffaires, locale)}
                     icon={<CurrencyEuroIcon className="w-full h-full" />}
                     accentColor="purple"
                   />
@@ -526,12 +528,12 @@ export default function DashboardPage() {
                     className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 hover:underline transition-colors py-0.5"
                   >
                     <CurrencyEuroIcon className="w-3.5 h-3.5" />
-                    Voir le détail par chantier →
+                    {t('dashboard.byProjectDetails')}
                   </Link>
                 </div>
                 <KPICard 
-                  title="États Avancement (mois préc.)" 
-                  value={formatEuros(kpis.montantEtatsAvancementMoisPrecedent)} 
+                  title={t('dashboard.previousMonthProgress')}
+                  value={formatEuros(kpis.montantEtatsAvancementMoisPrecedent, locale)}
                   icon={<ChartBarIcon className="w-full h-full" />} 
                   accentColor="indigo"
                 />

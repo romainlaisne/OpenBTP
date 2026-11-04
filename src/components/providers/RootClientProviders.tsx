@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import AuthProvider from './AuthProvider'
 import ChatSystemProvider from './ChatProvider'
 import { FeaturesProvider } from '@/hooks/useFeatures'
+import { LocaleProvider } from '@/contexts/LocaleContext'
 
 export default function RootClientProviders({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '/'
@@ -19,10 +20,10 @@ export default function RootClientProviders({ children }: { children: React.Reac
 
   if (isPublicPortal || isContractPage || isCheckinPage) {
     return (
-      <>
+      <LocaleProvider>
         {children}
         <Toaster position="top-right" />
-      </>
+      </LocaleProvider>
     )
   }
 
@@ -30,21 +31,23 @@ export default function RootClientProviders({ children }: { children: React.Reac
   // pour éviter les appels à /api/auth/session qui créent des boucles infinies
   if (isAuthPage) {
     return (
-      <>
+      <LocaleProvider>
         {children}
         <Toaster position="top-right" />
-      </>
+      </LocaleProvider>
     )
   }
 
   return (
-    <AuthProvider>
-      <FeaturesProvider>
-        {children}
-        <ChatSystemProvider />
-        <Toaster position="top-right" />
-      </FeaturesProvider>
-    </AuthProvider>
+    <LocaleProvider>
+      <AuthProvider>
+        <FeaturesProvider>
+          {children}
+          <ChatSystemProvider />
+          <Toaster position="top-right" />
+        </FeaturesProvider>
+      </AuthProvider>
+    </LocaleProvider>
   )
 }
 
