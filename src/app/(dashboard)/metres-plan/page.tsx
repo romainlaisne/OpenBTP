@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { PageHeader } from '@/components/PageHeader'
+import { UiText } from '@/contexts/LocaleContext'
 import {
   PencilSquareIcon,
   PlusIcon,
@@ -299,21 +300,21 @@ export default function MetresPlanPage() {
         ) : filtered.length === 0 && projets.length > 0 ? (
           <div className="text-center py-16">
             <MagnifyingGlassIcon className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-            <p className="text-gray-500 dark:text-gray-400 font-medium">Aucun résultat pour cette recherche</p>
+            <p className="text-gray-500 dark:text-gray-400 font-medium"><UiText>Aucun résultat pour cette recherche</UiText></p>
             <button onClick={() => { setSearch(''); setFilterChantier('') }} className="mt-3 text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
-              Effacer les filtres
+              <UiText>Effacer les filtres</UiText>
             </button>
           </div>
         ) : projets.length === 0 ? (
           <div className="text-center py-20">
             <PencilSquareIcon className="h-20 w-20 text-gray-300 dark:text-gray-600 mx-auto mb-5" />
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Aucun métré sur plan</h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-6">Commencez par créer un nouveau métré pour dessiner sur vos PDF.</p>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2"><UiText>Aucun métré sur plan</UiText></h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-6"><UiText>Commencez par créer un nouveau métré pour dessiner sur vos PDF.</UiText></p>
             <button
               onClick={() => setDialogOpen(true)}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white rounded-lg shadow-md text-sm font-semibold"
             >
-              <PlusIcon className="h-4 w-4" /> Créer mon premier métré
+              <PlusIcon className="h-4 w-4" /> <UiText>Créer mon premier métré</UiText>
             </button>
           </div>
         ) : view === 'list' ? (
@@ -321,8 +322,8 @@ export default function MetresPlanPage() {
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
             {/* Header row */}
             <div className="grid grid-cols-[1fr_auto_auto_auto] gap-4 px-4 py-2 border-b border-gray-100 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              <span>Nom / Chantier</span>
-              <span className="text-right w-36">Mis à jour</span>
+              <span><UiText>Nom / Chantier</UiText></span>
+              <span className="text-right w-36"><UiText>Mis à jour</UiText></span>
               <span className="w-20 text-center">Ouvrir</span>
               <span className="w-8" />
             </div>
@@ -476,7 +477,7 @@ export default function MetresPlanPage() {
               <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center shrink-0">
                 <TrashIcon className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
-              <h2 className="text-base font-bold text-gray-900 dark:text-white">Supprimer ce métré ?</h2>
+              <h2 className="text-base font-bold text-gray-900 dark:text-white"><UiText>Supprimer ce métré ?</UiText></h2>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
               Le métré <strong className="text-gray-700 dark:text-gray-200">{projets.find(p => p.id === deleteId)?.nom}</strong> et tous ses fichiers seront définitivement supprimés. Cette action est irréversible.

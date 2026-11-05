@@ -14,6 +14,7 @@ import toast from 'react-hot-toast' // Toaster déplacé vers RootClientProvider
 // removed unused SelectField import
 import React, { ChangeEvent } from 'react'
 import { useConfirmation } from '@/components/modals/confirmation-modal'
+import { UiText } from '@/contexts/LocaleContext'
 
 interface CommandePageProps {
   params: Promise<{
@@ -1165,7 +1166,7 @@ export default function CommandePage(props: CommandePageProps) {
                 <div className="relative px-6 py-4 bg-gradient-to-br from-blue-600/10 via-blue-700/10 to-indigo-800/10 dark:from-blue-600/5 dark:via-blue-700/5 dark:to-indigo-800/5 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <h2 className="text-lg font-bold text-blue-900 dark:text-white">Détail de la commande</h2>
+                      <h2 className="text-lg font-bold text-blue-900 dark:text-white"><UiText>Détail de la commande</UiText></h2>
                     </div>
                     <div className="flex items-center space-x-4">
                       <span className="inline-flex items-center px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -1183,10 +1184,10 @@ export default function CommandePage(props: CommandePageProps) {
                       <thead className="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
                           <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-8">#</th>
-                          <th scope="col" className="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Article</th>
+                          <th scope="col" className="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Article</UiText></th>
                           <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider min-w-[200px] max-w-[300px]">Description</th>
                           <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-24">Type</th>
-                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Unité</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Unité</UiText></th>
                           <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28">Quantité</th>
                           <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Prix Unit. (€)</th>
                           <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Total</th>
@@ -1253,22 +1254,22 @@ export default function CommandePage(props: CommandePageProps) {
               <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6">
                   <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">Informations générales</h2>
+                      <h2 className="text-lg font-bold text-gray-900 dark:text-white"><UiText>Informations générales</UiText></h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Référence</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Référence</UiText></label>
                       <input
                         type="text"
                         value={commande.reference || ''}
                         onChange={(e) => setCommande({ ...commande, reference: e.target.value })}
                         disabled={isLocked}
                         className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:text-gray-700 dark:disabled:text-gray-200 transition-colors"
-                        placeholder="Référence..."
+                        placeholder="Reference..."
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Date</UiText></label>
                       <input
                         type="date"
                         value={commande.dateCommande ? new Date(commande.dateCommande).toISOString().substr(0, 10) : ''}
@@ -1282,7 +1283,7 @@ export default function CommandePage(props: CommandePageProps) {
                 
                 <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6">
                   <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">Paramètres</h2>
+                      <h2 className="text-lg font-bold text-gray-900 dark:text-white"><UiText>Paramètres</UiText></h2>
                   </div>
                   <div className="grid grid-cols-1 gap-4">
                     <div>
@@ -1326,7 +1327,7 @@ export default function CommandePage(props: CommandePageProps) {
                 <div className="lg:col-span-2">
                   <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6">
                     <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                      <h2 className="text-lg font-bold text-gray-900 dark:text-white">Actions</h2>
+                      <h2 className="text-lg font-bold text-gray-900 dark:text-white"><UiText>Actions</UiText></h2>
                     </div>
                     <div className="flex flex-wrap gap-3">
                       <button
@@ -1337,7 +1338,7 @@ export default function CommandePage(props: CommandePageProps) {
                         }`}
                       >
                         <ArrowUpTrayIcon className="h-5 w-5" />
-                        Importer Excel
+                        <UiText>Importer Excel</UiText>
                       </button>
                       <input
                         ref={fileInputRef}
@@ -1351,7 +1352,7 @@ export default function CommandePage(props: CommandePageProps) {
                         className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 dark:from-green-700 dark:to-emerald-800 dark:hover:from-green-600 dark:hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                       >
                         <ArrowDownTrayIcon className="h-5 w-5" />
-                        Template Excel
+                        <UiText>Template Excel</UiText>
                       </button>
                       
                       {commande && (
@@ -1366,7 +1367,7 @@ export default function CommandePage(props: CommandePageProps) {
                           disabled={!commande.id}
                         >
                           <DocumentArrowDownIcon className="h-5 w-5" />
-                          Exporter Excel
+                          <UiText>Exporter Excel</UiText>
                           {!commande.id && (
                             <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs bg-yellow-500 text-white rounded-full">!</span>
                           )}
@@ -1380,7 +1381,7 @@ export default function CommandePage(props: CommandePageProps) {
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0v4" />
                           </svg>
-                          Déverrouiller
+                          <UiText>Déverrouiller</UiText>
                         </button>
                       )}
                     </div>
@@ -1389,7 +1390,7 @@ export default function CommandePage(props: CommandePageProps) {
                 <div className="lg:col-span-1">
                   <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6">
                     <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                      <h2 className="text-lg font-bold text-gray-900 dark:text-white">Récapitulatif</h2>
+                      <h2 className="text-lg font-bold text-gray-900 dark:text-white"><UiText>Récapitulatif</UiText></h2>
                     </div>
                     
                     <div className="space-y-3">

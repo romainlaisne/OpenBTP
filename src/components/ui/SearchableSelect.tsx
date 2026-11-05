@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDownIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import MenuFlottant from './MenuFlottant'
+import { localizeUiText, useLocale } from '@/contexts/LocaleContext'
 
 interface Option {
   value: string
@@ -28,6 +29,9 @@ export function SearchableSelect({
   className = '',
   disabled = false
 }: SearchableSelectProps) {
+  const { locale, uiTranslationsEnabled } = useLocale()
+  const translatedPlaceholder = localizeUiText(placeholder, locale, uiTranslationsEnabled)
+  const translatedEmptyMessage = localizeUiText(emptyMessage, locale, uiTranslationsEnabled)
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const containerRef = useRef<HTMLDivElement>(null)
@@ -95,7 +99,7 @@ export function SearchableSelect({
       >
         <div className="flex items-center justify-between">
           <span className={selectedOption ? '' : 'text-gray-500 dark:text-gray-400'}>
-            {selectedOption ? selectedOption.label : placeholder}
+            {selectedOption ? selectedOption.label : translatedPlaceholder}
           </span>
           <div className="flex items-center gap-2">
             {selectedOption && !disabled && (
@@ -123,7 +127,7 @@ export function SearchableSelect({
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Rechercher..."
+                placeholder={localizeUiText('Rechercher...', locale, uiTranslationsEnabled)}
                 className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               />
             </div>
@@ -153,7 +157,7 @@ export function SearchableSelect({
               </ul>
             ) : (
               <div className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                {emptyMessage}
+                {translatedEmptyMessage}
               </div>
             )}
           </div>

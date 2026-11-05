@@ -1,4 +1,7 @@
+'use client'
+
 import React, { ButtonHTMLAttributes, forwardRef } from 'react';
+import { useLocale, localizeUiText } from '@/contexts/LocaleContext'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'success';
@@ -22,6 +25,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     disabled,
     ...props 
   }, ref) => {
+    const { locale, uiTranslationsEnabled } = useLocale()
     const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors';
     
     const variantStyles = {
@@ -69,7 +73,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <span className="mr-2">{leftIcon}</span>
         )}
         
-        {children}
+        {typeof children === 'string' ? localizeUiText(children, locale, uiTranslationsEnabled) : children}
         
         {!isLoading && rightIcon && (
           <span className="ml-2">{rightIcon}</span>

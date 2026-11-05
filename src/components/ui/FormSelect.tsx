@@ -1,4 +1,7 @@
+'use client'
+
 import React, { SelectHTMLAttributes, forwardRef } from 'react';
+import { useLocale, localizeUiText } from '@/contexts/LocaleContext'
 
 export interface FormSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -12,18 +15,19 @@ export interface FormSelectProps extends SelectHTMLAttributes<HTMLSelectElement>
 
 const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
   ({ label, error, helperText, options, className, ...props }, ref) => {
+    const { locale, uiTranslationsEnabled } = useLocale()
     return (
       <div className="mb-4">
         {label && (
-          <label 
-            htmlFor={props.id} 
+          <label
+            htmlFor={props.id}
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
           >
-            {label}
+            {localizeUiText(label, locale, uiTranslationsEnabled)}
             {props.required && <span className="text-red-500 ml-1">*</span>}
           </label>
         )}
-        
+
         <div className="relative">
           <select
             ref={ref}
@@ -35,6 +39,8 @@ const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
               ${className || ''}
             `}
             {...props}
+            title={localizeUiText(props.title, locale, uiTranslationsEnabled)}
+            aria-label={localizeUiText(props['aria-label'], locale, uiTranslationsEnabled)}
           >
             {options.map((option) => (
               <option key={option.value} value={option.value}>
@@ -42,7 +48,7 @@ const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
               </option>
             ))}
           </select>
-          
+
           {/* Flèche personnalisée pour le select */}
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
             <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -50,13 +56,13 @@ const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
             </svg>
           </div>
         </div>
-        
+
         {error && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{localizeUiText(error, locale, uiTranslationsEnabled)}</p>
         )}
-        
+
         {helperText && !error && (
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{helperText}</p>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{localizeUiText(helperText, locale, uiTranslationsEnabled)}</p>
         )}
       </div>
     );
@@ -65,4 +71,4 @@ const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
 
 FormSelect.displayName = 'FormSelect';
 
-export default FormSelect; 
+export default FormSelect;
