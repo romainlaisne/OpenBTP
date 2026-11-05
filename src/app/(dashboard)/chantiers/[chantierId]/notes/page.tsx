@@ -4,6 +4,7 @@ import { ClipboardDocumentListIcon } from '@heroicons/react/24/outline'
 import { AdminTasksContent } from '@/components/chantier/AdminTasksContent'
 import { NotesContent } from '@/components/chantier/NotesContent'
 import { DocumentExpirationAlert } from '@/components/DocumentExpirationAlert'
+import { UiText } from '@/contexts/LocaleContext'
 
 export default function NotesPage() {
   const params = useParams()
@@ -33,7 +34,7 @@ export default function NotesPage() {
                 <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                   <ClipboardDocumentListIcon className="w-6 h-6 mr-3 text-purple-900 dark:text-white" />
                   <h1 className="text-xl font-bold text-purple-900 dark:text-white">
-                    Notes et tâches administratives
+                    <UiText>Notes et tâches administratives</UiText>
                   </h1>
                 </div>
               </div>
@@ -52,7 +53,7 @@ export default function NotesPage() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Tâches administratives</h2>
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200"><UiText>Tâches administratives</UiText></h2>
               </div>
               <AdminTasksContent chantierId={chantierId} />
             </div>
@@ -63,7 +64,7 @@ export default function NotesPage() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Notes et choix clients</h2>
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200"><UiText>Notes et choix clients</UiText></h2>
               </div>
               <NotesContent chantierId={chantierId} debug={true} />
             </div>

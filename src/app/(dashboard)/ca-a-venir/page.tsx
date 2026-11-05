@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
+import { UiText } from '@/contexts/LocaleContext'
 import {
   CurrencyEuroIcon,
   BuildingOffice2Icon,
@@ -175,8 +176,8 @@ export default function CaAVenirPage() {
               <BuildingOffice2Icon className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-gray-900 dark:text-white">Détail par chantier</h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Cliquez sur un en-tête pour trier</p>
+              <h2 className="text-sm font-bold text-gray-900 dark:text-white"><UiText>Détail par chantier</UiText></h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400"><UiText>Cliquez sur un en-tête pour trier</UiText></p>
             </div>
           </div>
         </div>
@@ -185,7 +186,7 @@ export default function CaAVenirPage() {
           <div className="p-12 text-center">
             <div className="inline-flex flex-col items-center gap-3">
               <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm text-gray-500 dark:text-gray-400">Chargement des données…</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Chargement des données…</UiText></p>
             </div>
           </div>
         ) : error ? (

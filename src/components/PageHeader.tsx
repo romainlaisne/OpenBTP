@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { ReactNode } from 'react'
+import { useLocale } from '@/contexts/LocaleContext'
+import { localizeUiText } from '@/contexts/LocaleContext'
 
 interface PageHeaderProps {
   title: string
@@ -30,6 +32,7 @@ export function PageHeader({
   compactThreshold = 100,
   leftAction
 }: PageHeaderProps) {
+  const { locale, uiTranslationsEnabled } = useLocale()
   const [isCompact, setIsCompact] = useState(false)
 
   useEffect(() => {
@@ -101,11 +104,11 @@ export function PageHeader({
                 </div>
                 <div className="min-w-0 flex-1">
                   <h1 className={`font-black ${getTextColor()} flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 transition-all duration-300 ${isCompact ? 'text-xs sm:text-sm md:text-base' : 'text-base sm:text-xl md:text-2xl'}`}>
-                    <span className="truncate">{title}</span>
+                    <span className="truncate">{localizeUiText(title, locale, uiTranslationsEnabled)}</span>
                     {!isCompact && badge && (
                       typeof badge === 'string' ? (
                         <span className={`hidden md:inline px-2 sm:px-3 py-0.5 sm:py-1 bg-gradient-to-r ${badgeColor}/20 backdrop-blur-sm rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold border border-gray-300/30 dark:border-gray-600/30 whitespace-nowrap`}>
-                          {badge}
+                          {localizeUiText(badge, locale, uiTranslationsEnabled)}
                         </span>
                       ) : (
                         <span className="hidden md:inline">
@@ -116,7 +119,7 @@ export function PageHeader({
                   </h1>
                   {!isCompact && subtitle && (
                     <p className="hidden sm:block mt-0.5 sm:mt-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium transition-opacity duration-300">
-                      {subtitle}
+                      {localizeUiText(subtitle, locale, uiTranslationsEnabled)}
                     </p>
                   )}
                 </div>

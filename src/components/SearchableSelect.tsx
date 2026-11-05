@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { MagnifyingGlassIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import MenuFlottant from '@/components/ui/MenuFlottant'
+import { localizeUiText, useLocale } from '@/contexts/LocaleContext'
 
 export interface SearchableSelectOption {
   value: string | number | null
@@ -40,6 +41,11 @@ export function SearchableSelect({
   renderOption,
   colorScheme = 'purple'
 }: SearchableSelectProps) {
+  const { locale, uiTranslationsEnabled } = useLocale()
+  const translatedPlaceholder = localizeUiText(placeholder, locale, uiTranslationsEnabled)
+  const translatedSearchPlaceholder = localizeUiText(searchPlaceholder, locale, uiTranslationsEnabled)
+  const translatedEmptyMessage = localizeUiText(emptyMessage, locale, uiTranslationsEnabled)
+  const translatedAllOptionLabel = localizeUiText(allOptionLabel, locale, uiTranslationsEnabled)
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const containerRef = useRef<HTMLDivElement>(null)
@@ -123,7 +129,7 @@ export function SearchableSelect({
     setSearchTerm('')
   }
 
-  const displayLabel = selectedOption ? selectedOption.label : placeholder
+  const displayLabel = selectedOption ? selectedOption.label : translatedPlaceholder
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
@@ -152,7 +158,7 @@ export function SearchableSelect({
               <input
                 ref={inputRef}
                 type="text"
-                placeholder={searchPlaceholder}
+                placeholder={translatedSearchPlaceholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={`w-full pl-8 pr-3 py-2 text-sm border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 ${currentColors.ring} ${currentColors.border} transition-all duration-200`}
@@ -173,7 +179,7 @@ export function SearchableSelect({
                     : 'text-gray-900 dark:text-white'
                 }`}
               >
-                {allOptionLabel}
+                {translatedAllOptionLabel}
               </button>
             )}
             {filteredOptions.length > 0 ? (
@@ -218,7 +224,7 @@ export function SearchableSelect({
               })
             ) : (
               <div className="px-3 py-2.5 text-sm text-gray-500 dark:text-gray-400 text-center">
-                {emptyMessage}
+                {translatedEmptyMessage}
               </div>
             )}
           </div>

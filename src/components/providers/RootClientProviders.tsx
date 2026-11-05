@@ -20,7 +20,7 @@ export default function RootClientProviders({ children }: { children: React.Reac
 
   if (isPublicPortal || isContractPage || isCheckinPage) {
     return (
-      <LocaleProvider>
+      <LocaleProvider uiTranslationsEnabled={!isPublicPortal}>
         {children}
         <Toaster position="top-right" />
       </LocaleProvider>

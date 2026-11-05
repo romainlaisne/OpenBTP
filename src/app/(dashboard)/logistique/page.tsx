@@ -29,6 +29,7 @@ import {
   ArrowPathIcon,
 } from '@heroicons/react/24/outline'
 import { PageHeader } from '@/components/PageHeader'
+import { UiText } from '@/contexts/LocaleContext'
 import Image from 'next/image'
 
 interface Magasinier {
@@ -952,10 +953,10 @@ export default function LogistiquePage() {
         {/* ===== TAB NOUVELLE TÂCHE ===== */}
         {activeTab === 'nouvelle' && (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Nouvelle tâche</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6"><UiText>Nouvelle tâche</UiText></h2>
             <form onSubmit={handleAddTache} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Titre *</UiText></label>
                 <input
                   type="text"
                   value={newTacheTitre}
@@ -965,7 +966,7 @@ export default function LogistiquePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optionnel)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Description (optionnel)</UiText></label>
                 <textarea
                   value={newTacheDesc}
                   onChange={(e) => setNewTacheDesc(e.target.value)}
@@ -1191,7 +1192,7 @@ export default function LogistiquePage() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-700">
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white">Modifier le bon de préparation</h3>
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white"><UiText>Modifier le bon de préparation</UiText></h3>
               <button onClick={() => setEditBon(null)} className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <XMarkIcon className="h-5 w-5 text-gray-500" />
               </button>
@@ -1330,7 +1331,7 @@ export default function LogistiquePage() {
             <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-3">
                 <ClipboardDocumentListIcon className="h-6 w-6 text-blue-500" />
-                <h3 className="font-bold text-lg text-gray-900 dark:text-white">Nouveau bon de préparation</h3>
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white"><UiText>Nouveau bon de préparation</UiText></h3>
               </div>
               <button onClick={() => setShowBonPrep(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg transition-colors">
                 <XMarkIcon className="h-5 w-5" />
@@ -1578,7 +1579,7 @@ export default function LogistiquePage() {
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
             <div className="p-5 border-b border-gray-100 dark:border-gray-700">
-              <h3 className="font-bold text-lg text-gray-900 dark:text-white">Modifier la tâche</h3>
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white"><UiText>Modifier la tâche</UiText></h3>
             </div>
             <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
               <div>
