@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { compressImages } from '@/lib/utils/image-compression'
+import { UiText } from '@/contexts/LocaleContext'
 import {
   DocumentTextIcon,
   BuildingOffice2Icon,
@@ -239,7 +240,7 @@ export default function QuickActionsWidget() {
                 <action.icon className="h-5 w-5 text-white" />
               </div>
               <h4 className={`font-bold text-gray-900 dark:text-white text-xs ${action.hoverTextColor} transition-colors`}>
-                {action.title}
+                <UiText>{action.title}</UiText>
               </h4>
               {action.shortcut && (
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
