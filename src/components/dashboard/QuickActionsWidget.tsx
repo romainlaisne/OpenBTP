@@ -285,10 +285,13 @@ export default function QuickActionsWidget() {
                 <div className="p-1.5 rounded-lg bg-gradient-to-br from-green-500 to-teal-600">
                   <ClipboardDocumentListIcon className="h-5 w-5 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Nouvelle tâche magasinier</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                  <UiText>Nouvelle tâche magasinier</UiText>
+                </h2>
               </div>
               <button
                 onClick={closeTacheModal}
+                aria-label={localizeUiText('Fermer', locale, uiTranslationsEnabled)}
                 className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 <XMarkIcon className="h-5 w-5" />
@@ -302,12 +305,16 @@ export default function QuickActionsWidget() {
                   <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/30">
                     <CheckIcon className="h-8 w-8 text-green-600 dark:text-green-400" />
                   </div>
-                  <p className="text-base font-semibold text-green-700 dark:text-green-300">Tâche créée avec succès !</p>
+                  <p className="text-base font-semibold text-green-700 dark:text-green-300">
+                    <UiText>Tâche créée avec succès !</UiText>
+                  </p>
                 </div>
               ) : (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre *</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <UiText>Titre *</UiText>
+                    </label>
                     <input
                       type="text"
                       value={titre}
@@ -319,7 +326,9 @@ export default function QuickActionsWidget() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optionnel)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <UiText>Description (optionnel)</UiText>
+                    </label>
                     <textarea
                       value={description}
                       onChange={e => setDescription(e.target.value)}
@@ -331,7 +340,9 @@ export default function QuickActionsWidget() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date d&apos;exécution</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <UiText>Date d&apos;exécution</UiText>
+                      </label>
                       <input
                         type="date"
                         value={dateExecution}
@@ -340,13 +351,15 @@ export default function QuickActionsWidget() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Magasinier *</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <UiText>Magasinier *</UiText>
+                      </label>
                       <select
                         value={magasinierId}
                         onChange={e => setMagasinierId(e.target.value)}
                         className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
                       >
-                        <option value="">Choisir...</option>
+                        <option value=""><UiText>Choisir...</UiText></option>
                         {magasiniers.map(m => (
                           <option key={m.id} value={m.id}>{m.nom}</option>
                         ))}
@@ -356,7 +369,9 @@ export default function QuickActionsWidget() {
 
                   {/* Photos (optionnel) */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Photos (optionnel)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <UiText>Photos (optionnel)</UiText>
+                    </label>
                     <input
                       ref={fileInputRef}
                       type="file"
@@ -371,7 +386,7 @@ export default function QuickActionsWidget() {
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-green-500 hover:text-green-600 dark:hover:text-green-400 transition-colors"
                     >
                       <PhotoIcon className="h-5 w-5" />
-                      <span className="text-sm font-medium">Ajouter des photos</span>
+                      <span className="text-sm font-medium"><UiText>Ajouter des photos</UiText></span>
                     </button>
                     {photos.length > 0 && (
                       <div className="mt-3 grid grid-cols-4 gap-2">
@@ -383,7 +398,7 @@ export default function QuickActionsWidget() {
                               type="button"
                               onClick={() => removePhoto(index)}
                               className="absolute top-0.5 right-0.5 p-0.5 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
-                              aria-label="Supprimer la photo"
+                              aria-label={localizeUiText('Supprimer la photo', locale, uiTranslationsEnabled)}
                             >
                               <XMarkIcon className="h-3.5 w-3.5" />
                             </button>
@@ -394,7 +409,9 @@ export default function QuickActionsWidget() {
                   </div>
 
                   {error && (
-                    <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">{error}</p>
+                    <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">
+                      {localizeUiText(error, locale, uiTranslationsEnabled)}
+                    </p>
                   )}
 
                   {/* Footer */}
@@ -404,14 +421,14 @@ export default function QuickActionsWidget() {
                       onClick={closeTacheModal}
                       className="flex-1 px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
-                      Annuler
+                      <UiText>Annuler</UiText>
                     </button>
                     <button
                       type="submit"
                       disabled={submitting}
                       className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-teal-600 text-white font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
                     >
-                      {submitting ? 'Création...' : 'Créer la tâche'}
+                      {localizeUiText(submitting ? 'Création...' : 'Créer la tâche', locale, uiTranslationsEnabled)}
                     </button>
                   </div>
                 </>
