@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { compressImages } from '@/lib/utils/image-compression'
-import { UiText } from '@/contexts/LocaleContext'
+import { localizeUiText, UiText, useLocale } from '@/contexts/LocaleContext'
 import {
   DocumentTextIcon,
   BuildingOffice2Icon,
@@ -34,6 +34,7 @@ interface Magasinier {
 }
 
 export default function QuickActionsWidget() {
+  const { locale, uiTranslationsEnabled } = useLocale()
   const [tacheModalOpen, setTacheModalOpen] = useState(false)
   const [magasiniers, setMagasiniers] = useState<Magasinier[]>([])
   const [titre, setTitre] = useState('')
@@ -311,7 +312,7 @@ export default function QuickActionsWidget() {
                       type="text"
                       value={titre}
                       onChange={e => setTitre(e.target.value)}
-                      placeholder="Ex: Rangement étagère A3"
+                      placeholder={localizeUiText('Ex: Rangement étagère A3', locale, uiTranslationsEnabled)}
                       autoFocus
                       className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
@@ -322,7 +323,7 @@ export default function QuickActionsWidget() {
                     <textarea
                       value={description}
                       onChange={e => setDescription(e.target.value)}
-                      placeholder="Détails supplémentaires..."
+                      placeholder={localizeUiText('Détails supplémentaires...', locale, uiTranslationsEnabled)}
                       rows={2}
                       className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
                     />
