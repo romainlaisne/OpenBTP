@@ -1,3 +1,7 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -14,10 +18,11 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string; rapportId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, rapportId } = await params
@@ -39,7 +44,7 @@ export async function POST(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Récupérer le document rapport
@@ -65,14 +70,14 @@ export async function POST(
     // général desktop (`rapport-visite-general`) et variantes par tag
     // (`rapport-visite-tag-*`).
     if (!rapport || typeof rapport.type !== 'string' || !rapport.type.startsWith('rapport-visite')) {
-      return NextResponse.json({ error: 'Rapport non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Rapport non trouvé' }, { status: 404 })
     }
 
     // Vérifier qu'on a des destinataires
     if (!recipients || recipients.length === 0) {
       // Si pas de destinataires fournis, utiliser l'email du client
       if (!chantier.clientEmail) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Aucun destinataire spécifié et aucun email client configuré' },
           { status: 400 }
         )
@@ -97,7 +102,7 @@ export async function POST(
       }
       
       if (!metadata) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Impossible de filtrer ce rapport (métadonnées manquantes)' },
           { status: 400 }
         )
@@ -164,7 +169,8 @@ export async function POST(
       }
 
       // Générer le HTML
-      const htmlContent = generateRapportHTML(rapportData)
+      const __locale = await bindRequestLocale()
+      const htmlContent = localizeGeneratedHtml(__locale, generateRapportHTML(rapportData), collectStrings(rapportData))
 
       // Générer le PDF avec Puppeteer
       pdfBuffer = await PDFGenerator.generatePDF(htmlContent, {
@@ -190,7 +196,7 @@ export async function POST(
         pdfBuffer = await readFile(filePath)
       } catch (error) {
         console.error('Erreur lors de la lecture du fichier PDF:', error)
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Fichier PDF introuvable' },
           { status: 404 }
         )
@@ -199,7 +205,7 @@ export async function POST(
 
     // Préparer le contenu de l'email
     const tagSuffix = tagFilter && tagFilter !== 'Tous' ? ` - ${tagFilter}` : ''
-    const emailSubject = `Rapport de visite${tagSuffix} - ${chantier.nomChantier} - ${new Date(rapport.createdAt).toLocaleDateString('fr-FR')}`
+    const emailSubject = `Rapport de visite${tagSuffix} - ${chantier.nomChantier} - ${new Date(rapport.createdAt).toLocaleDateString(intlLocale(getActiveLocale()))}`
     
     const emailBody = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -228,7 +234,7 @@ export async function POST(
             </p>
             ` : ''}
             <p style="margin: 8px 0; font-size: 14px; color: #334155;">
-              <strong style="color: #475569;">Date du rapport :</strong> ${new Date(rapport.createdAt).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              <strong style="color: #475569;">Date du rapport :</strong> ${new Date(rapport.createdAt).toLocaleDateString(intlLocale(getActiveLocale()), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
           
@@ -266,7 +272,7 @@ export async function POST(
 
     console.log(`✅ Rapport ${pdfFilename} envoyé par email à ${recipients.join(', ')}`)
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       message: 'Rapport envoyé par email avec succès',
       recipients
@@ -274,7 +280,7 @@ export async function POST(
 
   } catch (error) {
     console.error('❌ Erreur lors de l\'envoi du rapport par email:', error)
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de l\'envoi du rapport',
         message: error instanceof Error ? error.message : 'Erreur inconnue'

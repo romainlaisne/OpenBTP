@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -145,23 +147,23 @@ export default function TacheRapidePage() {
               <CheckCircleIcon className="h-10 w-10 text-green-600" />
             </div>
           </div>
-          <h2 className="text-xl font-bold text-gray-900">Tâche créée !</h2>
+          <h2 className="text-xl font-bold text-gray-900"><UiText>Tâche créée !</UiText></h2>
           <p className="text-sm text-gray-600">
-            La tâche a été assignée avec succès au magasinier.
-          </p>
+            <UiText>La tâche a été assignée avec succès au magasinier.
+          </UiText></p>
           <div className="space-y-3 pt-2">
             <button
               onClick={handleAnotherTask}
               className="w-full py-3 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 transition-colors"
             >
-              Créer une autre tâche
-            </button>
+              <UiText>Créer une autre tâche
+            </UiText></button>
             <button
               onClick={() => router.push('/mobile')}
               className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
             >
-              Retour à l&apos;accueil
-            </button>
+              <UiText>Retour à l&apos;accueil
+            </UiText></button>
           </div>
         </div>
       </div>
@@ -182,8 +184,8 @@ export default function TacheRapidePage() {
           <div className="flex items-center gap-2">
             <ArchiveBoxIcon className="h-6 w-6" />
             <div>
-              <h1 className="font-bold text-lg leading-tight">Nouvelle tâche</h1>
-              <p className="text-xs text-amber-100">Logistique magasinier</p>
+              <h1 className="font-bold text-lg leading-tight"><UiText>Nouvelle tâche</UiText></h1>
+              <p className="text-xs text-amber-100"><UiText>Logistique magasinier</UiText></p>
             </div>
           </div>
         </div>
@@ -195,10 +197,10 @@ export default function TacheRapidePage() {
           {/* Magasinier */}
           <div className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Magasinier <span className="text-red-500">*</span>
+              <UiText>Magasinier </UiText><span className="text-red-500">*</span>
             </label>
             {magasiniers.length === 0 ? (
-              <p className="text-sm text-gray-500 py-2">Aucun magasinier actif trouvé</p>
+              <p className="text-sm text-gray-500 py-2"><UiText>Aucun magasinier actif trouvé</UiText></p>
             ) : (
               <div className="grid grid-cols-2 gap-2">
                 {magasiniers.map(m => (
@@ -222,13 +224,13 @@ export default function TacheRapidePage() {
           {/* Titre */}
           <div className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Titre de la tâche <span className="text-red-500">*</span>
+              <UiText>Titre de la tâche </UiText><span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={titre}
               onChange={e => setTitre(e.target.value)}
-              placeholder="Ex : Rangement étagère A3, Inventaire stock..."
+              placeholder={tx("Ex : Rangement étagère A3, Inventaire stock...")}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-400 text-base"
             />
           </div>
@@ -236,12 +238,12 @@ export default function TacheRapidePage() {
           {/* Description */}
           <div className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Description <span className="text-gray-400 font-normal text-xs">(optionnel)</span>
+              <UiText>Description </UiText><span className="text-gray-400 font-normal text-xs">(optionnel)</span>
             </label>
             <textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
-              placeholder="Détails supplémentaires..."
+              placeholder={tx("Détails supplémentaires...")}
               rows={3}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-400 text-base resize-none"
             />
@@ -250,8 +252,8 @@ export default function TacheRapidePage() {
           {/* Date d'exécution */}
           <div className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Date d&apos;exécution
-            </label>
+              <UiText>Date d&apos;exécution
+            </UiText></label>
             <input
               type="date"
               value={dateExecution}
@@ -280,7 +282,7 @@ export default function TacheRapidePage() {
               className="w-full flex items-center justify-center gap-3 py-4 rounded-xl border-2 border-dashed border-amber-300 text-amber-700 hover:bg-amber-50 transition-colors"
             >
               <CameraIcon className="h-6 w-6" />
-              <span className="font-medium">Prendre / Ajouter une photo</span>
+              <span className="font-medium"><UiText>Prendre / Ajouter une photo</UiText></span>
             </button>
 
             {photoPreviewUrls.length > 0 && (
@@ -323,13 +325,13 @@ export default function TacheRapidePage() {
             {saving ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                Création...
-              </>
+                <UiText>Création...
+              </UiText></>
             ) : (
               <>
                 <ArchiveBoxIcon className="h-6 w-6" />
-                Créer la tâche
-              </>
+                <UiText>Créer la tâche
+              </UiText></>
             )}
           </button>
 

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 // import { prisma } from '@/lib/prisma/client'
 import { prismaWithExtensions } from '@/lib/prisma/types'
@@ -6,11 +8,12 @@ import { authOptions } from '@/lib/auth'
 
 // Obtenir tous les emplacements
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Paramètres de filtrage
@@ -47,10 +50,10 @@ export async function GET(request: NextRequest) {
       ]
     })
 
-    return NextResponse.json(emplacements)
+    return localizedJson(emplacements)
   } catch (error) {
     console.error('Erreur lors de la récupération des emplacements:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des emplacements' },
       { status: 500 }
     )
@@ -59,18 +62,19 @@ export async function GET(request: NextRequest) {
 
 // Mettre à jour un emplacement
 export async function PUT(request: NextRequest) {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const data = await request.json()
     const { id, statut } = data
 
     if (!id) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID d\'emplacement manquant' },
         { status: 400 }
       )
@@ -83,7 +87,7 @@ export async function PUT(request: NextRequest) {
     })
 
     if (!emplacement) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Emplacement introuvable' },
         { status: 404 }
       )
@@ -99,10 +103,10 @@ export async function PUT(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(updatedEmplacement)
+    return localizedJson(updatedEmplacement)
   } catch (error) {
     console.error('Erreur lors de la mise à jour de l\'emplacement:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de l\'emplacement' },
       { status: 500 }
     )
@@ -111,18 +115,19 @@ export async function PUT(request: NextRequest) {
 
 // Rechercher un emplacement par code QR
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const data = await request.json()
     const { codeQR } = data
 
     if (!codeQR) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Code QR manquant' },
         { status: 400 }
       )
@@ -141,7 +146,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (materiau) {
-      return NextResponse.json({
+      return localizedJson({
         type: 'materiau',
         data: materiau
       })
@@ -157,20 +162,20 @@ export async function POST(request: NextRequest) {
     })
 
     if (emplacement) {
-      return NextResponse.json({
+      return localizedJson({
         type: 'emplacement',
         data: emplacement
       })
     }
 
     // Si rien n'est trouvé
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Aucun élément trouvé avec ce code QR' },
       { status: 404 }
     )
   } catch (error) {
     console.error('Erreur lors de la recherche par code QR:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la recherche par code QR' },
       { status: 500 }
     )

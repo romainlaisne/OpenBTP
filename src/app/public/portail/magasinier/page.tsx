@@ -64,7 +64,7 @@ export default function MagasinierLoginPage() {
       <div className="w-full max-w-sm bg-white/10 backdrop-blur rounded-2xl p-6">
         <div className="flex items-center mb-4">
           <LockClosedIcon className="h-6 w-6 mr-2" />
-          <h1 className="text-xl font-semibold">Portail Magasinier</h1>
+          <h1 className="text-xl font-semibold">{t('warehouse_portal')}</h1>
         </div>
         <p className="text-sm text-blue-100 mb-4">{t('enter_pin')}</p>
         <form onSubmit={onSubmit} className="space-y-3">

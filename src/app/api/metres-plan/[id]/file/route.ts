@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -13,17 +15,18 @@ export async function GET(
   _request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const filePath = join(METRES_PLAN_BASE_PATH, id, 'project.mplan')
 
     if (!existsSync(filePath)) {
-      return NextResponse.json({ error: 'Fichier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Fichier non trouvé' }, { status: 404 })
     }
 
     const fileBuffer = await readFile(filePath)
@@ -37,7 +40,7 @@ export async function GET(
     })
   } catch (error) {
     console.error('Erreur GET /api/metres-plan/[id]/file:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la lecture du fichier' },
       { status: 500 }
     )
@@ -49,11 +52,12 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const formData = await request.formData()
@@ -61,7 +65,7 @@ export async function PUT(
     const pdfFile = formData.get('pdf') as Blob | null
 
     if (!mplanFile) {
-      return NextResponse.json({ error: 'Fichier .mplan requis' }, { status: 400 })
+      return localizedJson({ error: 'Fichier .mplan requis' }, { status: 400 })
     }
 
     const dir = join(METRES_PLAN_BASE_PATH, id)
@@ -91,10 +95,10 @@ export async function PUT(
       },
     })
 
-    return NextResponse.json(metrePlan)
+    return localizedJson(metrePlan)
   } catch (error) {
     console.error('Erreur PUT /api/metres-plan/[id]/file:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la sauvegarde du fichier' },
       { status: 500 }
     )

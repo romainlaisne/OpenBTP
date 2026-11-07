@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -8,11 +11,12 @@ export async function POST(
   request: Request,
   props: { params: Promise<{ chantierId: string; soustraitantId: string; commandeId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -38,7 +42,7 @@ export async function POST(
     `
 
     if (!commande || commande.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Commande sous-traitant non trouvée' },
         { status: 404 }
       )
@@ -48,7 +52,7 @@ export async function POST(
 
     // Vérifier que la commande est verrouillée
     if (!commandeData.estVerrouillee) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'La commande doit être validée avant d\'être envoyée par email' },
         { status: 400 }
       )
@@ -67,14 +71,14 @@ export async function POST(
     })
 
     if (!companySettings) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Paramètres de l\'entreprise non trouvés' },
         { status: 500 }
       )
     }
 
     if (!companySettings.emailHost || !companySettings.emailUser || !companySettings.emailPassword) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Paramètres d\'email non configurés' },
         { status: 500 }
       )
@@ -93,7 +97,7 @@ export async function POST(
 
     // Helpers formatage nombres
     const toNumber = (v: unknown): number => (typeof v === 'number' ? v : Number(v ?? 0))
-    const formatNumber = (v: unknown): string => new Intl.NumberFormat('fr-FR').format(toNumber(v))
+    const formatNumber = (v: unknown): string => new Intl.NumberFormat(intlLocale(getActiveLocale())).format(toNumber(v))
 
     // Générer le contenu HTML de l'email
     const emailContent = `
@@ -199,10 +203,10 @@ export async function POST(
 
     await transporter.sendMail(mailOptions)
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'envoi de l\'email' },
       { status: 500 }
     )

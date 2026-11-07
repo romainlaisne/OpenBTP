@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -11,6 +14,7 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ chantierId: string; soustraitantId: string; commandeId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const resolvedParams = await props.params
     const chantierIdReadable = resolvedParams.chantierId
@@ -21,7 +25,7 @@ export async function GET(
     
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer l'ID interne du chantier à partir de son ID lisible
@@ -32,7 +36,7 @@ export async function GET(
 
     if (!chantier) {
       console.error(`❌ Chantier non trouvé: ${chantierIdReadable}`)
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Récupérer la commande sous-traitant avec toutes les données nécessaires
@@ -75,7 +79,7 @@ export async function GET(
 
     if (!commande) {
       console.error(`❌ Commande sous-traitant N°${commandeId} non trouvée`)
-      return NextResponse.json({ error: 'Commande sous-traitant non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Commande sous-traitant non trouvée' }, { status: 404 })
     }
 
     console.log(`✅ Commande trouvée: ${commande.reference || `CMD-${commande.id}`} pour ${commande.soustraitant.nom}`)
@@ -121,7 +125,8 @@ export async function GET(
 
     console.log('🎨 Génération du HTML...')
     // Générer le HTML avec le template spécifique sous-traitant
-    const htmlContent = generateCommandeSoustraitantHTML(commandeData, companySettings, companySettings?.logo)
+    const __locale = await bindRequestLocale()
+    const htmlContent = localizeGeneratedHtml(__locale, generateCommandeSoustraitantHTML(commandeData, companySettings, companySettings?.logo), collectStrings(commandeData))
 
     // Générer le PDF avec Puppeteer en format portrait
     console.log('📄 Génération du PDF avec Puppeteer (portrait)...')
@@ -161,7 +166,7 @@ export async function GET(
 
   } catch (error) {
     console.error('❌ Erreur génération PDF commande sous-traitant:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la génération du PDF' },
       { status: 500 }
     )

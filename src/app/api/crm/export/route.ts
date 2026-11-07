@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -21,10 +23,11 @@ function applyHeaderStyle(row: ExcelJS.Row) {
 
 // GET /api/crm/export - Export Excel de tous les prospects
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer toutes les entreprises avec leurs contacts
@@ -134,7 +137,7 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Erreur GET /api/crm/export:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Erreur lors de l'export Excel" },
       { status: 500 }
     )

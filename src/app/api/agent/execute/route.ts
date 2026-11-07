@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Dispatch unique des outils agent.
 //
 // Corps : { tool, args?, dryRun?, idempotencyKey? }
@@ -15,24 +17,25 @@ import { toToolJSON } from '@/lib/agent/serialize'
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   const identity = await requireAgentAuth(request)
   if (!identity) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   }
 
   let body: Record<string, unknown>
   try {
     body = (await request.json()) as Record<string, unknown>
   } catch {
-    return NextResponse.json({ error: 'Corps JSON invalide' }, { status: 400 })
+    return localizedJson({ error: 'Corps JSON invalide' }, { status: 400 })
   }
 
   const toolName = typeof body.tool === 'string' ? body.tool.trim() : ''
   if (!toolName) {
-    return NextResponse.json({ error: 'Champ « tool » requis' }, { status: 400 })
+    return localizedJson({ error: 'Champ « tool » requis' }, { status: 400 })
   }
   if (!getTool(toolName)) {
-    return NextResponse.json({ error: `Outil inconnu : ${toolName}` }, { status: 400 })
+    return localizedJson({ error: `Outil inconnu : ${toolName}` }, { status: 400 })
   }
 
   const args = parseToolArgs(body.args as Record<string, unknown> | string | undefined)
@@ -46,7 +49,7 @@ export async function POST(request: Request) {
   if (idempotencyKey && !dryRun) {
     const cached = getIdempotent(toolName, idempotencyKey)
     if (cached !== undefined) {
-      return NextResponse.json({
+      return localizedJson({
         ok: true,
         tool: toolName,
         result: toToolJSON(cached),
@@ -73,7 +76,7 @@ export async function POST(request: Request) {
       `[agent] ${toolName} key=${identity.keyLabel} dryRun=${dryRun} ok=${ok} ${durationMs}ms`
     )
 
-    return NextResponse.json({
+    return localizedJson({
       ok,
       tool: toolName,
       result: toToolJSON(result),
@@ -83,6 +86,6 @@ export async function POST(request: Request) {
     // executeTool absorbe déjà les erreurs d'outil : on n'arrive ici que sur
     // une défaillance inattendue du dispatcher lui-même.
     console.error(`[agent] exception dispatcher ${toolName}:`, error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

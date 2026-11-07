@@ -1,5 +1,6 @@
-// Page d'administration du système RAG
 'use client';
+
+// Page d'administration du système RAG
 
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react';
@@ -69,8 +70,8 @@ export default function RAGAdminPage() {
             <UiText>Accès non autorisé</UiText>
           </h1>
           <p className="text-red-600 dark:text-red-300">
-            Vous n'avez pas les permissions nécessaires pour accéder à cette page.
-          </p>
+            <UiText>Vous n'avez pas les permissions nécessaires pour accéder à cette page.
+          </UiText></p>
         </div>
       </div>
     );
@@ -121,7 +122,7 @@ export default function RAGAdminPage() {
   };
 
   if (!session) {
-    return <div>Non autorisé</div>;
+    return <div><UiText>Non autorisé</UiText></div>;
   }
 
   return (
@@ -133,8 +134,8 @@ export default function RAGAdminPage() {
             <UiText>Administration RAG</UiText>
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Gestion du système de questions-réponses intelligentes
-          </p>
+            <UiText>Gestion du système de questions-réponses intelligentes
+          </UiText></p>
         </div>
 
         {/* Message de statut */}
@@ -175,21 +176,21 @@ export default function RAGAdminPage() {
                 </div>
                 
                 <div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Modèle principal:</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400"><UiText>Modèle principal:</UiText></span>
                   <span className="ml-2 text-sm text-gray-900 dark:text-white">
                     {health.ollama.config.model}
                   </span>
                 </div>
                 
                 <div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Modèle d'embedding:</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400"><UiText>Modèle d'embedding:</UiText></span>
                   <span className="ml-2 text-sm text-gray-900 dark:text-white">
                     {health.ollama.config.embeddingModel}
                   </span>
                 </div>
                 
                 <div>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Modèles disponibles:</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400"><UiText>Modèles disponibles:</UiText></span>
                   <span className="ml-2 text-sm text-gray-900 dark:text-white">
                     {health.ollama.models.length}
                   </span>
@@ -202,8 +203,8 @@ export default function RAGAdminPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Base de données vectorielle
-              </h2>
+                <UiText>Base de données vectorielle
+              </UiText></h2>
               <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                 health?.vectorStore.healthy 
                   ? 'bg-green-100 text-green-800' 
@@ -258,7 +259,7 @@ export default function RAGAdminPage() {
                     </div>
                     {health.vectorStore.stats.conversationStats?.lastActivity && (
                       <div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Dernière activité:</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400"><UiText>Dernière activité:</UiText></span>
                         <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
                           {new Date(health.vectorStore.stats.conversationStats.lastActivity).toLocaleString()}
                         </span>
@@ -274,8 +275,8 @@ export default function RAGAdminPage() {
         {/* Actions */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Actions d'administration
-          </h2>
+            <UiText>Actions d'administration
+          </UiText></h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button
@@ -295,8 +296,8 @@ export default function RAGAdminPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
               )}
-              Réindexer tout
-            </button>
+              <UiText>Réindexer tout
+            </UiText></button>
             
             <button
               onClick={() => performAction('stats')}
@@ -326,9 +327,9 @@ export default function RAGAdminPage() {
           </div>
           
           <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-            <p><strong>Réindexer tout:</strong> Indexe tous les chantiers, commandes et états d'avancement</p>
-            <p><strong>Actualiser stats:</strong> Met à jour les statistiques de la base vectorielle</p>
-            <p><strong>Vider la base:</strong> Supprime tous les documents indexés (attention!)</p>
+            <p><strong><UiText>Réindexer tout:</UiText></strong> <UiText>Indexe tous les chantiers, commandes et états d'avancement</UiText></p>
+            <p><strong>Actualiser stats:</strong> <UiText>Met à jour les statistiques de la base vectorielle</UiText></p>
+            <p><strong>Vider la base:</strong> <UiText>Supprime tous les documents indexés (attention!)</UiText></p>
           </div>
         </div>
 
@@ -345,8 +346,8 @@ export default function RAGAdminPage() {
             className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 
                      disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            Actualiser l'état
-          </button>
+            <UiText>Actualiser l'état
+          </UiText></button>
         </div>
       </div>
     </div>

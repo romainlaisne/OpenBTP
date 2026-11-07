@@ -1,9 +1,10 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 // import { useSession } from 'next-auth/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 
 interface AdminTask {
   id?: number;
@@ -87,7 +88,7 @@ export function AdminTasksContent({ chantierId }: { chantierId: string }) {
     }
   }
 
-  if (loading) return <div>Chargement...</div>
+  if (loading) return <div><UiText>Chargement...</UiText></div>
 
   return (
     <div className="space-y-4">
@@ -118,8 +119,8 @@ export function AdminTasksContent({ chantierId }: { chantierId: string }) {
               
               {task?.completed && task.completedAt && (
                 <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Validé par {task.user?.name || 'Utilisateur inconnu'} le{' '}
-                  {format(new Date(task.completedAt), 'dd MMMM yyyy à HH:mm', { locale: fr })}
+                  <UiText>Validé par </UiText>{task.user?.name || 'Utilisateur inconnu'} le{' '}
+                  {format(new Date(task.completedAt), 'dd MMMM yyyy à HH:mm', { locale: dateFnsLocale() })}
                 </div>
               )}
             </div>
@@ -128,8 +129,8 @@ export function AdminTasksContent({ chantierId }: { chantierId: string }) {
       })}
       {tasks.length === 0 && !loading && (
         <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          Aucune tâche administrative configurée ou disponible pour ce chantier.
-        </div>
+          <UiText>Aucune tâche administrative configurée ou disponible pour ce chantier.
+        </UiText></div>
       )}
     </div>
   )

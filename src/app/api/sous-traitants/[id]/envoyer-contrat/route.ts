@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -10,15 +12,16 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
   if (!session?.user) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   }
 
   const { id } = await context.params
   const r = await envoyerContratEnSignature(id, session.user.id)
   if (!r.ok) {
-    return NextResponse.json({ error: r.erreur }, { status: r.status ?? 500 })
+    return localizedJson({ error: r.erreur }, { status: r.status ?? 500 })
   }
-  return NextResponse.json({ success: true, message: 'Email envoyé avec succès', destinataire: r.destinataire })
+  return localizedJson({ success: true, message: 'Email envoyé avec succès', destinataire: r.destinataire })
 }

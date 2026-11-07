@@ -1,10 +1,11 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { PageHeader } from '@/components/PageHeader'
 import { 
   DocumentTextIcon, 
@@ -102,10 +103,10 @@ export default function BonsRegiePage() {
     navigator.clipboard.writeText(publicUrl).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      toast.success('Lien copié dans le presse-papiers');
+      toast.success(tx("Lien copié dans le presse-papiers"));
     }).catch(err => {
       console.error('Erreur lors de la copie du lien:', err);
-      toast.error('Impossible de copier le lien.');
+      toast.error(tx("Impossible de copier le lien."));
     });
   };
 
@@ -177,7 +178,7 @@ export default function BonsRegiePage() {
       // Mettre à jour la liste locale
       setBonsRegie(prev => prev.filter(bon => bon.id !== bonId))
       setBonToDelete(null)
-      toast.success('Bon de régie supprimé avec succès')
+      toast.success(tx("Bon de régie supprimé avec succès"))
     } catch (error) {
       console.error('Erreur lors de la suppression:', error)
       toast.error(error instanceof Error ? error.message : 'Erreur lors de la suppression')
@@ -237,7 +238,7 @@ export default function BonsRegiePage() {
         <div className="flex items-center gap-2">
           <CheckIcon className="h-4 w-4 text-teal-600 dark:text-teal-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Associés</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Associés</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{bonsAssocies}</div>
           </div>
         </div>
@@ -246,7 +247,7 @@ export default function BonsRegiePage() {
         <div className="flex items-center gap-2">
           <LinkIcon className="h-4 w-4 text-teal-600 dark:text-teal-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Non associés</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Non associés</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{bonsNonAssocies}</div>
           </div>
         </div>
@@ -257,8 +258,8 @@ export default function BonsRegiePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-teal-50/20 to-cyan-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Bons de régie"
-        subtitle="Gestion des bons de régie et association aux chantiers"
+        title={tx("Bons de régie")}
+        subtitle={tx("Gestion des bons de régie et association aux chantiers")}
         icon={DocumentTextIcon}
         badgeColor="from-teal-600 via-cyan-600 to-blue-700"
         gradientColor="from-teal-600/10 via-cyan-600/10 to-blue-700/10"
@@ -278,7 +279,7 @@ export default function BonsRegiePage() {
               className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-teal-600 to-cyan-700 hover:from-teal-700 hover:to-cyan-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
             >
               <PlusIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Nouveau bon de régie</span>
+              <span className="hidden sm:inline"><UiText>Nouveau bon de régie</UiText></span>
               <span className="sm:hidden">Nouveau</span>
             </Link>
           </div>
@@ -292,15 +293,15 @@ export default function BonsRegiePage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700 p-12 text-center">
           <DocumentTextIcon className="h-16 w-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-            Aucun bon de régie enregistré
-          </p>
+            <UiText>Aucun bon de régie enregistré
+          </UiText></p>
           <Link
             href="/public/bon-regie"
             className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600"
           >
             <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-            Créer un bon de régie
-          </Link>
+            <UiText>Créer un bon de régie
+          </UiText></Link>
         </div>
       ) : (
         <div className="space-y-4">
@@ -320,9 +321,9 @@ export default function BonsRegiePage() {
                   <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex flex-wrap gap-x-6 gap-y-2">
                       <span>Dates: {bon.dates}</span>
-                      <span>Temps: {bon.tempsChantier || 0}h x {bon.nombreTechniciens || 1} ouvriers</span>
+                      <span>Temps: {bon.tempsChantier || 0}h x {bon.nombreTechniciens || 1} <UiText>ouvriers</UiText></span>
                       <span>
-                        Signé par {bon.nomSignataire} le {format(new Date(bon.dateSignature), 'dd/MM/yyyy', { locale: fr })}
+                        <UiText>Signé par </UiText>{bon.nomSignataire} le {format(new Date(bon.dateSignature), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                       </span>
                     </div>
                   </div>
@@ -333,8 +334,8 @@ export default function BonsRegiePage() {
                     <>
                       <div className="inline-flex items-center px-3 py-1 rounded-md bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 text-sm">
                         <CheckIcon className="h-4 w-4 mr-1" />
-                        Associé à un chantier
-                      </div>
+                        <UiText>Associé à un chantier
+                      </UiText></div>
                       <Link 
                         href={`/chantiers/${bon.chantierId}/documents`}
                         className="inline-flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600"
@@ -353,7 +354,7 @@ export default function BonsRegiePage() {
                               onChange={(e) => setSelectedChantierId(e.target.value)}
                               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
                             >
-                              <option value="">Sélectionner un chantier</option>
+                              <option value=""><UiText>Sélectionner un chantier</UiText></option>
                               {chantiers.map((chantier) => (
                                 <option key={chantier.chantierId} value={chantier.chantierId}>
                                   {chantier.nomChantier}
@@ -381,8 +382,8 @@ export default function BonsRegiePage() {
                           
                           {updateSuccess && (
                             <div className="text-sm text-green-600 dark:text-green-400">
-                              ✅ Association réussie! Le PDF a été généré et ajouté aux documents du chantier.
-                            </div>
+                              <UiText>✅ Association réussie! Le PDF a été généré et ajouté aux documents du chantier.
+                            </UiText></div>
                           )}
                         </div>
                       ) : (
@@ -394,8 +395,8 @@ export default function BonsRegiePage() {
                           className="inline-flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600"
                         >
                           <LinkIcon className="h-4 w-4 mr-1" />
-                          Associer à un chantier
-                        </button>
+                          <UiText>Associer à un chantier
+                        </UiText></button>
                       )}
                     </>
                   )}
@@ -405,14 +406,14 @@ export default function BonsRegiePage() {
                     className="inline-flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600"
                   >
                     <DocumentTextIcon className="h-4 w-4 mr-1" />
-                    Voir détails
-                  </Link>
+                    <UiText>Voir détails
+                  </UiText></Link>
                   
                   {isAdmin && (
                     <button
                       onClick={() => setBonToDelete(bon.id)}
                       className="inline-flex items-center justify-center px-3 py-1 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-gray-700 dark:border-red-600 dark:text-red-400 dark:hover:bg-red-900/20"
-                      title="Supprimer ce bon de régie"
+                      title={tx("Supprimer ce bon de régie")}
                     >
                       <TrashIcon className="h-4 w-4 mr-1" />
                       <UiText>Supprimer</UiText>
@@ -430,11 +431,11 @@ export default function BonsRegiePage() {
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-80 flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full shadow-xl">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              Confirmer la suppression
-            </h3>
+              <UiText>Confirmer la suppression
+            </UiText></h3>
             <p className="text-sm text-gray-500 dark:text-gray-300 mb-6">
-              Êtes-vous sûr de vouloir supprimer ce bon de régie ? Cette action est irréversible.
-            </p>
+              <UiText>Êtes-vous sûr de vouloir supprimer ce bon de régie ? Cette action est irréversible.
+            </UiText></p>
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setBonToDelete(null)}

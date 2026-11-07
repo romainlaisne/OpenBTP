@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Export PDF « Attestation de rappels » d'un sous-traitant sur une période.
 // ?du=AAAA-MM-JJ&au=AAAA-MM-JJ — par défaut : du premier rappel à aujourd'hui.
 
@@ -12,15 +14,16 @@ import { maintenantBruxelles } from '@/lib/checkin/envoi'
 const DATE = /^\d{4}-\d{2}-\d{2}$/
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
-  if (!session?.user) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  if (!session?.user) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
 
   const { id } = await context.params
   const st = await prisma.soustraitant.findUnique({
     where: { id },
     select: { nom: true, tva: true, representantPrenom: true, representantNom: true, representantFonction: true },
   })
-  if (!st) return NextResponse.json({ error: 'Sous-traitant introuvable' }, { status: 404 })
+  if (!st) return localizedJson({ error: 'Sous-traitant introuvable' }, { status: 404 })
 
   const url = new URL(request.url)
   const aujourdhui = maintenantBruxelles().date
@@ -35,7 +38,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     du = premier?.dateRappel || au
   }
   if (!DATE.test(du) || !DATE.test(au)) {
-    return NextResponse.json({ error: 'Dates au format AAAA-MM-JJ' }, { status: 400 })
+    return localizedJson({ error: 'Dates au format AAAA-MM-JJ' }, { status: 400 })
   }
   if (du > au) [du, au] = [au, du]
 

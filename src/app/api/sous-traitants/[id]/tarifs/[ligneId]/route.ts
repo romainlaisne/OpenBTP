@@ -1,7 +1,10 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string; ligneId: string }> }) {
+  await bindRequestLocale()
   const { ligneId } = await params
   const body = await req.json()
 
@@ -16,11 +19,12 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       ...(body.remarques !== undefined && { remarques: body.remarques || null }),
     },
   })
-  return NextResponse.json(ligne)
+  return localizedJson(ligne)
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string; ligneId: string }> }) {
+  await bindRequestLocale()
   const { ligneId } = await params
   await prisma.ligneTarifSousTraitant.delete({ where: { id: ligneId } })
-  return NextResponse.json({ ok: true })
+  return localizedJson({ ok: true })
 }

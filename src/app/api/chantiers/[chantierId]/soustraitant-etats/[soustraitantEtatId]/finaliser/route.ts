@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,11 +10,12 @@ export async function POST(
   request: NextRequest,
   props: { params: Promise<{ chantierId: string; soustraitantEtatId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, soustraitantEtatId } = params
@@ -30,7 +33,7 @@ export async function POST(
     })
 
     if (!existingEtat) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement sous-traitant non trouvé' },
         { status: 404 }
       )
@@ -38,7 +41,7 @@ export async function POST(
 
     // Vérifier si l'état est déjà finalisé
     if (existingEtat.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Cet état d\'avancement est déjà finalisé' },
         { status: 400 }
       )
@@ -103,13 +106,13 @@ export async function POST(
       }
     })
 
-    return NextResponse.json({ 
+    return localizedJson({ 
       success: true,
       newEtatId: newEtat.id
     })
   } catch (error) {
     console.error('Erreur lors de la finalisation:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la finalisation de l\'état d\'avancement' },
       { status: 500 }
     )

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { getServerSession } from 'next-auth';
@@ -39,6 +41,7 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ chantierId: string; id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const resolvedParams = await params
     const { chantierId, id } = resolvedParams
@@ -47,7 +50,7 @@ export async function GET(
 
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -88,7 +91,7 @@ export async function GET(
 
     if (!reception) {
       console.log(`❌ Réception non trouvée: ${id}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Réception non trouvée' },
         { status: 404 }
       )
@@ -97,7 +100,7 @@ export async function GET(
     // Vérifier que la réception appartient bien au chantier demandé
     if (reception.chantierId !== chantierId) {
       console.log(`❌ La réception ${id} n'appartient pas au chantier ${chantierId}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Réception non trouvée' },
         { status: 404 }
       )
@@ -134,11 +137,11 @@ export async function GET(
       }))
     }
 
-    return NextResponse.json(response)
+    return localizedJson(response)
   } catch (error) {
     console.error('❌ Erreur lors de la récupération de la réception:', error)
     console.error('Stack trace:', error instanceof Error ? error.stack : 'N/A')
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la récupération de la réception',
         details: error instanceof Error ? error.message : 'Erreur inconnue'

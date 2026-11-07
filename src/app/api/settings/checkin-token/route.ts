@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Jeton du lien public /checkin/<jeton>.
 //
 // GET  : lien actuel (null si jamais généré)
@@ -19,22 +21,24 @@ function urlDe(jeton: string | null | undefined): string | null {
 }
 
 export async function GET() {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
   if (!session?.user || !ROLES.includes(session.user.role)) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 403 })
   }
   const s = await prisma.companysettings.findFirst({ select: { checkinToken: true } })
-  return NextResponse.json({ url: urlDe(s?.checkinToken) })
+  return localizedJson({ url: urlDe(s?.checkinToken) })
 }
 
 export async function POST() {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
   if (!session?.user || !ROLES.includes(session.user.role)) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 403 })
   }
   const s = await prisma.companysettings.findFirst({ select: { id: true } })
   if (!s) {
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Paramètres société absents : enregistre d’abord la configuration de l’entreprise.' },
       { status: 400 }
     )
@@ -42,5 +46,5 @@ export async function POST() {
   // 24 octets → 48 caractères hexadécimaux : impossible à deviner.
   const jeton = randomBytes(24).toString('hex')
   await prisma.companysettings.update({ where: { id: s.id }, data: { checkinToken: jeton } })
-  return NextResponse.json({ url: urlDe(jeton) })
+  return localizedJson({ url: urlDe(jeton) })
 }

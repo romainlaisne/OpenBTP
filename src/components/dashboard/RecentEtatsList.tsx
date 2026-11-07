@@ -1,5 +1,8 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { ArrowTopRightOnSquareIcon, CurrencyEuroIcon, TableCellsIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
@@ -14,7 +17,7 @@ interface EtatItem {
   etatId?: number
 }
 
-const formatCurrency = (v: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(v)
+const formatCurrency = (v: number) => new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR' }).format(v)
 
 export default function RecentEtatsList() {
   const [items, setItems] = useState<EtatItem[]>([])
@@ -48,14 +51,14 @@ export default function RecentEtatsList() {
             </svg>
           </div>
           <div className="min-w-0">
-            <h3 className="text-lg font-black text-gray-900 dark:text-white">États d'avancement récents</h3>
-            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Derniers éléments enregistrés</p>
+            <h3 className="text-lg font-black text-gray-900 dark:text-white"><UiText>États d'avancement récents</UiText></h3>
+            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium"><UiText>Derniers éléments enregistrés</UiText></p>
           </div>
         </div>
         <Link
           href="/etats-avancement"
           className="flex-shrink-0 p-2 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors"
-          title="Voir le tableau complet des états d'avancement"
+          title={tx("Voir le tableau complet des états d'avancement")}
         >
           <TableCellsIcon className="h-5 w-5" />
         </Link>
@@ -84,8 +87,8 @@ export default function RecentEtatsList() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 font-semibold">Aucun état récent</p>
-            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Les nouveaux états apparaîtront ici</p>
+            <p className="text-gray-600 dark:text-gray-400 font-semibold"><UiText>Aucun état récent</UiText></p>
+            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1"><UiText>Les nouveaux états apparaîtront ici</UiText></p>
           </div>
         ) : (
           <ul className="divide-y-2 divide-gray-200/50 dark:divide-gray-700/50">
@@ -98,7 +101,7 @@ export default function RecentEtatsList() {
                         {it.titre}
                       </span>
                       <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-lg text-xs text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap">
-                        {new Date(it.date).toLocaleDateString('fr-FR')}
+                        {new Date(it.date).toLocaleDateString(intlLocale(getActiveLocale()))}
                       </span>
                     </div>
                     <div className="text-xs text-gray-600 dark:text-gray-400 truncate font-medium">

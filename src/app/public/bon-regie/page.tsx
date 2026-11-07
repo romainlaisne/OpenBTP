@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useRef } from 'react'
 // import { useRouter } from 'next/navigation'
 import SignaturePad, { type SignaturePadHandle } from '@/components/ui/SignaturePad'
@@ -125,8 +127,8 @@ export default function BonRegiePage() {
                 className="mr-4"
               />
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Travaux en Régie
-              </h1>
+                <UiText>Travaux en Régie
+              </UiText></h1>
             </div>
           </div>
           
@@ -140,11 +142,11 @@ export default function BonRegiePage() {
             <div className="bg-green-50 dark:bg-green-900/30 p-6 rounded-lg text-center mb-6">
               <DocumentCheckIcon className="h-16 w-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-green-800 dark:text-green-300 mb-2">
-                Bon de régie enregistré avec succès!
-              </h2>
+                <UiText>Bon de régie enregistré avec succès!
+              </UiText></h2>
               <p className="text-green-600 dark:text-green-400 mb-4">
-                Le bon de régie a été correctement enregistré dans notre système.
-              </p>
+                <UiText>Le bon de régie a été correctement enregistré dans notre système.
+              </UiText></p>
             </div>
           ) : null}
           
@@ -180,8 +182,8 @@ export default function BonRegiePage() {
               
               <div>
                 <label htmlFor="nomChantier" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Chantier
-                </label>
+                  <UiText>Chantier
+                </UiText></label>
                 <input
                   type="text"
                   id="nomChantier"
@@ -194,8 +196,8 @@ export default function BonRegiePage() {
               
               <div className="md:col-span-2">
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Travail réalisé
-                </label>
+                  <UiText>Travail réalisé
+                </UiText></label>
                 <textarea
                   id="description"
                   value={description}
@@ -211,8 +213,8 @@ export default function BonRegiePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="relative">
                   <label htmlFor="tempsChantier" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Temps sur chantier (h)
-                  </label>
+                    <UiText>Temps sur chantier (h)
+                  </UiText></label>
                   <input
                     type="number"
                     id="tempsChantier"
@@ -226,8 +228,8 @@ export default function BonRegiePage() {
                 
                 <div>
                   <label htmlFor="nombreTechniciens" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Nombre d&apos;ouvriers
-                  </label>
+                    <UiText>Nombre d&apos;ouvriers
+                  </UiText></label>
                   <input
                     type="number"
                     id="nombreTechniciens"
@@ -242,15 +244,15 @@ export default function BonRegiePage() {
               
               <div className="mt-4">
                 <label htmlFor="materiaux" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Matériaux utilisés (optionnel)
-                </label>
+                  <UiText>Matériaux utilisés (optionnel)
+                </UiText></label>
                 <textarea
                   id="materiaux"
                   value={materiaux}
                   onChange={(e) => setMateriaux(e.target.value)}
                   rows={3}
                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Décrivez les matériaux utilisés si applicable..."
+                  placeholder={tx("Décrivez les matériaux utilisés si applicable...")}
                 />
               </div>
             </div>

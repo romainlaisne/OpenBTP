@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,17 +9,18 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ soustraitantId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer les paramètres de l'URL
     const { soustraitantId } = await context.params
 
     if (!soustraitantId) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID du sous-traitant manquant' },
         { status: 400 }
       )
@@ -28,16 +31,16 @@ export async function GET(
     })
 
     if (!soustraitant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(soustraitant)
+    return localizedJson(soustraitant)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du sous-traitant' },
       { status: 500 }
     )

@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import useSWR from 'swr'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -31,7 +32,7 @@ export default function SavListPage() {
   )
   if (error) return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-300">Erreur de chargement</div>
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-300"><UiText>Erreur de chargement</UiText></div>
     </div>
   )
 
@@ -73,7 +74,7 @@ export default function SavListPage() {
         <div className="flex items-center gap-2">
           <ArrowTopRightOnSquareIcon className="h-4 w-4 text-red-600 dark:text-red-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">En cours</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>En cours</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{ticketsEnCours}</div>
           </div>
         </div>
@@ -82,7 +83,7 @@ export default function SavListPage() {
         <div className="flex items-center gap-2">
           <CheckCircleIcon className="h-4 w-4 text-red-600 dark:text-red-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Résolus</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Résolus</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{ticketsResolus}</div>
           </div>
         </div>
@@ -93,8 +94,8 @@ export default function SavListPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-red-50/20 to-rose-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Tickets SAV"
-        subtitle="Suivi et gestion des demandes de service"
+        title={tx("Tickets SAV")}
+        subtitle={tx("Suivi et gestion des demandes de service")}
         icon={WrenchScrewdriverIcon}
         badgeColor="from-red-600 via-rose-600 to-pink-700"
         gradientColor="from-red-600/10 via-rose-600/10 to-pink-700/10"
@@ -118,7 +119,7 @@ export default function SavListPage() {
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
               <input
                 type="search"
-                placeholder="Rechercher par titre, numéro, description..."
+                placeholder={tx("Rechercher par titre, numéro, description...")}
                 defaultValue={sp.get('recherche') || ''}
                 onKeyDown={(e)=> { if (e.key==='Enter') setParam('recherche', (e.target as HTMLInputElement).value || undefined) }}
                 className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -140,7 +141,7 @@ export default function SavListPage() {
                 }}
                 className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md px-3 py-2"
               >
-                <option value="">Actifs (sans résolus)</option>
+                <option value=""><UiText>Actifs (sans résolus)</UiText></option>
                 <option value="TOUS">Tous les statuts</option>
                 {Object.values(StatutSAV).map(s => (
                   <option key={s} value={s}>{s}</option>
@@ -149,13 +150,13 @@ export default function SavListPage() {
             </div>
             <div>
               <select defaultValue={sp.get('priorite') || ''} onChange={(e)=> setParam('priorite', e.target.value || undefined)} className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md px-3 py-2">
-                <option value="">Priorité</option>
+                <option value=""><UiText>Priorité</UiText></option>
                 {Object.values(PrioriteSAV).map(p => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
             <div>
               <select defaultValue={sp.get('type') || ''} onChange={(e)=> setParam('type', e.target.value || undefined)} className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md px-3 py-2">
-                <option value="">Type</option>
+                <option value=""><UiText>Type</UiText></option>
                 {Object.values(TypeTicketSAV).map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
@@ -171,8 +172,8 @@ export default function SavListPage() {
               <tr>
                 <th className="text-left p-3">#</th>
                 <th className="text-left p-3">Titre</th>
-                <th className="text-left p-3">Chantier</th>
-                <th className="text-left p-3">Priorité</th>
+                <th className="text-left p-3"><UiText>Chantier</UiText></th>
+                <th className="text-left p-3"><UiText>Priorité</UiText></th>
                 <th className="text-left p-3"><UiText>Statut</UiText></th>
                 <th className="text-right p-3"><UiText>Actions</UiText></th>
               </tr>
@@ -203,24 +204,24 @@ export default function SavListPage() {
                   <td className="p-3 text-right">
                     <div className="inline-flex items-center gap-1">
                       <button
-                        onClick={async ()=>{ if(confirm('Marquer ce ticket comme résolu ?')) { await fetch(`/api/sav/${t.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ statut: 'RESOLU' }) }); router.refresh() } }}
+                        onClick={async ()=>{ if(confirm(tx("Marquer ce ticket comme résolu ?"))) { await fetch(`/api/sav/${t.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ statut: 'RESOLU' }) }); router.refresh() } }}
                         className="h-8 w-8 rounded-lg text-green-600 hover:text-green-700 hover:bg-green-50 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/20"
-                        title="Marquer comme résolu"
-                        aria-label="Marquer comme résolu"
+                        title={tx("Marquer comme résolu")}
+                        aria-label={tx("Marquer comme résolu")}
                       >
                         <CheckCircleIcon className="h-5 w-5 mx-auto" />
                       </button>
                       <button
-                        onClick={async ()=>{ if(confirm('Annuler ce ticket ?')) { await fetch(`/api/sav/${t.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ statut: 'ANNULE' }) }); router.refresh() } }}
+                        onClick={async ()=>{ if(confirm(tx("Annuler ce ticket ?"))) { await fetch(`/api/sav/${t.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ statut: 'ANNULE' }) }); router.refresh() } }}
                         className="h-8 w-8 rounded-lg text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:text-orange-400 dark:hover:text-orange-300 dark:hover:bg-orange-900/20"
-                        title="Annuler"
-                        aria-label="Annuler"
+                        title={tx("Annuler")}
+                        aria-label={tx("Annuler")}
                       >
                         <XCircleIcon className="h-5 w-5 mx-auto" />
                       </button>
                       <button
                         onClick={async ()=>{ 
-                          if(confirm('Supprimer définitivement ce ticket ?')) { 
+                          if(confirm(tx("Supprimer définitivement ce ticket ?"))) { 
                             const response = await fetch(`/api/sav/${t.id}`, { method: 'DELETE' });
                             if (response.ok) {
                               // Revalider les données SWR pour mettre à jour la liste
@@ -229,12 +230,12 @@ export default function SavListPage() {
                           } 
                         }}
                         className="h-8 w-8 rounded-lg text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
-                        title="Supprimer définitivement"
-                        aria-label="Supprimer définitivement"
+                        title={tx("Supprimer définitivement")}
+                        aria-label={tx("Supprimer définitivement")}
                       >
                         <TrashIcon className="h-5 w-5 mx-auto" />
                       </button>
-                      <Link href={`/sav/${t.id}`} className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/20" title="Ouvrir le ticket">
+                      <Link href={`/sav/${t.id}`} className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/20" title={tx("Ouvrir le ticket")}>
                         <ArrowTopRightOnSquareIcon className="h-5 w-5" />
                       </Link>
                     </div>
@@ -246,9 +247,9 @@ export default function SavListPage() {
         </div>
 
         <div className="flex gap-3 justify-end items-center mt-4">
-          <button disabled={meta.page<=1} onClick={()=> router.push(`/sav?page=${meta.page-1}`)} className="px-3 py-1 border rounded disabled:opacity-50">Précédent</button>
+          <button disabled={meta.page<=1} onClick={()=> router.push(`/sav?page=${meta.page-1}`)} className="px-3 py-1 border rounded disabled:opacity-50"><UiText>Précédent</UiText></button>
           <span className="text-sm text-gray-600 dark:text-gray-300">Page {meta.page}/{meta.totalPages}</span>
-          <button disabled={meta.page>=meta.totalPages} onClick={()=> router.push(`/sav?page=${meta.page+1}`)} className="px-3 py-1 border rounded disabled:opacity-50">Suivant</button>
+          <button disabled={meta.page>=meta.totalPages} onClick={()=> router.push(`/sav?page=${meta.page+1}`)} className="px-3 py-1 border rounded disabled:opacity-50"><UiText>Suivant</UiText></button>
         </div>
       </div>
     </div>

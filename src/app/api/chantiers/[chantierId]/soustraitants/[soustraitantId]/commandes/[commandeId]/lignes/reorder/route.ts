@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Réordonnancement des lignes d'une commande sous-traitant.
 //
 // Endpoint dédié plutôt qu'un champ `ordre` ajouté au PUT d'une ligne : celui-ci
@@ -13,11 +15,12 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ chantierId: string; soustraitantId: string; commandeId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const chantier = await prisma.chantier.findUnique({
@@ -25,12 +28,12 @@ export async function PUT(
       select: { id: true },
     })
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     const commandeId = parseInt(params.commandeId, 10)
     if (!Number.isInteger(commandeId)) {
-      return NextResponse.json({ error: 'Commande invalide' }, { status: 400 })
+      return localizedJson({ error: 'Commande invalide' }, { status: 400 })
     }
 
     const commande = await prisma.commandeSousTraitant.findFirst({
@@ -38,13 +41,13 @@ export async function PUT(
       select: { id: true, estVerrouillee: true },
     })
     if (!commande) {
-      return NextResponse.json({ error: 'Commande non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Commande non trouvée' }, { status: 404 })
     }
 
     // Même règle que l'ajout et la suppression de lignes : une commande validée
     // ne bouge plus. Elle a été envoyée au sous-traitant sous cette forme.
     if (commande.estVerrouillee) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible de réordonner les lignes d’une commande validée' },
         { status: 400 }
       )
@@ -53,7 +56,7 @@ export async function PUT(
     const body = await request.json().catch(() => null)
     const recu: unknown[] = Array.isArray(body?.lignes) ? body.lignes : []
     if (recu.length === 0) {
-      return NextResponse.json({ error: 'Aucun ordre fourni' }, { status: 400 })
+      return localizedJson({ error: 'Aucun ordre fourni' }, { status: 400 })
     }
 
     // On n'accepte que des lignes appartenant à CETTE commande : l'ordre vient
@@ -74,7 +77,7 @@ export async function PUT(
     })
 
     if (maj.length !== autorisees.size) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'La liste envoyée ne correspond pas aux lignes de la commande.' },
         { status: 400 }
       )
@@ -89,9 +92,9 @@ export async function PUT(
       )
     )
 
-    return NextResponse.json({ ok: true, lignesReordonnees: maj.length })
+    return localizedJson({ ok: true, lignesReordonnees: maj.length })
   } catch (error) {
     console.error('Erreur lors du réordonnancement des lignes:', error)
-    return NextResponse.json({ error: 'Erreur lors du réordonnancement' }, { status: 500 })
+    return localizedJson({ error: 'Erreur lors du réordonnancement' }, { status: 500 })
   }
 }

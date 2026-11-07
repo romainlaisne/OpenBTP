@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -6,7 +9,7 @@ import puppeteer from 'puppeteer'
 import { generateChoixClientHTML } from '@/lib/pdf/templates/choix-client-template'
 import { sendEmailWithAttachment } from '@/lib/email-sender'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,10 +18,11 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await params
@@ -42,14 +46,14 @@ export async function POST(
     })
 
     if (!choixClient) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Choix client non trouvé' },
         { status: 404 }
       )
     }
 
     if (!choixClient.emailClient) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Aucune adresse email renseignée pour ce client' },
         { status: 400 }
       )
@@ -104,7 +108,8 @@ export async function POST(
     }
 
     // Générer le HTML
-    const html = generateChoixClientHTML(templateData)
+    const __locale = await bindRequestLocale()
+    const html = localizeGeneratedHtml(__locale, generateChoixClientHTML(templateData), collectStrings(templateData))
 
     // Générer le PDF avec Puppeteer
     const browser = await puppeteer.launch({
@@ -142,7 +147,7 @@ export async function POST(
           </p>
           
           <p style="color: #374151; font-size: 16px; line-height: 1.6;">
-            Suite à votre visite du <strong>${format(new Date(choixClient.dateVisite), 'dd MMMM yyyy', { locale: fr })}</strong>, 
+            Suite à votre visite du <strong>${format(new Date(choixClient.dateVisite), 'dd MMMM yyyy', { locale: dateFnsLocale() })}</strong>, 
             vous trouverez ci-joint le récapitulatif complet de vos choix de revêtements.
           </p>
           
@@ -181,14 +186,14 @@ export async function POST(
       ]
     )
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       message: 'Email envoyé avec succès'
     })
 
   } catch (error) {
     console.error('Erreur lors de l\'envoi de l\'email:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'envoi de l\'email' },
       { status: 500 }
     )

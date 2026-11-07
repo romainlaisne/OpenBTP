@@ -1,8 +1,11 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { readPortalSessionFromCookie, unauthorized } from '@/app/public/portail/auth'
 
 export async function GET(request: Request, props: { params: Promise<{ type: 'ouvrier'|'soustraitant'; actorId: string }> }) {
+  await bindRequestLocale()
   const { type, actorId } = await props.params
   const sess = readPortalSessionFromCookie(request.headers.get('cookie'))
   if (!sess) return unauthorized()
@@ -41,6 +44,6 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
       chantier: { select: { chantierId: true, nomChantier: true } }
     }
   })
-  return NextResponse.json(tasks)
+  return localizedJson(tasks)
 }
 

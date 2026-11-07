@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 // Résolution d'entités à partir d'une référence libre fournie par le modèle.
 //
 // ATTENTION aux relations mixtes du schéma :
@@ -209,5 +210,5 @@ export function arrondi2(n: number): number {
 
 /** Formate un montant en euros à la française (ex. 1 234,56 €). */
 export function eur(n: number): string {
-  return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+  return n.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
 }

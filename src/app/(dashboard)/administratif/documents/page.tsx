@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { 
@@ -196,7 +198,7 @@ export default function DocumentsAdministratifsPage() {
   }
 
   const handleDelete = async (documentId: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce document ?')) return
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer ce document ?"))) return
 
     try {
       console.log('🗑️ Suppression du document:', documentId)
@@ -212,7 +214,7 @@ export default function DocumentsAdministratifsPage() {
 
       console.log('✅ Document supprimé avec succès')
       await fetchDocuments()
-      toast.success('Document supprimé avec succès')
+      toast.success(tx("Document supprimé avec succès"))
     } catch (err) {
       console.error('❌ Erreur:', err)
       const errorMessage = err instanceof Error ? err.message : 'Impossible de supprimer le document'
@@ -243,7 +245,7 @@ export default function DocumentsAdministratifsPage() {
         onClick={closePreview}
         role="button"
         tabIndex={-1}
-        aria-label="Fermer la prévisualisation (cliquez ou appuyez sur Échap)"
+        aria-label={tx("Fermer la prévisualisation (cliquez ou appuyez sur Échap)")}
       >
         <div
           className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 max-w-4xl w-full max-h-[90vh] overflow-hidden"
@@ -254,7 +256,7 @@ export default function DocumentsAdministratifsPage() {
             <button
               onClick={closePreview}
               className="flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 touch-manipulation"
-              aria-label="Fermer"
+              aria-label={tx("Fermer")}
             >
               <XMarkIcon className="h-6 w-6" />
             </button>
@@ -281,11 +283,11 @@ export default function DocumentsAdministratifsPage() {
             )}
             {isText && (
               <pre className="whitespace-pre-wrap font-sans text-sm">
-                <p className="text-gray-500">Prévisualisation non disponible pour les fichiers texte</p>
+                <p className="text-gray-500"><UiText>Prévisualisation non disponible pour les fichiers texte</UiText></p>
               </pre>
             )}
             {!isImage && !isPDF && !isText && (
-              <p className="text-gray-500">Prévisualisation non disponible pour ce type de fichier</p>
+              <p className="text-gray-500"><UiText>Prévisualisation non disponible pour ce type de fichier</UiText></p>
             )}
           </div>
           
@@ -370,7 +372,7 @@ export default function DocumentsAdministratifsPage() {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 w-full max-w-lg">
           <div className="mb-4">
             <h3 className="text-xl font-black text-gray-900 dark:text-white mb-1">{modalTitle}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Sélectionnez des tags existants ou ajoutez-en de nouveaux.</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400"><UiText>Sélectionnez des tags existants ou ajoutez-en de nouveaux.</UiText></p>
           </div>
 
           <div className="mb-4">
@@ -392,12 +394,12 @@ export default function DocumentsAdministratifsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-gray-500 dark:text-gray-400 italic">Aucun tag disponible.</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 italic"><UiText>Aucun tag disponible.</UiText></p>
             )}
           </div>
 
           <div className="mb-4">
-            <label htmlFor="new-tag-modal" className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Ajouter un nouveau tag :</label>
+            <label htmlFor="new-tag-modal" className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"><UiText>Ajouter un nouveau tag :</UiText></label>
             <div className="flex gap-2">
               <input 
                 type="text"
@@ -406,7 +408,7 @@ export default function DocumentsAdministratifsPage() {
                 onChange={(e) => setNewTagInput(e.target.value)}
                 onKeyPress={(e) => { if (e.key === 'Enter') handleAddNewTagToModal(); }}
                 className="flex-grow block w-full px-4 py-2.5 border-2 border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm dark:bg-gray-700 dark:text-gray-200 transition-all duration-200"
-                placeholder="Nom du tag"
+                placeholder={tx("Nom du tag")}
               />
               <button 
                 onClick={handleAddNewTagToModal}
@@ -431,7 +433,7 @@ export default function DocumentsAdministratifsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-gray-500 dark:text-gray-400 italic">Aucun tag sélectionné.</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 italic"><UiText>Aucun tag sélectionné.</UiText></p>
             )}
           </div>
 
@@ -505,8 +507,8 @@ export default function DocumentsAdministratifsPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
         <PageHeader
-          title="Documents Administratifs"
-          subtitle="Gérez les documents administratifs de l'entreprise"
+          title={tx("Documents Administratifs")}
+          subtitle={tx("Gérez les documents administratifs de l'entreprise")}
           icon={DocumentTextIcon}
           badgeColor="from-purple-600 via-indigo-600 to-pink-700"
           gradientColor="from-purple-600/10 via-indigo-600/10 to-pink-700/10"
@@ -523,8 +525,8 @@ export default function DocumentsAdministratifsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Documents Administratifs"
-        subtitle="Gérez les documents administratifs de l'entreprise"
+        title={tx("Documents Administratifs")}
+        subtitle={tx("Gérez les documents administratifs de l'entreprise")}
         icon={DocumentTextIcon}
         badgeColor="from-purple-600 via-indigo-600 to-pink-700"
         gradientColor="from-purple-600/10 via-indigo-600/10 to-pink-700/10"
@@ -545,7 +547,7 @@ export default function DocumentsAdministratifsPage() {
               }`}
             >
               <ArrowUpTrayIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Ajouter un document</span>
+              <span className="hidden sm:inline"><UiText>Ajouter un document</UiText></span>
               <span className="sm:hidden"><UiText>Ajouter</UiText></span>
             </label>
           </div>
@@ -559,21 +561,21 @@ export default function DocumentsAdministratifsPage() {
         <div className="mb-6 flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <label htmlFor="search-doc" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Rechercher par nom
-            </label>
+              <UiText>Rechercher par nom
+            </UiText></label>
             <input 
               type="text"
               id="search-doc"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="block w-full px-4 py-2.5 border-2 border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm dark:bg-gray-700 dark:text-gray-200 transition-all duration-200"
-              placeholder="Nom du document..."
+              placeholder={tx("Nom du document...")}
             />
           </div>
           <div className="flex-1">
             <label htmlFor="tag-filter" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Filtrer par tag
-            </label>
+              <UiText>Filtrer par tag
+            </UiText></label>
             <select 
               id="tag-filter"
               value={selectedTagFilter}
@@ -611,7 +613,7 @@ export default function DocumentsAdministratifsPage() {
               <li className="px-6 py-12 text-center">
                 <FolderIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400 font-medium">
-                  Aucun document administratif disponible {selectedTagFilter && `avec le tag "${selectedTagFilter}"`} {searchTerm && `contenant "${searchTerm}"`}.
+                  <UiText>Aucun document administratif disponible </UiText>{selectedTagFilter && `avec le tag "${selectedTagFilter}"`} {searchTerm && `contenant "${searchTerm}"`}.
                 </p>
               </li>
             ) : (
@@ -627,7 +629,7 @@ export default function DocumentsAdministratifsPage() {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{doc.nom}</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {formatFileSize(doc.taille)} • {new Date(doc.dateUpload).toLocaleDateString('fr-FR')}
+                          {formatFileSize(doc.taille)} • {new Date(doc.dateUpload).toLocaleDateString(intlLocale(getActiveLocale()))}
                           {doc.uploadedBy && <span className="italic"> • Par: {doc.uploadedBy}</span>}
                         </p>
                         {doc.tags && doc.tags.length > 0 && (
@@ -645,14 +647,14 @@ export default function DocumentsAdministratifsPage() {
                       <button
                         onClick={() => openEditTagsModal(doc)}
                         className="p-2 rounded-lg text-gray-500 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200"
-                        title="Modifier les tags"
+                        title={tx("Modifier les tags")}
                       >
                         <PencilSquareIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handlePreview(doc)}
                         className="p-2 rounded-lg text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200"
-                        title="Prévisualiser"
+                        title={tx("Prévisualiser")}
                       >
                         <EyeIcon className="h-5 w-5" />
                       </button>
@@ -661,14 +663,14 @@ export default function DocumentsAdministratifsPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-2 rounded-lg text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-200"
-                        title="Télécharger"
+                        title={tx("Télécharger")}
                       >
                         <ArrowDownTrayIcon className="h-5 w-5" />
                       </a>
                       <button
                         onClick={() => handleDelete(doc.id)}
                         className="p-2 rounded-lg text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
-                        title="Supprimer"
+                        title={tx("Supprimer")}
                       >
                         <TrashIcon className="h-5 w-5" />
                       </button>

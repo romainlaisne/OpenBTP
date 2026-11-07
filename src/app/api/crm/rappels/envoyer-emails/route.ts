@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -9,7 +12,7 @@ import { societeEmail } from '@/lib/email/societe'
 export const dynamic = 'force-dynamic'
 
 function formatDate(date: Date): string {
-  return date.toLocaleDateString('fr-FR', {
+  return date.toLocaleDateString(intlLocale(getActiveLocale()), {
     day:   '2-digit',
     month: '2-digit',
     year:  'numeric',
@@ -42,13 +45,14 @@ function buildEmailHtml(params: {
 
 // POST /api/crm/rappels/envoyer-emails - Envoi des rappels échus par email
 export async function POST() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     // Fin de la journée courante
@@ -98,10 +102,10 @@ export async function POST() {
       }
     }
 
-    return NextResponse.json({ success: true, sent })
+    return localizedJson({ success: true, sent })
   } catch (error) {
     console.error('Erreur POST /api/crm/rappels/envoyer-emails:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Erreur lors de l'envoi des emails de rappel" },
       { status: 500 }
     )

@@ -1,9 +1,11 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 // import { useSession } from 'next-auth/react'
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 
 interface Note {
   id: number
@@ -168,7 +170,7 @@ export function NotesContent({ chantierId, debug = false }: NotesContentProps) {
           type="text"
           value={newNote}
           onChange={(e) => setNewNote(e.target.value)}
-          placeholder="Ajouter une note..."
+          placeholder={tx("Ajouter une note...")}
           className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
@@ -179,7 +181,7 @@ export function NotesContent({ chantierId, debug = false }: NotesContentProps) {
         <button
           onClick={handleAddNote}
           className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-sm"
-          title="Ajouter une note"
+          title={tx("Ajouter une note")}
         >
           <PlusIcon className="w-5 h-5" />
         </button>
@@ -190,7 +192,7 @@ export function NotesContent({ chantierId, debug = false }: NotesContentProps) {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
-          <p className="text-gray-500 dark:text-gray-400">Aucune note pour ce chantier</p>
+          <p className="text-gray-500 dark:text-gray-400"><UiText>Aucune note pour ce chantier</UiText></p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -201,7 +203,7 @@ export function NotesContent({ chantierId, debug = false }: NotesContentProps) {
                 <button
                   onClick={() => handleDeleteNote(note.id)}
                   className="p-1.5 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                  title="Supprimer cette note"
+                  title={tx("Supprimer cette note")}
                 >
                   <TrashIcon className="w-5 h-5" />
                 </button>
@@ -215,7 +217,7 @@ export function NotesContent({ chantierId, debug = false }: NotesContentProps) {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                {format(new Date(note.createdAt), 'dd MMMM yyyy à HH:mm', { locale: fr })}
+                {format(new Date(note.createdAt), 'dd MMMM yyyy à HH:mm', { locale: dateFnsLocale() })}
               </div>
             </div>
           ))}
@@ -226,23 +228,23 @@ export function NotesContent({ chantierId, debug = false }: NotesContentProps) {
       {noteToDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full mx-4 border border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-gray-100">Confirmer la suppression</h3>
+            <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-gray-100"><UiText>Confirmer la suppression</UiText></h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Êtes-vous sûr de vouloir supprimer cette note ?
-            </p>
+              <UiText>Êtes-vous sûr de vouloir supprimer cette note ?
+            </UiText></p>
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setNoteToDelete(null)}
                 className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 onClick={confirmDelete}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-600 transition-colors shadow-sm"
               >
-                Supprimer
-              </button>
+                <UiText>Supprimer
+              </UiText></button>
             </div>
           </div>
         </div>

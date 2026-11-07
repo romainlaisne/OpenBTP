@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 // Liste filtrable des chantiers pour le check-in. Mobile d'abord : la plupart
 // des consultations se font depuis un téléphone, sur le chantier, juste avant
 // de s'enregistrer — d'où le numéro en gros et le bouton « Copier ».
@@ -69,13 +71,13 @@ export default function CheckinListe({ chantiers, miseAJour }: { chantiers: Chan
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Avertissement : c'est l'objet même de la page, il reste visible en haut */}
       <div className="bg-red-600 px-4 py-3 text-center text-sm font-semibold text-white">
-        Toute personne non enregistrée n&apos;est pas autorisée sur chantier.
-        <span className="block font-normal opacity-90">
+        <UiText>Toute personne non enregistrée n&apos;est pas autorisée sur chantier.
+        </UiText><span className="block font-normal opacity-90">
           Qualquer pessoa não registada não está autorizada na obra.
         </span>
         <span className="block font-normal opacity-90">
-          Orice persoană neînregistrată nu are acces pe șantier.
-        </span>
+          <UiText>Orice persoană neînregistrată nu are acces pe șantier.
+        </UiText></span>
         <span className="block font-normal opacity-90">
           Any unregistered person is not allowed on site.
         </span>
@@ -84,9 +86,9 @@ export default function CheckinListe({ chantiers, miseAJour }: { chantiers: Chan
       <header className="mx-auto max-w-5xl px-4 pt-5 pb-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-xl font-bold">Chantiers Secotech – Checkinatwork</h1>
+            <h1 className="text-xl font-bold"><UiText>Chantiers Secotech – Checkinatwork</UiText></h1>
             <p className="text-xs text-gray-500">
-              Numéros d&apos;enregistrement des présences · Números de registo · Mis à jour le {miseAJour}
+              <UiText>Numéros d&apos;enregistrement des présences · Números de registo · Mis à jour le </UiText>{miseAJour}
             </p>
           </div>
           <a
@@ -95,8 +97,8 @@ export default function CheckinListe({ chantiers, miseAJour }: { chantiers: Chan
             rel="noopener noreferrer"
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
-            Ouvrir Checkinatwork
-          </a>
+            <UiText>Ouvrir Checkinatwork
+          </UiText></a>
         </div>
 
         {/* Guide de bonnes pratiques Secotech, dans la langue de chacun */}
@@ -124,7 +126,7 @@ export default function CheckinListe({ chantiers, miseAJour }: { chantiers: Chan
             type="search"
             value={recherche}
             onChange={(e) => setRecherche(e.target.value)}
-            placeholder="Rechercher / Pesquisar…"
+            placeholder={tx("Rechercher / Pesquisar…")}
             className={`${champ} sm:col-span-4`}
           />
           <select value={client} onChange={(e) => setClient(e.target.value)} className={champ}>
@@ -134,7 +136,7 @@ export default function CheckinListe({ chantiers, miseAJour }: { chantiers: Chan
             ))}
           </select>
           <select value={localite} onChange={(e) => setLocalite(e.target.value)} className={champ}>
-            <option value="">Toutes les localités / Todas as localidades</option>
+            <option value=""><UiText>Toutes les localités / Todas as localidades</UiText></option>
             {localites.map((l) => (
               <option key={l} value={l}>{l}</option>
             ))}
@@ -147,15 +149,15 @@ export default function CheckinListe({ chantiers, miseAJour }: { chantiers: Chan
           </select>
         </div>
         <p className="mt-2 text-xs text-gray-500">
-          {filtres.length} chantier{filtres.length > 1 ? 's' : ''} sur {chantiers.length}
+          {filtres.length} <UiText>chantier</UiText>{filtres.length > 1 ? 's' : ''} sur {chantiers.length}
         </p>
       </header>
 
       <main className="mx-auto max-w-5xl px-4 pb-10">
         {filtres.length === 0 ? (
           <p className="rounded-lg bg-white p-6 text-center text-sm text-gray-500 shadow-sm">
-            Aucun chantier ne correspond à la recherche.
-          </p>
+            <UiText>Aucun chantier ne correspond à la recherche.
+          </UiText></p>
         ) : (
           <ul className="space-y-3">
             {filtres.map((c) => {
@@ -169,8 +171,8 @@ export default function CheckinListe({ chantiers, miseAJour }: { chantiers: Chan
                         <p className="font-mono text-2xl font-bold tracking-wide text-blue-800 break-all">{c.numero}</p>
                       ) : (
                         <p className="text-sm font-semibold text-amber-700">
-                          Numéro non encore communiqué – contactez Secotech
-                          <span className="block font-normal">Número ainda não comunicado – contacte a Secotech</span>
+                          <UiText>Numéro non encore communiqué – contactez Secotech
+                          </UiText><span className="block font-normal">Número ainda não comunicado – contacte a Secotech</span>
                         </p>
                       )}
                       <p className="mt-1 text-base font-semibold">{c.chantier}</p>
@@ -200,8 +202,8 @@ export default function CheckinListe({ chantiers, miseAJour }: { chantiers: Chan
                         rel="noopener noreferrer"
                         className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
                       >
-                        Itinéraire
-                      </a>
+                        <UiText>Itinéraire
+                      </UiText></a>
                     )}
                   </div>
                 </li>

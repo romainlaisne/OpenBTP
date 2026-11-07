@@ -1,9 +1,8 @@
 'use client'
-
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeftIcon, WrenchScrewdriverIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
-import { PortalI18nProvider, usePortalI18n } from '../../../i18n'
+import { PortalI18nProvider, portalIntlLocale, usePortalI18n } from '../../../i18n'
 
 type Ticket = { id: string; numTicket: string; titre: string; description?: string; priorite: string; statut: string; dateDemande: string }
 
@@ -53,7 +52,7 @@ function InnerPage(props: { params: { type: 'ouvrier'|'soustraitant'; actorId: s
                 <div className="flex items-start">
                   <div className="flex-1">
                     {/* En-tête avec numéro et date */}
-                    <div className="text-xs text-gray-500 mb-1">{tk.numTicket} • {new Date(tk.dateDemande).toLocaleDateString('fr-FR')}</div>
+                    <div className="text-xs text-gray-500 mb-1">{tk.numTicket} • {new Date(tk.dateDemande).toLocaleDateString(portalIntlLocale(lang))}</div>
                     
                     {/* Titre du problème */}
                     <div className="font-semibold text-gray-900 mb-2 text-sm leading-tight">{tk.titre}</div>

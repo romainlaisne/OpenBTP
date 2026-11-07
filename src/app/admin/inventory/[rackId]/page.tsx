@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -234,7 +235,7 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
       {loading ? (
         <div className="text-center py-10">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-          <p className="mt-2">Chargement du rack...</p>
+          <p className="mt-2"><UiText>Chargement du rack...</UiText></p>
         </div>
       ) : rack ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -260,7 +261,7 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
                   <p className="font-medium">{rack.emplacements.length}</p>
                 </div>
                 <div>
-                  <span className="text-gray-500">Emplacements occupés:</span>
+                  <span className="text-gray-500"><UiText>Emplacements occupés:</UiText></span>
                   <p className="font-medium">
                     {rack.emplacements.filter(e => e.statut === 'occupé').length} / {rack.emplacements.length}
                   </p>
@@ -269,7 +270,7 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
               
               {/* Ajouter un matériau */}
               <div className="mt-8">
-                <h3 className="text-lg font-medium mb-3">Ajouter un matériau</h3>
+                <h3 className="text-lg font-medium mb-3"><UiText>Ajouter un matériau</UiText></h3>
                 {selectedEmplacement ? (
                   <form onSubmit={handleAddMateriau}>
                     {formError && (
@@ -280,8 +281,8 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
                     <div className="space-y-4">
                       <div>
                         <label htmlFor="nom" className="block text-sm font-medium text-gray-700">
-                          Nom du matériau
-                        </label>
+                          <UiText>Nom du matériau
+                        </UiText></label>
                         <input
                           type="text"
                           id="nom"
@@ -293,8 +294,8 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
                       </div>
                       <div>
                         <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                          Description
-                        </label>
+                          <UiText>Description
+                        </UiText></label>
                         <textarea
                           id="description"
                           value={materiauData.description}
@@ -305,8 +306,8 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
                       </div>
                       <div>
                         <label htmlFor="quantite" className="block text-sm font-medium text-gray-700">
-                          Quantité
-                        </label>
+                          <UiText>Quantité
+                        </UiText></label>
                         <input
                           type="number"
                           id="quantite"
@@ -333,8 +334,8 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
                   </form>
                 ) : (
                   <div className="text-gray-500 text-sm">
-                    Sélectionnez un emplacement libre dans la visualisation du rack pour ajouter un matériau.
-                  </div>
+                    <UiText>Sélectionnez un emplacement libre dans la visualisation du rack pour ajouter un matériau.
+                  </UiText></div>
                 )}
               </div>
             </div>
@@ -343,7 +344,7 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
           {/* Visualisation du rack */}
           <div className="lg:col-span-2">
             <div className="bg-white shadow-md rounded p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4">Visualisation du rack</h2>
+              <h2 className="text-xl font-semibold mb-4"><UiText>Visualisation du rack</UiText></h2>
               <div className="overflow-auto">
                 {renderRackVisualization()}
               </div>
@@ -354,18 +355,18 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-red-500 border border-gray-300 mr-2"></div>
-                  <span className="text-sm">Occupé</span>
+                  <span className="text-sm"><UiText>Occupé</UiText></span>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-blue-500 border border-gray-300 mr-2"></div>
-                  <span className="text-sm">Sélectionné</span>
+                  <span className="text-sm"><UiText>Sélectionné</UiText></span>
                 </div>
               </div>
             </div>
             
             {/* Liste des matériaux dans ce rack */}
             <div className="bg-white shadow-md rounded p-6">
-              <h2 className="text-xl font-semibold mb-4">Matériaux dans ce rack</h2>
+              <h2 className="text-xl font-semibold mb-4"><UiText>Matériaux dans ce rack</UiText></h2>
               {rack.emplacements.some(e => e.statut === 'occupé') ? (
                 <div className="space-y-4">
                   {rack.emplacements
@@ -380,23 +381,23 @@ export default function RackDetailPage(props: { params: Promise<{ rackId: string
                         </div>
                         <p className="text-sm text-gray-600">{e.materiaux[0].description || 'Aucune description'}</p>
                         <p className="text-sm mt-1">
-                          <span className="font-medium">Quantité:</span> {typeof e.materiaux[0].quantite === 'number' ? e.materiaux[0].quantite.toFixed(2) : e.materiaux[0].quantite}
+                          <span className="font-medium"><UiText>Quantité:</UiText></span> {typeof e.materiaux[0].quantite === 'number' ? e.materiaux[0].quantite.toFixed(2) : e.materiaux[0].quantite}
                         </p>
                       </div>
                     ))}
                 </div>
               ) : (
-                <p className="text-gray-500">Aucun matériau n&apos;a été ajouté à ce rack.</p>
+                <p className="text-gray-500"><UiText>Aucun matériau n&apos;a été ajouté à ce rack.</UiText></p>
               )}
             </div>
           </div>
         </div>
       ) : (
         <div className="text-center py-10">
-          <p className="text-lg text-gray-600">Rack non trouvé.</p>
+          <p className="text-lg text-gray-600"><UiText>Rack non trouvé.</UiText></p>
           <Link href="/admin/inventory" className="mt-4 inline-block text-blue-500 hover:underline">
-            Retour à la liste des racks
-          </Link>
+            <UiText>Retour à la liste des racks
+          </UiText></Link>
         </div>
       )}
     </div>

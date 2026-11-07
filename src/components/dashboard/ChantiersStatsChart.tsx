@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import type { ChartData, ChartOptions, TooltipItem } from 'chart.js'
@@ -26,7 +28,7 @@ interface EvolutionResponse {
 }
 
 const formatCurrency = (value: number = 0) =>
-  new Intl.NumberFormat('fr-FR', {
+  new Intl.NumberFormat(intlLocale(getActiveLocale()), {
     style: 'currency',
     currency: 'EUR',
     maximumFractionDigits: 0
@@ -203,12 +205,12 @@ export default function ChantiersStatsChart() {
               <ChartBarIcon className="h-4 w-4 text-white" />
             </div>
             <h3 className="text-lg font-black text-gray-900 dark:text-white">
-              Évolution des états d'avancement
-            </h3>
+              <UiText>Évolution des états d'avancement
+            </UiText></h3>
           </div>
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
-            Montants validés sur les 12 derniers mois
-          </p>
+            <UiText>Montants validés sur les 12 derniers mois
+          </UiText></p>
         </div>
         <button
           type="button"
@@ -225,16 +227,16 @@ export default function ChantiersStatsChart() {
         <div className="bg-orange-500/10 dark:bg-orange-500/20 border border-orange-500/20 rounded-xl px-4 py-3">
           <div className="text-xs font-semibold text-orange-600 dark:text-orange-300 uppercase tracking-wide flex items-center gap-2">
             <ArrowTrendingUpIcon className="h-4 w-4" />
-            Total 12 mois
-          </div>
+            <UiText>Total 12 mois
+          </UiText></div>
           <div className="text-lg font-black text-gray-900 dark:text-white mt-2">
             {formatCurrency(totals.total)}
           </div>
         </div>
         <div className="bg-slate-100/80 dark:bg-slate-700/40 border border-slate-200/50 dark:border-slate-600/60 rounded-xl px-4 py-3">
           <div className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wide">
-            Dernier mois
-          </div>
+            <UiText>Dernier mois
+          </UiText></div>
           <div className="text-lg font-bold text-gray-900 dark:text-white mt-2">
             {formatCurrency(totals.lastMonth)}
           </div>
@@ -262,15 +264,15 @@ export default function ChantiersStatsChart() {
                 className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md hover:shadow-lg transition-all"
               >
                 <ArrowPathIcon className="h-4 w-4" />
-                Réessayer
-              </button>
+                <UiText>Réessayer
+              </UiText></button>
             </div>
           ) : chartData ? (
             <Line data={chartData} options={lineOptions} />
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center text-sm text-gray-500 dark:text-gray-400 gap-2">
               <ChartBarIcon className="h-12 w-12 text-gray-400 dark:text-gray-600" />
-              <p>Aucune donnée disponible pour le moment</p>
+              <p><UiText>Aucune donnée disponible pour le moment</UiText></p>
             </div>
           )}
         </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useSelectedChantier } from '@/contexts/SelectedChantierContext'
@@ -98,7 +99,7 @@ export default function MobileNouvelleNotePage() {
             <textarea
               value={contenu}
               onChange={(e) => setContenu(e.target.value)}
-              placeholder="Saisissez votre note..."
+              placeholder={tx("Saisissez votre note...")}
               rows={12}
               className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               autoFocus

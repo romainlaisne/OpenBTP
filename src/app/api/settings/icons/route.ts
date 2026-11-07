@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -6,10 +8,11 @@ import path from 'path'
 import sharp from 'sharp'
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -20,11 +23,11 @@ export async function POST(request: Request) {
     const type = formData.get('type') as string // 'desktop' ou 'mobile'
 
     if (!file) {
-      return NextResponse.json({ error: 'Aucun fichier fourni' }, { status: 400 })
+      return localizedJson({ error: 'Aucun fichier fourni' }, { status: 400 })
     }
 
     if (!type || (type !== 'desktop' && type !== 'mobile')) {
-      return NextResponse.json({ error: 'Type invalide (doit être "desktop" ou "mobile")' }, { status: 400 })
+      return localizedJson({ error: 'Type invalide (doit être "desktop" ou "mobile")' }, { status: 400 })
     }
 
     const bytes = await file.arrayBuffer()
@@ -112,21 +115,21 @@ export async function POST(request: Request) {
         const sourceFilename = type === 'desktop' ? 'icon-desktop-source.png' : 'icon-mobile-source.png'
         await writeFile(path.join(iconsDir, sourceFilename), buffer)
 
-        return NextResponse.json({ 
+        return localizedJson({ 
           success: true,
           message: `Icône ${type} uploadée et traitée avec succès`,
           url: `/images/icons/${type === 'desktop' ? 'favicon-192.png' : 'apple-touch-icon.png'}`
         })
     } catch (error) {
       console.error('Erreur lors du traitement de l\'image:', error)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Erreur lors du traitement de l\'image' },
         { status: 500 }
       )
     }
   } catch (error) {
     console.error('Erreur lors de l\'upload de l\'icône:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'upload de l\'icône' },
       { status: 500 }
     )

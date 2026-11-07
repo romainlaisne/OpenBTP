@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,13 +10,14 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string; commandeId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     console.log('📊 Début export Excel commande')
     
     const session = await getServerSession(authOptions)
     if (!session) {
       console.log('❌ Session non autorisée')
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, commandeId } = await context.params
@@ -36,7 +39,7 @@ export async function GET(
 
     if (!chantier) {
       console.log(`❌ Chantier ${chantierId} non trouvé`)
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
     console.log(`✅ Chantier trouvé: ${chantier.nomChantier}`)
 
@@ -58,7 +61,7 @@ export async function GET(
 
     if (!commande) {
       console.log(`❌ Commande ${commandeId} non trouvée`)
-      return NextResponse.json({ error: 'Commande non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Commande non trouvée' }, { status: 404 })
     }
     console.log(`✅ Commande trouvée: ${commande.lignes.length} lignes`)
 
@@ -124,7 +127,7 @@ export async function GET(
     
     console.error('📋 Détails de l\'erreur:', errorDetails)
     
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de l\'export Excel',
         details: errorDetails.message 

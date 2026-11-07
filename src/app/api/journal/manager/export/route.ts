@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -6,15 +9,16 @@ import ExcelJS from 'exceljs'
 
 // GET - Export Excel du journal
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Vérifier que l'utilisateur est manager ou admin
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -87,7 +91,7 @@ export async function GET(request: Request) {
     journalEntries.forEach(entry => {
       const photos = entry.photos ? JSON.parse(entry.photos as string) : []
       worksheet.addRow({
-        date: entry.date.toLocaleDateString('fr-FR'),
+        date: entry.date.toLocaleDateString(intlLocale(getActiveLocale())),
         ouvrier: `${entry.ouvrier.prenom} ${entry.ouvrier.nom}`,
         heureDebut: entry.heureDebut,
         heureFin: entry.heureFin,
@@ -122,7 +126,7 @@ export async function GET(request: Request) {
     })
   } catch (error) {
     console.error('Erreur lors de l\'export Excel:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'export Excel' },
       { status: 500 }
     )

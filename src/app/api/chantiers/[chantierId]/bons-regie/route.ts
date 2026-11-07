@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 
@@ -6,6 +8,7 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { chantierId } = await params
     
@@ -28,7 +31,7 @@ export async function GET(
       ORDER BY createdAt DESC
     `;
     
-    return NextResponse.json(bonsRegie)
+    return localizedJson(bonsRegie)
   } catch (error) {
     console.error('Erreur lors de la récupération des bons de régie du chantier:', error)
     return new NextResponse(

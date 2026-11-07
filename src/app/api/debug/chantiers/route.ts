@@ -1,13 +1,16 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -33,7 +36,7 @@ export async function GET() {
     const chantiersSansDate = chantiers.filter(c => !c.dateCommencement)
     const chantiersAvecDuree = chantiers.filter(c => c.dureeEnJours)
 
-    return NextResponse.json({
+    return localizedJson({
       total: chantiers.length,
       avecDate: chantiersAvecDate.length,
       sansDate: chantiersSansDate.length,
@@ -49,7 +52,7 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des données de débogage' },
       { status: 500 }
     )

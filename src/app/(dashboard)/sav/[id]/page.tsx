@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import {
@@ -146,7 +147,7 @@ export default function SavDetailPage() {
           <button
             onClick={() => router.push('/sav')}
             className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-            title="Retour à la liste des tickets SAV"
+            title={tx("Retour à la liste des tickets SAV")}
           >
             <ArrowLeftIcon className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
@@ -242,7 +243,7 @@ export default function SavDetailPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm mb-1">Sous-traitant</label>
+              <label className="block text-sm mb-1"><UiText>Sous-traitant</UiText></label>
               <div className="flex gap-2">
                 <select
                   className="flex-1 p-2 border rounded bg-white"
@@ -259,25 +260,25 @@ export default function SavDetailPage() {
               <input name="localisation" value={form.localisation} onChange={onChangeForm} className="w-full p-2 border rounded bg-white" placeholder="Localisation" />
             </div>
             <div>
-              <label className="block text-sm mb-1">Adresse d'intervention</label>
-              <input name="adresseIntervention" value={form.adresseIntervention} onChange={onChangeForm} className="w-full p-2 border rounded bg-white" placeholder="Adresse" />
+              <label className="block text-sm mb-1"><UiText>Adresse d'intervention</UiText></label>
+              <input name="adresseIntervention" value={form.adresseIntervention} onChange={onChangeForm} className="w-full p-2 border rounded bg-white" placeholder={tx("Adresse")} />
             </div>
             <div>
               <label className="block text-sm mb-1">Contact - Nom</label>
-              <input name="contactNom" value={form.contactNom} onChange={onChangeForm} className="w-full p-2 border rounded bg-white" placeholder="Nom du contact" />
+              <input name="contactNom" value={form.contactNom} onChange={onChangeForm} className="w-full p-2 border rounded bg-white" placeholder={tx("Nom du contact")} />
             </div>
             <div>
-              <label className="block text-sm mb-1">Contact - Téléphone</label>
-              <input name="contactTelephone" value={form.contactTelephone} onChange={onChangeForm} className="w-full p-2 border rounded bg-white" placeholder="Téléphone" />
+              <label className="block text-sm mb-1"><UiText>Contact - Téléphone</UiText></label>
+              <input name="contactTelephone" value={form.contactTelephone} onChange={onChangeForm} className="w-full p-2 border rounded bg-white" placeholder={tx("Téléphone")} />
             </div>
             <div>
               <label className="block text-sm mb-1">Contact - Email</label>
-              <input name="contactEmail" value={form.contactEmail} onChange={onChangeForm} className="w-full p-2 border rounded bg-white" placeholder="Email" />
+              <input name="contactEmail" value={form.contactEmail} onChange={onChangeForm} className="w-full p-2 border rounded bg-white" placeholder={tx("Email")} />
             </div>
           </div>
           <div>
             <label className="block text-sm mb-1"><UiText>Description</UiText></label>
-            <textarea name="description" value={form.description} onChange={onChangeForm} rows={4} className="w-full p-2 border rounded bg-white" placeholder="Description" />
+            <textarea name="description" value={form.description} onChange={onChangeForm} rows={4} className="w-full p-2 border rounded bg-white" placeholder={tx("Description")} />
           </div>
         </div>
       )}
@@ -285,7 +286,7 @@ export default function SavDetailPage() {
       {tab==='interventions' && (
         <div>
           {ticket.interventions?.length === 0 ? (
-            <div className="text-gray-500">Aucune intervention</div>
+            <div className="text-gray-500"><UiText>Aucune intervention</UiText></div>
           ) : (
             <div className="space-y-3">
               {ticket.interventions.map((i)=>(
@@ -298,7 +299,7 @@ export default function SavDetailPage() {
             </div>
           )}
           <div className="mt-4 p-3 border rounded">
-            <div className="font-medium mb-2">Ajouter une intervention</div>
+            <div className="font-medium mb-2"><UiText>Ajouter une intervention</UiText></div>
             <form onSubmit={async(e)=>{
               e.preventDefault()
               const form = e.target as HTMLFormElement
@@ -317,10 +318,10 @@ export default function SavDetailPage() {
             }}>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                 <input name="titre" required placeholder="Titre" className="p-2 border rounded" />
-                <input name="technicienId" required placeholder="Technicien ID" className="p-2 border rounded" />
+                <input name="technicienId" required placeholder={tx("Technicien ID")} className="p-2 border rounded" />
                 <input name="dateDebut" type="datetime-local" required className="p-2 border rounded" />
                 <input name="dateFin" type="datetime-local" className="p-2 border rounded" />
-                <input name="description" placeholder="Description" className="p-2 border rounded md:col-span-4" />
+                <input name="description" placeholder={tx("Description")} className="p-2 border rounded md:col-span-4" />
               </div>
               <div className="mt-2 text-right"><button className="px-3 py-2 bg-blue-600 text-white rounded"><UiText>Ajouter</UiText></button></div>
             </form>
@@ -339,14 +340,14 @@ export default function SavDetailPage() {
                     <span>{d.nom}</span>
                   </div>
                   <a href={d.url} target="_blank" className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700">
-                    Ouvrir <ArrowTopRightOnSquareIcon className="h-4 w-4"/>
+                    <UiText>Ouvrir </UiText><ArrowTopRightOnSquareIcon className="h-4 w-4"/>
                   </a>
                 </div>
               ))}
             </div>
-          ) : <div className="text-gray-500">Aucun document</div>}
+          ) : <div className="text-gray-500"><UiText>Aucun document</UiText></div>}
           <div className="mt-2 p-3 border rounded bg-white">
-            <div className="font-medium mb-2">Ajouter un document</div>
+            <div className="font-medium mb-2"><UiText>Ajouter un document</UiText></div>
             <label className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded cursor-pointer hover:bg-blue-700">
               <UiText>Télécharger</UiText>
               <input hidden type="file" onChange={async(e)=>{
@@ -377,9 +378,9 @@ export default function SavDetailPage() {
               <div className="text-sm text-gray-500">{c.auteur?.name || '—'} • {new Date(c.createdAt).toLocaleString()}</div>
               <div>{c.contenu}</div>
             </div>
-          )) : <div className="text-gray-500">Aucun commentaire</div>}
+          )) : <div className="text-gray-500"><UiText>Aucun commentaire</UiText></div>}
           <div className="mt-2 flex gap-2">
-            <input className="flex-1 p-2 border rounded" placeholder="Ajouter un commentaire" value={newComment} onChange={e=>setNewComment(e.target.value)} />
+            <input className="flex-1 p-2 border rounded" placeholder={tx("Ajouter un commentaire")} value={newComment} onChange={e=>setNewComment(e.target.value)} />
             <button className="px-3 py-2 bg-blue-600 text-white rounded" onClick={async()=>{
               if (!newComment.trim()) return
               const res = await fetch(`/api/sav/${params.id}/commentaires`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ contenu: newComment }) })
@@ -402,7 +403,7 @@ function PhotosSection({ ticket, ticketId, reload, uploading, setUploading }: { 
       {lightboxUrl && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={()=> setLightboxUrl(null)}>
           <button className="absolute top-4 right-4 text-white" onClick={()=> setLightboxUrl(null)}><XMarkIcon className="h-7 w-7"/></button>
-          <img src={lightboxUrl} alt="Photo SAV" className="max-h-[85vh] max-w-[90vw] rounded shadow-lg" />
+          <img src={lightboxUrl} alt={tx("Photo SAV")} className="max-h-[85vh] max-w-[90vw] rounded shadow-lg" />
         </div>
       )}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -411,10 +412,10 @@ function PhotosSection({ ticket, ticketId, reload, uploading, setUploading }: { 
             <img src={p.url} alt={p.nomOriginal||'Photo'} className="w-full h-28 object-cover" />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition"/>
           </button>
-        )) : <div className="text-gray-500">Aucune photo</div>}
+        )) : <div className="text-gray-500"><UiText>Aucune photo</UiText></div>}
       </div>
       <div className="mt-4 p-3 border rounded bg-white">
-        <div className="font-medium mb-2">Ajouter une photo</div>
+        <div className="font-medium mb-2"><UiText>Ajouter une photo</UiText></div>
         <label className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded cursor-pointer hover:bg-blue-700">
           <UiText>Télécharger</UiText>
           <input hidden type="file" accept="image/*" onChange={async(e)=>{

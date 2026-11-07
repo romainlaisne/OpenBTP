@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 const compress = async (files: File[]) => {
   const m = await import('@/lib/client/image')
   const out: File[] = []
@@ -183,8 +184,8 @@ export default function NouveauTicketSAVPage() {
       <NotificationComponent />
       
       <PageHeader
-        title="Nouveau ticket SAV"
-        subtitle="Créer une nouvelle demande de service après-vente"
+        title={tx("Nouveau ticket SAV")}
+        subtitle={tx("Créer une nouvelle demande de service après-vente")}
         icon={WrenchScrewdriverIcon}
         badgeColor="from-red-600 via-rose-600 to-pink-700"
         gradientColor="from-red-600/10 via-rose-600/10 to-pink-700/10"
@@ -192,7 +193,7 @@ export default function NouveauTicketSAVPage() {
           <button
             onClick={() => router.push('/sav')}
             className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-            title="Retour à la liste des tickets SAV"
+            title={tx("Retour à la liste des tickets SAV")}
           >
             <ArrowLeftIcon className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
@@ -222,7 +223,7 @@ export default function NouveauTicketSAVPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Chantier */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chantier *</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Chantier *</UiText></label>
               <SearchableSelect
                 options={[
                   { value: 'LIBRE', label: '— Chantier libre —' },
@@ -242,16 +243,16 @@ export default function NouveauTicketSAVPage() {
                     handleInputChange('chantierId', v as string)
                   }
                 }}
-                placeholder="Sélectionner un chantier"
-                searchPlaceholder="Rechercher un chantier..."
-                emptyMessage="Aucun chantier trouvé"
-                allOptionLabel="Tous les chantiers"
+                placeholder={tx("Sélectionner un chantier")}
+                searchPlaceholder={tx("Rechercher un chantier...")}
+                emptyMessage={tx("Aucun chantier trouvé")}
+                allOptionLabel={tx("Tous les chantiers")}
                 showAllOption={false}
               />
               {isChantierLibre && (
                 <div className="mt-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Nom libre (chantier/ticket)</UiText></label>
-                  <input className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white" value={chantierLibreNom} onChange={e=>setChantierLibreNom(e.target.value)} placeholder="Ex: Intervention client Dupont" />
+                  <input className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white" value={chantierLibreNom} onChange={e=>setChantierLibreNom(e.target.value)} placeholder={tx("Ex: Intervention client Dupont")} />
                 </div>
               )}
             </div>
@@ -266,7 +267,7 @@ export default function NouveauTicketSAVPage() {
                 required
                 value={formData.titre}
                 onChange={(e) => handleInputChange('titre', e.target.value)}
-                placeholder="Ex: Fissures dans le carrelage du salon"
+                placeholder={tx("Ex: Fissures dans le carrelage du salon")}
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               />
             </div>
@@ -281,7 +282,7 @@ export default function NouveauTicketSAVPage() {
                 rows={4}
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
-                placeholder="Décrivez le problème en détail..."
+                placeholder={tx("Décrivez le problème en détail...")}
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               />
             </div>
@@ -333,7 +334,7 @@ export default function NouveauTicketSAVPage() {
                 type="text"
                 value={formData.localisation}
                 onChange={(e) => handleInputChange('localisation', e.target.value)}
-                placeholder="Ex: Salon, mur sud près de la fenêtre"
+                placeholder={tx("Ex: Salon, mur sud près de la fenêtre")}
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               />
             </div>
@@ -350,8 +351,8 @@ export default function NouveauTicketSAVPage() {
             {/* Date souhaitée */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Date d&apos;intervention souhaitée
-              </label>
+                <UiText>Date d&apos;intervention souhaitée
+              </UiText></label>
               <input
                 type="date"
                 value={formData.dateInterventionSouhaitee}
@@ -366,13 +367,13 @@ export default function NouveauTicketSAVPage() {
 
             {/* Ouvrier interne assigné */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ouvrier interne assigné</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Ouvrier interne assigné</UiText></label>
               <select
                 value={formData.ouvrierInterneAssignId}
                 onChange={(e)=> handleInputChange('ouvrierInterneAssignId', e.target.value)}
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               >
-                <option value="">— Aucun —</option>
+                <option value=""><UiText>— Aucun —</UiText></option>
                 {ouvriersInternes.map(o=> (
                   <option key={o.id} value={o.id}>{(o.prenom||'')+' '+o.nom}</option>
                 ))}
@@ -382,14 +383,14 @@ export default function NouveauTicketSAVPage() {
             {/* Sous-traitant assigné */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Sous-traitant assigné
-              </label>
+                <UiText>Sous-traitant assigné
+              </UiText></label>
               <select
                 value={formData.soustraitantAssignId}
                 onChange={(e) => handleInputChange('soustraitantAssignId', e.target.value)}
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               >
-                <option value="">Aucun sous-traitant assigné</option>
+                <option value=""><UiText>Aucun sous-traitant assigné</UiText></option>
                 {soustraitants.map(soustraitant => (
                   <option key={soustraitant.id} value={soustraitant.id}>
                     {soustraitant.nom} - {soustraitant.email}
@@ -431,10 +432,10 @@ export default function NouveauTicketSAVPage() {
           </div>
           {/* Pièces jointes */}
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pièces jointes</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Pièces jointes</UiText></label>
             <input type="file" multiple onChange={async(e)=>{ if(e.target.files){ const arr = Array.from(e.target.files); setPendingFiles(await compress(arr)) } }} className="block" />
             {pendingFiles.length>0 && (
-              <p className="text-xs text-gray-500 mt-1">{pendingFiles.length} fichier(s) seront ajoutés après création.</p>
+              <p className="text-xs text-gray-500 mt-1">{pendingFiles.length} <UiText>fichier(s) seront ajoutés après création.</UiText></p>
             )}
           </div>
         </div>

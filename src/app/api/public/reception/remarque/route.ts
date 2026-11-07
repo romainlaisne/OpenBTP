@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { v4 as uuidv4 } from 'uuid'
@@ -59,6 +61,7 @@ async function ajouterPhotoAuxDocuments(chantierId: string, remarqueId: string, 
 // PATCH /api/public/reception/remarque
 // Marquer une remarque comme résolue et ajouter une photo de preuve
 export async function PATCH(request: Request) {
+  await bindRequestLocale()
   try {
     const formData = await request.formData()
     const remarqueId = formData.get('remarqueId')?.toString()
@@ -67,7 +70,7 @@ export async function PATCH(request: Request) {
     const photo = formData.get('photo') as File | null
 
     if (!remarqueId || !codePIN) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Données manquantes' },
         { status: 400 }
       )
@@ -90,7 +93,7 @@ export async function PATCH(request: Request) {
     `
 
     if (!reception || reception.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Code PIN invalide ou remarque non trouvée' },
         { status: 404 }
       )
@@ -98,7 +101,7 @@ export async function PATCH(request: Request) {
 
     const remarque = reception[0]
     if (remarque.estValidee === 1) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Cette remarque a déjà été validée' },
         { status: 400 }
       )
@@ -128,7 +131,7 @@ export async function PATCH(request: Request) {
         // Valider le type réel du fichier par magic bytes
         const validation = await validateImageFile(photo);
         if (!validation.isValid) {
-          return NextResponse.json({ error: 'Fichier invalide : seules les images sont acceptées.' }, { status: 400 });
+          return localizedJson({ error: 'Fichier invalide : seules les images sont acceptées.' }, { status: 400 });
         }
 
         // Nom du fichier avec timestamp et extension sécurisée (basée sur les magic bytes)
@@ -163,13 +166,13 @@ export async function PATCH(request: Request) {
       }
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       message: 'Remarque marquée comme résolue'
     })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la résolution de la remarque' },
       { status: 500 }
     )

@@ -1,13 +1,16 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -25,10 +28,10 @@ export async function GET(request: Request) {
       ORDER BY at."createdAt" DESC
     `
 
-    return NextResponse.json(tasks)
+    return localizedJson(tasks)
   } catch (error) {
     console.error('Erreur lors de la récupération des tâches:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des tâches' },
       { status: 500 }
     )
@@ -36,10 +39,11 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -62,10 +66,10 @@ export async function POST(request: Request) {
       LIMIT 1
     `
 
-    return NextResponse.json(created[0] || null)
+    return localizedJson(created[0] || null)
   } catch (error) {
     console.error('Erreur lors de la création de la tâche:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de la tâche' },
       { status: 500 }
     )

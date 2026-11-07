@@ -36,7 +36,7 @@ export default function DashboardLayout({
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Vérification de l'authentification...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400"><UiText>Vérification de l'authentification...</UiText></p>
         </div>
       </div>
     )
@@ -48,7 +48,7 @@ export default function DashboardLayout({
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4"><UiText>Accès non autorisé</UiText></h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">Vous devez être connecté pour accéder à cette page.</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4"><UiText>Vous devez être connecté pour accéder à cette page.</UiText></p>
           <button 
             onClick={() => router.push('/login')}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"

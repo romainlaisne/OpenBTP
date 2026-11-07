@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
@@ -55,6 +57,7 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Attendre la Promise params
     const resolvedParams = await params;
@@ -64,7 +67,7 @@ export async function GET(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -76,7 +79,7 @@ export async function GET(
     })
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -116,17 +119,17 @@ export async function GET(
       }));
 
       console.log(`${receptionsFormattees.length} réception(s) trouvée(s) pour le chantier ${chantierId}`);
-      return NextResponse.json(formatValues(receptionsFormattees));
+      return localizedJson(formatValues(receptionsFormattees));
     } catch (error) {
       console.error('Erreur lors de la récupération des réceptions:', error);
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Erreur lors de la récupération des réceptions' },
         { status: 500 }
       );
     }
   } catch (error) {
     console.error('Erreur générale:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des réceptions' },
       { status: 500 }
     )
@@ -139,6 +142,7 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Attendre la Promise params
     const resolvedParams = await params;
@@ -146,7 +150,7 @@ export async function POST(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -160,7 +164,7 @@ export async function POST(
     })
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -171,7 +175,7 @@ export async function POST(
     const { dateLimite } = body
 
     if (!dateLimite) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'La date limite est requise' },
         { status: 400 }
       )
@@ -181,7 +185,7 @@ export async function POST(
     const dateLimiteObj = new Date(dateLimite);
     if (isNaN(dateLimiteObj.getTime())) {
       console.error('Date limite invalide:', dateLimite);
-      return NextResponse.json(
+      return localizedJson(
         { error: 'La date limite fournie est invalide' },
         { status: 400 }
       )
@@ -223,7 +227,7 @@ export async function POST(
         },
       })
       
-      return NextResponse.json(nouvelleReception, { status: 201 });
+      return localizedJson(nouvelleReception, { status: 201 });
     } catch (dbError) {
       console.error('Erreur lors de la création avec Prisma:', dbError);
       
@@ -266,10 +270,10 @@ export async function POST(
         };
 
         console.log('Réception créée avec succès via SQL brut:', nouvelleReception);
-        return NextResponse.json(nouvelleReception, { status: 201 });
+        return localizedJson(nouvelleReception, { status: 201 });
       } catch (sqlError) {
         console.error('Erreur lors de la création avec SQL brut:', sqlError);
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Erreur lors de la création de la réception', details: String(sqlError) },
           { status: 500 }
         );
@@ -277,7 +281,7 @@ export async function POST(
     }
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de la réception' },
       { status: 500 }
     )

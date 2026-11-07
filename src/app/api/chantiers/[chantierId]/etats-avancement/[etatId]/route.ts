@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -28,6 +30,7 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ chantierId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   const chantierReadableId = params.chantierId;
   const etatNumero = parseInt(params.etatId);
@@ -35,7 +38,7 @@ export async function GET(
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -46,7 +49,7 @@ export async function GET(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour GET etatId' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour GET etatId' }, { status: 404 });
     }
 
     const etatAvancement = await prisma.etatAvancement.findFirst({
@@ -69,7 +72,7 @@ export async function GET(
     }) as EtatAvancementWithRelations | null
 
     if (!etatAvancement) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
@@ -83,13 +86,13 @@ export async function GET(
       montantAvenants: etatAvancement.avenants.reduce((sum: number, avenant: AvenantEtatAvancement) => sum + avenant.montantTotal, 0)
     }
 
-    return NextResponse.json({
+    return localizedJson({
       ...etatAvancement,
       totaux
     })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de l\'état d\'avancement' },
       { status: 500 }
     )
@@ -101,6 +104,7 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ chantierId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   const chantierReadableId = params.chantierId;
   const etatNumero = parseInt(params.etatId);
@@ -108,7 +112,7 @@ export async function PUT(
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -119,7 +123,7 @@ export async function PUT(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour PUT etatId' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour PUT etatId' }, { status: 404 });
     }
 
     const body = await request.json()
@@ -153,10 +157,10 @@ export async function PUT(
       }
     }) as EtatAvancementWithRelations
 
-    return NextResponse.json(etatAvancement)
+    return localizedJson(etatAvancement)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de l\'état d\'avancement' },
       { status: 500 }
     )
@@ -168,6 +172,7 @@ export async function DELETE(
   request: Request,
   props: { params: Promise<{ chantierId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   const chantierReadableId = params.chantierId;
   const etatNumeroToDelete = parseInt(params.etatId);
@@ -175,7 +180,7 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions)
     if (!session || !['ADMIN', 'MANAGER'].includes(session.user.role)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -186,7 +191,7 @@ export async function DELETE(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour DELETE etatId' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour DELETE etatId' }, { status: 404 });
     }
 
     // Vérifier si c'est le dernier état d'avancement
@@ -196,11 +201,11 @@ export async function DELETE(
     });
 
     if (!latestEtat) {
-      return NextResponse.json({ error: 'Aucun état d\'avancement trouvé pour ce chantier.' }, { status: 404 });
+      return localizedJson({ error: 'Aucun état d\'avancement trouvé pour ce chantier.' }, { status: 404 });
     }
 
     if (latestEtat.numero !== etatNumeroToDelete) {
-      return NextResponse.json({ error: 'Seul le dernier état d\'avancement peut être supprimé.' }, { status: 400 });
+      return localizedJson({ error: 'Seul le dernier état d\'avancement peut être supprimé.' }, { status: 400 });
     }
 
     // Si l'état à supprimer est bien le dernier, procéder à la suppression
@@ -214,10 +219,10 @@ export async function DELETE(
       }
     });
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de l\'état d\'avancement' },
       { status: 500 }
     )

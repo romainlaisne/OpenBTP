@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
@@ -41,8 +43,8 @@ export default function MetresEnAttenteWidget() {
           </svg>
         </div>
         <div>
-          <h2 className="text-lg font-black text-gray-900 dark:text-white">Métrés en attente</h2>
-          <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Métrés soumis par les sous-traitants</p>
+          <h2 className="text-lg font-black text-gray-900 dark:text-white"><UiText>Métrés en attente</UiText></h2>
+          <p className="text-xs text-gray-600 dark:text-gray-400 font-medium"><UiText>Métrés soumis par les sous-traitants</UiText></p>
         </div>
       </div>
 
@@ -67,8 +69,8 @@ export default function MetresEnAttenteWidget() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 font-semibold">Aucun métré soumis</p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Tous les métrés sont à jour</p>
+          <p className="text-gray-600 dark:text-gray-400 font-semibold"><UiText>Aucun métré soumis</UiText></p>
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1"><UiText>Tous les métrés sont à jour</UiText></p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -91,7 +93,7 @@ export default function MetresEnAttenteWidget() {
                     {m.chantier.nomChantier}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                    {new Date(m.createdAt).toLocaleDateString('fr-FR')}
+                    {new Date(m.createdAt).toLocaleDateString(intlLocale(getActiveLocale()))}
                   </div>
                 </div>
                 <div className="mt-2 flex items-center gap-2 flex-wrap">

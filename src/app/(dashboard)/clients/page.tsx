@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -222,7 +224,7 @@ export default function ClientsPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="text-red-500 text-xl mb-4"><UiText>Accès non autorisé</UiText></div>
-          <p className="text-gray-600">Veuillez vous connecter pour accéder à cette page</p>
+          <p className="text-gray-600"><UiText>Veuillez vous connecter pour accéder à cette page</UiText></p>
         </div>
       </div>
     )
@@ -240,7 +242,7 @@ export default function ClientsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="text-red-500 text-xl mb-4">Erreur: {error}</div>
+          <div className="text-red-500 text-xl mb-4"><UiText>Erreur: </UiText>{error}</div>
           <button 
             onClick={() => window.location.reload()} 
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
@@ -287,7 +289,7 @@ export default function ClientsPage() {
           <div>
             <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">CA</div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">
-              {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0, notation: 'compact' }).format(chiffreAffaires)}
+              {new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR', maximumFractionDigits: 0, notation: 'compact' }).format(chiffreAffaires)}
             </div>
           </div>
         </div>
@@ -298,8 +300,8 @@ export default function ClientsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Annuaire des Clients"
-        subtitle="Gérez vos relations clients et leurs projets"
+        title={tx("Annuaire des Clients")}
+        subtitle={tx("Gérez vos relations clients et leurs projets")}
         icon={BuildingStorefrontIcon}
         badgeColor="from-indigo-600 via-purple-600 to-pink-700"
         gradientColor="from-indigo-600/10 via-purple-600/10 to-pink-700/10"
@@ -323,7 +325,7 @@ export default function ClientsPage() {
           <div className="flex-1 max-w-md">
             <SearchInput
               id="search"
-              placeholder="Rechercher un client..."
+              placeholder={tx("Rechercher un client...")}
               value={filtreNom}
               onChange={(e) => setFiltreNom(e.target.value)}
               className="w-full"
@@ -435,7 +437,7 @@ export default function ClientsPage() {
                        className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium hover:underline transition-colors duration-200"
                      >
                        <BuildingOfficeIcon className="h-4 w-4 mr-1" />
-                       <span className="font-medium">{client.Chantier?.length || 0}</span>&nbsp;chantier{(client.Chantier?.length || 0) !== 1 ? 's' : ''}
+                       <span className="font-medium">{client.Chantier?.length || 0}</span><UiText>&nbsp;chantier</UiText>{(client.Chantier?.length || 0) !== 1 ? 's' : ''}
                      </Link>
                      {client.Chantier && client.Chantier.length > 0 && (
                        <div className="text-indigo-600 dark:text-indigo-400 font-medium">
@@ -449,7 +451,7 @@ export default function ClientsPage() {
                              return sum + (montantCommandes > 0 ? montantCommandes : (chantier.budget || 0))
                            }, 0)
                            
-                           return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(montantTotal)
+                           return new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(montantTotal)
                          })()}
                        </div>
                      )}
@@ -463,15 +465,15 @@ export default function ClientsPage() {
                       <Link
                         href={`/clients/${client.id}`}
                         className="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
-                        title="Voir les détails"
+                        title={tx("Voir les détails")}
                       >
                         <EyeIcon className="h-4 w-4 mr-1" />
-                        Détails
-                      </Link>
+                        <UiText>Détails
+                      </UiText></Link>
                       <Link
                         href={`/clients/${client.id}/edit`}
                         className="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
-                        title="Modifier le client"
+                        title={tx("Modifier le client")}
                       >
                         <PencilSquareIcon className="h-4 w-4 mr-1" />
                         <UiText>Modifier</UiText>
@@ -480,11 +482,11 @@ export default function ClientsPage() {
                     <button
                       onClick={() => handleCreateChantier(client.id, client.nom)}
                       className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
-                      title="Créer un nouveau chantier pour ce client"
+                      title={tx("Créer un nouveau chantier pour ce client")}
                     >
                       <BuildingOfficeIcon className="h-4 w-4 mr-1" />
-                      Chantier
-                    </button>
+                      <UiText>Chantier
+                    </UiText></button>
                   </div>
                 </div>
               </div>
@@ -498,21 +500,21 @@ export default function ClientsPage() {
                       <tr>
                         <SortableHeader
                           field="nom"
-                          label="Nom"
+                          label={tx("Nom")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
                         />
                         <SortableHeader
                           field="email"
-                          label="Email"
+                          label={tx("Email")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
                         />
                         <SortableHeader
                           field="telephone"
-                          label="Téléphone"
+                          label={tx("Téléphone")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
@@ -522,14 +524,14 @@ export default function ClientsPage() {
                         </th>
                         <SortableHeader
                           field="chantiers"
-                          label="Chantiers"
+                          label={tx("Chantiers")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
                         />
                         <SortableHeader
                           field="montant"
-                          label="Montant"
+                          label={tx("Montant")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
@@ -574,7 +576,7 @@ export default function ClientsPage() {
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
                               {montantTotal > 0 
-                                ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(montantTotal)
+                                ? new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(montantTotal)
                                 : '-'
                               }
                             </td>
@@ -583,7 +585,7 @@ export default function ClientsPage() {
                                 <Link 
                                   href={`/clients/${client.id}`} 
                                   className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors" 
-                                  title="Consulter"
+                                  title={tx("Consulter")}
                                   onClick={(e) => e.stopPropagation()}
                                 >
                                   <EyeIcon className="h-4 w-4" />
@@ -591,7 +593,7 @@ export default function ClientsPage() {
                                 <Link 
                                   href={`/clients/${client.id}/edit`} 
                                   className="p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900 rounded transition-colors" 
-                                  title="Modifier"
+                                  title={tx("Modifier")}
                                   onClick={(e) => e.stopPropagation()}
                                 >
                                   <PencilSquareIcon className="h-4 w-4" />
@@ -599,7 +601,7 @@ export default function ClientsPage() {
                                 <button
                                   onClick={() => handleCreateChantier(client.id, client.nom)}
                                   className="p-2 text-green-600 hover:bg-green-100 dark:text-green-400 dark:hover:bg-green-900 rounded transition-colors"
-                                  title="Créer un chantier"
+                                  title={tx("Créer un chantier")}
                                 >
                                   <BuildingOfficeIcon className="h-4 w-4" />
                                 </button>

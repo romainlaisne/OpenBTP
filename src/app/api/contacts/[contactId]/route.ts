@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client'; // Utilisation de l'instance partagée
 
@@ -5,10 +7,11 @@ import { prisma } from '@/lib/prisma/client'; // Utilisation de l'instance parta
 
 // METTRE À JOUR UN CONTACT
 export async function PUT(request: Request, props: { params: Promise<{ contactId: string }> }) {
+  await bindRequestLocale()
   const routeParams = await props.params; // Attendre les paramètres
   const contactId = routeParams.contactId;
   if (!contactId) {
-    return NextResponse.json({ error: 'Contact ID manquant' }, { status: 400 });
+    return localizedJson({ error: 'Contact ID manquant' }, { status: 400 });
   }
 
   try {
@@ -28,28 +31,29 @@ export async function PUT(request: Request, props: { params: Promise<{ contactId
         updatedAt: new Date(), // Mettre à jour la date de modification
       },
     });
-    return NextResponse.json(contactMaj);
+    return localizedJson(contactMaj);
   } catch (error) {
     console.error(`Erreur lors de la mise à jour du contact ${contactId}:`, error);
-    return NextResponse.json({ error: "Erreur lors de la mise à jour du contact" }, { status: 500 });
+    return localizedJson({ error: "Erreur lors de la mise à jour du contact" }, { status: 500 });
   }
 }
 
 // SUPPRIMER UN CONTACT
 export async function DELETE(request: Request, props: { params: Promise<{ contactId: string }> }) {
+  await bindRequestLocale()
   const routeParams = await props.params; // Attendre les paramètres
   const contactId = routeParams.contactId;
   if (!contactId) {
-    return NextResponse.json({ error: 'Contact ID manquant' }, { status: 400 });
+    return localizedJson({ error: 'Contact ID manquant' }, { status: 400 });
   }
 
   try {
     await prisma.contact.delete({
       where: { id: contactId },
     });
-    return NextResponse.json({ message: 'Contact supprimé avec succès' }, { status: 200 }); // ou 204 No Content
+    return localizedJson({ message: 'Contact supprimé avec succès' }, { status: 200 }); // ou 204 No Content
   } catch (error) {
     console.error(`Erreur lors de la suppression du contact ${contactId}:`, error);
-    return NextResponse.json({ error: "Erreur lors de la suppression du contact" }, { status: 500 });
+    return localizedJson({ error: "Erreur lors de la suppression du contact" }, { status: 500 });
   }
 } 

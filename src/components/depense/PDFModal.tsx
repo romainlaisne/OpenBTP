@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { XMarkIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline'
 
@@ -53,8 +54,8 @@ export default function PDFModal({ isOpen, onClose, chantierId }: PDFModalProps)
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-            Rapport des dépenses
-          </h3>
+            <UiText>Rapport des dépenses
+          </UiText></h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
@@ -65,8 +66,8 @@ export default function PDFModal({ isOpen, onClose, chantierId }: PDFModalProps)
         
         <div className="p-6">
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Téléchargez le rapport PDF des dépenses pour ce chantier.
-          </p>
+            <UiText>Téléchargez le rapport PDF des dépenses pour ce chantier.
+          </UiText></p>
           
           {error && (
             <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-md">
@@ -79,8 +80,8 @@ export default function PDFModal({ isOpen, onClose, chantierId }: PDFModalProps)
               onClick={onClose}
               className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
             >
-              Annuler
-            </button>
+              <UiText>Annuler
+            </UiText></button>
             <button
               onClick={handleDownload}
               disabled={loading}

@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 // Renouvellement automatique des contrats-cadres : option, contrats à
 // échéance et lancement manuel.
 
@@ -90,7 +91,7 @@ export default function RenouvellementContratsSettings() {
   if (actif === null) {
     return (
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
-        <p className="text-sm text-gray-500">Chargement…</p>
+        <p className="text-sm text-gray-500"><UiText>Chargement…</UiText></p>
       </div>
     )
   }
@@ -100,12 +101,12 @@ export default function RenouvellementContratsSettings() {
   return (
     <div className="space-y-4 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Renouvellement automatique des contrats</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Renouvellement automatique des contrats</UiText></h2>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Chaque matin ouvrable à 8h00 : tout contrat-cadre signé qui expire dans les 30 jours (ou déjà expiré) d&apos;un
+          <UiText>Chaque matin ouvrable à 8h00 : tout contrat-cadre signé qui expire dans les 30 jours (ou déjà expiré) d&apos;un
           sous-traitant actif est régénéré avec le template actif et envoyé en signature au représentant. Sans signature,
           relance tous les 7 jours. Récapitulatif envoyé à l&apos;adresse d&apos;alerte.
-        </p>
+        </UiText></p>
       </div>
 
       <label className="flex items-center gap-3">
@@ -117,10 +118,10 @@ export default function RenouvellementContratsSettings() {
 
       <div>
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-          Contrats à échéance ({echeances.length})
+          <UiText>Contrats à échéance (</UiText>{echeances.length})
         </h3>
         {echeances.length === 0 ? (
-          <p className="mt-1 text-sm text-gray-500">Aucun contrat signé n&apos;expire dans les 30 jours.</p>
+          <p className="mt-1 text-sm text-gray-500"><UiText>Aucun contrat signé n&apos;expire dans les 30 jours.</UiText></p>
         ) : (
           <ul className="mt-2 space-y-1 text-sm text-gray-700 dark:text-gray-300">
             {echeances.map((e) => (

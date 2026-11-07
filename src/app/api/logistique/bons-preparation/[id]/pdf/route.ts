@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -9,17 +11,18 @@ export async function GET(
   _request: NextRequest,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await props.params
     const pdfBuffer = await generateBonPreparationPDF(id)
 
     if (!pdfBuffer) {
-      return NextResponse.json({ error: 'Bon de préparation introuvable' }, { status: 404 })
+      return localizedJson({ error: 'Bon de préparation introuvable' }, { status: 404 })
     }
 
     // NextResponse attend un BodyInit (Uint8Array / ArrayBuffer, etc.)
@@ -32,6 +35,6 @@ export async function GET(
     })
   } catch (error) {
     console.error('Erreur génération PDF bon-preparation:', error)
-    return NextResponse.json({ error: 'Erreur serveur lors de la génération du PDF' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur lors de la génération du PDF' }, { status: 500 })
   }
 }

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -90,6 +92,7 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Attendre la Promise params
     const resolvedParams = await params;
@@ -99,7 +102,7 @@ export async function GET(
     const pin = searchParams.get('pin')
 
     if (!id || !pin) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID de réception et code PIN requis' },
         { status: 400 }
       )
@@ -112,7 +115,7 @@ export async function GET(
     `
 
     if (Array.isArray(checkPin) && checkPin.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Code PIN invalide ou réception inexistante' },
         { status: 401 }
       )
@@ -171,10 +174,10 @@ export async function GET(
       }
     })
 
-    return NextResponse.json(remarquesAvecDetails)
+    return localizedJson(remarquesAvecDetails)
   } catch (error) {
     console.error('Erreur lors de la récupération des remarques:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur serveur lors de la récupération des remarques' },
       { status: 500 }
     )

@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useRef, use, useCallback } from 'react';
@@ -302,7 +304,7 @@ export default function CommandePage(props: CommandePageProps) {
         }
       } catch (error) {
         console.error('Erreur:', error)
-        toast.error('Erreur lors du chargement des informations du chantier')
+        toast.error(tx("Erreur lors du chargement des informations du chantier"))
       }
     }
 
@@ -560,7 +562,7 @@ export default function CommandePage(props: CommandePageProps) {
       };
 
       if (!chantierPrimaryId) {
-        toast.error('Erreur: ID du chantier non disponible');
+        toast.error(tx("Erreur: ID du chantier non disponible"));
         return;
       }
 
@@ -640,7 +642,7 @@ export default function CommandePage(props: CommandePageProps) {
         window.history.pushState({}, '', url.toString());
       }
       
-      toast.success('Commande enregistrée et validée avec succès');
+      toast.success(tx("Commande enregistrée et validée avec succès"));
     } catch (error) {
       console.error('Erreur:', error);
       toast.error(`Erreur: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
@@ -654,7 +656,7 @@ export default function CommandePage(props: CommandePageProps) {
     try {
       // Vérifier si l'utilisateur est un administrateur ou le créateur de la commande
       if (!session) {
-        toast.error('Vous devez être connecté pour rouvrir une commande.');
+        toast.error(tx("Vous devez être connecté pour rouvrir une commande."));
         return;
       }
       
@@ -664,12 +666,12 @@ export default function CommandePage(props: CommandePageProps) {
                        (commande.createdBy && commande.createdBy === session.user.email);
       
       if (!canReopen) {
-        toast.error('Vous n\'avez pas les droits pour rouvrir cette commande.');
+        toast.error(tx("Vous n'avez pas les droits pour rouvrir cette commande."));
         return;
       }
       
       if (!commande.id) {
-        toast.error('Impossible de rouvrir une commande qui n\'a pas encore été enregistrée.');
+        toast.error(tx("Impossible de rouvrir une commande qui n'a pas encore été enregistrée."));
         return;
       }
 
@@ -697,7 +699,7 @@ export default function CommandePage(props: CommandePageProps) {
       }
       
       if (!chantierPrimaryId) {
-        toast.error('Erreur: ID du chantier non disponible');
+        toast.error(tx("Erreur: ID du chantier non disponible"));
         return;
       }
 
@@ -751,7 +753,7 @@ export default function CommandePage(props: CommandePageProps) {
       // Mettre à jour l'état de verrouillage
       setIsLocked(false);
       
-      toast.success('Commande déverrouillée avec succès');
+      toast.success(tx("Commande déverrouillée avec succès"));
     } catch (error) {
       console.error('Erreur:', error);
       toast.error(`Erreur: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
@@ -761,19 +763,19 @@ export default function CommandePage(props: CommandePageProps) {
   // Fonction pour exporter la commande en Excel
   const exportCommandeToExcel = async () => {
     if (!commande || !chantierId) {
-      toast.error('Aucune commande à exporter');
+      toast.error(tx("Aucune commande à exporter"));
       return;
     }
 
     // Vérifier si la commande a été enregistrée (a un ID)
     if (!commande.id) {
-      const confirmed = confirm('Vous devez enregistrer la commande avant de pouvoir l\'exporter en Excel. Voulez-vous l\'enregistrer maintenant ?');
+      const confirmed = confirm(tx("Vous devez enregistrer la commande avant de pouvoir l'exporter en Excel. Voulez-vous l'enregistrer maintenant ?"));
       
       if (confirmed) {
         // Enregistrer la commande d'abord
         await handleSave();
         // Informer l'utilisateur
-        toast.success('Commande enregistrée ! Vous pouvez maintenant l\'exporter.');
+        toast.success(tx("Commande enregistrée ! Vous pouvez maintenant l'exporter."));
       }
       return;
     }
@@ -793,10 +795,10 @@ export default function CommandePage(props: CommandePageProps) {
       a.click();
       window.URL.revokeObjectURL(url);
       
-      toast.success('Commande exportée avec succès');
+      toast.success(tx("Commande exportée avec succès"));
     } catch (error) {
       console.error('Erreur lors de l\'export:', error);
-      toast.error('Erreur lors de l\'export de la commande');
+      toast.error(tx("Erreur lors de l'export de la commande"));
     }
   };
 
@@ -959,7 +961,7 @@ export default function CommandePage(props: CommandePageProps) {
       // Récupérer la première feuille
       const worksheet = workbook.getWorksheet(1);
       if (!worksheet) {
-        toast.error('Le fichier Excel est vide ou n\'a pas le bon format.');
+        toast.error(tx("Le fichier Excel est vide ou n'a pas le bon format."));
         return;
       }
 
@@ -1014,7 +1016,7 @@ export default function CommandePage(props: CommandePageProps) {
       });
 
       if (newLignes.length === 0) {
-        toast.error('Aucune ligne valide n\'a été trouvée dans le fichier.');
+        toast.error(tx("Aucune ligne valide n'a été trouvée dans le fichier."));
         return;
       }
 
@@ -1043,7 +1045,7 @@ export default function CommandePage(props: CommandePageProps) {
       toast.success(`${newLignes.length} lignes ont été importées avec succès.`);
     } catch (error) {
       console.error('Erreur lors de l\'importation du fichier Excel:', error);
-      toast.error('Une erreur est survenue lors de l\'importation du fichier Excel.');
+      toast.error(tx("Une erreur est survenue lors de l'importation du fichier Excel."));
     }
 
     // Réinitialiser l'input file
@@ -1085,8 +1087,8 @@ export default function CommandePage(props: CommandePageProps) {
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
-                      🔒 Verrouillée
-                    </span>
+                      <UiText>🔒 Verrouillée
+                    </UiText></span>
                   )}
                 </div>
                 <div className="flex items-center space-x-4">
@@ -1096,8 +1098,8 @@ export default function CommandePage(props: CommandePageProps) {
                       className="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-lg text-sm font-semibold shadow-lg hover:bg-white/40 transition-all duration-200 text-blue-900 dark:text-white"
                     >
                       <DocumentArrowDownIcon className="h-5 w-5" />
-                      Générer PDF
-                    </button>
+                      <UiText>Générer PDF
+                    </UiText></button>
                   )}
                   <button
                     onClick={handleSave}
@@ -1131,7 +1133,7 @@ export default function CommandePage(props: CommandePageProps) {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              📅 {commande.dateCommande ? new Date(commande.dateCommande).toLocaleDateString('fr-FR') : 'Date non définie'}
+              📅 {commande.dateCommande ? new Date(commande.dateCommande).toLocaleDateString(intlLocale(getActiveLocale())) : 'Date non définie'}
             </span>
             <span className="inline-flex items-center px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import {
   XMarkIcon,
@@ -658,8 +660,8 @@ export default function ModifierDossierModal({
                 <DocumentTextIcon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                    Modifier le dossier technique
-                  </h2>
+                    <UiText>Modifier le dossier technique
+                  </UiText></h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     Version {dossier.version} • {dossier.fiches.filter(f => !fichesASupprimer.has(f.id)).length} fiche{dossier.fiches.filter(f => !fichesASupprimer.has(f.id)).length !== 1 ? 's' : ''}
                   </p>
@@ -709,7 +711,7 @@ export default function ModifierDossierModal({
                       </div>
                       {fiche.ficheReference && (
                         <p className="text-xs text-gray-600 dark:text-gray-400">
-                          Réf CSC: {fiche.ficheReference}
+                          <UiText>Réf CSC: </UiText>{fiche.ficheReference}
                         </p>
                       )}
                     </div>
@@ -725,7 +727,7 @@ export default function ModifierDossierModal({
                           }
                         }}
                         className="p-1.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                        title="Supprimer du dossier"
+                        title={tx("Supprimer du dossier")}
                       >
                         <TrashIcon className="h-4 w-4" />
                       </button>
@@ -740,8 +742,8 @@ export default function ModifierDossierModal({
                         onChange={(e) => handleStatutChange(fiche.ficheId, e.target.value)}
                         className="flex-1 px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
                       >
-                        <option value="BROUILLON">Brouillon</option>
-                        <option value="VALIDEE">Validée</option>
+                        <option value="BROUILLON"><UiText>Brouillon</UiText></option>
+                        <option value="VALIDEE"><UiText>Validée</UiText></option>
                         <option value="NOUVELLE_PROPOSITION">Nouvelle proposition</option>
                       </select>
 
@@ -769,8 +771,8 @@ export default function ModifierDossierModal({
                     {/* Dropdown sous-traitant - réduit en largeur */}
                     <div>
                       <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Sous-traitant
-                      </label>
+                        <UiText>Sous-traitant
+                      </UiText></label>
                       <select
                         value={fichesSoustraitants[fiche.ficheId] || ''}
                         onChange={(e) => {
@@ -781,7 +783,7 @@ export default function ModifierDossierModal({
                         }}
                         className="w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
                       >
-                        <option value="">Aucun</option>
+                        <option value=""><UiText>Aucun</UiText></option>
                         {soustraitants.map(st => (
                           <option key={st.id} value={st.id}>{st.nom}</option>
                         ))}
@@ -791,8 +793,8 @@ export default function ModifierDossierModal({
                     {/* Champ CSC */}
                     <div>
                       <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Référence CSC
-                      </label>
+                        <UiText>Référence CSC
+                      </UiText></label>
                       <input
                         type="text"
                         value={fichesReferences[fiche.ficheId] || ''}
@@ -837,7 +839,7 @@ export default function ModifierDossierModal({
                               type="text"
                               value={searchFilterReplacement}
                               onChange={(e) => setSearchFilterReplacement(e.target.value)}
-                              placeholder="Rechercher une fiche..."
+                              placeholder={tx("Rechercher une fiche...")}
                               className="w-full pl-8 pr-8 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             />
                             {searchFilterReplacement && (
@@ -854,10 +856,10 @@ export default function ModifierDossierModal({
                           {loadingStructure ? (
                             <div className="text-center py-4">
                               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-600 mx-auto mb-2"></div>
-                              <p className="text-xs text-gray-500">Chargement...</p>
+                              <p className="text-xs text-gray-500"><UiText>Chargement...</UiText></p>
                             </div>
                           ) : filteredStructureReplacement.length === 0 ? (
-                            <p className="text-xs text-gray-500 text-center py-2">Aucune fiche disponible</p>
+                            <p className="text-xs text-gray-500 text-center py-2"><UiText>Aucune fiche disponible</UiText></p>
                           ) : (
                             <div>
                               {filteredStructureReplacement.map(d => renderDossierReplacement(d))}
@@ -876,8 +878,8 @@ export default function ModifierDossierModal({
               <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-2 border-blue-200 dark:border-blue-800">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold text-sm text-gray-900 dark:text-white">
-                  Ajouter des fiches techniques
-                  </h3>
+                  <UiText>Ajouter des fiches techniques
+                  </UiText></h3>
                   <button
                     onClick={() => {
                       setAddingFiches(false)
@@ -896,7 +898,7 @@ export default function ModifierDossierModal({
                       type="text"
                       value={searchFilterAdd}
                       onChange={(e) => setSearchFilterAdd(e.target.value)}
-                      placeholder="Rechercher une fiche..."
+                      placeholder={tx("Rechercher une fiche...")}
                       className="w-full pl-8 pr-8 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                     {searchFilterAdd && (
@@ -913,10 +915,10 @@ export default function ModifierDossierModal({
                   {loadingStructure ? (
                     <div className="text-center py-4">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                      <p className="text-xs text-gray-500">Chargement...</p>
+                      <p className="text-xs text-gray-500"><UiText>Chargement...</UiText></p>
                     </div>
                   ) : filteredStructureAdd.length === 0 ? (
-                    <p className="text-xs text-gray-500 text-center py-2">Aucune fiche disponible</p>
+                    <p className="text-xs text-gray-500 text-center py-2"><UiText>Aucune fiche disponible</UiText></p>
                   ) : (
                     <div>
                       {filteredStructureAdd.map(d => renderDossierAdd(d))}
@@ -925,7 +927,7 @@ export default function ModifierDossierModal({
                 </div>
                 {fichesSelectionnees.size > 0 && (
                   <div className="mt-3 text-xs text-blue-600 dark:text-blue-400">
-                    {fichesSelectionnees.size} fiche{fichesSelectionnees.size > 1 ? 's' : ''} sélectionnée{fichesSelectionnees.size > 1 ? 's' : ''}
+                    {fichesSelectionnees.size} fiche{fichesSelectionnees.size > 1 ? 's' : ''} <UiText>sélectionnée</UiText>{fichesSelectionnees.size > 1 ? 's' : ''}
                   </div>
                 )}
               </div>
@@ -942,8 +944,8 @@ export default function ModifierDossierModal({
                   className="w-full px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-medium"
                 >
                   <DocumentTextIcon className="h-4 w-4" />
-                  Ajouter des fiches techniques
-                </button>
+                  <UiText>Ajouter des fiches techniques
+                </UiText></button>
               </div>
             )}
           </div>
@@ -955,8 +957,8 @@ export default function ModifierDossierModal({
             onClick={onClose}
             className="px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors font-medium"
           >
-            Annuler
-          </button>
+            <UiText>Annuler
+          </UiText></button>
           <div className="flex items-center gap-2">
             <button
               onClick={handleSave}
@@ -976,13 +978,13 @@ export default function ModifierDossierModal({
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Génération...
-                </>
+                  <UiText>Génération...
+                </UiText></>
               ) : (
                 <>
                   <ArrowPathIcon className="h-3 w-3" />
-                  Régénérer
-                </>
+                  <UiText>Régénérer
+                </UiText></>
               )}
             </button>
           </div>

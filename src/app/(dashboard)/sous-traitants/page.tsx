@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import Link from 'next/link'
@@ -133,11 +135,11 @@ function DeleteModal({ isOpen, sousTraitant, onClose, onConfirm, isDeleting }: D
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-80 flex items-center justify-center p-4 z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full shadow-xl">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Confirmer la suppression</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white"><UiText>Confirmer la suppression</UiText></h3>
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
-          Êtes-vous sûr de vouloir supprimer le sous-traitant "{sousTraitant?.nom}" ? 
+          <UiText>Êtes-vous sûr de vouloir supprimer le sous-traitant "</UiText>{sousTraitant?.nom}<UiText>" ? 
           Cette action est irréversible et supprimera également tous les ouvriers associés.
-        </p>
+        </UiText></p>
         <div className="mt-4 flex justify-end space-x-3">
           <button
             type="button"
@@ -417,7 +419,7 @@ export default function SousTraitantsPage() {
     }
   }
   const handleDeleteOuvrier = async (id: string) => {
-    if (!confirm('Désactiver cet ouvrier ?')) return
+    if (!confirm(tx("Désactiver cet ouvrier ?"))) return
     try {
       const res = await fetch(`/api/ouvriers-internes/${id}`, { method: 'DELETE' })
       if (res.ok) {
@@ -515,7 +517,7 @@ export default function SousTraitantsPage() {
     }
   }
   const handleDeleteMag = async (id: string) => {
-    if (!confirm('Désactiver ce magasinier ?')) return
+    if (!confirm(tx("Désactiver ce magasinier ?"))) return
     try {
       const res = await fetch(`/api/magasiniers/${id}`, { method: 'DELETE' })
       if (res.ok) {
@@ -768,7 +770,7 @@ export default function SousTraitantsPage() {
         <div className="flex items-center gap-2">
           <UserGroupIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Ouvriers</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Ouvriers</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{totalOuvriers}</div>
           </div>
         </div>
@@ -786,7 +788,7 @@ export default function SousTraitantsPage() {
         <div className="flex items-center gap-2">
           <ClockIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">En attente</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>En attente</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{sansContrat}</div>
           </div>
         </div>
@@ -797,8 +799,8 @@ export default function SousTraitantsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Sous-Traitants"
-        subtitle="Gestion des sous-traitants et de leurs équipes"
+        title={tx("Sous-Traitants")}
+        subtitle={tx("Gestion des sous-traitants et de leurs équipes")}
         icon={UsersIcon}
         badgeColor="from-blue-600 via-indigo-600 to-purple-700"
         gradientColor="from-blue-600/10 via-indigo-600/10 to-purple-700/10"
@@ -817,7 +819,7 @@ export default function SousTraitantsPage() {
             <Link
               href="/sous-traitants/documents"
               className="inline-flex items-center px-3 py-2 bg-white/90 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-100 rounded-lg shadow hover:shadow-md transition-all duration-200 text-sm font-semibold"
-              title="Tableau des documents de toutes les personnes"
+              title={tx("Tableau des documents de toutes les personnes")}
             >
               <ClipboardDocumentListIcon className="h-4 w-4 mr-1.5" />
               <span className="hidden sm:inline"><UiText>Documents</UiText></span>
@@ -827,7 +829,7 @@ export default function SousTraitantsPage() {
               className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
             >
               <PlusIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Nouveau sous-traitant</span>
+              <span className="hidden sm:inline"><UiText>Nouveau sous-traitant</UiText></span>
               <span className="sm:hidden">Nouveau</span>
             </Link>
           </div>
@@ -841,7 +843,7 @@ export default function SousTraitantsPage() {
           <div className="flex-1 max-w-md">
             <SearchInput
               id="search"
-              placeholder="Rechercher un sous-traitant..."
+              placeholder={tx("Rechercher un sous-traitant...")}
               value={filtreNom}
               onChange={(e) => setFiltreNom(e.target.value)}
               className="w-full"
@@ -917,8 +919,8 @@ export default function SousTraitantsPage() {
                   className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   <PlusIcon className="h-4 w-4 mr-2" />
-                  Nouveau sous-traitant
-                </Link>
+                  <UiText>Nouveau sous-traitant
+                </UiText></Link>
               </div>
             )}
           </div>
@@ -936,7 +938,7 @@ export default function SousTraitantsPage() {
                         {st.nom}
                       </h3>
                       {st.parentId && nomParId.get(st.parentId) && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400">↳ rattaché à {nomParId.get(st.parentId)}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400"><UiText>↳ rattaché à </UiText>{nomParId.get(st.parentId)}</p>
                       )}
                       <div className="mt-2">
                         <label className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
@@ -968,14 +970,14 @@ export default function SousTraitantsPage() {
                       <Link
                         href={`/sous-traitants/${st.id}`}
                         className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors duration-200"
-                        title="Consulter"
+                        title={tx("Consulter")}
                       >
                         <EyeIcon className="h-4 w-4" />
                       </Link>
                       <Link
                         href={`/sous-traitants/${st.id}/edit`}
                         className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors duration-200"
-                        title="Modifier"
+                        title={tx("Modifier")}
                       >
                         <PencilSquareIcon className="h-4 w-4" />
                       </Link>
@@ -984,7 +986,7 @@ export default function SousTraitantsPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors duration-200"
-                        title="Portail public sous-traitant"
+                        title={tx("Portail public sous-traitant")}
                       >
                         <GlobeAltIcon className="h-4 w-4" />
                       </a>
@@ -1000,7 +1002,7 @@ export default function SousTraitantsPage() {
                           })
                         }}
                         className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
-                        title="Supprimer"
+                        title={tx("Supprimer")}
                       >
                         <TrashIcon className="h-4 w-4" />
                       </button>
@@ -1040,13 +1042,13 @@ export default function SousTraitantsPage() {
                       ) : st.contrats && st.contrats.length > 0 ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100">
                           <ClockIcon className="h-3 w-3 mr-1" />
-                          En attente
-                        </span>
+                          <UiText>En attente
+                        </UiText></span>
                       ) : (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                           <DocumentTextIcon className="h-3 w-3 mr-1" />
-                          Aucun contrat
-                        </span>
+                          <UiText>Aucun contrat
+                        </UiText></span>
                       )}
                     </div>
 
@@ -1056,7 +1058,7 @@ export default function SousTraitantsPage() {
                       className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium hover:underline transition-colors duration-200"
                     >
                       <UserGroupIcon className="h-4 w-4 mr-1" />
-                      {st._count?.ouvriers || 0} ouvrier{(st._count?.ouvriers || 0) !== 1 ? 's' : ''}
+                      {st._count?.ouvriers || 0} <UiText>ouvrier</UiText>{(st._count?.ouvriers || 0) !== 1 ? 's' : ''}
                     </Link>
                   </div>
                 </div>
@@ -1137,7 +1139,7 @@ export default function SousTraitantsPage() {
                                 <div className="flex items-center gap-1 font-medium">
                                   <ClockIcon className="h-3.5 w-3.5" />
                                   {st.renouvellement.dateEnvoi
-                                    ? `Nouveau contrat envoyé le ${new Date(st.renouvellement.dateEnvoi).toLocaleDateString('fr-FR')} — en attente de signature`
+                                    ? `Nouveau contrat envoyé le ${new Date(st.renouvellement.dateEnvoi).toLocaleDateString(intlLocale(getActiveLocale()))} — en attente de signature`
                                     : 'Nouveau contrat généré — pas encore envoyé'}
                                 </div>
                                 <div className="mt-2 flex gap-2">
@@ -1175,7 +1177,7 @@ export default function SousTraitantsPage() {
                             {(() => {
                               const contratActuel = st.contrats?.[0]
                               if (!contratActuel?.dateFin) return <span />
-                              const dateAffichee = new Date(contratActuel.dateFin).toLocaleDateString('fr-FR')
+                              const dateAffichee = new Date(contratActuel.dateFin).toLocaleDateString(intlLocale(getActiveLocale()))
                               const alerte = contratActuel.estSigne && contratActuel.renouvellementConseille
                               return (
                                 <span className={`inline-flex items-center gap-1 text-xs ${alerte ? 'font-medium text-amber-700 dark:text-amber-400' : 'text-gray-500 dark:text-gray-400'}`}>
@@ -1205,35 +1207,35 @@ export default function SousTraitantsPage() {
                       <tr>
                         <SortableHeader
                           field="nom"
-                          label="Nom"
+                          label={tx("Nom")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
                         />
                         <SortableHeader
                           field="email"
-                          label="Email"
+                          label={tx("Email")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
                         />
                         <SortableHeader
                           field="telephone"
-                          label="Téléphone"
+                          label={tx("Téléphone")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
                         />
                         <SortableHeader
                           field="ouvriers"
-                          label="Ouvriers"
+                          label={tx("Ouvriers")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
                         />
                         <SortableHeader
                           field="actif"
-                          label="Statut"
+                          label={tx("Statut")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
@@ -1263,7 +1265,7 @@ export default function SousTraitantsPage() {
                                 {st.nom}
                                 {st.parentId && nomParId.get(st.parentId) && (
                                   <span className="block text-xs font-normal text-gray-500 dark:text-gray-400">
-                                    rattaché à {nomParId.get(st.parentId)}
+                                    <UiText>rattaché à </UiText>{nomParId.get(st.parentId)}
                                   </span>
                                 )}
                               </>
@@ -1278,7 +1280,7 @@ export default function SousTraitantsPage() {
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
                             <Link
                               href={`/sous-traitants/${st.id}/ouvriers`}
-                              title="Voir les ouvriers et leurs documents"
+                              title={tx("Voir les ouvriers et leurs documents")}
                               className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100 hover:border-blue-300 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 transition-colors"
                             >
                               <UserGroupIcon className="h-4 w-4" />
@@ -1297,7 +1299,7 @@ export default function SousTraitantsPage() {
                                 className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium cursor-pointer hover:opacity-80 hover:shadow-md transition-all ${getStatusStyle(st.actif ?? true)} ${
                                   updatingStatus === st.id ? 'opacity-50 cursor-not-allowed' : ''
                                 }`}
-                                title="Cliquer pour changer le statut"
+                                title={tx("Cliquer pour changer le statut")}
                               >
                                 {updatingStatus === st.id ? (
                                   <span className="flex items-center gap-1">
@@ -1356,16 +1358,16 @@ export default function SousTraitantsPage() {
                               <div className="flex flex-col items-start gap-1">
                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
                                   <CheckCircleIcon className="h-3 w-3 mr-1" />
-                                  Signé
-                                </span>
+                                  <UiText>Signé
+                                </UiText></span>
                                 {st.renouvellement && (
                                   <span
                                     className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100"
-                                    title={st.renouvellement.dateEnvoi ? `Nouveau contrat envoyé le ${new Date(st.renouvellement.dateEnvoi).toLocaleDateString('fr-FR')}` : 'Nouveau contrat généré, pas encore envoyé'}
+                                    title={st.renouvellement.dateEnvoi ? `Nouveau contrat envoyé le ${new Date(st.renouvellement.dateEnvoi).toLocaleDateString(intlLocale(getActiveLocale()))}` : 'Nouveau contrat généré, pas encore envoyé'}
                                   >
                                     <ClockIcon className="h-3 w-3 mr-1" />
                                     {st.renouvellement.dateEnvoi
-                                      ? `Renouvellement envoyé le ${new Date(st.renouvellement.dateEnvoi).toLocaleDateString('fr-FR')}`
+                                      ? `Renouvellement envoyé le ${new Date(st.renouvellement.dateEnvoi).toLocaleDateString(intlLocale(getActiveLocale()))}`
                                       : 'Renouvellement à envoyer'}
                                   </span>
                                 )}
@@ -1373,13 +1375,13 @@ export default function SousTraitantsPage() {
                             ) : st.contrats && st.contrats.length > 0 ? (
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100">
                                 <ClockIcon className="h-3 w-3 mr-1" />
-                                En attente
-                              </span>
+                                <UiText>En attente
+                              </UiText></span>
                             ) : (
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                                 <DocumentTextIcon className="h-3 w-3 mr-1" />
-                                Aucun
-                              </span>
+                                <UiText>Aucun
+                              </UiText></span>
                             )}
                           </td>
                           {/* Icônes contrat (sous le colspan "Contrat") */}
@@ -1392,7 +1394,7 @@ export default function SousTraitantsPage() {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="p-2 text-green-600 hover:bg-green-100 dark:text-green-400 dark:hover:bg-green-900 rounded transition-colors"
-                                  title="Voir contrat signé"
+                                  title={tx("Voir contrat signé")}
                                   onClick={(e) => e.stopPropagation()}
                                 >
                                   <DocumentTextIcon className="h-4 w-4" />
@@ -1404,7 +1406,7 @@ export default function SousTraitantsPage() {
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors"
-                                      title="Consulter le nouveau contrat (en attente de signature)"
+                                      title={tx("Consulter le nouveau contrat (en attente de signature)")}
                                       onClick={(e) => e.stopPropagation()}
                                     >
                                       <EyeIcon className="h-4 w-4" />
@@ -1423,7 +1425,7 @@ export default function SousTraitantsPage() {
                                     onClick={(e) => { e.stopPropagation(); envoyerContrat(st.id, 'renouvellement') }}
                                     disabled={sendingContract === st.id}
                                     className="p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900 rounded transition-colors disabled:opacity-50"
-                                    title="Renouveler : générer un nouveau contrat et l'envoyer en signature"
+                                    title={tx("Renouveler : générer un nouveau contrat et l'envoyer en signature")}
                                   >
                                     <ArrowPathIcon className={`h-4 w-4 ${sendingContract === st.id ? 'animate-spin' : ''}`} />
                                   </button>
@@ -1438,7 +1440,7 @@ export default function SousTraitantsPage() {
                                     }}
                                     disabled={generatingContract === st.id}
                                     className="p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                    title="Générer contrat"
+                                    title={tx("Générer contrat")}
                                   >
                                     {generatingContract === st.id ? (
                                       <svg className="animate-spin h-4 w-4 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -1455,7 +1457,7 @@ export default function SousTraitantsPage() {
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors"
-                                      title="Consulter contrat"
+                                      title={tx("Consulter contrat")}
                                       onClick={(e) => e.stopPropagation()}
                                     >
                                       <EyeIcon className="h-4 w-4" />
@@ -1468,7 +1470,7 @@ export default function SousTraitantsPage() {
                                     }}
                                     disabled={sendingContract === st.id || !st.contrats || st.contrats.length === 0}
                                     className="p-2 text-green-600 hover:bg-green-100 dark:text-green-400 dark:hover:bg-green-900 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                    title="Envoyer contrat"
+                                    title={tx("Envoyer contrat")}
                                   >
                                     {sendingContract === st.id ? (
                                       <svg className="animate-spin h-4 w-4 text-green-600 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -1493,7 +1495,7 @@ export default function SousTraitantsPage() {
                                 return <span className="text-gray-400 dark:text-gray-500">—</span>
                               }
                               const statut = statutEcheance(new Date(contratActuel.dateFin))
-                              const dateAffichee = new Date(contratActuel.dateFin).toLocaleDateString('fr-FR')
+                              const dateAffichee = new Date(contratActuel.dateFin).toLocaleDateString(intlLocale(getActiveLocale()))
                               // L'urgence n'a de sens que pour un contrat SIGNÉ : une échéance
                               // proche sur un contrat encore en attente appelle à relancer la
                               // signature, pas à en régénérer un nouveau.
@@ -1522,7 +1524,7 @@ export default function SousTraitantsPage() {
                               <Link
                                 href={`/sous-traitants/${st.id}`}
                                 className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors"
-                                title="Consulter"
+                                title={tx("Consulter")}
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <EyeIcon className="h-4 w-4" />
@@ -1530,7 +1532,7 @@ export default function SousTraitantsPage() {
                               <Link
                                 href={`/sous-traitants/${st.id}/edit`}
                                 className="p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900 rounded transition-colors"
-                                title="Modifier"
+                                title={tx("Modifier")}
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <PencilSquareIcon className="h-4 w-4" />
@@ -1540,7 +1542,7 @@ export default function SousTraitantsPage() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors"
-                                title="Portail public"
+                                title={tx("Portail public")}
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <GlobeAltIcon className="h-4 w-4" />
@@ -1551,13 +1553,13 @@ export default function SousTraitantsPage() {
                                   setHistoriqueOuvert({ id: st.id, nom: st.nom })
                                 }}
                                 className="p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 rounded transition-colors relative"
-                                title="Historique des contrats"
+                                title={tx("Historique des contrats")}
                               >
                                 <ClipboardDocumentListIcon className="h-4 w-4" />
                                 {st.contrats?.[0]?.renouvellementConseille && (
                                   <span
                                     className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-amber-500"
-                                    title="Renouvellement conseillé"
+                                    title={tx("Renouvellement conseillé")}
                                   />
                                 )}
                               </button>
@@ -1573,7 +1575,7 @@ export default function SousTraitantsPage() {
                                   })
                                 }}
                                 className="p-2 text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900 rounded transition-colors"
-                                title="Supprimer"
+                                title={tx("Supprimer")}
                               >
                                 <TrashIcon className="h-4 w-4" />
                               </button>
@@ -1591,7 +1593,7 @@ export default function SousTraitantsPage() {
 
         {/* Ouvriers internes */}
         <div className="mt-12">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Ouvriers internes</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4"><UiText>Ouvriers internes</UiText></h2>
           
           {/* Formulaire d'ajout */}
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-4">
@@ -1604,11 +1606,11 @@ export default function SousTraitantsPage() {
                 setNewOuvrier({ prenom:'', nom:'', email:'', telephone:'', poste:'', actif:true })
               }
             }}>
-              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder="Prénom" value={newOuvrier.prenom} onChange={e=>setNewOuvrier(prev=>({...prev, prenom:e.target.value}))} />
-              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder="Nom" value={newOuvrier.nom} onChange={e=>setNewOuvrier(prev=>({...prev, nom:e.target.value}))} />
-              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder="Email" value={newOuvrier.email} onChange={e=>setNewOuvrier(prev=>({...prev, email:e.target.value}))} />
-              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder="Téléphone" value={newOuvrier.telephone} onChange={e=>setNewOuvrier(prev=>({...prev, telephone:e.target.value}))} />
-              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder="Poste" value={newOuvrier.poste} onChange={e=>setNewOuvrier(prev=>({...prev, poste:e.target.value}))} />
+              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder={tx("Prénom")} value={newOuvrier.prenom} onChange={e=>setNewOuvrier(prev=>({...prev, prenom:e.target.value}))} />
+              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder={tx("Nom")} value={newOuvrier.nom} onChange={e=>setNewOuvrier(prev=>({...prev, nom:e.target.value}))} />
+              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder={tx("Email")} value={newOuvrier.email} onChange={e=>setNewOuvrier(prev=>({...prev, email:e.target.value}))} />
+              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder={tx("Téléphone")} value={newOuvrier.telephone} onChange={e=>setNewOuvrier(prev=>({...prev, telephone:e.target.value}))} />
+              <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder={tx("Poste")} value={newOuvrier.poste} onChange={e=>setNewOuvrier(prev=>({...prev, poste:e.target.value}))} />
               <div className="md:col-span-5 flex items-center gap-3 mt-2">
                 <label className="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input type="checkbox" checked={newOuvrier.actif} onChange={e=>setNewOuvrier(prev=>({...prev, actif:e.target.checked}))} /> Actif</label>
                 <button className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"><UiText>Ajouter</UiText></button>
@@ -1620,7 +1622,7 @@ export default function SousTraitantsPage() {
           {ouvriersInternesAffichables.length === 0 ? (
             <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
               <UsersIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <p className="text-sm text-gray-500 dark:text-gray-400">Aucun ouvrier interne</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Aucun ouvrier interne</UiText></p>
             </div>
           ) : (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
@@ -1691,7 +1693,7 @@ export default function SousTraitantsPage() {
                         }}
                       >
                         <div className="flex items-center gap-1">
-                          <span>Poste</span>
+                          <span><UiText>Poste</UiText></span>
                           {ouvrierSortField === 'poste' ? (
                             ouvrierSortDirection === 'asc' ? (
                               <ChevronUpIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -1819,7 +1821,7 @@ export default function SousTraitantsPage() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors"
-                                title="Portail public"
+                                title={tx("Portail public")}
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <GlobeAltIcon className="h-4 w-4" />
@@ -1827,7 +1829,7 @@ export default function SousTraitantsPage() {
                               <button
                                 type="button"
                                 className="p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900 rounded transition-colors"
-                                title="Modifier"
+                                title={tx("Modifier")}
                                 onClick={(e) => { e.stopPropagation(); openEditOuvrier(o) }}
                               >
                                 <PencilSquareIcon className="h-4 w-4" />
@@ -1835,7 +1837,7 @@ export default function SousTraitantsPage() {
                               <button
                                 type="button"
                                 className="p-2 text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900 rounded transition-colors"
-                                title="Désactiver"
+                                title={tx("Désactiver")}
                                 onClick={(e) => { e.stopPropagation(); handleDeleteOuvrier(o.id) }}
                               >
                                 <TrashIcon className="h-4 w-4" />
@@ -1863,7 +1865,7 @@ export default function SousTraitantsPage() {
                 <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nom *</label>
                 <input
                   className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500"
-                  placeholder="Nom du magasinier"
+                  placeholder={tx("Nom du magasinier")}
                   value={newMagasinierNomST}
                   onChange={e => setNewMagasinierNomST(e.target.value)}
                 />
@@ -1894,7 +1896,7 @@ export default function SousTraitantsPage() {
           {magasiniers.length === 0 ? (
             <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
               <UsersIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <p className="text-sm text-gray-500 dark:text-gray-400">Aucun magasinier</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Aucun magasinier</UiText></p>
             </div>
           ) : (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
@@ -1935,15 +1937,15 @@ export default function SousTraitantsPage() {
                             className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 text-xs font-medium hover:underline"
                           >
                             <GlobeAltIcon className="h-4 w-4" />
-                            Ouvrir
-                          </a>
+                            <UiText>Ouvrir
+                          </UiText></a>
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <div className="flex space-x-1 justify-end">
                             <button
                               type="button"
                               className="p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900 rounded transition-colors"
-                              title="Modifier / gérer le PIN"
+                              title={tx("Modifier / gérer le PIN")}
                               onClick={() => openEditMag(m)}
                             >
                               <PencilSquareIcon className="h-4 w-4" />
@@ -1951,7 +1953,7 @@ export default function SousTraitantsPage() {
                             <button
                               type="button"
                               className="p-2 text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900 rounded transition-colors"
-                              title="Désactiver"
+                              title={tx("Désactiver")}
                               onClick={() => handleDeleteMag(m.id)}
                             >
                               <TrashIcon className="h-4 w-4" />
@@ -1980,7 +1982,7 @@ export default function SousTraitantsPage() {
       {editOuvrierModal.open && editOuvrierModal.ouvrier && (
         <div className="fixed inset-0 bg-gray-500/75 dark:bg-gray-900/80 flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-lg w-full shadow-xl space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Modifier l&apos;ouvrier</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Modifier l&apos;ouvrier</UiText></h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Prénom</UiText></label>
@@ -1999,7 +2001,7 @@ export default function SousTraitantsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Poste</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Poste</UiText></label>
                 <input
                   className="w-full p-2 border rounded dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   value={editOuvrierForm.poste}
@@ -2099,7 +2101,7 @@ export default function SousTraitantsPage() {
       {editMagModal.open && editMagModal.mag && (
         <div className="fixed inset-0 bg-gray-500/75 dark:bg-gray-900/80 flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full shadow-xl space-y-5">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Modifier le magasinier</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Modifier le magasinier</UiText></h3>
 
             {/* Infos générales */}
             <div className="space-y-3">
@@ -2192,7 +2194,7 @@ export default function SousTraitantsPage() {
               <div className="flex items-center gap-3">
                 <PaperAirplaneIcon className="h-6 w-6" />
                 <div>
-                  <h3 className="text-lg font-bold">Inviter au portail sous-traitant</h3>
+                  <h3 className="text-lg font-bold"><UiText>Inviter au portail sous-traitant</UiText></h3>
                   <p className="text-xs text-blue-100">Un rappel par email avec le lien (sans le code PIN)</p>
                 </div>
               </div>
@@ -2207,8 +2209,8 @@ export default function SousTraitantsPage() {
                 <>
                   <div className="flex flex-wrap items-center gap-2 mb-4">
                     <button onClick={inviteSelectAll} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">Tout cocher</button>
-                    <button onClick={inviteClear} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">Tout décocher</button>
-                    <span className="ml-auto text-sm font-semibold text-blue-600 dark:text-blue-400">{inviteSelected.size} sélectionné(s)</span>
+                    <button onClick={inviteClear} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600"><UiText>Tout décocher</UiText></button>
+                    <span className="ml-auto text-sm font-semibold text-blue-600 dark:text-blue-400">{inviteSelected.size} <UiText>sélectionné(s)</UiText></span>
                   </div>
 
                   <div className="border border-gray-200 dark:border-gray-700 rounded-xl divide-y divide-gray-100 dark:divide-gray-700 overflow-hidden">
@@ -2236,8 +2238,8 @@ export default function SousTraitantsPage() {
                     })}
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
-                    Les sous-traitants « pas encore de code » recevront le lien mais devront d&apos;abord obtenir un code PIN (fiche sous-traitant). Ceux « sans email » n&apos;auront pas d&apos;envoi automatique — utilisez WhatsApp ou le QR code affichés après l&apos;envoi.
-                  </p>
+                    <UiText>Les sous-traitants « pas encore de code » recevront le lien mais devront d&apos;abord obtenir un code PIN (fiche sous-traitant). Ceux « sans email » n&apos;auront pas d&apos;envoi automatique — utilisez WhatsApp ou le QR code affichés après l&apos;envoi.
+                  </UiText></p>
                 </>
               ) : (
                 <div className="space-y-3">
@@ -2249,12 +2251,12 @@ export default function SousTraitantsPage() {
                           {r.sent ? (
                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 inline-flex items-center gap-1"><CheckIcon className="h-3 w-3" /><UiText>Email envoyé</UiText></span>
                           ) : r.email ? (
-                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">Échec email</span>
+                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"><UiText>Échec email</UiText></span>
                           ) : (
                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">Sans email</span>
                           )}
                           {!r.hasPin && (
-                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">à définir : code PIN</span>
+                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"><UiText>à définir : code PIN</UiText></span>
                           )}
                         </div>
                         <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -2267,8 +2269,8 @@ export default function SousTraitantsPage() {
                             onClick={() => { navigator.clipboard?.writeText(r.portalUrl); showNotification('Copié', 'Lien copié dans le presse-papier', 'success') }}
                             className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                           >
-                            Copier le lien
-                          </button>
+                            <UiText>Copier le lien
+                          </UiText></button>
                         </div>
                       </div>
                       {inviteQrs[r.id] && (
@@ -2302,7 +2304,7 @@ export default function SousTraitantsPage() {
                   </button>
                 </>
               ) : (
-                <button onClick={() => setInviteOpen(false)} className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-700 rounded-lg hover:from-blue-700 hover:to-indigo-800">Terminé</button>
+                <button onClick={() => setInviteOpen(false)} className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-700 rounded-lg hover:from-blue-700 hover:to-indigo-800"><UiText>Terminé</UiText></button>
               )}
             </div>
           </div>

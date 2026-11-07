@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 // Rapport d'activité hebdomadaire : envoi à la demande (en plus du vendredi midi).
 
 import { useState } from 'react'
@@ -26,12 +27,12 @@ export default function RapportHebdoSettings() {
   return (
     <div className="space-y-3 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Rapport d&apos;activité hebdomadaire</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Rapport d&apos;activité hebdomadaire</UiText></h2>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Chaque vendredi à midi, aux administrateurs : états d&apos;avancement de la période en clôture (mois précédent
+          <UiText>Chaque vendredi à midi, aux administrateurs : états d&apos;avancement de la période en clôture (mois précédent
           jusqu&apos;au 20, mois en cours ensuite), états à facturer, chantiers en cours et à venir, devis, et ce qui reste à
           traiter (métrés, SAV, contrats, numéros Checkinatwork).
-        </p>
+        </UiText></p>
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <button

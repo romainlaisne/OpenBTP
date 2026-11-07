@@ -1,8 +1,10 @@
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState } from 'react';
 import { useChat, User } from './context/ChatContext';
 import type { Chat as ChatType } from './context/ChatContext';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { dateFnsLocale } from '@/lib/i18n/dates';
 import { useSession } from 'next-auth/react';
 
 const ConversationList: React.FC = () => {
@@ -89,7 +91,7 @@ const ConversationList: React.FC = () => {
       } else if (diffDays === 1) {
         return 'Hier';
       } else if (diffDays < 7) {
-        return format(messageDate, 'EEEE', { locale: fr });
+        return format(messageDate, 'EEEE', { locale: dateFnsLocale() });
       } else {
         return format(messageDate, 'dd/MM/yyyy');
       }
@@ -151,13 +153,13 @@ const ConversationList: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-300 mb-4" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
             </svg>
-            <p>Aucune conversation</p>
+            <p><UiText>Aucune conversation</UiText></p>
             <button 
               onClick={() => setShowNewChatModal(true)}
               className="mt-4 px-4 py-2 bg-gradient-to-r from-amber-500 via-orange-600 to-red-600 hover:from-amber-600 hover:via-orange-700 hover:to-red-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105 text-sm font-semibold"
             >
-              Démarrer une conversation
-            </button>
+              <UiText>Démarrer une conversation
+            </UiText></button>
           </div>
         ) : (
           <ul>
@@ -217,8 +219,8 @@ const ConversationList: React.FC = () => {
                   onChange={e => setIsGroup(e.target.checked)} 
                   className="mr-3 w-5 h-5" 
                 />
-                Créer un groupe
-              </label>
+                <UiText>Créer un groupe
+              </UiText></label>
               
               {isGroup && (
                 <input 
@@ -234,8 +236,8 @@ const ConversationList: React.FC = () => {
             {/* Recherche d'utilisateurs */}
             <div className="mb-6">
               <label className="block text-base font-medium text-gray-700 mb-2">
-                Ajouter des participants
-              </label>
+                <UiText>Ajouter des participants
+              </UiText></label>
               <div className="relative">
                 <input 
                   type="text" 
@@ -244,7 +246,7 @@ const ConversationList: React.FC = () => {
                     setSearchTerm(e.target.value);
                     searchUsers(e.target.value);
                   }} 
-                  placeholder="Rechercher un utilisateur..." 
+                  placeholder={tx("Rechercher un utilisateur...")} 
                   className="w-full p-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-blue-300" 
                 />
                 {isLoading && (
@@ -305,8 +307,8 @@ const ConversationList: React.FC = () => {
                 }}
                 className="px-6 py-3 text-gray-600 hover:text-gray-800 text-base font-medium"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button 
                 onClick={handleCreateChat}
                 disabled={selectedUsers.length === 0}
@@ -314,8 +316,8 @@ const ConversationList: React.FC = () => {
                   selectedUsers.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
                 }`}
               >
-                Créer
-              </button>
+                <UiText>Créer
+              </UiText></button>
             </div>
           </div>
         </div>

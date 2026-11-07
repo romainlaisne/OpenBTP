@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,10 +8,11 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/dashboard/alertes - Récupère les alertes et notifications pour le dashboard
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -62,7 +66,7 @@ export async function GET() {
           id: `doc-${doc.id}`,
           type: 'document',
           message: `${doc.nom} de ${doc.ouvrier.prenom} ${doc.ouvrier.nom} (${doc.ouvrier.soustraitant?.nom || 'Sous-traitant inconnu'}) expire dans ${joursRestants} jours`,
-          date: doc.dateExpiration.toLocaleDateString('fr-FR'),
+          date: doc.dateExpiration.toLocaleDateString(intlLocale(getActiveLocale())),
           severity
         })
       }
@@ -99,7 +103,7 @@ export async function GET() {
         id: `pret-${pret.id}`,
         type: 'pret',
         message: `Retard de ${joursRetard} jours pour le retour de ${pret.machine.nom} emprunté par ${pret.emprunteur}`,
-        date: pret.dateRetourPrevue.toLocaleDateString('fr-FR'),
+        date: pret.dateRetourPrevue.toLocaleDateString(intlLocale(getActiveLocale())),
         severity
       })
     })
@@ -121,7 +125,7 @@ export async function GET() {
         id: `tache-${tache.id}`,
         type: 'tache',
         message: `Tâche administrative "${tache.title || tache.taskType}" en attente pour le chantier ${tache.chantier.nomChantier}`,
-        date: new Date().toLocaleDateString('fr-FR'),
+        date: new Date().toLocaleDateString(intlLocale(getActiveLocale())),
         severity: 'low'
       })
     })
@@ -148,7 +152,7 @@ export async function GET() {
         id: `machine-${machine.id}`,
         type: 'machine',
         message,
-        date: new Date().toLocaleDateString('fr-FR'),
+        date: new Date().toLocaleDateString(intlLocale(getActiveLocale())),
         severity
       })
     })
@@ -159,11 +163,11 @@ export async function GET() {
       return severityOrder[a.severity as keyof typeof severityOrder] - severityOrder[b.severity as keyof typeof severityOrder]
     })
 
-    return NextResponse.json(sortedAlertes.slice(0, 10)) // Limiter à 10 alertes
+    return localizedJson(sortedAlertes.slice(0, 10)) // Limiter à 10 alertes
   } catch (error) {
     console.error('Erreur:', error)
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des alertes' },
       { status: 500 }
     )

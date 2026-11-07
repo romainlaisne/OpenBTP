@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { checkJournalEntryAuth } from '@/lib/journalAuth'
@@ -7,6 +9,7 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await params
 
@@ -15,18 +18,18 @@ export async function POST(
     })
 
     if (!entree) {
-      return NextResponse.json({ error: 'Entrée non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Entrée non trouvée' }, { status: 404 })
     }
 
     const auth = await checkJournalEntryAuth(request, entree.ouvrierId)
     if (auth.allowed === false) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: auth.status })
+      return localizedJson({ error: 'Non autorisé' }, { status: auth.status })
     }
 
     // Vérifier si l'entrée est encore modifiable (48h)
     const maintenant = new Date()
     if (maintenant > entree.modifiableJusquA) {
-      return NextResponse.json({ 
+      return localizedJson({ 
         error: 'Cette entrée n\'est plus modifiable (délai de 48h dépassé)' 
       }, { status: 400 })
     }
@@ -47,10 +50,10 @@ export async function POST(
       }
     })
 
-    return NextResponse.json(entreeDevalidee)
+    return localizedJson(entreeDevalidee)
   } catch (error) {
     console.error('Erreur lors de la dévalidation de l\'entrée:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la dévalidation de l\'entrée' },
       { status: 500 }
     )

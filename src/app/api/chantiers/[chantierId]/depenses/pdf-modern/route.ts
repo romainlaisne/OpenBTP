@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -13,6 +16,7 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const params = await props.params
     const { chantierId } = params
@@ -21,7 +25,7 @@ export async function GET(
     
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer le chantier avec les informations client
@@ -37,7 +41,7 @@ export async function GET(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Récupérer les dépenses
@@ -78,7 +82,8 @@ export async function GET(
     }
 
     // Générer le HTML
-    const htmlContent = generateDepensesHTML(depensesData)
+    const __locale = await bindRequestLocale()
+    const htmlContent = localizeGeneratedHtml(__locale, generateDepensesHTML(depensesData), collectStrings(depensesData))
 
     // Générer le PDF avec Puppeteer
     console.log('📄 Génération du PDF avec Puppeteer...')
@@ -106,7 +111,7 @@ export async function GET(
 
   } catch (error) {
     console.error('❌ Erreur lors de la génération du PDF de dépenses:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la génération du PDF' },
       { status: 500 }
     )

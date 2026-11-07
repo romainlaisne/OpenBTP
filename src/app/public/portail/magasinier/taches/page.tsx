@@ -14,7 +14,7 @@ import {
   PrinterIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline'
-import { usePortalI18n } from '../../i18n'
+import { portalIntlLocale, usePortalI18n } from '../../i18n'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -44,7 +44,8 @@ interface BonPreparation {
 
 export default function MagasinierTachesPage() {
   const router = useRouter()
-  const { t } = usePortalI18n()
+  const { t, lang } = usePortalI18n()
+  const locale = portalIntlLocale(lang)
   const [me, setMe] = useState<{ magasinier: { id: string; nom: string }; tachesAFaire: number } | null>(null)
   const [taches, setTaches] = useState<Tache[]>([])
   const [loading, setLoading] = useState(true)
@@ -117,7 +118,6 @@ export default function MagasinierTachesPage() {
   }
 
   const today = new Date()
-  const locale = 'fr-FR'
   const localDateKey = (d: Date) => {
     const y = d.getFullYear()
     const m = String(d.getMonth() + 1).padStart(2, '0')
@@ -255,7 +255,7 @@ export default function MagasinierTachesPage() {
           <div className="text-center flex-1">
             <div className="font-semibold">{me?.magasinier?.nom || ''}</div>
             <div className="text-sm text-white/80">
-              {me?.tachesAFaire ?? 0} tâche(s) à faire
+              {me?.tachesAFaire ?? 0} {t('tasks_to_do')}
             </div>
           </div>
           <Link
@@ -274,7 +274,7 @@ export default function MagasinierTachesPage() {
           className="flex-1 min-w-0 py-3 px-2 font-medium text-blue-700 border-b-2 border-blue-600 text-sm flex items-center justify-center gap-1"
         >
           <ClipboardDocumentListIcon className="h-5 w-5 flex-shrink-0" />
-          <span>Tâches</span>
+          <span>{t('tasks')}</span>
         </button>
         <button
           onClick={() => router.push('/public/portail/magasinier/historique')}
@@ -291,7 +291,7 @@ export default function MagasinierTachesPage() {
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
               <ClipboardDocumentListIcon className="h-5 w-5 text-orange-500" />
-              <h2 className="font-bold text-gray-900">Commandes à préparer ({bonsPreparation.length})</h2>
+              <h2 className="font-bold text-gray-900">{t('orders_to_prepare')} ({bonsPreparation.length})</h2>
             </div>
             <div className="space-y-3">
               {bonsPreparation.map(bon => (
@@ -351,7 +351,7 @@ export default function MagasinierTachesPage() {
                       ? <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-white" />
                       : <CheckCircleIcon className="h-5 w-5" />
                     }
-                    Commande préparée
+                    {t('order_prepared')}
                   </button>
                 </div>
               ))}
@@ -364,7 +364,7 @@ export default function MagasinierTachesPage() {
           className="mb-4 w-full py-3 bg-white border-2 border-dashed border-blue-300 text-blue-700 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-blue-50 active:scale-[0.99] transition"
         >
           <PlusIcon className="h-5 w-5" />
-          Ajouter une tâche
+          {t('add_task')}
         </button>
 
         <div className="space-y-4">
@@ -402,23 +402,23 @@ export default function MagasinierTachesPage() {
                       —
                     </div>
                   ) : (
-                    dayTasks.map((t) => (
+                    dayTasks.map((task) => (
                       <div
-                        key={t.id}
+                        key={task.id}
                         className="bg-white rounded-xl p-4 shadow border border-gray-100"
                       >
-                        <h3 className="font-semibold text-gray-900">{t.titre}</h3>
-                        {t.creeParMagasinier && (
+                        <h3 className="font-semibold text-gray-900">{task.titre}</h3>
+                        {task.creeParMagasinier && (
                           <span className="inline-block mt-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                            Ajoutée par moi
+                            {t('added_by_me')}
                           </span>
                         )}
-                        {t.description && (
-                          <p className="text-sm text-gray-600 mt-1">{t.description}</p>
+                        {task.description && (
+                          <p className="text-sm text-gray-600 mt-1">{task.description}</p>
                         )}
-                        {t.photos?.length > 0 && (
+                        {task.photos?.length > 0 && (
                           <div className="flex gap-1 mt-2 overflow-x-auto">
-                            {t.photos.map((p) => (
+                            {task.photos.map((p) => (
                               <button
                                 key={p.id}
                                 onClick={() => setLightboxUrl(p.url)}
@@ -430,11 +430,11 @@ export default function MagasinierTachesPage() {
                           </div>
                         )}
                         <button
-                          onClick={() => handleOpenValider(t)}
+                          onClick={() => handleOpenValider(task)}
                           className="mt-3 w-full py-3 bg-blue-600 text-white rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-blue-700 active:scale-[0.99] transition"
                         >
                           <CheckCircleIcon className="h-5 w-5" />
-                          Marquer comme fait
+                          {t('mark_done')}
                         </button>
                       </div>
                     ))
@@ -451,8 +451,8 @@ export default function MagasinierTachesPage() {
         <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-4">
           <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="p-4 border-b">
-              <h3 className="font-bold text-lg">Nouvelle tâche</h3>
-              <p className="text-sm text-gray-500 mt-1">Pour ne rien oublier : elle s’ajoute à ta liste.</p>
+              <h3 className="font-bold text-lg">{t('new_task')}</h3>
+              <p className="text-sm text-gray-500 mt-1">{t('task_hint')}</p>
             </div>
             <div className="p-4 space-y-4">
               <div>
@@ -470,7 +470,7 @@ export default function MagasinierTachesPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="ajout-description">
-                  Détails (optionnel)
+                  {t('details_optional')}
                 </label>
                 <textarea
                   id="ajout-description"
@@ -498,7 +498,7 @@ export default function MagasinierTachesPage() {
                   onClick={() => setAjoutOuvert(false)}
                   className="flex-1 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium"
                 >
-                  Annuler
+                  {t('cancel')}
                 </button>
                 <button
                   onClick={handleAjouter}
@@ -583,7 +583,7 @@ export default function MagasinierTachesPage() {
                   onClick={() => setModalTache(null)}
                   className="flex-1 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium"
                 >
-                  Annuler
+                  {t('cancel')}
                 </button>
                 <button
                   onClick={handleValider}
@@ -615,7 +615,7 @@ export default function MagasinierTachesPage() {
           <div id="print-bon-prep" className="bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
             {/* En-tête modal (caché à l'impression) */}
             <div className="no-print flex items-center justify-between p-4 border-b">
-              <h3 className="font-bold text-gray-900">Bon de préparation</h3>
+              <h3 className="font-bold text-gray-900">{t('preparation_slip')}</h3>
               <button onClick={() => setPrintBon(null)} className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg">
                 <XMarkIcon className="h-5 w-5" />
               </button>
@@ -623,12 +623,12 @@ export default function MagasinierTachesPage() {
             {/* Contenu imprimable */}
             <div className="p-5">
               <div className="text-center mb-4">
-                <h2 className="text-xl font-bold tracking-widest uppercase">BON DE PRÉPARATION</h2>
-                <p className="text-xs text-gray-500 mt-1">À coller sur la palette</p>
+                <h2 className="text-xl font-bold tracking-widest uppercase">{t('preparation_slip_title')}</h2>
+                <p className="text-xs text-gray-500 mt-1">{t('stick_on_pallet')}</p>
               </div>
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <div className="border-2 border-gray-800 rounded-lg p-3">
-                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Client / Chantier</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('client_project')}</p>
                   <p className="font-bold text-gray-900">{printBon.client}</p>
                 </div>
                 <div className="border-2 border-gray-800 rounded-lg p-3">
@@ -641,8 +641,8 @@ export default function MagasinierTachesPage() {
                   <tr className="bg-gray-100">
                     <th className="border border-gray-400 px-2 py-2 text-left text-xs uppercase">N°</th>
                     <th className="border border-gray-400 px-2 py-2 text-left text-xs uppercase">Description</th>
-                    <th className="border border-gray-400 px-2 py-2 text-center text-xs uppercase">Qté</th>
-                    <th className="border border-gray-400 px-2 py-2 text-center text-xs uppercase">Unité</th>
+                    <th className="border border-gray-400 px-2 py-2 text-center text-xs uppercase">{t('qty_short')}</th>
+                    <th className="border border-gray-400 px-2 py-2 text-center text-xs uppercase">{t('unit')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -660,7 +660,7 @@ export default function MagasinierTachesPage() {
                 <p className="text-xs text-gray-400 uppercase tracking-wide">Remarques</p>
               </div>
               <p className="text-xs text-gray-400 text-right mt-1">
-                {new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date())}
+                {new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date())}
               </p>
             </div>
             {/* Boutons (cachés à l'impression) */}
@@ -676,7 +676,7 @@ export default function MagasinierTachesPage() {
                 disabled={terminantBonId === printBon.id}
                 className="flex-1 py-3 bg-green-600 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-green-700 disabled:opacity-50 transition-colors"
               >
-                <CheckCircleIcon className="h-5 w-5" /> Terminé
+                <CheckCircleIcon className="h-5 w-5" /> {t('done')}
               </button>
             </div>
           </div>

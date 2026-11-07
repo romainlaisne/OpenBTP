@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { CompanySettings } from '../pdf-generator'
 
 export interface CommandeSoustraitantData {
@@ -466,7 +467,7 @@ export function generateCommandeSoustraitantHTML(
             </div>
             
             <div class="project-info">
-                <div><span class="label">Date:</span> ${new Date(data.dateCommande).toLocaleDateString('fr-FR')}</div>
+                <div><span class="label">Date:</span> ${new Date(data.dateCommande).toLocaleDateString(intlLocale(getActiveLocale()))}</div>
                 <div><span class="label">Chantier:</span> ${data.chantier.chantierId}</div>
                 <div><span class="label">Statut:</span> <span class="status-badge ${data.estVerrouillee ? 'status-verrouillee' : 'status-brouillon'}">${data.estVerrouillee ? '✓ Verrouillée' : '⚠ Brouillon'}</span></div>
             </div>
@@ -518,9 +519,9 @@ export function generateCommandeSoustraitantHTML(
                             <td>${ligne.description}</td>
                             <td class="text-center">${ligne.type}</td>
                             <td class="text-center">${ligne.unite}</td>
-                            <td class="text-center">${ligne.quantite.toLocaleString('fr-FR')}</td>
-                            <td class="text-right">${ligne.prixUnitaire.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
-                            <td class="text-right montant font-bold">${ligne.total.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
+                            <td class="text-center">${ligne.quantite.toLocaleString(intlLocale(getActiveLocale()))}</td>
+                            <td class="text-right">${ligne.prixUnitaire.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
+                            <td class="text-right montant font-bold">${ligne.total.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -533,7 +534,7 @@ export function generateCommandeSoustraitantHTML(
                 <h4>Total HT</h4>
                 <div class="summary-row">
                     <span>Montant HT</span>
-                    <span class="montant">${data.sousTotal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <span class="montant">${data.sousTotal.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </div>
             
@@ -541,7 +542,7 @@ export function generateCommandeSoustraitantHTML(
                 <h4>TVA</h4>
                 <div class="summary-row">
                     <span>TVA (${data.tauxTVA}%)</span>
-                    <span class="montant">${data.tva.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <span class="montant">${data.tva.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </div>
             
@@ -549,7 +550,7 @@ export function generateCommandeSoustraitantHTML(
                 <h4>Total TTC</h4>
                 <div class="summary-row total">
                     <span>Montant TTC</span>
-                    <span class="text-orange">${data.totalTTC.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <span class="text-orange">${data.totalTTC.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </div>
         </div>
@@ -557,7 +558,7 @@ export function generateCommandeSoustraitantHTML(
         <!-- Pied de page -->
         <div class="footer">
             <div class="footer-left">
-                Document généré le ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                Document généré le ${new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString(intlLocale(getActiveLocale()), { hour: '2-digit', minute: '2-digit' })}
             </div>
             <div class="footer-right">
                 ${companySettings?.nomEntreprise || 'Nom Entreprise'}

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -9,11 +11,12 @@ export async function DELETE(
   request: Request,
   props: { params: Promise<{ id: string, ouvrierId: string, documentId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -28,7 +31,7 @@ export async function DELETE(
     })
 
     if (!document) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Document non trouvé' },
         { status: 404 }
       )
@@ -39,10 +42,10 @@ export async function DELETE(
     // déplacé dans _Archives sur le NAS.
     await archiverDocumentOuvrier(document.id)
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du document' },
       { status: 500 }
     )
@@ -58,22 +61,23 @@ export async function PATCH(
   request: Request,
   props: { params: Promise<{ id: string; ouvrierId: string; documentId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
 
     const document = await prisma.documentOuvrier.findFirst({
       where: { id: params.documentId, ouvrierId: params.ouvrierId },
     })
-    if (!document) return NextResponse.json({ error: 'Document non trouvé' }, { status: 404 })
+    if (!document) return localizedJson({ error: 'Document non trouvé' }, { status: 404 })
 
     const body = await request.json().catch(() => ({}))
     const data: { type?: string; dateExpiration?: Date | null; precision?: string | null; updatedAt: Date } = { updatedAt: new Date() }
 
     if (body.type !== undefined) {
       if (!CODES_OUVRIER.includes(String(body.type))) {
-        return NextResponse.json({ error: 'Type de document invalide' }, { status: 400 })
+        return localizedJson({ error: 'Type de document invalide' }, { status: 400 })
       }
       data.type = String(body.type)
     }
@@ -83,7 +87,7 @@ export async function PATCH(
       } else if (/^\d{4}-\d{2}-\d{2}$/.test(String(body.dateExpiration))) {
         data.dateExpiration = new Date(`${body.dateExpiration}T00:00:00.000Z`)
       } else {
-        return NextResponse.json({ error: "Date d'expiration invalide (AAAA-MM-JJ)" }, { status: 400 })
+        return localizedJson({ error: "Date d'expiration invalide (AAAA-MM-JJ)" }, { status: 400 })
       }
     }
     if (body.precision !== undefined) {
@@ -94,9 +98,9 @@ export async function PATCH(
     // Le nom du fichier sur le NAS reflète type, précision et date
     await renommerDocumentOuvrierNas(document.id).catch((e) => console.error('[DOCUMENTS] Renommage NAS :', e))
 
-    return NextResponse.json(misAJour)
+    return localizedJson(misAJour)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json({ error: 'Erreur lors de la modification du document' }, { status: 500 })
+    return localizedJson({ error: 'Erreur lors de la modification du document' }, { status: 500 })
   }
 }

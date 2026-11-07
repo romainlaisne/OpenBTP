@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { signPortalSession, readPortalSessionFromCookie } from '@/app/public/portail/auth'
@@ -11,12 +13,13 @@ function toSubjectEnum(type: SubjectTypeInput): SubjectEnumValue {
 }
 
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     // Utiliser readPortalSessionFromCookie pour valider correctement le cookie signé HMAC
     const sess = readPortalSessionFromCookie(request.headers.get('cookie'))
 
     if (!sess || (sess.t !== 'OUVRIER_INTERNE' && sess.t !== 'SOUSTRAITANT')) {
-      return NextResponse.json({ authenticated: false }, { status: 401 })
+      return localizedJson({ authenticated: false }, { status: 401 })
     }
 
     // Vérifier que le PIN existe toujours et est actif
@@ -29,7 +32,7 @@ export async function GET(request: Request) {
     })
 
     if (!access) {
-      return NextResponse.json({ authenticated: false }, { status: 401 })
+      return localizedJson({ authenticated: false }, { status: 401 })
     }
 
     // Récupérer le nom du sujet
@@ -52,7 +55,7 @@ export async function GET(request: Request) {
       }
     }
 
-    return NextResponse.json({
+    return localizedJson({
       authenticated: true,
       token: {
         subjectType: sess.t as SubjectEnumValue,
@@ -63,15 +66,16 @@ export async function GET(request: Request) {
 
   } catch (error) {
     console.error('Erreur vérification session portail:', error)
-    return NextResponse.json({ authenticated: false }, { status: 500 })
+    return localizedJson({ authenticated: false }, { status: 500 })
   }
 }
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const { type, actorId, pin } = await request.json() as { type: SubjectTypeInput; actorId: string; pin: string }
     if (!type || !actorId || !pin) {
-      return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 })
+      return localizedJson({ error: 'Paramètres manquants' }, { status: 400 })
     }
 
     const subjectType = toSubjectEnum(type)
@@ -85,10 +89,10 @@ export async function POST(request: Request) {
     })
 
     if (!access || !(await bcrypt.compare(pin, access.codePIN))) {
-      return NextResponse.json({ error: 'PIN invalide' }, { status: 401 })
+      return localizedJson({ error: 'PIN invalide' }, { status: 401 })
     }
 
-    const res = NextResponse.json({ ok: true })
+    const res = localizedJson({ ok: true })
     const value = signPortalSession(subjectType, actorId)
 
     res.cookies.set('portalSession', value, {
@@ -107,7 +111,7 @@ export async function POST(request: Request) {
     return res
   } catch (error) {
     console.error('Erreur login portail:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 

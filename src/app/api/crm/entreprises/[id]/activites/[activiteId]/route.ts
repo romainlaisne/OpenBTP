@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -8,10 +10,11 @@ export async function DELETE(
   _request: Request,
   props: { params: Promise<{ id: string; activiteId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id, activiteId } = await props.params
@@ -20,15 +23,15 @@ export async function DELETE(
       where: { id: activiteId, entrepriseId: id },
     })
     if (!activite) {
-      return NextResponse.json({ error: 'Activité non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Activité non trouvée' }, { status: 404 })
     }
 
     await prisma.prospectActivite.delete({ where: { id: activiteId } })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur DELETE /api/crm/entreprises/[id]/activites/[activiteId]:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de l\'activité' },
       { status: 500 }
     )

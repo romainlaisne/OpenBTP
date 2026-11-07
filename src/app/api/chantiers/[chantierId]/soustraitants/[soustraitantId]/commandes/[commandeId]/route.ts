@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -7,6 +9,7 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; commandeId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -16,7 +19,7 @@ export async function GET(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -29,7 +32,7 @@ export async function GET(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
     }
     const chantierIdInterne = chantier.id;
 
@@ -65,7 +68,7 @@ export async function GET(
     })
 
     if (!commande) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Commande sous-traitant non trouvée' },
         { status: 404 }
       )
@@ -99,10 +102,10 @@ export async function GET(
       }))
     }
 
-    return NextResponse.json(commandeFormatee)
+    return localizedJson(commandeFormatee)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de la commande sous-traitant' },
       { status: 500 }
     )
@@ -113,6 +116,7 @@ export async function PUT(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; commandeId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -122,7 +126,7 @@ export async function PUT(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -139,7 +143,7 @@ export async function PUT(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
     }
     const chantierIdInterne = chantier.id;
 
@@ -152,7 +156,7 @@ export async function PUT(
     `
 
     if (!commandeExistante || commandeExistante.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Commande sous-traitant non trouvée' },
         { status: 404 }
       )
@@ -181,7 +185,7 @@ export async function PUT(
       if (commandeExistante[0].estVerrouillee && typeof estVerrouillee === 'undefined') {
         // Si la commande est déjà verrouillée et qu'on n'essaie pas explicitement de la déverrouiller,
         // on n'autorise pas la modification des lignes.
-        return NextResponse.json(
+        return localizedJson(
           { error: 'La commande est verrouillée et ses lignes ne peuvent pas être modifiées.' },
           { status: 400 }
         );
@@ -302,14 +306,14 @@ export async function PUT(
       ORDER BY ordre ASC
     `;
 
-    return NextResponse.json({
+    return localizedJson({
       ...commandeMiseAJour[0],
       lignes: lignesCommandeMiseAJour
     });
 
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la commande sous-traitant' },
       { status: 500 }
     )
@@ -320,22 +324,23 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; commandeId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Seul un administrateur peut supprimer une commande sous-traitant.' }, { status: 403 })
+      return localizedJson({ error: 'Seul un administrateur peut supprimer une commande sous-traitant.' }, { status: 403 })
     }
 
     const params = await context.params;
     const { chantierId: chantierIdLisible, soustraitantId, commandeId } = params;
 
     if (!soustraitantId || !commandeId || !chantierIdLisible) {
-      return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 });
+      return localizedJson({ error: 'Paramètres manquants' }, { status: 400 });
     }
     
     const commandeIdInt = parseInt(commandeId);
     if (isNaN(commandeIdInt)) {
-        return NextResponse.json({ error: 'ID de commande invalide' }, { status: 400 });
+        return localizedJson({ error: 'ID de commande invalide' }, { status: 400 });
     }
 
     // 1. Récupérer l'ID interne du chantier
@@ -345,7 +350,7 @@ export async function DELETE(
     });
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 });
     }
     const chantierIdInterne = chantierData.id;
 
@@ -359,7 +364,7 @@ export async function DELETE(
     });
 
     if (!commande) {
-        return NextResponse.json({ error: 'Commande sous-traitant non trouvée' }, { status: 404 });
+        return localizedJson({ error: 'Commande sous-traitant non trouvée' }, { status: 404 });
     }
 
     // 3. Vérifier s'il existe des états d'avancement liés à cette commande
@@ -370,7 +375,7 @@ export async function DELETE(
     });
 
     if (etatsAvancementLies > 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible de supprimer la commande car des états d\'avancement y sont liés.' },
         { status: 409 } // 409 Conflict
       );
@@ -391,11 +396,11 @@ export async function DELETE(
       }
     });
 
-    return NextResponse.json({ message: 'Commande sous-traitant supprimée avec succès' });
+    return localizedJson({ message: 'Commande sous-traitant supprimée avec succès' });
 
   } catch (error) {
     console.error('Erreur lors de la suppression de la commande sous-traitant:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur interne du serveur lors de la suppression de la commande.' },
       { status: 500 }
     );

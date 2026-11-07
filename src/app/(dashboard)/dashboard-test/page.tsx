@@ -1,3 +1,5 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import UserNotepad from '@/components/dashboard/UserNotepad'
 import { headers } from 'next/headers'
@@ -65,12 +67,12 @@ const DashboardTestPage = async () => {
         {/* En-tête + actions principales */}
         <header className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Tableau de bord</h1>
-            <p className="text-muted-foreground">Vue synthétique et actions rapides</p>
+            <h1 className="text-2xl font-bold"><UiText>Tableau de bord</UiText></h1>
+            <p className="text-muted-foreground"><UiText>Vue synthétique et actions rapides</UiText></p>
           </div>
           <div className="flex gap-2">
             <Link href="/chantiers/nouveau" className="px-3 py-2 rounded bg-blue-600 text-white"><UiText>Nouveau chantier</UiText></Link>
-            <Link href="/chantiers/reception/nouveau" className="px-3 py-2 rounded bg-emerald-600 text-white">Nouvelle réception</Link>
+            <Link href="/chantiers/reception/nouveau" className="px-3 py-2 rounded bg-emerald-600 text-white"><UiText>Nouvelle réception</UiText></Link>
             <Link href="/sav/nouveau" className="px-3 py-2 rounded bg-orange-600 text-white"><UiText>Nouveau ticket SAV</UiText></Link>
           </div>
         </header>
@@ -78,26 +80,26 @@ const DashboardTestPage = async () => {
         {/* KPIs */}
         <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <KPICard
-            title="Chiffre d’affaires (mois)"
-            value={stats?.kpis?.chiffreAffaires ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(stats.kpis.chiffreAffaires) : '—'}
-            subtitle="Commandes validées"
+            title={tx("Chiffre d’affaires (mois)")}
+            value={stats?.kpis?.chiffreAffaires ? new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR' }).format(stats.kpis.chiffreAffaires) : '—'}
+            subtitle={tx("Commandes validées")}
             accentColor="indigo"
             icon={<CurrencyEuroIcon className="w-8 h-8" />}
           />
           <KPICard
-            title="Chantiers en cours"
+            title={tx("Chantiers en cours")}
             value={stats?.kpis?.chantiersEnCours ?? '—'}
             accentColor="blue"
             icon={<BuildingOffice2Icon className="w-8 h-8" />}
           />
           <KPICard
-            title="Tâches en attente"
+            title={tx("Tâches en attente")}
             value={stats?.kpis?.tachesEnAttente ?? '—'}
             accentColor="yellow"
             icon={<ClipboardDocumentListIcon className="w-8 h-8" />}
           />
           <KPICard
-            title="Total chantiers"
+            title={tx("Total chantiers")}
             value={stats?.kpis?.totalChantiers ?? '—'}
             accentColor="purple"
             icon={<ChartBarIcon className="w-8 h-8" />}
@@ -140,7 +142,7 @@ const DashboardTestPage = async () => {
                   ))}
                 </ul>
               ) : (
-                <div className="text-sm text-muted-foreground">Aucune alerte</div>
+                <div className="text-sm text-muted-foreground"><UiText>Aucune alerte</UiText></div>
               )}
             </div>
           </div>

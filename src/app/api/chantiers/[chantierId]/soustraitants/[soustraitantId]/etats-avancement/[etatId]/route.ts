@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -10,10 +12,11 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, soustraitantId, etatId } = await context.params
@@ -28,7 +31,7 @@ export async function GET(
 
     if (!chantierData) {
       console.error('[GET État Soustraitant] Chantier non trouvé:', chantierId)
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     console.log('[GET État Soustraitant] Chantier ID interne:', chantierData.id)
@@ -64,7 +67,7 @@ export async function GET(
 
     if (!etat) {
       console.error('[GET État Soustraitant] État non trouvé pour:', { etatId, soustraitantId })
-      return NextResponse.json({ error: 'État d\'avancement non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'État d\'avancement non trouvé' }, { status: 404 })
     }
 
     // Vérifier que l'état appartient bien au bon chantier
@@ -75,7 +78,7 @@ export async function GET(
         expected: chantierData.id,
         actual: chantierDeLEtat
       })
-      return NextResponse.json({ error: 'État d\'avancement non trouvé pour ce chantier' }, { status: 404 })
+      return localizedJson({ error: 'État d\'avancement non trouvé pour ce chantier' }, { status: 404 })
     }
 
     console.log('[GET État Soustraitant] État récupéré avec succès:', {
@@ -83,7 +86,7 @@ export async function GET(
       avenants: etat.avenant_soustraitant_etat_avancement.length
     })
 
-    return NextResponse.json({
+    return localizedJson({
       id: etat.id,
       numero: etat.numero,
       date: etat.date,
@@ -97,7 +100,7 @@ export async function GET(
     })
   } catch (error) {
     console.error('[GET État Soustraitant] Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de l\'état d\'avancement' },
       { status: 500 }
     )
@@ -110,10 +113,11 @@ export async function PUT(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, soustraitantId, etatId } = await context.params
@@ -121,7 +125,7 @@ export async function PUT(
 
     // Valider que etatId n'est pas 0 (nouvel état)
     if (etatId === '0') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Cannot update state with ID 0. Create state first.' },
         { status: 400 }
       )
@@ -129,7 +133,7 @@ export async function PUT(
 
     const etatIdNum = parseInt(etatId)
     if (isNaN(etatIdNum)) {
-      return NextResponse.json({ error: 'ID d\'état invalide' }, { status: 400 })
+      return localizedJson({ error: 'ID d\'état invalide' }, { status: 400 })
     }
 
     // Récupérer l'ID interne du chantier
@@ -139,7 +143,7 @@ export async function PUT(
     })
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Vérifier que l'état existe et appartient au bon sous-traitant ET au bon chantier
@@ -152,7 +156,7 @@ export async function PUT(
     })
 
     if (!etatExistant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
@@ -160,7 +164,7 @@ export async function PUT(
 
     // Vérifier que l'état n'est pas finalisé (sauf si on veut le finaliser)
     if (etatExistant.estFinalise && !body.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible de modifier un état finalisé' },
         { status: 400 }
       )
@@ -210,7 +214,7 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       id: etatMisAJour.id,
       numero: etatMisAJour.numero,
       date: etatMisAJour.date,
@@ -223,7 +227,7 @@ export async function PUT(
     })
   } catch (error) {
     console.error('Erreur lors de la mise à jour:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de l\'état d\'avancement' },
       { status: 500 }
     )
@@ -236,17 +240,18 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, soustraitantId, etatId } = await context.params
 
     const etatIdNum = parseInt(etatId)
     if (isNaN(etatIdNum)) {
-      return NextResponse.json({ error: 'ID d\'état invalide' }, { status: 400 })
+      return localizedJson({ error: 'ID d\'état invalide' }, { status: 400 })
     }
 
     // Récupérer l'ID interne du chantier
@@ -256,7 +261,7 @@ export async function DELETE(
     })
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Vérifier que l'état existe et appartient au bon sous-traitant
@@ -268,7 +273,7 @@ export async function DELETE(
     })
 
     if (!etatExistant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
@@ -276,7 +281,7 @@ export async function DELETE(
 
     // Vérifier que l'état n'est pas finalisé
     if (etatExistant.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible de supprimer un état finalisé' },
         { status: 400 }
       )
@@ -294,7 +299,7 @@ export async function DELETE(
     })
 
     if (!dernierEtat || dernierEtat.id !== etatIdNum) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Seul le dernier état d\'avancement peut être supprimé' },
         { status: 400 }
       )
@@ -314,10 +319,10 @@ export async function DELETE(
       where: { id: etatIdNum }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la suppression:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de l\'état d\'avancement' },
       { status: 500 }
     )

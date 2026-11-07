@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -14,6 +16,7 @@ type JsonValue = string | number | boolean | null | { [key: string]: JsonValue }
 const DOCUMENTS_BASE_PATH = join(process.cwd(), 'public', 'uploads', 'documents')
 
 export async function GET(request: Request, props: { params: Promise<{ chantierId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     console.log('GET documents - params:', params)
@@ -85,7 +88,7 @@ export async function GET(request: Request, props: { params: Promise<{ chantierI
     console.log(`Documents trouvés: ${documentsWithDetails.length}`)
 
     // Ne plus transformer les données, retourner directement ce que Prisma fournit
-    return NextResponse.json(documentsWithDetails);
+    return localizedJson(documentsWithDetails);
   } catch (error) {
     // Log plus détaillé de l'erreur
     console.error('Erreur complète dans GET documents:', {
@@ -115,13 +118,14 @@ export async function GET(request: Request, props: { params: Promise<{ chantierI
 }
 
 export async function POST(request: Request, props: { params: Promise<{ chantierId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     console.log('POST documents - début de la requête')
     const session = await getServerSession(authOptions)
     if (!session?.user) {
       console.log('POST documents - non autorisé')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -133,7 +137,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
     
     if (!file) {
       console.log('POST documents - aucun fichier fourni')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Aucun fichier fourni' },
         { status: 400 }
       )
@@ -243,7 +247,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error)
       console.error('Erreur lors de la création des dossiers:', errorMessage)
-      return NextResponse.json(
+      return localizedJson(
         { error: `Erreur lors de la création des dossiers: ${errorMessage}` },
         { status: 500 }
       )
@@ -258,7 +262,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error)
       console.error('Erreur lors de l\'écriture du fichier:', errorMessage)
-      return NextResponse.json(
+      return localizedJson(
         { error: `Erreur lors de l'écriture du fichier: ${errorMessage}` },
         { status: 500 }
       )
@@ -273,7 +277,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
       
       if (!userExists) {
         console.log('POST documents - Utilisateur non trouvé dans la base de données:', session.user.id)
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Utilisateur non trouvé dans la base de données' },
           { status: 400 }
         )
@@ -449,7 +453,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
               });
               
               if (correctedDoc) {
-                return NextResponse.json(correctedDoc);
+                return localizedJson(correctedDoc);
               } else {
                 console.error('❌ POST documents - Impossible de récupérer le document corrigé');
               }
@@ -476,7 +480,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
         },
       })
 
-      return NextResponse.json(document)
+      return localizedJson(document)
     } catch (dbError: unknown) {
       const dbMessage = dbError instanceof Error ? dbError.message : String(dbError)
       console.error('Erreur lors de la création du document dans la base de données:', dbMessage)
@@ -489,7 +493,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
           console.error('Métadonnées d\'erreur Prisma:', (dbError as { meta?: unknown }).meta)
         }
       }
-      return NextResponse.json(
+      return localizedJson(
         { error: `Erreur lors de la création du document dans la base de données: ${dbMessage}` },
         { status: 500 }
       )
@@ -498,7 +502,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
     const errorMessage = error instanceof Error ? error.message : String(error)
     const errorStack = error instanceof Error ? error.stack : undefined
     console.error('Erreur globale dans POST documents:', errorMessage, errorStack)
-    return NextResponse.json(
+    return localizedJson(
       { error: `Erreur générale: ${errorMessage}` },
       { status: 500 }
     )
@@ -506,6 +510,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
 }
 
 export async function DELETE(request: Request, props: { params: Promise<{ chantierId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     console.log('DELETE document - début de la requête')
@@ -514,7 +519,7 @@ export async function DELETE(request: Request, props: { params: Promise<{ chanti
     // Vérifier si l'utilisateur est connecté
     if (!session?.user) {
       console.log('DELETE document - non autorisé')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -523,7 +528,7 @@ export async function DELETE(request: Request, props: { params: Promise<{ chanti
     // Vérifier si l'utilisateur est administrateur
     if (session.user.role !== 'ADMIN') {
       console.log('DELETE document - utilisateur non administrateur')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Seuls les administrateurs peuvent supprimer des documents' },
         { status: 403 }
       )
@@ -535,7 +540,7 @@ export async function DELETE(request: Request, props: { params: Promise<{ chanti
     
     if (!documentId) {
       console.log('DELETE document - ID du document manquant')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID du document manquant' },
         { status: 400 }
       )
@@ -557,20 +562,20 @@ export async function DELETE(request: Request, props: { params: Promise<{ chanti
     // si d'autres documents y font référence. Dans une implémentation complète,
     // on pourrait vérifier si le fichier est utilisé ailleurs avant de le supprimer.
     
-    return NextResponse.json({ success: true, message: 'Document supprimé avec succès' })
+    return localizedJson({ success: true, message: 'Document supprimé avec succès' })
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
     console.error('Erreur lors de la suppression du document:', errorMessage)
     
     // Si le document n'existe pas
     if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Document non trouvé' },
         { status: 404 }
       )
     }
     
-    return NextResponse.json(
+    return localizedJson(
       { error: `Erreur lors de la suppression du document: ${errorMessage}` },
       { status: 500 }
     )

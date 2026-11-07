@@ -4,7 +4,7 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 import fontkit from '@pdf-lib/fontkit'
 import { prisma } from '@/lib/prisma/client'
 import { format, addYears } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import crypto from 'crypto'
 
 // Chemin de base pour les documents
@@ -172,8 +172,8 @@ export async function generateContratSoustraitance(soustraitantId: string, _user
     
     // Date de génération formatée
     console.log('Formatage des dates...');
-    const dateGeneration = format(new Date(), 'dd/MM/yyyy', { locale: fr })
-    const dateFin = format(addYears(new Date(), 1), 'dd/MM/yyyy', { locale: fr })
+    const dateGeneration = format(new Date(), 'dd/MM/yyyy', { locale: dateFnsLocale() })
+    const dateFin = format(addYears(new Date(), 1), 'dd/MM/yyyy', { locale: dateFnsLocale() })
     
     // Générer un token unique pour la signature électronique
     console.log('Génération du token...');
@@ -735,7 +735,7 @@ export async function generateContratSoustraitance(soustraitantId: string, _user
       
       // Ajouter la date et l'heure de signature
       const dateSignature = new Date()
-      const dateFormatted = format(dateSignature, "dd/MM/yyyy à HH:mm", { locale: fr })
+      const dateFormatted = format(dateSignature, "dd/MM/yyyy à HH:mm", { locale: dateFnsLocale() })
       
       // Positionner la date sous la signature
       page3.drawText(`Signé électroniquement le ${dateFormatted}`, {
@@ -845,7 +845,7 @@ export async function signerContrat(token: string, signatureBase64: string): Pro
     
     // Ajouter la date et l'heure de signature
     const dateSignature = new Date()
-    const dateFormatted = format(dateSignature, "dd/MM/yyyy à HH:mm", { locale: fr })
+    const dateFormatted = format(dateSignature, "dd/MM/yyyy à HH:mm", { locale: dateFnsLocale() })
     
     // Positionner la date sous la signature
     lastPage.drawText(`Signé électroniquement le ${dateFormatted}`, {

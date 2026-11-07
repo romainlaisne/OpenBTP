@@ -1,8 +1,11 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { readPortalSessionFromCookie, unauthorized } from '@/app/public/portail/auth'
 
 export async function GET(request: Request, props: { params: Promise<{ type: 'ouvrier'|'soustraitant'; actorId: string }> }) {
+  await bindRequestLocale()
   const { type, actorId } = await props.params
 
   const session = readPortalSessionFromCookie(request.headers.get('cookie'))
@@ -12,7 +15,7 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
 
   try {
     if (type !== 'soustraitant') {
-      return NextResponse.json({ error: 'Type non supporté' }, { status: 400 })
+      return localizedJson({ error: 'Type non supporté' }, { status: 400 })
     }
 
     // Lister les chantiers ayant une commande pour ce sous-traitant
@@ -57,8 +60,8 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
         return acc
       }, [] as { chantierId: string; nomChantier: string; statut: string; client: string; dateDebut: Date | null; dateFin: Date | null }[])
 
-    return NextResponse.json({ data: chantiers })
+    return localizedJson({ data: chantiers })
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

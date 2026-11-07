@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 export interface GanttPlanningData {
   periodText: string
   scale: string
@@ -306,7 +307,7 @@ export function generateGanttPlanningHTML(
             <div style="font-size: 5px; color: #6b7280; margin-top: 1px;">${unit.subLabel}</div>
             ${data.scale === 'Jours' ? `
               <div style="font-size: 4px; color: #9ca3af; margin-top: 1px;">
-                ${new Date(unit.start).toLocaleDateString('fr-FR', { weekday: 'short' })}
+                ${new Date(unit.start).toLocaleDateString(intlLocale(getActiveLocale()), { weekday: 'short' })}
               </div>
             ` : ''}
           </th>

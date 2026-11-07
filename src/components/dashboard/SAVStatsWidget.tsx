@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { 
@@ -123,8 +124,8 @@ export default function SAVStatsWidget() {
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Service Après-Vente
-          </h3>
+            <UiText>Service Après-Vente
+          </UiText></h3>
           <Link href="/sav">
             <EyeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer" />
           </Link>
@@ -156,7 +157,7 @@ export default function SAVStatsWidget() {
               <ClockIcon className="h-6 w-6 text-orange-600 dark:text-orange-400" />
             </div>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.enCours}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">En cours</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400"><UiText>En cours</UiText></p>
           </div>
 
           <div className="text-center">
@@ -173,7 +174,7 @@ export default function SAVStatsWidget() {
           <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Taux de résolution</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400"><UiText>Taux de résolution</UiText></p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {stats.pourcentageResolution.toFixed(1)}%
                 </p>
@@ -203,8 +204,8 @@ export default function SAVStatsWidget() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-              Tickets récents
-            </h4>
+              <UiText>Tickets récents
+            </UiText></h4>
             <Link href="/sav" className="text-xs text-blue-600 dark:text-blue-400 hover:underline">
               Voir tout
             </Link>
@@ -246,13 +247,13 @@ export default function SAVStatsWidget() {
         <div className="flex space-x-2">
           <Link href="/sav/nouveau" className="flex-1">
             <button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors">
-              Nouveau ticket
-            </button>
+              <UiText>Nouveau ticket
+            </UiText></button>
           </Link>
           <Link href="/sav" className="flex-1">
             <button className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors">
-              Gérer SAV
-            </button>
+              <UiText>Gérer SAV
+            </UiText></button>
           </Link>
         </div>
       </div>

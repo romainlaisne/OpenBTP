@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
@@ -103,10 +105,10 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
     } else {
       // Fallback : copier dans le presse-papiers
       navigator.clipboard.writeText(shareText).then(() => {
-        toast.success('Lien de localisation copié dans le presse-papiers !')
+        toast.success(tx("Lien de localisation copié dans le presse-papiers !"))
       }).catch(() => {
         // Fallback ultime : afficher les liens
-        toast.error('Impossible de copier le lien. Veuillez réessayer.')
+        toast.error(tx("Impossible de copier le lien. Veuillez réessayer."))
       })
     }
   }
@@ -162,8 +164,8 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                     className="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-lg text-sm font-semibold shadow-lg hover:bg-white/40 transition-all duration-200 text-sky-900 dark:text-white"
                   >
                     <PencilSquareIcon className="h-5 w-5" />
-                    Éditer
-                  </button>
+                    <UiText>Éditer
+                  </UiText></button>
                 </div>
               </div>
             </div>
@@ -179,7 +181,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-sky-500 via-sky-600 to-cyan-700 text-white rounded-full shadow-lg ring-2 ring-sky-200 dark:ring-sky-700">
                   <InformationCircleIcon className="w-5 h-5 mr-2" />
-                  <span className="font-bold text-lg">Informations du chantier</span>
+                  <span className="font-bold text-lg"><UiText>Informations du chantier</UiText></span>
                 </div>
               </div>
               <div className="p-6 space-y-6">
@@ -191,7 +193,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                       </label>
                       <div className="flex items-center text-gray-900 dark:text-gray-100">
                         <CalendarIcon className="h-5 w-5 mr-2 text-gray-400" />
-                        {new Date(chantier.dateDebut).toLocaleDateString('fr-FR', {
+                        {new Date(chantier.dateDebut).toLocaleDateString(intlLocale(getActiveLocale()), {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric'
@@ -203,8 +205,8 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                   {chantier.dureeEnJours && (
                     <div>
                       <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                        Durée
-                      </label>
+                        <UiText>Durée
+                      </UiText></label>
                       <div className="flex items-center text-gray-900 dark:text-gray-100">
                         <ClockIcon className="h-5 w-5 mr-2 text-gray-400" />
                         {chantier.dureeEnJours} jour{chantier.dureeEnJours > 1 ? 's' : ''} ({chantier.typeDuree === 'OUVRABLE' ? 'ouvrables' : 'calendrier'})
@@ -219,7 +221,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                       </label>
                       <div className="flex items-center text-gray-900 dark:text-gray-100">
                         <CurrencyEuroIcon className="h-5 w-5 mr-2 text-gray-400" />
-                        {new Intl.NumberFormat('fr-FR', {
+                        {new Intl.NumberFormat(intlLocale(getActiveLocale()), {
                           style: 'currency',
                           currency: 'EUR'
                         }).format(chantier.budget)}
@@ -231,8 +233,8 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                 {chantier.adresseChantier && (
                   <div>
                     <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                      Adresse du chantier
-                    </label>
+                      <UiText>Adresse du chantier
+                    </UiText></label>
                     <div className="flex items-start gap-3">
                       <MapPinIcon className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
@@ -261,7 +263,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 active:bg-red-800 transition-colors text-sm font-medium shadow-md hover:shadow-lg"
-                                title="Ouvrir dans Google Maps"
+                                title={tx("Ouvrir dans Google Maps")}
                               >
                                 <MapIcon className="h-4 w-4" />
                                 <span className="hidden sm:inline">Google Maps</span>
@@ -270,7 +272,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                                 <button
                                   onClick={handleShareLocation}
                                   className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 active:bg-green-800 transition-colors"
-                                  title="Partager la localisation GPS"
+                                  title={tx("Partager la localisation GPS")}
                                 >
                                   <ArrowUpTrayIcon className="h-5 w-5" />
                                 </button>
@@ -287,8 +289,8 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                 {(chantier.maitreOuvrageNom || chantier.maitreOuvrageAdresse || chantier.maitreOuvrageLocalite) && (
                   <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                      Maître d'ouvrage
-                    </label>
+                      <UiText>Maître d'ouvrage
+                    </UiText></label>
                     <div className="space-y-2">
                       {chantier.maitreOuvrageNom && (
                         <div className="flex items-start gap-3">
@@ -312,7 +314,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                         <div className="flex items-start gap-3">
                           <MapPinIcon className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Localité / Province</p>
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Localité / Province</UiText></p>
                             <p className="text-gray-900 dark:text-gray-100">{chantier.maitreOuvrageLocalite}</p>
                           </div>
                         </div>
@@ -325,8 +327,8 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                 {(chantier.bureauArchitectureNom || chantier.bureauArchitectureAdresse || chantier.bureauArchitectureLocalite) && (
                   <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                      Bureau d'architecture
-                    </label>
+                      <UiText>Bureau d'architecture
+                    </UiText></label>
                     <div className="space-y-2">
                       {chantier.bureauArchitectureNom && (
                         <div className="flex items-start gap-3">
@@ -350,7 +352,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                         <div className="flex items-start gap-3">
                           <MapPinIcon className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Localité / Province</p>
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Localité / Province</UiText></p>
                             <p className="text-gray-900 dark:text-gray-100">{chantier.bureauArchitectureLocalite}</p>
                           </div>
                         </div>

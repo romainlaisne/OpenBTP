@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useRef, useState, useCallback, useEffect } from 'react'
 import Konva from 'konva'
 import { usePdfStore } from '@/store/metres-plan/usePdfStore'
@@ -186,7 +188,7 @@ const CanvasArea: React.FC<Props> = ({ onPdfLoaded }) => {
     const { activeTool } = useToolStore.getState()
     const { calibration, activePosteId } = useProjectStore.getState()
     if (!calibration) {
-      alert("Calibrez d'abord l'echelle (touche C).")
+      alert(tx("Calibrez d'abord l'echelle (touche C)."))
       setCurrentPoints([])
       return
     }
@@ -400,7 +402,7 @@ const CanvasArea: React.FC<Props> = ({ onPdfLoaded }) => {
       setStagePos({ x: 0, y: 0 })
       onPdfLoaded?.(bytes, file.name)
     } catch (err) {
-      alert('Erreur lors du chargement du PDF.')
+      alert(tx("Erreur lors du chargement du PDF."))
       console.error(err)
     }
   }, [setPdfDocument, setPdfBytes, setZoom, onPdfLoaded])
@@ -451,8 +453,8 @@ const CanvasArea: React.FC<Props> = ({ onPdfLoaded }) => {
             <FileUp size={56} className="text-gray-600 group-hover:text-blue-400 transition-colors" />
             <div className="text-center">
               <p className="text-xl font-semibold text-gray-300">Importer un plan PDF</p>
-              <p className="text-sm text-gray-500 mt-1">Glissez-deposez ou cliquez pour selectionner</p>
-              <p className="text-xs text-gray-600 mt-2">Multi-pages • 100% local • aucun serveur</p>
+              <p className="text-sm text-gray-500 mt-1"><UiText>Glissez-deposez ou cliquez pour selectionner</UiText></p>
+              <p className="text-xs text-gray-600 mt-2"><UiText>Multi-pages • 100% local • aucun serveur</UiText></p>
             </div>
           </div>
         </label>

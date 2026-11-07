@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -7,11 +9,12 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ chantierId: string; soustraitantId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -24,7 +27,7 @@ export async function GET(
     });
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
     }
     const chantierIdInterne = chantierData.id;
 
@@ -69,10 +72,10 @@ export async function GET(
       }
     }))
 
-    return NextResponse.json(commandesAvecLignes)
+    return localizedJson(commandesAvecLignes)
   } catch (error) {
     console.error('Erreur lors de la récupération des commandes:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des commandes' },
       { status: 500 }
     )
@@ -83,11 +86,12 @@ export async function POST(
   request: Request,
   props: { params: Promise<{ chantierId: string; soustraitantId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -97,7 +101,7 @@ export async function POST(
     const { lignes, reference, tauxTVA } = body
 
     if (!lignes || !Array.isArray(lignes) || lignes.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Les lignes de commande sont requises' },
         { status: 400 }
       )
@@ -142,7 +146,7 @@ export async function POST(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 });
     }
 
     // Créer la commande avec Prisma et récupérer l'ID
@@ -210,13 +214,13 @@ export async function POST(
     })
 
     if (!commandeComplete) {
-      return NextResponse.json({ error: 'Erreur lors de la récupération de la commande créée' }, { status: 500 });
+      return localizedJson({ error: 'Erreur lors de la récupération de la commande créée' }, { status: 500 });
     }
 
-    return NextResponse.json(commandeComplete)
+    return localizedJson(commandeComplete)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de la commande sous-traitant' },
       { status: 500 }
     )

@@ -1,5 +1,7 @@
 'use client';
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, FormEvent } from 'react';
 import { Button, FormInput, FormTextarea } from '@/components/ui'; // FormLabel supprimé de l'import
 import { toast } from 'react-hot-toast'
@@ -62,7 +64,7 @@ export default function ContactForm({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formData.prenom || !formData.nom) {
-      toast.error('Le prénom et le nom sont obligatoires.');
+      toast.error(tx("Le prénom et le nom sont obligatoires."));
       return;
     }
     await onSubmit(formData);
@@ -79,7 +81,7 @@ export default function ContactForm({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="prenom" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prénom *</label>
+              <label htmlFor="prenom" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Prénom *</UiText></label>
               <FormInput type="text" name="prenom" id="prenom" value={formData.prenom} onChange={handleChange} required />
             </div>
             <div>
@@ -92,21 +94,21 @@ export default function ContactForm({
             <FormInput type="text" name="fonction" id="fonction" value={formData.fonction || ''} onChange={handleChange} />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Email</UiText></label>
             <FormInput type="email" name="email" id="email" value={formData.email || ''} onChange={handleChange} />
           </div>
           <div>
-            <label htmlFor="telephone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Téléphone</label>
+            <label htmlFor="telephone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Téléphone</UiText></label>
             <FormInput type="tel" name="telephone" id="telephone" value={formData.telephone || ''} onChange={handleChange} />
           </div>
           <div>
-            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notes</label>
+            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Notes</UiText></label>
             <FormTextarea name="notes" id="notes" value={formData.notes || ''} onChange={handleChange} rows={3} />
           </div>
           <div className="mt-6 flex justify-end space-x-3">
             <Button type="button" variant="secondary" onClick={onClose} disabled={isSubmitting}>
-              Annuler
-            </Button>
+              <UiText>Annuler
+            </UiText></Button>
             <Button type="submit" variant="primary" disabled={isSubmitting}>
               {isSubmitting ? (initialData?.id ? 'Modification...' : 'Ajout...') : (initialData?.id ? 'Enregistrer les modifications' : 'Ajouter le contact')}
             </Button>

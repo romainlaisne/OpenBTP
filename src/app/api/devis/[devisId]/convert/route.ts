@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -12,6 +14,7 @@ export async function POST(
   request: NextRequest,
   props: { params: Promise<{ devisId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params
   const { devisId } = params
   
@@ -68,7 +71,7 @@ export async function POST(
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -101,7 +104,7 @@ export async function POST(
     })
 
     if (!devis) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Devis introuvable' },
         { status: 404 }
       )
@@ -111,14 +114,14 @@ export async function POST(
 
     // Vérifier le statut
     if (devis.statut === 'CONVERTI') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Ce document a déjà été converti' },
         { status: 400 }
       )
     }
 
     if (devis.statut !== 'ACCEPTE') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Seuls les documents acceptés peuvent être convertis' },
         { status: 400 }
       )
@@ -129,7 +132,7 @@ export async function POST(
     // ========================================
     if (devis.typeDevis === 'DEVIS') {
       if (!chantierId) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Le chantier est obligatoire pour la conversion d\'un devis' },
           { status: 400 }
         )
@@ -149,14 +152,14 @@ export async function POST(
       }
 
       if (!chantier) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Chantier introuvable' },
           { status: 404 }
         )
       }
 
       if (chantier.clientId !== devis.clientId) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Le chantier doit appartenir au même client que le devis' },
           { status: 400 }
         )
@@ -378,7 +381,7 @@ export async function POST(
       })
 
       console.log('✅ Conversion terminée avec succès')
-      return NextResponse.json({
+      return localizedJson({
         success: true,
         type: 'DEVIS',
         commande,
@@ -391,7 +394,7 @@ export async function POST(
     // ========================================
     else if (devis.typeDevis === 'AVENANT') {
       if (!devis.chantierId) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Aucun chantier associé à cet avenant' },
           { status: 400 }
         )
@@ -406,7 +409,7 @@ export async function POST(
       console.log('🏗️ Chantier trouvé:', chantier ? `${chantier.id} (${chantier.chantierId}) - ${chantier.nomChantier}` : 'AUCUN')
 
       if (!chantier) {
-        return NextResponse.json(
+        return localizedJson(
           { error: `Chantier introuvable avec l'id métier: ${devis.chantierId}` },
           { status: 404 }
         )
@@ -652,7 +655,7 @@ export async function POST(
         }
       })
 
-      return NextResponse.json({
+      return localizedJson({
         success: true,
         type: 'AVENANT',
         etatAvancement: {
@@ -663,7 +666,7 @@ export async function POST(
         message: 'Avenant ajouté à l\'état d\'avancement avec succès'
       })
     } else {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Type de devis invalide' },
         { status: 400 }
       )
@@ -678,7 +681,7 @@ export async function POST(
       devisId,
       typeDevis: devis?.typeDevis
     })
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la conversion',
         details: process.env.NODE_ENV === 'development' ? errorMessage : undefined

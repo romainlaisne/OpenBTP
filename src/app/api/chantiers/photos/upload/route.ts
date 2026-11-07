@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -12,10 +14,11 @@ import { validateMediaFile, TAILLE_MAX_VIDEO } from '@/lib/utils/image-validatio
  * Upload de photos manuelles pour un chantier
  */
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 });
     }
 
     const formData = await request.formData();
@@ -24,14 +27,14 @@ export async function POST(request: NextRequest) {
     const chantierId = formData.get('chantierId') as string;
 
     if (!files || files.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Aucune photo fournie' },
         { status: 400 }
       );
     }
 
     if (!chantierId) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID de chantier requis' },
         { status: 400 }
       );
@@ -44,7 +47,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       );
@@ -98,7 +101,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (uploadedUrls.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Aucune photo valide n\'a pu être uploadée' },
         { status: 400 }
       );
@@ -132,7 +135,7 @@ export async function POST(request: NextRequest) {
         },
       })
 
-      return NextResponse.json({
+      return localizedJson({
         success: true,
         message: `${uploadedUrls.length} photo(s) uploadée(s) avec succès`,
         uploadedCount: uploadedUrls.length,
@@ -154,7 +157,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Erreur lors de l\'enregistrement en base de données' },
         { status: 500 }
       );
@@ -162,7 +165,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Erreur lors de l\'upload des photos manuelles:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'upload des photos' },
       { status: 500 }
     );

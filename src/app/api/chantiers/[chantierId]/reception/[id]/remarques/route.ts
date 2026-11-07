@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import path from 'path';
 // import fs from 'fs';
 import { NextResponse } from 'next/server';
@@ -141,6 +143,7 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ chantierId: string; id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const resolvedParams = await params;
     const chantierId = resolvedParams.chantierId;
@@ -150,7 +153,7 @@ export async function GET(
 
     const session = await getServerSession(authOptions);
     if (!session || !session.user || !session.user.id) {
-      return NextResponse.json(
+      return localizedJson(
         { error: "Non autorisé, utilisateur non connecté" },
         { status: 401 }
       );
@@ -167,7 +170,7 @@ export async function GET(
       });
 
       if (!reception) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Réception non trouvée' },
           { status: 404 }
         );
@@ -198,7 +201,7 @@ export async function GET(
 
       // Mapper les résultats pour convertir BigInt en Number si nécessaire (typage souple)
       const remarques = remarquesBrutes.map(remarque => formatValues(remarque));
-      return NextResponse.json(remarques);
+      return localizedJson(remarques);
     } catch (prismaError) {
       console.error('Erreur Prisma:', prismaError);
       
@@ -209,7 +212,7 @@ export async function GET(
       `;
 
       if (!reception || reception.length === 0) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Réception non trouvée' },
           { status: 404 }
         );
@@ -263,11 +266,11 @@ export async function GET(
         })
       );
 
-      return NextResponse.json(formatValues(remarquesCompletes));
+      return localizedJson(formatValues(remarquesCompletes));
     }
   } catch (error) {
     console.error('Erreur lors de la récupération des remarques:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des remarques' },
       { status: 500 }
     );
@@ -280,6 +283,7 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ chantierId: string; id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const resolvedParams = await params;
     const chantierId = resolvedParams.chantierId;
@@ -287,7 +291,7 @@ export async function POST(
 
     const session = await getServerSession(authOptions);
     if (!session || !session.user || !session.user.id) {
-      return NextResponse.json(
+      return localizedJson(
         { error: "Non autorisé, utilisateur non connecté" },
         { status: 401 }
       );
@@ -298,7 +302,7 @@ export async function POST(
     const userExists = await prisma.user.findUnique({ where: { id: userId } });
     if (!userExists) {
       console.error("API POST Remarques - ERREUR FATALE: L'utilisateur avec l'ID de session", userId, "n'existe pas dans la base de données !");
-      return NextResponse.json(
+      return localizedJson(
         { error: "Utilisateur de session invalide ou introuvable dans la base de données." },
         { status: 500 } 
       );
@@ -309,7 +313,7 @@ export async function POST(
     });
 
     if (!receptionExistante) {
-      return NextResponse.json(
+      return localizedJson(
         { error: "Réception non trouvée" },
         { status: 404 }
       );
@@ -328,7 +332,7 @@ export async function POST(
     const coordonneesPlanStr = formData.get('coordonneesPlan') as string | null;
 
     if (!description) {
-      return NextResponse.json(
+      return localizedJson(
         { error: "La description est obligatoire" },
         { status: 400 }
       );
@@ -491,7 +495,7 @@ export async function POST(
       }
     }
     
-    return NextResponse.json(remarqueComplete, { status: 201 });
+    return localizedJson(remarqueComplete, { status: 201 });
   } catch (error) {
     let errorMessage = "Erreur serveur lors de la création de la remarque";
     let statusCode = 500;
@@ -513,7 +517,7 @@ export async function POST(
         errorMessage = error.message;
     }
     
-    return NextResponse.json(
+    return localizedJson(
       { error: errorMessage },
       { status: statusCode }
     );

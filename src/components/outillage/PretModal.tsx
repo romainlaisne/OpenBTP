@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -43,10 +45,10 @@ export default function PretModal({ machineId, onClose, onSuccess }: PretModalPr
       }
 
       onSuccess()
-      toast.success('Prêt créé avec succès')
+      toast.success(tx("Prêt créé avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error("Une erreur s'est produite lors de la création du prêt")
+      toast.error(tx("Une erreur s'est produite lors de la création du prêt"))
     } finally {
       setSaving(false)
     }
@@ -85,8 +87,8 @@ export default function PretModal({ machineId, onClose, onSuccess }: PretModalPr
             as="h3"
             className="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4"
           >
-            Nouveau prêt
-          </Dialog.Title>
+            <UiText>Nouveau prêt
+          </UiText></Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -101,14 +103,14 @@ export default function PretModal({ machineId, onClose, onSuccess }: PretModalPr
                 value={formData.emprunteur}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                placeholder="Nom de l'emprunteur"
+                placeholder={tx("Nom de l'emprunteur")}
               />
             </div>
 
             <div>
               <label htmlFor="dateRetourPrevue" className="block text-sm font-medium text-gray-700">
-                Date de retour prévue *
-              </label>
+                <UiText>Date de retour prévue *
+              </UiText></label>
               <input
                 type="date"
                 name="dateRetourPrevue"
@@ -123,8 +125,8 @@ export default function PretModal({ machineId, onClose, onSuccess }: PretModalPr
 
             <div>
               <label htmlFor="commentaire" className="block text-sm font-medium text-gray-700">
-                Commentaire
-              </label>
+                <UiText>Commentaire
+              </UiText></label>
               <textarea
                 name="commentaire"
                 id="commentaire"
@@ -132,7 +134,7 @@ export default function PretModal({ machineId, onClose, onSuccess }: PretModalPr
                 value={formData.commentaire}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                placeholder="Informations complémentaires..."
+                placeholder={tx("Informations complémentaires...")}
               />
             </div>
 
@@ -142,8 +144,8 @@ export default function PretModal({ machineId, onClose, onSuccess }: PretModalPr
                 onClick={onClose}
                 className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 type="submit"
                 disabled={saving}

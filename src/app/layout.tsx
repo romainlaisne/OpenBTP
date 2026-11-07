@@ -33,22 +33,24 @@ export const viewport = {
 }
 
 import RootClientProviders from '@/components/providers/RootClientProviders'
+import { bindRequestLocale } from '@/lib/i18n/server'
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
 import PWAInstall from '@/components/PWAInstall'
 import CustomIcons from '@/components/CustomIcons'
 import DynamicManifest from '@/components/DynamicManifest'
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const locale = await bindRequestLocale()
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <CustomIcons />
         <DynamicManifest />
-        <RootClientProviders>
+        <RootClientProviders initialLocale={locale}>
           {children}
           <ServiceWorkerRegistration />
           <PWAInstall />

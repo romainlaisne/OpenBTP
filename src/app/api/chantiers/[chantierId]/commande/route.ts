@@ -1,18 +1,21 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function GET(request: Request, props: { params: Promise<{ chantierId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     if (!params.chantierId) {
-      return NextResponse.json({ error: 'ID du chantier manquant' }, { status: 400 })
+      return localizedJson({ error: 'ID du chantier manquant' }, { status: 400 })
     }
 
     // Vérifier si le chantier existe
@@ -23,7 +26,7 @@ export async function GET(request: Request, props: { params: Promise<{ chantierI
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Récupérer la commande validée
@@ -38,13 +41,13 @@ export async function GET(request: Request, props: { params: Promise<{ chantierI
     })
 
     if (!commande) {
-      return NextResponse.json({ error: 'Aucune commande validée trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Aucune commande validée trouvée' }, { status: 404 })
     }
 
-    return NextResponse.json(commande)
+    return localizedJson(commande)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de la commande' },
       { status: 500 }
     )

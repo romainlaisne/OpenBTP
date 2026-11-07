@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { 
   SunIcon, 
@@ -100,7 +101,7 @@ export default function WeatherWidget() {
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Météo {location}
+            <UiText>Météo </UiText>{location}
           </h3>
           <button
             onClick={fetchWeather}
@@ -148,7 +149,7 @@ export default function WeatherWidget() {
             {/* Détails météo */}
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-                <div className="text-gray-600 dark:text-gray-400">Humidité</div>
+                <div className="text-gray-600 dark:text-gray-400"><UiText>Humidité</UiText></div>
                 <div className="font-semibold text-gray-900 dark:text-white">
                   {weather.humidity}%
                 </div>
@@ -181,13 +182,13 @@ export default function WeatherWidget() {
             {/* Conseils */}
             <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
               {weather.condition === 'Pluvieux' && (
-                <p>💧 Prévoir des bâches de protection</p>
+                <p><UiText>💧 Prévoir des bâches de protection</UiText></p>
               )}
               {weather.temperature > 25 && (
-                <p>☀️ Prévoir des pauses hydratation</p>
+                <p><UiText>☀️ Prévoir des pauses hydratation</UiText></p>
               )}
               {weather.temperature < 10 && (
-                <p>🧥 Équipements de protection contre le froid</p>
+                <p><UiText>🧥 Équipements de protection contre le froid</UiText></p>
               )}
               {weather.windSpeed > 20 && (
                 <p>💨 Attention aux travaux en hauteur</p>

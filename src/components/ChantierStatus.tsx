@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import SelectField from '@/components/ui/SelectField'
 
@@ -55,12 +56,12 @@ export default function ChantierStatus({ status, chantierId, onStatusChange, cla
           onChange={(e) => handleStatusChange(e.target.value as ChantierStatus)}
           className="text-sm rounded-md"
         >
-          <option value="En préparation">En préparation</option>
-          <option value="En cours">En cours</option>
-          <option value="Terminé">Terminé</option>
+          <option value="En préparation"><UiText>En préparation</UiText></option>
+          <option value="En cours"><UiText>En cours</UiText></option>
+          <option value="Terminé"><UiText>Terminé</UiText></option>
         </SelectField>
         
-        {loading && <span className="ml-2 text-sm text-gray-500">Enregistrement...</span>}
+        {loading && <span className="ml-2 text-sm text-gray-500"><UiText>Enregistrement...</UiText></span>}
       </div>
     )
   }

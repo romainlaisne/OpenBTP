@@ -1,5 +1,7 @@
 'use client';
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react';
 import { PlayIcon, StopIcon, ClockIcon } from '@heroicons/react/24/outline';
 
@@ -68,8 +70,8 @@ export default function RAGSchedulerAdmin() {
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
       <h3 className="text-lg font-semibold mb-4 dark:text-white flex items-center">
         <ClockIcon className="h-5 w-5 mr-2" />
-        Planificateur d'indexation RAG
-      </h3>
+        <UiText>Planificateur d'indexation RAG
+      </UiText></h3>
 
       {message && (
         <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
@@ -80,7 +82,7 @@ export default function RAGSchedulerAdmin() {
       {/* Statut des tâches */}
       {status && (
         <div className="mb-6">
-          <h4 className="text-md font-medium mb-3 dark:text-gray-200">Statut des tâches</h4>
+          <h4 className="text-md font-medium mb-3 dark:text-gray-200"><UiText>Statut des tâches</UiText></h4>
           <div className="grid gap-3">
             {Object.entries(status.tasks).map(([taskName, taskStatus]) => (
               <div key={taskName} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -92,7 +94,7 @@ export default function RAGSchedulerAdmin() {
                   </div>
                   {taskStatus.nextRun && (
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      Prochaine exécution: {new Date(taskStatus.nextRun).toLocaleString('fr-FR')}
+                      <UiText>Prochaine exécution: </UiText>{new Date(taskStatus.nextRun).toLocaleString(intlLocale(getActiveLocale()))}
                     </div>
                   )}
                 </div>
@@ -120,7 +122,7 @@ export default function RAGSchedulerAdmin() {
 
       {/* Actions */}
       <div className="space-y-3">
-        <h4 className="text-md font-medium dark:text-gray-200">Actions</h4>
+        <h4 className="text-md font-medium dark:text-gray-200"><UiText>Actions</UiText></h4>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <button
@@ -129,8 +131,8 @@ export default function RAGSchedulerAdmin() {
             className="flex items-center justify-center gap-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
             <PlayIcon className="h-4 w-4" />
-            Démarrer les tâches par défaut
-          </button>
+            <UiText>Démarrer les tâches par défaut
+          </UiText></button>
 
           <button
             onClick={() => executeAction('stop-all')}
@@ -138,8 +140,8 @@ export default function RAGSchedulerAdmin() {
             className="flex items-center justify-center gap-2 p-3 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
           >
             <StopIcon className="h-4 w-4" />
-            Arrêter toutes les tâches
-          </button>
+            <UiText>Arrêter toutes les tâches
+          </UiText></button>
 
           <button
             onClick={() => executeAction('run-full-now')}
@@ -147,8 +149,8 @@ export default function RAGSchedulerAdmin() {
             className="flex items-center justify-center gap-2 p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
           >
             <PlayIcon className="h-4 w-4" />
-            Indexation complète maintenant
-          </button>
+            <UiText>Indexation complète maintenant
+          </UiText></button>
 
           <button
             onClick={() => executeAction('run-incremental-now')}
@@ -156,19 +158,19 @@ export default function RAGSchedulerAdmin() {
             className="flex items-center justify-center gap-2 p-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:opacity-50"
           >
             <PlayIcon className="h-4 w-4" />
-            Indexation incrémentale maintenant
-          </button>
+            <UiText>Indexation incrémentale maintenant
+          </UiText></button>
         </div>
       </div>
 
       {/* Configuration */}
       <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-        <h4 className="text-md font-medium mb-2 dark:text-gray-200">Configuration par défaut</h4>
+        <h4 className="text-md font-medium mb-2 dark:text-gray-200"><UiText>Configuration par défaut</UiText></h4>
         <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-          <li>• <strong>Indexation complète:</strong> Tous les jours à 02:00</li>
-          <li>• <strong>Indexation incrémentale:</strong> Toutes les 6 heures</li>
+          <li>• <strong><UiText>Indexation complète:</UiText></strong> <UiText>Tous les jours à 02:00</UiText></li>
+          <li>• <strong><UiText>Indexation incrémentale:</UiText></strong> Toutes les 6 heures</li>
           <li>• <strong>Fuseau horaire:</strong> Europe/Brussels</li>
-          <li>• <strong>Données indexées:</strong> Chantiers, notes libres, documents, remarques</li>
+          <li>• <strong><UiText>Données indexées:</UiText></strong> <UiText>Chantiers, notes libres, documents, remarques</UiText></li>
         </ul>
       </div>
     </div>

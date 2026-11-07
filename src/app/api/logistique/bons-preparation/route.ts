@@ -1,13 +1,16 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma/client'
 
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -27,31 +30,32 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     })
 
-    return NextResponse.json(bons)
+    return localizedJson(bons)
   } catch (error) {
     console.error('Erreur GET bons-preparation:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
     const { client, localisation, magasinierId, lignes } = body
 
     if (!client?.trim()) {
-      return NextResponse.json({ error: 'Le nom du client est requis' }, { status: 400 })
+      return localizedJson({ error: 'Le nom du client est requis' }, { status: 400 })
     }
     if (!magasinierId?.trim()) {
-      return NextResponse.json({ error: 'Le magasinier est requis' }, { status: 400 })
+      return localizedJson({ error: 'Le magasinier est requis' }, { status: 400 })
     }
     if (!Array.isArray(lignes) || lignes.length === 0) {
-      return NextResponse.json({ error: 'Au moins une ligne est requise' }, { status: 400 })
+      return localizedJson({ error: 'Au moins une ligne est requise' }, { status: 400 })
     }
 
     const bon = await prisma.bonPreparation.create({
@@ -68,9 +72,9 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(bon, { status: 201 })
+    return localizedJson(bon, { status: 201 })
   } catch (error) {
     console.error('Erreur POST bons-preparation:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -33,10 +35,11 @@ function hasCustomFiches(chantierId: string): boolean {
 }
 
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer le chantierId depuis les query params
@@ -72,10 +75,10 @@ export async function GET(request: Request) {
     console.log(`[API Structure] Total fiches trouvées: ${totalFiches}`)
     console.log(`[API Structure] Structure:`, JSON.stringify(structure, null, 2))
 
-    return NextResponse.json(structure)
+    return localizedJson(structure)
   } catch (error) {
     console.error('Erreur lors de la lecture de la structure:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la lecture de la structure des dossiers' },
       { status: 500 }
     )

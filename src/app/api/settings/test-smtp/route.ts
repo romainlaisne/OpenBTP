@@ -1,20 +1,23 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     
     if (!session || (session.user?.role !== 'ADMIN' && session.user?.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Accès non autorisé' }, { status: 403 });
+      return localizedJson({ error: 'Accès non autorisé' }, { status: 403 });
     }
 
     const { emailHost, emailPort, emailSecure, emailUser, emailPassword, emailFrom } = await request.json();
 
     // Validation des paramètres
     if (!emailHost || !emailPort || !emailUser || !emailPassword || !emailFrom) {
-      return NextResponse.json({ 
+      return localizedJson({ 
         error: 'Tous les champs SMTP sont requis' 
       }, { status: 400 });
     }
@@ -30,13 +33,13 @@ export async function POST(request: Request) {
     });
 
     if (testResult.success) {
-      return NextResponse.json({ 
+      return localizedJson({ 
         success: true, 
         message: 'Connexion SMTP réussie !',
         details: testResult.details
       });
     } else {
-      return NextResponse.json({ 
+      return localizedJson({ 
         success: false, 
         error: testResult.error,
         details: testResult.details
@@ -45,7 +48,7 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('Erreur test SMTP:', error);
-    return NextResponse.json({ 
+    return localizedJson({ 
       error: 'Erreur lors du test de connexion SMTP' 
     }, { status: 500 });
   }

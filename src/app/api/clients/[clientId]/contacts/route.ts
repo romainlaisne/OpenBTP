@@ -1,12 +1,15 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(request: Request, props: { params: Promise<{ clientId: string }> }) {
+  await bindRequestLocale()
   const routeParams = await props.params; // Attendre les paramètres
   const clientId = routeParams.clientId;
 
   if (!clientId) {
-    return NextResponse.json({ error: 'Client ID manquant' }, { status: 400 });
+    return localizedJson({ error: 'Client ID manquant' }, { status: 400 });
   }
 
   try {
@@ -18,19 +21,20 @@ export async function GET(request: Request, props: { params: Promise<{ clientId:
         prenom: 'asc',
       },
     });
-    return NextResponse.json(contacts);
+    return localizedJson(contacts);
   } catch (error) {
     console.error("Erreur lors de la récupération des contacts:", error);
-    return NextResponse.json({ error: "Erreur lors de la récupération des contacts" }, { status: 500 });
+    return localizedJson({ error: "Erreur lors de la récupération des contacts" }, { status: 500 });
   }
 }
 
 export async function POST(request: Request, props: { params: Promise<{ clientId: string }> }) {
+  await bindRequestLocale()
   const routeParams = await props.params; // Attendre les paramètres
   const clientId = routeParams.clientId;
 
   if (!clientId) {
-    return NextResponse.json({ error: 'Client ID manquant' }, { status: 400 });
+    return localizedJson({ error: 'Client ID manquant' }, { status: 400 });
   }
 
   try {
@@ -38,7 +42,7 @@ export async function POST(request: Request, props: { params: Promise<{ clientId
     const { prenom, nom, email, telephone, fonction, notes } = body;
 
     if (!prenom || !nom) {
-      return NextResponse.json({ error: 'Prénom et Nom sont requis' }, { status: 400 });
+      return localizedJson({ error: 'Prénom et Nom sont requis' }, { status: 400 });
     }
 
     const nouveauContact = await prisma.contact.create({
@@ -53,13 +57,13 @@ export async function POST(request: Request, props: { params: Promise<{ clientId
       },
     });
 
-    return NextResponse.json(nouveauContact, { status: 201 });
+    return localizedJson(nouveauContact, { status: 201 });
   } catch (error) {
     console.error("Erreur lors de la création du contact:", error);
     // Vérifier si l'erreur est une erreur de validation Prisma ou autre
     if (error instanceof Error && error.message.includes('validation')) {
-        return NextResponse.json({ error: `Erreur de validation: ${error.message}` }, { status: 400 });
+        return localizedJson({ error: `Erreur de validation: ${error.message}` }, { status: 400 });
     }
-    return NextResponse.json({ error: "Erreur lors de la création du contact" }, { status: 500 });
+    return localizedJson({ error: "Erreur lors de la création du contact" }, { status: 500 });
   }
 } 

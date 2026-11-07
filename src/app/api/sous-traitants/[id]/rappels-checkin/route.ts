@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Historique des rappels Checkinatwork d'un sous-traitant (fiche sous-traitant).
 // Lecture seule : le journal n'est jamais modifié.
 
@@ -7,8 +9,9 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma/client'
 
 export async function GET(_request: Request, context: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
-  if (!session?.user) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  if (!session?.user) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
 
   const { id } = await context.params
   const rappels = await prisma.rappelCheckinLog.findMany({
@@ -28,5 +31,5 @@ export async function GET(_request: Request, context: { params: Promise<{ id: st
     orderBy: { createdAt: 'desc' },
     take: 500,
   })
-  return NextResponse.json({ rappels })
+  return localizedJson({ rappels })
 }

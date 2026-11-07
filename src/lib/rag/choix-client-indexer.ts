@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 // Service d'indexation RAG pour les choix clients
 import { prisma } from '@/lib/prisma/client'
 import { VectorStore } from './vector-store'
@@ -64,7 +65,7 @@ export function formatChoixClientForRAG(choixClient: {
   
   // En-tête
   parts.push(`Choix client pour ${choixClient.nomClient}`)
-  parts.push(`Date de visite: ${new Date(choixClient.dateVisite).toLocaleDateString('fr-FR')}`)
+  parts.push(`Date de visite: ${new Date(choixClient.dateVisite).toLocaleDateString(intlLocale(getActiveLocale()))}`)
   parts.push(`Statut: ${choixClient.statut}`)
   
   if (choixClient.chantier) {

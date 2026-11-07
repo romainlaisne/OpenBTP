@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
@@ -100,7 +102,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
   if (!session) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-red-600">Veuillez vous connecter pour accéder à cette page</div>
+        <div className="text-red-600"><UiText>Veuillez vous connecter pour accéder à cette page</UiText></div>
       </div>
     )
   }
@@ -116,7 +118,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-red-600">Erreur: {error}</div>
+        <div className="text-red-600"><UiText>Erreur: </UiText>{error}</div>
       </div>
     )
   }
@@ -124,7 +126,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
   if (!client) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-300">Client non trouvé</div>
+        <div className="text-gray-600 dark:text-gray-300"><UiText>Client non trouvé</UiText></div>
       </div>
     )
   }
@@ -133,7 +135,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
         title={`Modifier ${client.nom}`}
-        subtitle="Éditez les informations du client"
+        subtitle={tx("Éditez les informations du client")}
         icon={BuildingStorefrontIcon}
         badgeColor="from-indigo-600 via-purple-600 to-pink-700"
         gradientColor="from-indigo-600/10 via-purple-600/10 to-pink-700/10"
@@ -159,7 +161,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                 id="nom"
                 name="nom"
                 type="text"
-                label="Nom du client"
+                label={tx("Nom du client")}
                 value={client.nom}
                 onChange={handleChange}
                 required
@@ -169,7 +171,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                 id="email"
                 name="email"
                 type="email"
-                label="Email"
+                label={tx("Email")}
                 value={client.email || ''}
                 onChange={handleChange}
               />
@@ -178,7 +180,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                 id="telephone"
                 name="telephone"
                 type="tel"
-                label="Téléphone"
+                label={tx("Téléphone")}
                 value={client.telephone || ''}
                 onChange={handleChange}
               />
@@ -186,7 +188,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
               <FormTextarea
                 id="adresse"
                 name="adresse"
-                label="Adresse"
+                label={tx("Adresse")}
                 value={client.adresse || ''}
                 onChange={handleChange}
                 rows={3}
@@ -196,7 +198,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                 id="numeroTva"
                 name="numeroTva"
                 type="text"
-                label="Numéro de TVA"
+                label={tx("Numéro de TVA")}
                 value={client.numeroTva || ''}
                 onChange={handleChange}
                 placeholder="BE 1234.567.890"
@@ -226,7 +228,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
         {/* Historique des chantiers */}
         <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
           <div className="p-6">
-            <h2 className="text-xl font-bold mb-4 dark:text-white">Historique des chantiers</h2>
+            <h2 className="text-xl font-bold mb-4 dark:text-white"><UiText>Historique des chantiers</UiText></h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
@@ -238,8 +240,8 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                       Date de commencement
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      État
-                    </th>
+                      <UiText>État
+                    </UiText></th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       <UiText>Montant</UiText>
                     </th>
@@ -263,7 +265,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap dark:text-gray-200">
-                        {chantier.budget ? chantier.budget.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' }) : '0 €'}
+                        {chantier.budget ? chantier.budget.toLocaleString(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR' }) : '0 €'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link

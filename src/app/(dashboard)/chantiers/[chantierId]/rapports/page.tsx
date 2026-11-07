@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -200,10 +202,10 @@ export default function RapportsVisitePage(props: { params: Promise<{ chantierId
         setRapports(prev => prev.filter(rapport => rapport.id !== id))
       }
       
-      toast.success('Rapport supprimé avec succès')
+      toast.success(tx("Rapport supprimé avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la suppression du rapport')
+      toast.error(tx("Erreur lors de la suppression du rapport"))
     }
   }
 
@@ -218,15 +220,15 @@ export default function RapportsVisitePage(props: { params: Promise<{ chantierId
   }
 
   const handleDeleteRapportDurable = async (rapport: RapportDurable) => {
-    if (!confirm('Supprimer ce rapport de visite et tous ses PDF ?')) return
+    if (!confirm(tx("Supprimer ce rapport de visite et tous ses PDF ?"))) return
     try {
       const res = await fetch(`/api/rapports/${rapport.id}`, { method: 'DELETE' })
       if (!res.ok) throw new Error('Erreur lors de la suppression')
       setRapportsDurables(prev => prev.filter(r => r.id !== rapport.id))
-      toast.success('Rapport supprimé')
+      toast.success(tx("Rapport supprimé"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la suppression du rapport')
+      toast.error(tx("Erreur lors de la suppression du rapport"))
     }
   }
 
@@ -420,7 +422,7 @@ export default function RapportsVisitePage(props: { params: Promise<{ chantierId
       if (r._count?.photos) morceaux.push(`${r._count.photos} photo${r._count.photos > 1 ? 's' : ''}`)
       return {
         cle: `r-${r.id}`,
-        titre: `Rapport de visite du ${date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+        titre: `Rapport de visite du ${date.toLocaleDateString(intlLocale(getActiveLocale()), { day: 'numeric', month: 'long', year: 'numeric' })}`,
         auteur: r.auteur?.name || r.auteur?.email || 'Utilisateur inconnu',
         date,
         resume: morceaux.join(' · ') || undefined,
@@ -490,17 +492,17 @@ export default function RapportsVisitePage(props: { params: Promise<{ chantierId
       {groupes.length === 0 ? (
         <div className="rounded-2xl border border-gray-200 bg-white px-4 py-12 text-center dark:border-gray-700 dark:bg-gray-800">
           <DocumentTextIcon className="mx-auto mb-4 h-12 w-12 text-gray-300 dark:text-gray-600" />
-          <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Aucun rapport de visite</h3>
+          <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white"><UiText>Aucun rapport de visite</UiText></h3>
           <p className="mx-auto mb-6 max-w-md text-gray-500 dark:text-gray-400">
-            Créez votre premier rapport de visite pour documenter l&apos;avancement des travaux.
-          </p>
+            <UiText>Créez votre premier rapport de visite pour documenter l&apos;avancement des travaux.
+          </UiText></p>
           <Link
             href={`/chantiers/${params.chantierId}/rapports/nouveau`}
             className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-blue-600 px-5 font-semibold text-white hover:bg-blue-700"
           >
             <PlusIcon className="h-5 w-5" />
-            Créer un rapport
-          </Link>
+            <UiText>Créer un rapport
+          </UiText></Link>
         </div>
       ) : (
         <ul className="space-y-3">
@@ -515,27 +517,27 @@ export default function RapportsVisitePage(props: { params: Promise<{ chantierId
                     <p className="mt-1 flex flex-wrap gap-x-2 text-sm text-gray-500 dark:text-gray-400">
                       <span>{groupe.auteur}</span>
                       <span>·</span>
-                      <span>{groupe.date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
+                      <span>{groupe.date.toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: 'long', year: 'numeric' })}</span>
                       {groupe.resume && (<><span>·</span><span>{groupe.resume}</span></>)}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
                     {groupe.principal && (
                       <>
-                        <a href={groupe.principal.url} target="_blank" rel="noopener noreferrer" className={`${bouton} text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20`} title="Voir le PDF">
+                        <a href={groupe.principal.url} target="_blank" rel="noopener noreferrer" className={`${bouton} text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20`} title={tx("Voir le PDF")}>
                           <EyeIcon className="h-5 w-5" />
                         </a>
-                        <button onClick={() => handleOpenEmailModal(groupe.principal!.id, groupe.principal!.nom)} className={`${bouton} text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-900/20`} title="Envoyer par email">
+                        <button onClick={() => handleOpenEmailModal(groupe.principal!.id, groupe.principal!.nom)} className={`${bouton} text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-900/20`} title={tx("Envoyer par email")}>
                           <EnvelopeIcon className="h-5 w-5" />
                         </button>
                       </>
                     )}
                     {groupe.editHref && (
-                      <Link href={groupe.editHref} className={`${bouton} text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20`} title="Modifier">
+                      <Link href={groupe.editHref} className={`${bouton} text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20`} title={tx("Modifier")}>
                         <PencilIcon className="h-5 w-5" />
                       </Link>
                     )}
-                    <button onClick={groupe.supprimer} className={`${bouton} text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20`} title="Supprimer">
+                    <button onClick={groupe.supprimer} className={`${bouton} text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20`} title={tx("Supprimer")}>
                       <TrashIcon className="h-5 w-5" />
                     </button>
                     {aVariantes && (
@@ -558,10 +560,10 @@ export default function RapportsVisitePage(props: { params: Promise<{ chantierId
                       <li key={variante.id} className="flex items-center gap-3 px-4 py-2">
                         <TagIcon className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
                         <span className="min-w-0 flex-1 truncate text-sm font-medium text-gray-900 dark:text-white">{variante.tag}</span>
-                        <a href={variante.url} target="_blank" rel="noopener noreferrer" className={`${bouton} text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20`} title="Voir le PDF">
+                        <a href={variante.url} target="_blank" rel="noopener noreferrer" className={`${bouton} text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20`} title={tx("Voir le PDF")}>
                           <EyeIcon className="h-5 w-5" />
                         </a>
-                        <button onClick={() => handleOpenEmailModal(variante.id, variante.nom)} className={`${bouton} text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-900/20`} title="Envoyer par email">
+                        <button onClick={() => handleOpenEmailModal(variante.id, variante.nom)} className={`${bouton} text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-900/20`} title={tx("Envoyer par email")}>
                           <EnvelopeIcon className="h-5 w-5" />
                         </button>
                       </li>

@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { DocumentTextIcon } from '@heroicons/react/24/outline'
@@ -60,25 +61,25 @@ export default function TestContratPage() {
   }
 
   if (!session) {
-    return <div className="p-8">Veuillez vous connecter pour accéder à cette page.</div>
+    return <div className="p-8"><UiText>Veuillez vous connecter pour accéder à cette page.</UiText></div>
   }
 
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-8 flex items-center gap-2 dark:text-white">
         <DocumentTextIcon className="h-8 w-8" />
-        Test de génération de contrat professionnel
-      </h1>
+        <UiText>Test de génération de contrat professionnel
+      </UiText></h1>
 
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
         <h2 className="text-lg font-medium mb-4 dark:text-white">
-          Test du générateur de contrats
-        </h2>
+          <UiText>Test du générateur de contrats
+        </UiText></h2>
         
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          Cette page permet de tester la génération d'un contrat de sous-traitance professionnel 
+          <UiText>Cette page permet de tester la génération d'un contrat de sous-traitance professionnel 
           avec le nouveau template et le générateur Puppeteer.
-        </p>
+        </UiText></p>
 
         <button
           onClick={testGeneration}
@@ -90,22 +91,22 @@ export default function TestContratPage() {
 
         {error && (
           <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-            <strong>Erreur:</strong> {error}
+            <strong><UiText>Erreur:</UiText></strong> {error}
           </div>
         )}
 
         {result && (
           <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-            <strong>Succès!</strong> Contrat généré avec succès.
-            <div className="mt-2">
+            <strong><UiText>Succès!</UiText></strong> <UiText>Contrat généré avec succès.
+            </UiText><div className="mt-2">
               <a 
                 href={result} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-800 underline"
               >
-                Voir le contrat généré
-              </a>
+                <UiText>Voir le contrat généré
+              </UiText></a>
             </div>
           </div>
         )}
@@ -113,16 +114,16 @@ export default function TestContratPage() {
 
       <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
         <h3 className="text-lg font-medium mb-4 text-blue-900 dark:text-blue-100">
-          Fonctionnalités du nouveau système
-        </h3>
+          <UiText>Fonctionnalités du nouveau système
+        </UiText></h3>
         <ul className="list-disc list-inside space-y-2 text-blue-800 dark:text-blue-200">
           <li>Template HTML professionnel avec design moderne</li>
-          <li>Logo de l'entreprise intégré</li>
-          <li>Signature de l'entreprise pré-remplie</li>
-          <li>En-tête et pied de page professionnels</li>
-          <li>Génération PDF avec Puppeteer</li>
-          <li>Page de signature électronique pour les sous-traitants</li>
-          <li>Gestion complète du cycle de vie du contrat</li>
+          <li><UiText>Logo de l'entreprise intégré</UiText></li>
+          <li><UiText>Signature de l'entreprise pré-remplie</UiText></li>
+          <li><UiText>En-tête et pied de page professionnels</UiText></li>
+          <li><UiText>Génération PDF avec Puppeteer</UiText></li>
+          <li><UiText>Page de signature électronique pour les sous-traitants</UiText></li>
+          <li><UiText>Gestion complète du cycle de vie du contrat</UiText></li>
         </ul>
       </div>
     </div>

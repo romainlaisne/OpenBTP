@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
@@ -155,7 +156,7 @@ export default function EditSousTraitantPage(
         throw new Error(errorData.error || 'Erreur lors de la mise à jour du sous-traitant')
       }
 
-      toast.success('Sous-traitant modifié avec succès')
+      toast.success(tx("Sous-traitant modifié avec succès"))
       
       // Rediriger vers la page de consultation du sous-traitant
       router.push(`/sous-traitants/${params.id}`)
@@ -257,8 +258,8 @@ export default function EditSousTraitantPage(
                     <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                       <PencilSquareIcon className="w-6 h-6 mr-3 text-blue-900 dark:text-white" />
                       <h1 className="text-xl font-bold text-blue-900 dark:text-white">
-                        Modifier le Sous-Traitant
-                      </h1>
+                        <UiText>Modifier le Sous-Traitant
+                      </UiText></h1>
                     </div>
                     {formData.nom && (
                       <span className="px-3 py-1 rounded-full bg-white/30 backdrop-blur-sm text-blue-900 dark:text-white shadow-sm text-xs sm:text-sm font-semibold inline-flex w-max">
@@ -289,7 +290,7 @@ export default function EditSousTraitantPage(
             id="nom"
             name="nom"
             type="text"
-            label="Nom de l'entreprise"
+            label={tx("Nom de l'entreprise")}
             required
             value={formData.nom}
             onChange={handleChange}
@@ -299,7 +300,7 @@ export default function EditSousTraitantPage(
             id="email"
             name="email"
             type="email"
-            label="Email"
+            label={tx("Email")}
             required
             value={formData.email}
             onChange={handleChange}
@@ -318,7 +319,7 @@ export default function EditSousTraitantPage(
             id="tva"
             name="tva"
             type="text"
-            label="Numéro de TVA"
+            label={tx("Numéro de TVA")}
             value={formData.tva}
             onChange={handleChange}
             placeholder="BE0123456789"
@@ -328,7 +329,7 @@ export default function EditSousTraitantPage(
             id="telephone"
             name="telephone"
             type="tel"
-            label="Téléphone"
+            label={tx("Téléphone")}
             value={formData.telephone}
             onChange={handleChange}
           />
@@ -337,7 +338,7 @@ export default function EditSousTraitantPage(
             id="adresse"
             name="adresse"
             type="text"
-            label="Adresse"
+            label={tx("Adresse")}
             value={formData.adresse}
             onChange={handleChange}
           />
@@ -348,8 +349,8 @@ export default function EditSousTraitantPage(
             </label>
             {rattaches.length > 0 ? (
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Sous-traitant principal de : {rattaches.map((r) => r.nom).join(', ')}. Il ne peut pas être rattaché à son tour.
-              </p>
+                <UiText>Sous-traitant principal de : </UiText>{rattaches.map((r) => r.nom).join(', ')}<UiText>. Il ne peut pas être rattaché à son tour.
+              </UiText></p>
             ) : (
               <>
                 <select
@@ -359,15 +360,15 @@ export default function EditSousTraitantPage(
                   onChange={(e) => setFormData((f) => ({ ...f, parentId: e.target.value }))}
                   className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 >
-                  <option value="">— Aucun (sous-traitant indépendant de tout autre)</option>
+                  <option value=""><UiText>— Aucun (sous-traitant indépendant de tout autre)</UiText></option>
                   {principaux.map((p) => (
                     <option key={p.id} value={p.id}>{p.nom}</option>
                   ))}
                 </select>
                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  Pour un indépendant qui travaille avec un autre sous-traitant : il s&apos;affiche sous lui dans la liste et
+                  <UiText>Pour un indépendant qui travaille avec un autre sous-traitant : il s&apos;affiche sous lui dans la liste et
                   dans la déclaration de sous-traitance.
-                </p>
+                </UiText></p>
               </>
             )}
           </div>
@@ -386,9 +387,9 @@ export default function EditSousTraitantPage(
                 Rappel Checkinatwork quotidien actif
               </span>
               <span className="block text-xs text-gray-500 dark:text-gray-400">
-                Activé automatiquement à la signature du contrat-cadre. Décocher pour un sous-traitant qui
+                <UiText>Activé automatiquement à la signature du contrat-cadre. Décocher pour un sous-traitant qui
                 n&apos;intervient plus.
-              </span>
+              </UiText></span>
             </span>
           </label>
 
@@ -413,7 +414,7 @@ export default function EditSousTraitantPage(
                   disabled:opacity-50 disabled:cursor-not-allowed"
               />
               {uploadingLogo && (
-                <span className="text-sm text-gray-500">Upload en cours...</span>
+                <span className="text-sm text-gray-500"><UiText>Upload en cours...</UiText></span>
               )}
             </div>
             {logoPreview && (
@@ -458,12 +459,12 @@ export default function EditSousTraitantPage(
                         body: JSON.stringify({ pin }) 
                       })
                       if (response.ok) {
-                        toast.success('PIN enregistré avec succès')
+                        toast.success(tx("PIN enregistré avec succès"))
                       } else {
-                        toast.error('Erreur lors de l\'enregistrement du PIN')
+                        toast.error(tx("Erreur lors de l'enregistrement du PIN"))
                       }
                     } catch {
-                      toast.error('Erreur lors de l\'enregistrement du PIN')
+                      toast.error(tx("Erreur lors de l'enregistrement du PIN"))
                     } finally {
                       setSavingPin(false)
                     }
@@ -477,7 +478,7 @@ export default function EditSousTraitantPage(
             <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <LinkIcon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Lien d'accès public:</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Lien d'accès public:</UiText></span>
               </div>
               <div className="flex items-center gap-3">
                 <a 
@@ -493,9 +494,9 @@ export default function EditSousTraitantPage(
                   onClick={async () => { 
                     try { 
                       await navigator.clipboard.writeText(portalLink)
-                      toast.success('Lien copié dans le presse-papiers')
+                      toast.success(tx("Lien copié dans le presse-papiers"))
                     } catch {
-                      toast.error('Impossible de copier le lien')
+                      toast.error(tx("Impossible de copier le lien"))
                     }
                   }}
                   className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-medium hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"

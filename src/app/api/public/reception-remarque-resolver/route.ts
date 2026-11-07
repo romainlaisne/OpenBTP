@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { v4 as uuidv4 } from 'uuid'
@@ -59,6 +61,7 @@ async function ajouterPhotoAuxDocuments(chantierId: string, remarqueId: string, 
 // POST /api/public/reception-remarque-resolver
 // Marquer une remarque comme résolue et ajouter une photo de preuve
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     console.log('Requête reçue:', {
       contentType: request.headers.get('Content-Type'),
@@ -70,7 +73,7 @@ export async function POST(request: Request) {
       formData = await request.formData()
     } catch (error) {
       console.error('Erreur lors de la récupération du formData:', error)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Erreur de format de requête. Content-Type doit être multipart/form-data' },
         { status: 400 }
       )
@@ -88,7 +91,7 @@ export async function POST(request: Request) {
     })
 
     if (!remarqueId || !codePIN) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Données manquantes', params: { remarqueId: !!remarqueId, codePIN: !!codePIN } },
         { status: 400 }
       )
@@ -122,7 +125,7 @@ export async function POST(request: Request) {
 
     if (soustraitantPin) {
       if (soustraitantPin.estFinalise) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Cette réception est finalisée et n\'est plus accessible' },
           { status: 403 }
         );
@@ -144,7 +147,7 @@ export async function POST(request: Request) {
       console.log('Info réception (PIN global):', receptionInfo);
 
       if (!receptionInfo || receptionInfo.length === 0) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Code PIN invalide ou réception non trouvée', params: { codePIN } },
           { status: 404 }
         );
@@ -152,7 +155,7 @@ export async function POST(request: Request) {
 
       const reception = receptionInfo[0];
       if (reception.estFinalise) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Cette réception est finalisée et n\'est plus accessible' },
           { status: 403 }
         );
@@ -174,7 +177,7 @@ export async function POST(request: Request) {
     console.log('Info remarque:', remarqueInfo);
 
     if (!remarqueInfo || remarqueInfo.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Remarque non trouvée', params: { remarqueId } },
         { status: 404 }
       );
@@ -184,7 +187,7 @@ export async function POST(request: Request) {
     
     // Vérifier que la remarque appartient bien à la réception
     if (receptionId == null || remarque.receptionId !== receptionId) {
-      return NextResponse.json(
+      return localizedJson(
         { 
           error: 'La remarque n\'appartient pas à cette réception', 
           params: { receptionId, remarqueReceptionId: remarque.receptionId } 
@@ -194,7 +197,7 @@ export async function POST(request: Request) {
     }
 
     if (remarque.estValidee === 1) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Cette remarque a déjà été validée' },
         { status: 400 }
       );
@@ -223,7 +226,7 @@ export async function POST(request: Request) {
         // Valider le type réel du fichier par magic bytes
         const validation = await validateImageFile(photo);
         if (!validation.isValid) {
-          return NextResponse.json({ error: 'Fichier invalide : seules les images sont acceptées.' }, { status: 400 });
+          return localizedJson({ error: 'Fichier invalide : seules les images sont acceptées.' }, { status: 400 });
         }
 
         const fileName = `resolution-${Date.now()}-${photoId.substring(0, 8)}.${validation.safeExtension}`;
@@ -254,7 +257,7 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({
+    return localizedJson({
       message: 'Remarque marquée comme résolue avec succès',
       remarqueId: remarqueId,
       nouvellePhoto: nouvellePhotoInfo, 
@@ -262,7 +265,7 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('Erreur complète:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la résolution de la remarque', details: String(error) },
       { status: 500 }
     );

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { getServerSession } from 'next-auth';
@@ -29,11 +31,12 @@ type Chat = {
 
 // GET /api/messaging/conversations - Récupérer toutes les conversations de l'utilisateur
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
     
     const userId = session.user.id;
@@ -99,20 +102,21 @@ export async function GET() {
       })
     );
     
-    return NextResponse.json(chatsWithUnreadCount);
+    return localizedJson(chatsWithUnreadCount);
   } catch (error) {
     console.error('Erreur lors de la récupération des conversations:', error);
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 });
   }
 }
 
 // POST /api/messaging/conversations - Créer une nouvelle conversation
 export async function POST(req: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
     
     const userId = session.user.id;
@@ -120,7 +124,7 @@ export async function POST(req: NextRequest) {
     
     // Validation de base
     if (!participantIds || !Array.isArray(participantIds) || participantIds.length === 0) {
-      return NextResponse.json({ error: 'Participants requis' }, { status: 400 });
+      return localizedJson({ error: 'Participants requis' }, { status: 400 });
     }
     
     // S'assurer que les ID sont uniques et inclure l'utilisateur actuel
@@ -196,7 +200,7 @@ export async function POST(req: NextRequest) {
           },
         });
         
-        return NextResponse.json({
+        return localizedJson({
           ...existingChat,
           unreadCount,
           messages: existingChat.messages.reverse(), // Inverser pour ordre chronologique
@@ -231,13 +235,13 @@ export async function POST(req: NextRequest) {
       },
     });
     
-    return NextResponse.json({
+    return localizedJson({
       ...newChat,
       messages: [],
       unreadCount: 0,
     });
   } catch (error) {
     console.error('Erreur lors de la création de conversation:', error);
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 });
   }
 } 

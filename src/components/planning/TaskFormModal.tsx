@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 
 export type TaskStatus = 'PREVU'|'EN_COURS'|'TERMINE'
@@ -238,11 +239,11 @@ export default function TaskFormModal({
           <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm mb-1">Titre *</label>
+                <label className="block text-sm mb-1"><UiText>Titre *</UiText></label>
                 <input className="w-full p-2 text-sm border rounded" value={values.title} onChange={e=>handleChange('title', e.target.value)} required />
               </div>
               <div>
-                <label className="block text-sm mb-1">Chantier (en cours)</label>
+                <label className="block text-sm mb-1"><UiText>Chantier (en cours)</UiText></label>
                 <select
                   className="w-full p-2 text-sm border rounded"
                   value={values.chantierId || ''}
@@ -270,20 +271,20 @@ export default function TaskFormModal({
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm mb-1">Créneau</label>
+                  <label className="block text-sm mb-1"><UiText>Créneau</UiText></label>
                   <select className="w-full p-2 text-sm border rounded" value={segment} onChange={e=>setSegment(e.target.value as 'FULL'|'AM'|'PM')}>
-                    <option value="FULL">Journée</option>
+                    <option value="FULL"><UiText>Journée</UiText></option>
                     <option value="AM">Matin</option>
-                    <option value="PM">Après-midi</option>
+                    <option value="PM"><UiText>Après-midi</UiText></option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm mb-1">Durée (jours, lu→sa)</label>
+                  <label className="block text-sm mb-1"><UiText>Durée (jours, lu→sa)</UiText></label>
                   <input type="number" min={1} max={14} className="w-full p-2 text-sm border rounded" value={durationDays} onChange={e=>setDurationDays(Math.max(1, Math.min(14, Number(e.target.value)||1)))} />
                 </div>
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm mb-1">Description</label>
+                <label className="block text-sm mb-1"><UiText>Description</UiText></label>
                 <textarea className="w-full p-2 text-sm border rounded" rows={3} value={values.description} onChange={e=>handleChange('description', e.target.value)} />
               </div>
             </div>
@@ -292,7 +293,7 @@ export default function TaskFormModal({
           <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm mb-1">Ouvriers internes</label>
+                <label className="block text-sm mb-1"><UiText>Ouvriers internes</UiText></label>
                 <select multiple className="w-full p-2 text-sm border rounded h-24" value={values.ouvrierInterneIds} onChange={(e)=>{
                   const opts = Array.from(e.target.selectedOptions).map(o=>o.value); handleChange('ouvrierInterneIds', opts)
                 }}>
@@ -300,7 +301,7 @@ export default function TaskFormModal({
                 </select>
               </div>
               <div>
-                <label className="block text-sm mb-1">Sous-traitants</label>
+                <label className="block text-sm mb-1"><UiText>Sous-traitants</UiText></label>
                 <select multiple className="w-full p-2 text-sm border rounded h-24" value={values.soustraitantIds} onChange={(e)=>{
                   const opts = Array.from(e.target.selectedOptions).map(o=>o.value); handleChange('soustraitantIds', opts)
                 }}>
@@ -318,7 +319,7 @@ export default function TaskFormModal({
           </div>
           {/* Section: Pièces jointes (repliable) */}
           <details className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-            <summary className="cursor-pointer text-sm font-medium">Pièces jointes</summary>
+            <summary className="cursor-pointer text-sm font-medium"><UiText>Pièces jointes</UiText></summary>
             <div className="mt-3">
               <input
                 type="file"
@@ -347,7 +348,7 @@ export default function TaskFormModal({
                 }}
               />
               {!initial?.id && pendingFiles.length>0 && (
-                <p className="text-xs text-gray-500 mt-1">{pendingFiles.length} fichier(s) seront ajoutés après création.</p>
+                <p className="text-xs text-gray-500 mt-1">{pendingFiles.length} <UiText>fichier(s) seront ajoutés après création.</UiText></p>
               )}
             </div>
           </details>
@@ -355,8 +356,8 @@ export default function TaskFormModal({
         {/* Footer */}
         <div className="shrink-0 px-6 py-3 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row md:justify-end gap-2">
           <div className="flex-1 md:flex-none text-xs text-gray-500 md:text-right">{loading ? 'Traitement en cours…' : ''}</div>
-          <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-200 rounded text-sm">Annuler</button>
-          <button type="button" onClick={handleDuplicateNextWeek} disabled={loading} className="px-4 py-2 border border-orange-500 text-orange-600 rounded text-sm hover:bg-orange-50">Dupliquer semaine suivante</button>
+          <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-200 rounded text-sm"><UiText>Annuler</UiText></button>
+          <button type="button" onClick={handleDuplicateNextWeek} disabled={loading} className="px-4 py-2 border border-orange-500 text-orange-600 rounded text-sm hover:bg-orange-50"><UiText>Dupliquer semaine suivante</UiText></button>
           <button type="submit" form="taskForm" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded text-sm">{initial?.id ? 'Enregistrer' : 'Créer'}</button>
         </div>
       </div>

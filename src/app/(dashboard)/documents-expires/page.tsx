@@ -1,12 +1,13 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { PageHeader } from '@/components/PageHeader'
 import { ExclamationCircleIcon, ClockIcon } from '@heroicons/react/24/outline'
 
@@ -100,8 +101,8 @@ export default function DocumentsExpiresPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50/20 to-red-50/20 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Documents expirés"
-        subtitle="Vue détaillée de tous les documents expirés ou proches de l'expiration"
+        title={tx("Documents expirés")}
+        subtitle={tx("Vue détaillée de tous les documents expirés ou proches de l'expiration")}
         icon={ExclamationCircleIcon}
         badge="Conformité"
         badgeColor="from-orange-500 via-red-500 to-rose-600"
@@ -165,9 +166,9 @@ export default function DocumentsExpiresPage() {
                 {error}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-500">
-                Merci de réessayer plus tard. Si le problème persiste, contactez
+                <UiText>Merci de réessayer plus tard. Si le problème persiste, contactez
                 l’administrateur.
-              </p>
+              </UiText></p>
             </div>
           ) : documents.length === 0 ? (
             <div className="p-10 flex flex-col items-center justify-center text-center">
@@ -187,12 +188,12 @@ export default function DocumentsExpiresPage() {
                 </svg>
               </div>
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                Tous vos documents sont à jour
-              </h3>
+                <UiText>Tous vos documents sont à jour
+              </UiText></h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md">
-                Aucun document n’est expiré ou proche de l’échéance. Vous êtes
+                <UiText>Aucun document n’est expiré ou proche de l’échéance. Vous êtes
                 en conformité.
-              </p>
+              </UiText></p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -206,17 +207,17 @@ export default function DocumentsExpiresPage() {
                       Document
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                      Ouvrier
-                    </th>
+                      <UiText>Ouvrier
+                    </UiText></th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                      Sous-traitant
-                    </th>
+                      <UiText>Sous-traitant
+                    </UiText></th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Expiration
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                      Délai
-                    </th>
+                      <UiText>Délai
+                    </UiText></th>
                     <th className="px-4 py-3 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       <UiText>Actions</UiText>
                     </th>
@@ -239,8 +240,8 @@ export default function DocumentsExpiresPage() {
                           {doc.isExpired ? (
                             <>
                               <ExclamationCircleIcon className="h-4 w-4" />
-                              Expiré
-                            </>
+                              <UiText>Expiré
+                            </UiText></>
                           ) : (
                             <>
                               <ClockIcon className="h-4 w-4" />
@@ -260,7 +261,7 @@ export default function DocumentsExpiresPage() {
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
                         {format(new Date(doc.dateExpiration), 'dd/MM/yyyy', {
-                          locale: fr,
+                          locale: dateFnsLocale(),
                         })}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
@@ -279,8 +280,8 @@ export default function DocumentsExpiresPage() {
                           href={`/sous-traitants/${doc.Ouvrier.sousTraitantId}/ouvriers/${doc.Ouvrier.id}/documents`}
                           className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-semibold shadow-sm transition-colors"
                         >
-                          Ouvrir le dossier
-                        </Link>
+                          <UiText>Ouvrir le dossier
+                        </UiText></Link>
                       </td>
                     </tr>
                   ))}

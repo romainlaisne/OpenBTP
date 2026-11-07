@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 export interface PlanningData {
   periodText: string
   days: string[]
@@ -431,14 +432,14 @@ export function generatePlanningHTML(
           return `
             <th class="day-header" style="${isSunday ? 'background-color: #f3f4f6;' : ''} ${isHoliday ? 'background-color: #fef2f2;' : ''}">
               <div style="font-size: 7px; font-weight: bold;">
-                ${isWeekView ? date.toLocaleDateString('fr-FR', { weekday: 'short' }) : date.getDate()}
+                ${isWeekView ? date.toLocaleDateString(intlLocale(getActiveLocale()), { weekday: 'short' }) : date.getDate()}
               </div>
               <div style="font-size: 5px; color: #6b7280; margin-top: 1px;">
-                ${isWeekView ? date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) : date.toLocaleDateString('fr-FR', { month: 'short' })}
+                ${isWeekView ? date.toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit' }) : date.toLocaleDateString(intlLocale(getActiveLocale()), { month: 'short' })}
               </div>
               ${isWeekView ? `
                 <div style="font-size: 4px; color: #9ca3af; margin-top: 1px;">
-                  ${date.toLocaleDateString('fr-FR', { weekday: 'short' })}
+                  ${date.toLocaleDateString(intlLocale(getActiveLocale()), { weekday: 'short' })}
                 </div>
               ` : ''}
             </th>

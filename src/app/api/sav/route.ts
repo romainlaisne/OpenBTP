@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -17,10 +19,11 @@ import { notifier } from '@/lib/services/notificationService'
  * Récupère la liste des tickets SAV avec filtres optionnels
  */
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -145,7 +148,7 @@ export async function GET(request: Request) {
     })
     ])
 
-    return NextResponse.json({
+    return localizedJson({
       data: tickets,
       meta: {
         page,
@@ -162,7 +165,7 @@ export async function GET(request: Request) {
       message: errorMessage,
       stack: error instanceof Error ? error.stack : undefined
     })
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des tickets SAV', details: errorMessage },
       { status: 500 }
     )
@@ -174,10 +177,11 @@ export async function GET(request: Request) {
  * Crée un nouveau ticket SAV
  */
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -186,7 +190,7 @@ export async function POST(request: Request) {
     // Validation des données
     const validation = validateTicketSAVData(data)
     if (!validation.isValid) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Données invalides', details: validation.errors },
         { status: 400 }
       )
@@ -199,7 +203,7 @@ export async function POST(request: Request) {
         where: { chantierId: data.chantierId }
       })
       if (!chantier) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Chantier introuvable' },
           { status: 404 }
         )
@@ -213,7 +217,7 @@ export async function POST(request: Request) {
       })
 
       if (!technicien) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Technicien introuvable' },
           { status: 404 }
         )
@@ -227,7 +231,7 @@ export async function POST(request: Request) {
       })
 
       if (!soustraitant) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Sous-traitant introuvable' },
           { status: 404 }
         )
@@ -342,11 +346,11 @@ export async function POST(request: Request) {
       })
     }
 
-    return NextResponse.json(nouveauTicket, { status: 201 })
+    return localizedJson(nouveauTicket, { status: 201 })
 
   } catch (error) {
     console.error('Erreur lors de la création du ticket SAV:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du ticket SAV' },
       { status: 500 }
     )

@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState } from 'react'
 import { useToolStore } from '@/store/metres-plan/useToolStore'
 import { useProjectStore } from '@/store/metres-plan/useProjectStore'
@@ -91,7 +93,7 @@ const Toolbar: React.FC = () => {
 
       {/* ── Unit selector ────────────────────────────────────────────────────── */}
       <div className="px-3 pb-3">
-        <p className={`${sectionLbl} mb-2`}>Unité</p>
+        <p className={`${sectionLbl} mb-2`}><UiText>Unité</UiText></p>
         <div className="grid grid-cols-3 gap-1">
           {(['mm','cm','m','ft','in'] as Unit[]).map(u => (
             <button
@@ -117,14 +119,14 @@ const Toolbar: React.FC = () => {
         <p className={`${sectionLbl} mb-2`}>Calibration</p>
         {calibration ? (
           <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-2">
-            <p className="text-xs text-green-700 dark:text-green-400 font-medium">Calibrée</p>
+            <p className="text-xs text-green-700 dark:text-green-400 font-medium"><UiText>Calibrée</UiText></p>
             <p className="text-xs text-green-600 dark:text-green-300 mt-0.5">1px = {calibration.ratio.toFixed(4)} {calibration.unit}</p>
             <p className="text-xs text-green-600 dark:text-green-300">{calibration.realValue} {calibration.unit} / {calibration.pixelDistance.toFixed(1)}px</p>
           </div>
         ) : (
           <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-2">
-            <p className="text-xs text-red-600 dark:text-red-400 font-medium">Non calibrée</p>
-            <p className="text-xs text-red-500 dark:text-red-300 mt-0.5">Appuyez sur C pour calibrer l&apos;échelle</p>
+            <p className="text-xs text-red-600 dark:text-red-400 font-medium"><UiText>Non calibrée</UiText></p>
+            <p className="text-xs text-red-500 dark:text-red-300 mt-0.5"><UiText>Appuyez sur C pour calibrer l&apos;échelle</UiText></p>
           </div>
         )}
       </div>
@@ -139,7 +141,7 @@ const Toolbar: React.FC = () => {
               className={`${inputCls} focus:border-blue-500 mb-2`}
               value={counterName}
               onChange={e => setCounterName(e.target.value)}
-              placeholder="Nom de l'élément"
+              placeholder={tx("Nom de l'élément")}
             />
             <div className="flex flex-wrap gap-1.5 mb-3">
               {MEASUREMENT_COLORS.map(c => (
@@ -152,7 +154,7 @@ const Toolbar: React.FC = () => {
               ))}
             </div>
             <p className={`${sectionLbl} mb-1`}>Dimensions ouverture</p>
-            <p className="text-xs text-gray-400 dark:text-gray-600 mb-2">Laisser à 0 pour un simple compteur</p>
+            <p className="text-xs text-gray-400 dark:text-gray-600 mb-2"><UiText>Laisser à 0 pour un simple compteur</UiText></p>
             <div className="flex items-center gap-1 mb-1">
               <input
                 type="number"
@@ -174,7 +176,7 @@ const Toolbar: React.FC = () => {
             </div>
             {counterUnitWidth > 0 && counterUnitHeight > 0 && (
               <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-1">
-                Chaque unité = {(counterUnitWidth * counterUnitHeight).toFixed(3)} {activeUnit}²
+                <UiText>Chaque unité = </UiText>{(counterUnitWidth * counterUnitHeight).toFixed(3)} {activeUnit}²
               </p>
             )}
           </div>
@@ -187,7 +189,7 @@ const Toolbar: React.FC = () => {
           <div className={divider} />
           <div className="p-3">
             <p className={`${sectionLbl} mb-2`}>Surface mur</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Tracez le périmètre des murs, la surface est calculée automatiquement.</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2"><UiText>Tracez le périmètre des murs, la surface est calculée automatiquement.</UiText></p>
             <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Hauteur de mur</label>
             <div className="flex items-center gap-2">
               <input
@@ -200,7 +202,7 @@ const Toolbar: React.FC = () => {
               <span className="text-xs text-gray-500 dark:text-gray-400">{activeUnit}</span>
             </div>
             <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-              Surface = périmètre × {wallHeight} {activeUnit}
+              <UiText>Surface = périmètre × </UiText>{wallHeight} {activeUnit}
             </p>
           </div>
         </>
@@ -249,8 +251,8 @@ const Toolbar: React.FC = () => {
             </p>
             {showSlopeAdvanced && (
               <p className="text-xs text-gray-400 dark:text-gray-600 mt-1 leading-relaxed">
-                Mesure le plan incliné réel (projetion horizontale × facteur)
-              </p>
+                <UiText>Mesure le plan incliné réel (projetion horizontale × facteur)
+              </UiText></p>
             )}
             <button
               className="text-xs text-gray-400 dark:text-gray-600 mt-1 hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
@@ -274,7 +276,7 @@ const Toolbar: React.FC = () => {
               <button
                 onClick={() => setActivePosteId(null)}
                 className="p-0.5 text-blue-500 hover:text-blue-700 dark:hover:text-white hover:bg-blue-100 dark:hover:bg-blue-800 rounded transition-colors"
-                title="Désactiver le poste"
+                title={tx("Désactiver le poste")}
               >
                 <X size={12} />
               </button>
@@ -291,10 +293,10 @@ const Toolbar: React.FC = () => {
       <div className={`p-3 border-t border-gray-200 dark:border-gray-800`}>
         <p className="text-xs text-gray-400 font-medium mb-1">Raccourcis</p>
         <div className="space-y-0.5 text-xs text-gray-400 dark:text-gray-600">
-          <p>Double-clic / Entrée → Valider</p>
-          <p>Échap → Annuler</p>
-          <p>Suppr → Effacer sélection</p>
-          <p>Ctrl+Z / Ctrl+Y → Annuler/Refaire</p>
+          <p><UiText>Double-clic / Entrée → Valider</UiText></p>
+          <p><UiText>Échap → Annuler</UiText></p>
+          <p><UiText>Suppr → Effacer sélection</UiText></p>
+          <p><UiText>Ctrl+Z / Ctrl+Y → Annuler/Refaire</UiText></p>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation'
@@ -312,8 +313,8 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                   <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                     <PencilSquareIcon className="w-6 h-6 mr-3 text-sky-900 dark:text-white" />
                     <h1 className="text-xl font-bold text-sky-900 dark:text-white">
-                      Éditer
-                    </h1>
+                      <UiText>Éditer
+                    </UiText></h1>
                   </div>
                   {chantier.numeroIdentification && (
                     <span className="px-3 py-1 rounded-full bg-white/30 backdrop-blur-sm text-sky-900 dark:text-white shadow-sm text-xs sm:text-sm font-semibold inline-flex w-max">
@@ -342,7 +343,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-sky-500 via-sky-600 to-cyan-700 text-white rounded-full shadow-lg ring-2 ring-sky-200 dark:ring-sky-700">
                 <PencilSquareIcon className="w-5 h-5 mr-2" />
-                <span className="font-bold text-lg">Informations du chantier</span>
+                <span className="font-bold text-lg"><UiText>Informations du chantier</UiText></span>
               </div>
             </div>
             <div className="p-6">
@@ -383,7 +384,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                           numeroIdentification: e.target.value
                         }))}
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                        placeholder="Ex: CH-2025-001 (optionnel)"
+                        placeholder={tx("Ex: CH-2025-001 (optionnel)")}
                       />
                     </div>
 
@@ -406,9 +407,9 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                             clientId: clientId
                           }));
                         }}
-                        placeholder="Sélectionner un client"
-                        searchPlaceholder="Rechercher un client..."
-                        emptyMessage="Aucun client trouvé"
+                        placeholder={tx("Sélectionner un client")}
+                        searchPlaceholder={tx("Rechercher un client...")}
+                        emptyMessage={tx("Aucun client trouvé")}
                         showAllOption={false}
                       />
                     </div>
@@ -429,8 +430,8 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                           }}
                           disabled={loadingContacts || contactsDuClient.length === 0}
                           placeholder={loadingContacts ? "Chargement..." : (contactsDuClient.length === 0 ? "Aucun contact" : "Sélectionner un contact")}
-                          searchPlaceholder="Rechercher un contact..."
-                          emptyMessage="Aucun contact trouvé"
+                          searchPlaceholder={tx("Rechercher un contact...")}
+                          emptyMessage={tx("Aucun contact trouvé")}
                           showAllOption={false}
                         />
                       </div>
@@ -454,7 +455,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                               maitreOuvrageNom: e.target.value
                             }))}
                             className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                            placeholder="Nom du maître d'ouvrage"
+                            placeholder={tx("Nom du maître d'ouvrage")}
                           />
                         </div>
                         <div>
@@ -469,13 +470,13 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                               maitreOuvrageAdresse: e.target.value
                             }))}
                             className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                            placeholder="Adresse du maître d'ouvrage"
+                            placeholder={tx("Adresse du maître d'ouvrage")}
                           />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Localité / Province
-                          </label>
+                            <UiText>Localité / Province
+                          </UiText></label>
                           <input
                             type="text"
                             value={formData.maitreOuvrageLocalite || ''}
@@ -484,7 +485,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                               maitreOuvrageLocalite: e.target.value
                             }))}
                             className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                            placeholder="Localité, Province"
+                            placeholder={tx("Localité, Province")}
                           />
                         </div>
                       </div>
@@ -508,7 +509,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                               bureauArchitectureNom: e.target.value
                             }))}
                             className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                            placeholder="Nom du bureau d'architecture"
+                            placeholder={tx("Nom du bureau d'architecture")}
                           />
                         </div>
                         <div>
@@ -523,13 +524,13 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                               bureauArchitectureAdresse: e.target.value
                             }))}
                             className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                            placeholder="Adresse du bureau d'architecture"
+                            placeholder={tx("Adresse du bureau d'architecture")}
                           />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Localité / Province
-                          </label>
+                            <UiText>Localité / Province
+                          </UiText></label>
                           <input
                             type="text"
                             value={formData.bureauArchitectureLocalite || ''}
@@ -538,7 +539,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                               bureauArchitectureLocalite: e.target.value
                             }))}
                             className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                            placeholder="Localité, Province"
+                            placeholder={tx("Localité, Province")}
                           />
                         </div>
                       </div>
@@ -549,8 +550,8 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                 {/* Section Détails du chantier */}
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-6">
                   <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-600 pb-2">
-                    Détails du chantier
-                  </h3>
+                    <UiText>Détails du chantier
+                  </UiText></h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -571,8 +572,8 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        État du chantier
-                      </label>
+                        <UiText>État du chantier
+                      </UiText></label>
                       <select
                         name="statut"
                         value={formData.statut}
@@ -582,15 +583,15 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                         }))}
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                       >
-                        <option value="En préparation">En préparation</option>
-                        <option value="En cours">En cours</option>
-                        <option value="Terminé">Terminé</option>
+                        <option value="En préparation"><UiText>En préparation</UiText></option>
+                        <option value="En cours"><UiText>En cours</UiText></option>
+                        <option value="Terminé"><UiText>Terminé</UiText></option>
                       </select>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Adresse du chantier
-                      </label>
+                        <UiText>Adresse du chantier
+                      </UiText></label>
                       <input
                         type="text"
                         name="adresseChantier"
@@ -605,8 +606,8 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Durée (en jours)
-                      </label>
+                        <UiText>Durée (en jours)
+                      </UiText></label>
                       <input
                         type="number"
                         name="dureeEnJours"
@@ -621,8 +622,8 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
 
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Type de durée
-                      </label>
+                        <UiText>Type de durée
+                      </UiText></label>
                       <select
                         name="typeDuree"
                         value={formData.typeDuree}

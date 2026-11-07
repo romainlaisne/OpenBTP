@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -12,11 +14,12 @@ export async function POST(
   request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const formData = await request.formData()
@@ -24,7 +27,7 @@ export async function POST(
     const fileName = formData.get('fileName') as string | null
 
     if (!pdfFile) {
-      return NextResponse.json({ error: 'Fichier PDF requis' }, { status: 400 })
+      return localizedJson({ error: 'Fichier PDF requis' }, { status: 400 })
     }
 
     const name = fileName || `metre-plan-export-${id}.pdf`
@@ -35,7 +38,7 @@ export async function POST(
     })
 
     if (!metrePlan) {
-      return NextResponse.json({ error: 'Métré sur plan non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Métré sur plan non trouvé' }, { status: 404 })
     }
 
     const pdfBuffer = Buffer.from(await pdfFile.arrayBuffer())
@@ -62,7 +65,7 @@ export async function POST(
         },
       })
 
-      return NextResponse.json({ success: true, document })
+      return localizedJson({ success: true, document })
     } else {
       // Pas de chantier associé : retourner le fichier en téléchargement direct
       return new NextResponse(pdfBuffer, {
@@ -75,7 +78,7 @@ export async function POST(
     }
   } catch (error) {
     console.error('Erreur POST /api/metres-plan/[id]/export:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Erreur lors de l'export du métré sur plan" },
       { status: 500 }
     )

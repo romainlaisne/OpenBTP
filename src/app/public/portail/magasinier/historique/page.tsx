@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -9,7 +8,7 @@ import {
   CheckCircleIcon,
   CalendarDaysIcon,
 } from '@heroicons/react/24/outline'
-import { usePortalI18n } from '../../i18n'
+import { portalIntlLocale, usePortalI18n } from '../../i18n'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -26,7 +25,7 @@ interface TacheHistorique {
 
 export default function MagasinierHistoriquePage() {
   const router = useRouter()
-  const { t } = usePortalI18n()
+  const { t, lang } = usePortalI18n()
   const [me, setMe] = useState<{ magasinier: { id: string; nom: string } } | null>(null)
   const [taches, setTaches] = useState<TacheHistorique[]>([])
   const [loading, setLoading] = useState(true)
@@ -63,7 +62,7 @@ export default function MagasinierHistoriquePage() {
   }
 
   const formatDate = (s: string) =>
-    new Date(s).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+    new Date(s).toLocaleDateString(portalIntlLocale(lang), { day: '2-digit', month: 'short', year: 'numeric' })
 
   if (loading) {
     return (
@@ -98,7 +97,7 @@ export default function MagasinierHistoriquePage() {
           className="flex-1 min-w-0 py-3 px-2 font-medium text-gray-600 hover:text-blue-600 transition-colors text-sm flex items-center justify-center gap-1"
         >
           <ClipboardDocumentListIcon className="h-5 w-5 flex-shrink-0" />
-          <span>Tâches</span>
+          <span>{t('tasks')}</span>
         </button>
         <button
           onClick={() => router.push('/public/portail/magasinier/historique')}
@@ -110,30 +109,30 @@ export default function MagasinierHistoriquePage() {
       </nav>
 
       <div className="p-4 max-w-lg mx-auto">
-        <h2 className="text-lg font-bold text-gray-800 mb-4">Tâches validées</h2>
+        <h2 className="text-lg font-bold text-gray-800 mb-4">{t('validated_tasks')}</h2>
         <div className="space-y-3">
-          {taches.map((t) => (
+          {taches.map((task) => (
             <div
-              key={t.id}
+              key={task.id}
               className="bg-white rounded-xl p-4 shadow border border-gray-100"
             >
               <div className="flex items-start gap-2">
                 <CheckCircleIcon className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-gray-900">{t.titre}</h3>
-                  {t.description && (
-                    <p className="text-sm text-gray-600 mt-0.5">{t.description}</p>
+                  <h3 className="font-semibold text-gray-900">{task.titre}</h3>
+                  {task.description && (
+                    <p className="text-sm text-gray-600 mt-0.5">{task.description}</p>
                   )}
                   <p className="text-xs text-gray-500 mt-1">
-                    Exécutée le {formatDate(t.dateExecution)}
-                    {t.dateValidation && ` • Validée le ${formatDate(t.dateValidation)}`}
+                    {t('completed_on')} {formatDate(task.dateExecution)}
+                    {task.dateValidation && ` • ${t('validated_on')} ${formatDate(task.dateValidation)}`}
                   </p>
-                  {t.commentaire && (
-                    <p className="text-sm text-gray-600 mt-2 italic">&quot;{t.commentaire}&quot;</p>
+                  {task.commentaire && (
+                    <p className="text-sm text-gray-600 mt-2 italic">&quot;{task.commentaire}&quot;</p>
                   )}
-                  {t.photos?.length > 0 && (
+                  {task.photos?.length > 0 && (
                     <div className="flex gap-1 mt-2 overflow-x-auto">
-                      {t.photos.map((p) => (
+                      {task.photos.map((p) => (
                         <div key={p.id} className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
                           <Image src={p.url} alt="" fill className="object-cover" sizes="64px" />
                         </div>
@@ -146,7 +145,7 @@ export default function MagasinierHistoriquePage() {
           ))}
           {taches.length === 0 && (
             <div className="text-center py-12 text-gray-500 bg-white rounded-xl border border-gray-100">
-              Aucune tâche validée
+              {t('no_validated_tasks')}
             </div>
           )}
         </div>

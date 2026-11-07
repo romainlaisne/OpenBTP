@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -13,10 +15,11 @@ interface DossierTechnique {
 }
 
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer tous les documents de type DOSSIER_TECHNIQUE
@@ -50,10 +53,10 @@ export async function GET() {
       };
     })
 
-    return NextResponse.json(dossiers)
+    return localizedJson(dossiers)
   } catch (error) {
     console.error('Erreur lors de la lecture de l\'historique:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la lecture de l\'historique des dossiers' },
       { status: 500 }
     )

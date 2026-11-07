@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -11,6 +14,7 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ chantierId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const resolvedParams = await props.params
     const chantierReadableId = resolvedParams.chantierId
@@ -21,7 +25,7 @@ export async function GET(
     const session = await getServerSession(authOptions)
     if (!session) {
       console.error('❌ Session non autorisée')
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer le chantier avec le client
@@ -34,12 +38,12 @@ export async function GET(
 
     if (!chantierEntity) {
       console.error(`❌ Chantier non trouvé: ${chantierReadableId}`)
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     if (!chantierEntity.client) {
       console.error(`❌ Client du chantier non trouvé: ${chantierReadableId}`)
-      return NextResponse.json({ error: 'Client du chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Client du chantier non trouvé' }, { status: 404 })
     }
     
     console.log(`✅ Chantier trouvé: ${chantierEntity.nomChantier}`)
@@ -70,7 +74,7 @@ export async function GET(
 
     if (!etatAvancement) {
       console.error(`❌ État d'avancement N°${etatNumero} non trouvé`)
-      return NextResponse.json({ error: 'État d\'avancement non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'État d\'avancement non trouvé' }, { status: 404 })
     }
     
     console.log(`✅ État d'avancement trouvé: ${etatAvancement.lignes.length} lignes, ${etatAvancement.avenants.length} avenants (estFinalise: ${etatAvancement.estFinalise})`)
@@ -152,7 +156,8 @@ export async function GET(
     }
 
     console.log('🎨 Génération du HTML...')
-    const html = generateEtatAvancementHTML(pdfData, companySettings, 'client')
+    const __locale = await bindRequestLocale()
+    const html = localizeGeneratedHtml(__locale, generateEtatAvancementHTML(pdfData, companySettings, 'client'), collectStrings(pdfData))
     
     console.log('📄 Génération du PDF avec Puppeteer...')
     const pdfBuffer = await PDFGenerator.generatePDF(html, {
@@ -186,7 +191,7 @@ export async function GET(
     const message = error instanceof Error ? error.message : String(error)
     const stack = error instanceof Error ? error.stack : undefined
     console.error('❌ Erreur génération PDF:', message, stack)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la génération du PDF', details: process.env.NODE_ENV === 'development' ? message : undefined },
       { status: 500 }
     )

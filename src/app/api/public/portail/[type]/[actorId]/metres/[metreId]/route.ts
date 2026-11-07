@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { notifier } from '@/lib/services/notificationService'
@@ -20,9 +22,10 @@ interface MetreLineInput {
 
 // GET: récupérer un métré du sous-traitant connecté (pour réouverture/édition)
 export async function GET(request: Request, props: { params: Promise<{ type: 'ouvrier'|'soustraitant'; actorId: string; metreId: string }> }) {
+  await bindRequestLocale()
   const { type, actorId, metreId } = await props.params
   if (type !== 'soustraitant') {
-    return NextResponse.json({ error: 'Type non supporté' }, { status: 400 })
+    return localizedJson({ error: 'Type non supporté' }, { status: 400 })
   }
 
   const session = readPortalSessionFromCookie(request.headers.get('cookie'))
@@ -40,21 +43,22 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
       },
     })
     if (!metre) {
-      return NextResponse.json({ error: 'Métré non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Métré non trouvé' }, { status: 404 })
     }
-    return NextResponse.json({ ...metre, modifiable: STATUTS_MODIFIABLES.includes(metre.statut) })
+    return localizedJson({ ...metre, modifiable: STATUTS_MODIFIABLES.includes(metre.statut) })
   } catch (error) {
     console.error('Erreur récupération métré portail:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 // PATCH: mettre à jour un métré existant (brouillon ou déjà soumis, tant que non traité)
 // Body: { statut?: 'BROUILLON'|'SOUMIS', commentaire?, piecesJointes?: string[], lignes: [...] }
 export async function PATCH(request: Request, props: { params: Promise<{ type: 'ouvrier'|'soustraitant'; actorId: string; metreId: string }> }) {
+  await bindRequestLocale()
   const { type, actorId, metreId } = await props.params
   if (type !== 'soustraitant') {
-    return NextResponse.json({ error: 'Type non supporté' }, { status: 400 })
+    return localizedJson({ error: 'Type non supporté' }, { status: 400 })
   }
 
   const session = readPortalSessionFromCookie(request.headers.get('cookie'))
@@ -68,10 +72,10 @@ export async function PATCH(request: Request, props: { params: Promise<{ type: '
       include: { chantier: { select: { chantierId: true, nomChantier: true } } },
     })
     if (!existing) {
-      return NextResponse.json({ error: 'Métré non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Métré non trouvé' }, { status: 404 })
     }
     if (!STATUTS_MODIFIABLES.includes(existing.statut)) {
-      return NextResponse.json({ error: 'Ce métré a été traité et ne peut plus être modifié' }, { status: 409 })
+      return localizedJson({ error: 'Ce métré a été traité et ne peut plus être modifié' }, { status: 409 })
     }
 
     const body = await request.json()
@@ -83,7 +87,7 @@ export async function PATCH(request: Request, props: { params: Promise<{ type: '
     }
 
     if (!Array.isArray(lignes) || lignes.length === 0) {
-      return NextResponse.json({ error: 'lignes requis' }, { status: 400 })
+      return localizedJson({ error: 'lignes requis' }, { status: 400 })
     }
 
     const nouveauStatut = statut === 'BROUILLON' ? 'BROUILLON' : 'SOUMIS'
@@ -133,9 +137,9 @@ export async function PATCH(request: Request, props: { params: Promise<{ type: '
       })
     }
 
-    return NextResponse.json(metre)
+    return localizedJson(metre)
   } catch (error) {
     console.error('Erreur mise à jour métré portail:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

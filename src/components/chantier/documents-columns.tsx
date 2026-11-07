@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { ColumnDef, Row, Column } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 import { EyeIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -50,7 +52,7 @@ const CellActions: React.FC<CellActionsProps> = ({
         variant="outline"
         className="h-8 w-8 p-0"
         onClick={() => onPreview(document.url)}
-        title="Aperçu"
+        title={tx("Aperçu")}
       >
         <EyeIcon className="h-4 w-4" style={{ color: 'green' }} />
       </Button>
@@ -58,7 +60,7 @@ const CellActions: React.FC<CellActionsProps> = ({
         variant="outline"
         className="h-8 w-8 p-0 text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600"
         onClick={() => onDelete(document.id)}
-        title="Supprimer"
+        title={tx("Supprimer")}
       >
         <TrashIcon className="h-4 w-4" style={{ color: 'red' }} />
       </Button>
@@ -81,7 +83,7 @@ export const getDocumentColumns = (
         variant="outline"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Nom <ArrowUpDown className="ml-2 h-4 w-4" />
+        <UiText>Nom </UiText><ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
     cell: ({ row }: { row: Row<DocumentColumn> }) => (
@@ -120,7 +122,7 @@ export const getDocumentColumns = (
         variant="outline"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Date <ArrowUpDown className="ml-2 h-4 w-4" />
+        <UiText>Date </UiText><ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
     cell: ({ row }: { row: Row<DocumentColumn> }) => new Date(row.original.createdAt).toLocaleDateString(),
@@ -148,7 +150,7 @@ export const getDocumentColumns = (
   },
   {
     id: "actions",
-    header: () => <div className="text-right">Actions</div>,
+    header: () => <div className="text-right"><UiText>Actions</UiText></div>,
     cell: ({ row }: { row: Row<DocumentColumn> }) => ( <CellActions row={row} onDelete={onDelete} onPreview={onPreview} /> ),
     meta: {
       filterType: undefined // Pas de filtre pour la colonne actions

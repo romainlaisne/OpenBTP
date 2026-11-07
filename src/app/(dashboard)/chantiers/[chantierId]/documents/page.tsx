@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { DocumentDuplicateIcon } from '@heroicons/react/24/outline'
 import DocumentsContent from '@/components/chantier/DocumentsContent'
@@ -42,8 +43,8 @@ export default function DocumentsPage(props: { params: Promise<{ chantierId: str
                 <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                   <DocumentDuplicateIcon className="w-6 h-6 mr-3 text-emerald-900 dark:text-white" />
                   <h1 className="text-xl font-bold text-emerald-900 dark:text-white">
-                    Documents du chantier
-                  </h1>
+                    <UiText>Documents du chantier
+                  </UiText></h1>
                 </div>
               </div>
             </div>

@@ -1,12 +1,15 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getMagasinierIdFromCookie } from '@/app/public/portail/auth'
 
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const magasinierId = getMagasinierIdFromCookie(request.headers.get('cookie'))
     if (!magasinierId) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -22,7 +25,7 @@ export async function GET(request: NextRequest) {
         orderBy: { dateValidation: 'desc' },
         include: { photos: { where: { type: 'PREUVE' }, orderBy: { ordre: 'asc' } } }
       })
-      return NextResponse.json(taches)
+      return localizedJson(taches)
     }
 
     // Vue à faire: tâches non validées, report au lendemain (dateExecution <= date affichée)
@@ -43,14 +46,14 @@ export async function GET(request: NextRequest) {
       include: { photos: { where: { type: 'A_FAIRE' }, orderBy: { ordre: 'asc' } } }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       taches,
       dateDebut: dateDebut.toISOString(),
       dateFin: dateFin.toISOString()
     })
   } catch (error) {
     console.error('Erreur GET taches magasinier:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
@@ -59,17 +62,18 @@ export async function GET(request: NextRequest) {
  * Elle apparaît comme les autres dans sa liste et côté bureau (marquée « ajoutée par le magasinier »).
  */
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const magasinierId = getMagasinierIdFromCookie(request.headers.get('cookie'))
     if (!magasinierId) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const body = await request.json().catch(() => ({}))
     const titre = typeof body.titre === 'string' ? body.titre.trim().slice(0, 190) : ''
     const description = typeof body.description === 'string' && body.description.trim() ? body.description.trim() : null
     if (!titre) {
-      return NextResponse.json({ error: 'Le titre est obligatoire' }, { status: 400 })
+      return localizedJson({ error: 'Le titre est obligatoire' }, { status: 400 })
     }
 
     // Date d'exécution : jour choisi (midi, pour éviter tout décalage de fuseau), sinon maintenant
@@ -88,9 +92,9 @@ export async function POST(request: NextRequest) {
       },
       include: { photos: { where: { type: 'A_FAIRE' }, orderBy: { ordre: 'asc' } } }
     })
-    return NextResponse.json(tache, { status: 201 })
+    return localizedJson(tache, { status: 201 })
   } catch (error) {
     console.error('Erreur POST taches magasinier:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

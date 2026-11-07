@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { getServerSession } from 'next-auth';
@@ -9,11 +11,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 // GET /api/messaging/messages?chatId=xxx - Récupérer les messages d'une conversation
 export async function GET(req: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
     
     const userId = session.user.id;
@@ -21,7 +24,7 @@ export async function GET(req: NextRequest) {
     const chatId = searchParams.get('chatId');
     
     if (!chatId) {
-      return NextResponse.json({ error: 'ID de chat requis' }, { status: 400 });
+      return localizedJson({ error: 'ID de chat requis' }, { status: 400 });
     }
     
     // Vérifier que l'utilisateur est bien participant de cette conversation
@@ -35,7 +38,7 @@ export async function GET(req: NextRequest) {
     });
     
     if (!isParticipant) {
-      return NextResponse.json({ error: 'Non autorisé pour ce chat' }, { status: 403 });
+      return localizedJson({ error: 'Non autorisé pour ce chat' }, { status: 403 });
     }
     
     // Récupérer les messages, les plus récents en premier
@@ -85,20 +88,21 @@ export async function GET(req: NextRequest) {
       },
     });
     
-    return NextResponse.json(messages.reverse()); // Renvoyer dans l'ordre chronologique
+    return localizedJson(messages.reverse()); // Renvoyer dans l'ordre chronologique
   } catch (error) {
     console.error('Erreur lors de la récupération des messages:', error);
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 });
   }
 }
 
 // POST /api/messaging/messages - Envoyer un nouveau message
 export async function POST(req: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
     
     const userId = session.user.id;
@@ -111,7 +115,7 @@ export async function POST(req: NextRequest) {
       const file = formData.get('file') as File;
       
       if (!chatId) {
-        return NextResponse.json({ error: 'ID de chat requis' }, { status: 400 });
+        return localizedJson({ error: 'ID de chat requis' }, { status: 400 });
       }
       
       // Vérifier que l'utilisateur est participant
@@ -125,7 +129,7 @@ export async function POST(req: NextRequest) {
       });
       
       if (!isParticipant) {
-        return NextResponse.json({ error: 'Non autorisé pour ce chat' }, { status: 403 });
+        return localizedJson({ error: 'Non autorisé pour ce chat' }, { status: 403 });
       }
       
       // Gérer le fichier si présent
@@ -190,17 +194,17 @@ export async function POST(req: NextRequest) {
         },
       });
       
-      return NextResponse.json(message);
+      return localizedJson(message);
     } else {
       // Traitement standard JSON
       const { content, chatId } = await req.json();
       
       if (!chatId) {
-        return NextResponse.json({ error: 'ID de chat requis' }, { status: 400 });
+        return localizedJson({ error: 'ID de chat requis' }, { status: 400 });
       }
       
       if (!content || content.trim() === '') {
-        return NextResponse.json({ error: 'Contenu requis' }, { status: 400 });
+        return localizedJson({ error: 'Contenu requis' }, { status: 400 });
       }
       
       // Vérifier que l'utilisateur est participant
@@ -214,7 +218,7 @@ export async function POST(req: NextRequest) {
       });
       
       if (!isParticipant) {
-        return NextResponse.json({ error: 'Non autorisé pour ce chat' }, { status: 403 });
+        return localizedJson({ error: 'Non autorisé pour ce chat' }, { status: 403 });
       }
       
       // Créer le message
@@ -245,10 +249,10 @@ export async function POST(req: NextRequest) {
         },
       });
       
-      return NextResponse.json(message);
+      return localizedJson(message);
     }
   } catch (error) {
     console.error('Erreur lors de l\'envoi du message:', error);
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 });
   }
 } 

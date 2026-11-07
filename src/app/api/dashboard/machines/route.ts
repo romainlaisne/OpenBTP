@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,10 +8,11 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/dashboard/machines - Récupère les données des machines pour le dashboard
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -86,7 +90,7 @@ export async function GET() {
       const isLate = dateRetourPrevue < new Date() && !pret.dateRetourEffective
       
       // Formater la date de retour
-      const dateRetour = pret.dateRetourPrevue.toLocaleDateString('fr-FR')
+      const dateRetour = pret.dateRetourPrevue.toLocaleDateString(intlLocale(getActiveLocale()))
       
       return {
         id: pret.id,
@@ -97,13 +101,13 @@ export async function GET() {
       }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       machineStats,
       prets: pretsFormattés
     })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des données des machines' },
       { status: 500 }
     )

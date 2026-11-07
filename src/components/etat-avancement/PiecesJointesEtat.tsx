@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 // Photos et fichiers joints à un état d'avancement client. Ajout par bouton ou
 // glisser-déposer ; retrait possible tant que l'état n'est pas finalisé. Les
 // pièces se joignent au mail d'envoi de l'état (case à cocher dans la modale).
@@ -66,7 +68,7 @@ export default function PiecesJointesEtat({ chantierId, etatId }: { chantierId: 
       for (const e of d.erreurs || []) toast.error(e)
       if (!res.ok && !d.erreurs?.length) toast.error(d.error || "Erreur lors de l'ajout")
     } catch {
-      toast.error("Erreur lors de l'ajout")
+      toast.error(tx("Erreur lors de l'ajout"))
     } finally {
       setEnvoi(false)
     }
@@ -130,15 +132,15 @@ export default function PiecesJointesEtat({ chantierId, etatId }: { chantierId: 
 
       <div className="p-6">
         {chargement ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400">Chargement…</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Chargement…</UiText></p>
         ) : pieces.length === 0 ? (
           <button
             onClick={() => input.current?.click()}
             className="w-full py-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:border-sky-400 hover:text-sky-600 transition-colors flex flex-col items-center gap-2"
           >
             <PhotoIcon className="h-8 w-8" />
-            Aucune pièce jointe — cliquez ou glissez des photos, PDF, plans…
-          </button>
+            <UiText>Aucune pièce jointe — cliquez ou glissez des photos, PDF, plans…
+          </UiText></button>
         ) : (
           <div className="space-y-4">
             {images.length > 0 && (
@@ -178,7 +180,7 @@ export default function PiecesJointesEtat({ chantierId, etatId }: { chantierId: 
               </ul>
             )}
             {estFinalise && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">État finalisé : on peut encore ajouter des pièces, mais plus en retirer.</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400"><UiText>État finalisé : on peut encore ajouter des pièces, mais plus en retirer.</UiText></p>
             )}
           </div>
         )}

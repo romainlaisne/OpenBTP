@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useParams } from 'next/navigation'
@@ -26,7 +27,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { Button } from '@/components/ui'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 // Import dynamique pour reduire le bundle client
 let ExcelJSImport: typeof import('exceljs') | null = null
 import RemarqueForm from '@/components/chantier/RemarqueForm';
@@ -178,20 +179,20 @@ const PhotoModal = ({
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 bg-white rounded-full p-2.5 shadow-xl hover:bg-gray-200 transition-colors z-10 border border-gray-300"
-          aria-label="Fermer"
+          aria-label={tx("Fermer")}
         >
           <XMarkIcon className="h-7 w-7 text-gray-800" />
         </button>
         {isProof && (
           <div className="absolute top-4 left-4 bg-green-500 text-white text-sm px-2 py-1 rounded-md z-10">
-            Preuve de résolution
-          </div>
+            <UiText>Preuve de résolution
+          </UiText></div>
         )}
         {hasPrevious && onPrevious && (
           <button 
             onClick={onPrevious} 
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-white rounded-full p-2.5 shadow-xl hover:bg-gray-200 transition-colors z-10 border border-gray-300"
-            aria-label="Photo précédente"
+            aria-label={tx("Photo précédente")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -202,7 +203,7 @@ const PhotoModal = ({
           <button 
             onClick={onNext} 
             className="absolute right-4 top-1/2 -translate-y-1/2 bg-white rounded-full p-2.5 shadow-xl hover:bg-gray-200 transition-colors z-10 border border-gray-300"
-            aria-label="Photo suivante"
+            aria-label={tx("Photo suivante")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -461,7 +462,7 @@ export default function ReceptionDetailPage() {
   };
 
   const handleDeleteRemarque = async (remarqueId: string) => {
-    if (!confirm('Supprimer cette remarque ?')) return;
+    if (!confirm(tx("Supprimer cette remarque ?"))) return;
     setLoadingState(prev => ({...prev, suppression: true}))
     try {
       const response = await fetch(`/api/chantiers/${chantierId}/reception/${id}/remarques/${remarqueId}`, { method: 'DELETE' });
@@ -490,13 +491,13 @@ export default function ReceptionDetailPage() {
 
   const formatDateForDisplay = (dateString: string | null | undefined) => {
     if (!dateString) return 'N/A';
-    try { return format(new Date(dateString), 'dd/MM/yyyy HH:mm', { locale: fr }); } 
+    try { return format(new Date(dateString), 'dd/MM/yyyy HH:mm', { locale: dateFnsLocale() }); } 
     catch { return 'Date invalide'; }
   };
 
   const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) return 'N/A';
-    try { return format(new Date(dateString), 'dd/MM/yyyy', { locale: fr }); } 
+    try { return format(new Date(dateString), 'dd/MM/yyyy', { locale: dateFnsLocale() }); } 
     catch { return 'Date invalide'; }
   };
 
@@ -575,14 +576,14 @@ export default function ReceptionDetailPage() {
                     <input id="estInterne" name="estInterne" type="checkbox" checked={isInterne}
                       onChange={(e) => { setIsInterne(e.target.checked); if (e.target.checked) setSelectedSoustraitant(''); }}
                       className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-                    <label htmlFor="estInterne" className="ml-2 block text-sm text-gray-900 dark:text-gray-200">Équipe interne</label>
+                    <label htmlFor="estInterne" className="ml-2 block text-sm text-gray-900 dark:text-gray-200"><UiText>Équipe interne</UiText></label>
                   </div>
                   {!isInterne && (
                     <div>
-                      <label htmlFor="soustraitant" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Sous-traitant</label>
+                      <label htmlFor="soustraitant" className="block text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Sous-traitant</UiText></label>
                       <select id="soustraitant" value={selectedSoustraitant} onChange={(e) => setSelectedSoustraitant(e.target.value)} disabled={isInterne}
                         className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        <option value="">Sélectionner...</option>
+                        <option value=""><UiText>Sélectionner...</UiText></option>
                         {soustraitants.map((st) => <option key={st.value} value={st.value}>{st.label}</option>)}
                       </select>
                     </div>
@@ -601,7 +602,7 @@ export default function ReceptionDetailPage() {
   };
 
   const handleDeletePin = async (pinId: string) => {
-    if (!confirm('Supprimer ce PIN ?')) return;
+    if (!confirm(tx("Supprimer ce PIN ?"))) return;
     try {
       const response = await fetch(`/api/chantiers/${chantierId}/reception/${id}/pins/${pinId}`, { method: 'DELETE' });
       if (!response.ok) throw new Error((await response.json()).error || 'Erreur suppression PIN');
@@ -679,7 +680,7 @@ export default function ReceptionDetailPage() {
 
   if (loadingState.page) return <div className="min-h-screen flex justify-center items-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-red-700"></div></div>;
   if (error && !reception) return <div className="p-4 text-red-600 bg-red-100 rounded-md">{error} <Button onClick={fetchData}><UiText>Réessayer</UiText></Button></div>;
-  if (!reception) return <div className="p-4 text-gray-600">Aucune donnée de réception.</div>;
+  if (!reception) return <div className="p-4 text-gray-600"><UiText>Aucune donnée de réception.</UiText></div>;
 
   return (
     <div className="max-w-[1600px] mx-auto px-2 sm:px-4 lg:px-6 py-6 space-y-6">
@@ -722,8 +723,8 @@ export default function ReceptionDetailPage() {
                   className="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-lg text-sm font-semibold shadow-lg hover:bg-white/40 transition-all duration-200 text-red-900 dark:text-white"
                 >
                   <PlusCircleIcon className="h-5 w-5" />
-                  Créer la réception
-                </Link>
+                  <UiText>Créer la réception
+                </UiText></Link>
               </div>
             </div>
           </div>
@@ -733,24 +734,24 @@ export default function ReceptionDetailPage() {
       {/* Informations de la réception */}
       <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm text-gray-600 dark:text-gray-400">
-          <p>Créée le: {formatDateForDisplay(reception.dateCreation)} par {reception.createdBy?.name || reception.createdBy?.email || 'N/A'}</p>
+          <p><UiText>Créée le: </UiText>{formatDateForDisplay(reception.dateCreation)} par {reception.createdBy?.name || reception.createdBy?.email || 'N/A'}</p>
           <p>Date limite: <span className="font-semibold">{formatDateForDisplay(reception.dateLimite)}</span></p>
-          <p>Statut: <span className={`font-semibold ${reception.estFinalise ? 'text-green-600' : 'text-yellow-600'}`}>{reception.estFinalise ? 'Finalisée' : 'En cours'}</span></p>
+          <p><UiText>Statut: </UiText><span className={`font-semibold ${reception.estFinalise ? 'text-green-600' : 'text-yellow-600'}`}>{reception.estFinalise ? 'Finalisée' : 'En cours'}</span></p>
           {reception.codePIN && 
             <div className="flex items-center">
-              <p className="mr-2">Accès public principal:</p>
+              <p className="mr-2"><UiText>Accès public principal:</UiText></p>
               <span className="font-mono bg-gray-200 dark:bg-gray-700 px-1.5 py-0.5 rounded mr-2">{reception.codePIN}</span>
               <Button 
                 variant="outline"
                 size="sm"
                 onClick={copyExternalLink}
                 className="text-xs py-1 px-2"
-                title="Copier le lien public général"
+                title={tx("Copier le lien public général")}
               >
                 {linkCopied ? (
-                  <><ClipboardIcon className="h-3.5 w-3.5 mr-1" />Copié!</>
+                  <><ClipboardIcon className="h-3.5 w-3.5 mr-1" /><UiText>Copié!</UiText></>
                 ) : (
-                  <><LinkIcon className="h-3.5 w-3.5 mr-1" />Copier Lien</>
+                  <><LinkIcon className="h-3.5 w-3.5 mr-1" /><UiText>Copier Lien</UiText></>
                 )}
               </Button>
             </div>
@@ -759,8 +760,8 @@ export default function ReceptionDetailPage() {
         <div className="mt-4 flex flex-wrap gap-2">
           {firstImagePlan && (
             <Button variant="outline" onClick={handleOpenAnnotatedPlanModal} disabled={loadingState.planAnnotation} className="w-full md:w-auto">
-              {loadingState.planAnnotation ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div> : <EyeIcon className="h-5 w-5 mr-2" />}Plan Annoté
-            </Button>
+              {loadingState.planAnnotation ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div> : <EyeIcon className="h-5 w-5 mr-2" />}<UiText>Plan Annoté
+            </UiText></Button>
           )}
           <Button variant="outline" onClick={handleExportExcel} disabled={loadingState.exportExcel} className="w-full md:w-auto">
              {loadingState.exportExcel ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div> : <TableCellsIcon className="h-5 w-5 mr-2" />}Excel
@@ -782,8 +783,8 @@ export default function ReceptionDetailPage() {
           <div className="flex justify-between items-center cursor-pointer" onClick={() => setIsPinSectionExpanded(!isPinSectionExpanded)}>
             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 flex items-center">
               <KeyIcon className="h-5 w-5 mr-2 text-gray-500 dark:text-gray-400" />
-              Accès Publics (Codes PIN)
-            </h2>
+              <UiText>Accès Publics (Codes PIN)
+            </UiText></h2>
             {isPinSectionExpanded ? <ChevronDownIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" /> : <ChevronRightIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />}
           </div>
           {isPinSectionExpanded && (
@@ -798,13 +799,13 @@ export default function ReceptionDetailPage() {
                         <p className="text-sm text-gray-600 dark:text-gray-400">PIN: <span className="font-mono bg-gray-200 dark:bg-gray-600 px-1.5 py-0.5 rounded">{pin.codePIN}</span></p>
                       </div>
                       <div className="mt-2 sm:mt-0 flex space-x-2">
-                        <Button variant="outline" size="sm" onClick={() => copyPinLink(pin.codePIN)} className="text-xs text-blue-600 hover:text-blue-800"><LinkIcon className="h-3 w-3 mr-1" />Copier Lien</Button>
+                        <Button variant="outline" size="sm" onClick={() => copyPinLink(pin.codePIN)} className="text-xs text-blue-600 hover:text-blue-800"><LinkIcon className="h-3 w-3 mr-1" /><UiText>Copier Lien</UiText></Button>
                         {!reception.estFinalise && <Button variant="outline" size="sm" onClick={() => handleDeletePin(pin.id)} className="text-xs text-red-600 hover:text-red-800"><TrashIcon className="h-3 w-3 mr-1" />Suppr.</Button>}
                       </div>
                     </li>
                   ))}
                 </ul>
-              ) : <p className="text-sm text-gray-500 dark:text-gray-400">Aucun PIN configuré.</p>}
+              ) : <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Aucun PIN configuré.</UiText></p>}
             </div>
           )}
         </div>
@@ -836,11 +837,11 @@ export default function ReceptionDetailPage() {
           )}
         </div>
         <div className="flex items-center space-x-2 mt-3 sm:mt-0">
-          <span className="text-sm text-gray-600 dark:text-gray-400">Filtrer:</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400"><UiText>Filtrer:</UiText></span>
           <select value={remarkFilter} onChange={(e) => setRemarkFilter(e.target.value as typeof remarkFilter)}
             className="block w-auto pl-3 pr-8 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-            <option value="all">Toutes</option> <option value="pending">En attente</option> <option value="resolved">Résolues</option>
-            <option value="validated">Validées</option> <option value="rejected">Rejetées</option>
+            <option value="all">Toutes</option> <option value="pending"><UiText>En attente</UiText></option> <option value="resolved"><UiText>Résolues</UiText></option>
+            <option value="validated"><UiText>Validées</UiText></option> <option value="rejected"><UiText>Rejetées</UiText></option>
           </select>
         </div>
       </div>
@@ -910,7 +911,7 @@ export default function ReceptionDetailPage() {
 
                 <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start space-y-3 sm:space-y-0">
                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                    Créée le: {formatDateForDisplay(remarque.createdAt)}
+                    <UiText>Créée le: </UiText>{formatDateForDisplay(remarque.createdAt)}
                     {remarque.createdBy && ` par ${remarque.createdBy.name || remarque.createdBy.email}`}<br />
                     {remarque.estResolue && `Résolue le: ${formatDateForDisplay(remarque.dateResolution)}`}
                   </div>
@@ -922,7 +923,7 @@ export default function ReceptionDetailPage() {
                         )}
                         {remarque.estResolue && !remarque.estValidee && !remarque.estRejetee && (
                           <>
-                            <Button size="sm" variant="success" onClick={() => handleValiderRemarque(remarque.id)}><CheckCircleIcon className="h-3.5 w-3.5 mr-1"/>Valider</Button>
+                            <Button size="sm" variant="success" onClick={() => handleValiderRemarque(remarque.id)}><CheckCircleIcon className="h-3.5 w-3.5 mr-1"/><UiText>Valider</UiText></Button>
                             <Button size="sm" variant="outline" onClick={() => handleRejeterRemarque(remarque.id)} className="text-yellow-600 border-yellow-500 hover:bg-yellow-50"><XMarkIcon className="h-3.5 w-3.5 mr-1"/>Rejeter</Button>
                           </>
                         )}
@@ -933,7 +934,7 @@ export default function ReceptionDetailPage() {
                 </div>
                  {remarque.estRejetee && remarque.raisonRejet && (
                     <p className="mt-2 text-xs text-red-600 bg-red-50 dark:bg-red-900/50 dark:text-red-400 p-2 rounded-md">
-                        <strong>Rejetée:</strong> {remarque.raisonRejet}
+                        <strong><UiText>Rejetée:</UiText></strong> {remarque.raisonRejet}
                     </p>
                 )}
               </div>
@@ -977,19 +978,19 @@ export default function ReceptionDetailPage() {
       {isAnnotatedPlanModalOpen && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black bg-opacity-80 p-2 sm:p-4" onClick={handleCloseAnnotatedPlanModal}>
           <div className="relative max-w-full max-h-[95vh] w-auto bg-white dark:bg-gray-800 rounded-lg shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <button onClick={handleCloseAnnotatedPlanModal} className="absolute top-2 right-2 z-20 bg-gray-100 dark:bg-gray-700 rounded-full p-1.5 shadow hover:bg-gray-200 dark:hover:bg-gray-600" aria-label="Fermer">
+            <button onClick={handleCloseAnnotatedPlanModal} className="absolute top-2 right-2 z-20 bg-gray-100 dark:bg-gray-700 rounded-full p-1.5 shadow hover:bg-gray-200 dark:hover:bg-gray-600" aria-label={tx("Fermer")}>
               <XMarkIcon className="h-5 w-5 text-gray-700 dark:text-gray-200" />
             </button>
             <div className="p-2 sm:p-4 h-full flex flex-col items-center justify-center">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 text-center">Plan Annoté: {firstImagePlan?.nom}</h3>
-              {loadingState.planAnnotation && <div className="flex flex-col items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div><p className="mt-3 text-gray-600 dark:text-gray-300">Génération du plan...</p></div>}
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 text-center"><UiText>Plan Annoté: </UiText>{firstImagePlan?.nom}</h3>
+              {loadingState.planAnnotation && <div className="flex flex-col items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div><p className="mt-3 text-gray-600 dark:text-gray-300"><UiText>Génération du plan...</UiText></p></div>}
               {error && !loadingState.planAnnotation && <p className="text-red-500 p-4">{error}</p>}
               
               {!loadingState.planAnnotation && annotatedImageUrl && (
                   <div className="relative flex-grow w-full flex items-center justify-center overflow-auto">
                       <img 
                           src={annotatedImageUrl} 
-                          alt="Plan annoté" 
+                          alt={tx("Plan annoté")} 
                           className="max-w-full max-h-[calc(95vh-100px)] object-contain block"
                           onLoad={(e) => {
                               const img = e.target as HTMLImageElement;
@@ -1036,7 +1037,7 @@ export default function ReceptionDetailPage() {
                       }
                   </div>
               )}
-              {!loadingState.planAnnotation && !annotatedImageUrl && !error && <p className="text-gray-500 p-4">Aucun plan annoté à afficher ou plan en cours de préparation.</p>}
+              {!loadingState.planAnnotation && !annotatedImageUrl && !error && <p className="text-gray-500 p-4"><UiText>Aucun plan annoté à afficher ou plan en cours de préparation.</UiText></p>}
             </div>
           </div>
         </div>

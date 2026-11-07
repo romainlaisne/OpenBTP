@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -10,10 +12,11 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId } = await params
@@ -27,10 +30,10 @@ export async function GET(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       latitude: chantier.latitude,
       longitude: chantier.longitude,
@@ -38,7 +41,7 @@ export async function GET(
     })
   } catch (error) {
     console.error('Erreur lors de la récupération de la géolocalisation:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de la géolocalisation' },
       { status: 500 }
     )
@@ -50,10 +53,11 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId } = await params
@@ -61,7 +65,7 @@ export async function PUT(
     const { latitude, longitude } = body
 
     if (typeof latitude !== 'number' || typeof longitude !== 'number') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Latitude et longitude doivent être des nombres' },
         { status: 400 }
       )
@@ -73,7 +77,7 @@ export async function PUT(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Mettre à jour la géolocalisation
@@ -89,14 +93,14 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       latitude: updatedChantier.latitude,
       longitude: updatedChantier.longitude
     })
   } catch (error) {
     console.error('Erreur lors de la mise à jour de la géolocalisation:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la géolocalisation' },
       { status: 500 }
     )
@@ -108,10 +112,11 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId } = await params
@@ -122,7 +127,7 @@ export async function DELETE(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Supprimer la géolocalisation
@@ -134,10 +139,10 @@ export async function DELETE(
       }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la suppression de la géolocalisation:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de la géolocalisation' },
       { status: 500 }
     )

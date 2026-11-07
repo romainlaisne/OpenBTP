@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -13,15 +15,16 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ photoId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 });
     }
 
     // Vérifier que l'utilisateur a les droits (MANAGER ou ADMIN)
     if (!['ADMIN', 'MANAGER'].includes(session.user.role)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Permissions insuffisantes' },
         { status: 403 }
       );
@@ -43,7 +46,7 @@ export async function DELETE(
     });
 
     if (!photoExterne) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Photo non trouvée' },
         { status: 404 }
       );
@@ -79,14 +82,14 @@ export async function DELETE(
       uploadedBy: photoExterne.uploadedByName
     });
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       message: 'Photo supprimée avec succès'
     });
 
   } catch (error) {
     console.error('Erreur lors de la suppression de la photo externe:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de la photo' },
       { status: 500 }
     );
@@ -101,10 +104,11 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ photoId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 });
     }
 
     const { photoId } = await params;
@@ -122,13 +126,13 @@ export async function GET(
     });
 
     if (!photoExterne) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Photo non trouvée' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       photo: {
         id: photoExterne.id,
@@ -145,7 +149,7 @@ export async function GET(
 
   } catch (error) {
     console.error('Erreur lors de la récupération de la photo externe:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de la photo' },
       { status: 500 }
     );

@@ -1,16 +1,20 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   const { id } = await params
   const lignes = await prisma.ligneTarifSousTraitant.findMany({
     where: { soustraitantId: id },
     orderBy: { ordre: 'asc' },
   })
-  return NextResponse.json(lignes)
+  return localizedJson(lignes)
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   const { id } = await params
   const body = await req.json()
 
@@ -33,5 +37,5 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       remarques: body.remarques ?? null,
     },
   })
-  return NextResponse.json(ligne, { status: 201 })
+  return localizedJson(ligne, { status: 201 })
 }

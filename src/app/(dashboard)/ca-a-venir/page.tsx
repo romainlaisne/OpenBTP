@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
@@ -37,7 +39,7 @@ interface Totaux {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const formatEuros = (val: number) =>
-  new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val)
+  new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val)
 
 const statutConfig: Record<string, { label: string; classes: string; icon: React.ReactNode }> = {
   EN_PREPARATION: {
@@ -120,8 +122,8 @@ export default function CaAVenirPage() {
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Header */}
       <PageHeader
-        title="Chiffre d'affaires à venir"
-        subtitle="Détail par chantier actif — commandes confirmées moins montants déjà facturés"
+        title={tx("Chiffre d'affaires à venir")}
+        subtitle={tx("Détail par chantier actif — commandes confirmées moins montants déjà facturés")}
         icon={CurrencyEuroIcon}
         badgeColor="from-purple-600 via-fuchsia-600 to-pink-700"
         gradientColor="from-purple-600/10 via-fuchsia-600/10 to-pink-700/10"
@@ -141,21 +143,21 @@ export default function CaAVenirPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Total commandes */}
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg p-5">
-            <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Total commandes confirmées</p>
+            <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1"><UiText>Total commandes confirmées</UiText></p>
             <p className="text-2xl font-black text-gray-900 dark:text-white">{formatEuros(totaux.totalCommandes)}</p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Sur {lignes.length} chantier{lignes.length > 1 ? 's' : ''} actif{lignes.length > 1 ? 's' : ''}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Sur {lignes.length} <UiText>chantier</UiText>{lignes.length > 1 ? 's' : ''} actif{lignes.length > 1 ? 's' : ''}</p>
           </div>
 
           {/* Déjà facturé */}
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg p-5">
-            <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Déjà facturé</p>
+            <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1"><UiText>Déjà facturé</UiText></p>
             <p className="text-2xl font-black text-blue-700 dark:text-blue-400">{formatEuros(totaux.montantFacture)}</p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">États d&apos;avancement finalisés</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1"><UiText>États d&apos;avancement finalisés</UiText></p>
           </div>
 
           {/* CA à venir */}
           <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 dark:from-purple-950/30 dark:to-fuchsia-950/20 rounded-2xl border-2 border-purple-200 dark:border-purple-700/50 shadow-xl p-5">
-            <p className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-1">CA à venir</p>
+            <p className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-1"><UiText>CA à venir</UiText></p>
             <p className="text-2xl font-black text-purple-700 dark:text-purple-300">{formatEuros(totaux.caAvenir)}</p>
             <p className="text-xs text-purple-500 dark:text-purple-400 mt-1">
               {totaux.totalCommandes > 0
@@ -196,19 +198,19 @@ export default function CaAVenirPage() {
         ) : lignes.length === 0 ? (
           <div className="p-12 text-center">
             <CurrencyEuroIcon className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Aucun chantier actif avec des commandes confirmées</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Aucun chantier actif avec des commandes confirmées</UiText></p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-900/10 dark:to-fuchsia-900/10">
                 <tr>
-                  <ThSortable col="nomChantier" className="text-left pl-6">Chantier</ThSortable>
+                  <ThSortable col="nomChantier" className="text-left pl-6"><UiText>Chantier</UiText></ThSortable>
                   <ThSortable col="clientNom" className="text-left">Client</ThSortable>
                   <ThSortable col="statut" className="text-left"><UiText>Statut</UiText></ThSortable>
-                  <ThSortable col="totalCommandes" className="text-right">Commandes confirmées</ThSortable>
-                  <ThSortable col="montantFacture" className="text-right">Déjà facturé</ThSortable>
-                  <ThSortable col="caAvenir" className="text-right pr-6">CA à venir</ThSortable>
+                  <ThSortable col="totalCommandes" className="text-right"><UiText>Commandes confirmées</UiText></ThSortable>
+                  <ThSortable col="montantFacture" className="text-right"><UiText>Déjà facturé</UiText></ThSortable>
+                  <ThSortable col="caAvenir" className="text-right pr-6"><UiText>CA à venir</UiText></ThSortable>
                   <th className="px-4 py-3 w-10" />
                 </tr>
               </thead>
@@ -246,7 +248,7 @@ export default function CaAVenirPage() {
                         <span className="text-sm font-semibold text-gray-900 dark:text-white">{formatEuros(ligne.totalCommandes)}</span>
                         {ligne.nbCommandes > 0 && (
                           <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                            {ligne.nbCommandes} commande{ligne.nbCommandes > 1 ? 's' : ''}
+                            {ligne.nbCommandes} <UiText>commande</UiText>{ligne.nbCommandes > 1 ? 's' : ''}
                           </div>
                         )}
                       </td>
@@ -256,7 +258,7 @@ export default function CaAVenirPage() {
                         <span className="text-sm font-medium text-blue-700 dark:text-blue-400">{formatEuros(ligne.montantFacture)}</span>
                         {ligne.nbEtatsAvancement > 0 && (
                           <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                            {ligne.nbEtatsAvancement} état{ligne.nbEtatsAvancement > 1 ? 's' : ''}
+                            {ligne.nbEtatsAvancement} <UiText>état</UiText>{ligne.nbEtatsAvancement > 1 ? 's' : ''}
                           </div>
                         )}
                         {/* Barre de progression */}
@@ -286,7 +288,7 @@ export default function CaAVenirPage() {
                       <td className="px-2 py-4 text-center">
                         <Link
                           href={`/chantiers/${ligne.id}`}
-                          title="Voir le chantier"
+                          title={tx("Voir le chantier")}
                           className="inline-flex items-center justify-center w-7 h-7 rounded-lg text-gray-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-all opacity-0 group-hover:opacity-100"
                         >
                           <ArrowTopRightOnSquareIcon className="w-4 h-4" />
@@ -303,7 +305,7 @@ export default function CaAVenirPage() {
                   <tr className="bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-900/20 dark:to-fuchsia-900/20 border-t-2 border-purple-200 dark:border-purple-700/50">
                     <td colSpan={3} className="px-4 py-4 pl-6">
                       <span className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        Total — {lignes.length} chantier{lignes.length > 1 ? 's' : ''}
+                        Total — {lignes.length} <UiText>chantier</UiText>{lignes.length > 1 ? 's' : ''}
                       </span>
                     </td>
                     <td className="px-4 py-4 text-right">

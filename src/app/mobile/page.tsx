@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { signOut } from 'next-auth/react'
@@ -118,15 +120,15 @@ export default function MobileHomePage() {
     if (status === 'EN_COURS' || status === 'En cours') {
       return (
         <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold">
-          En cours
-        </span>
+          <UiText>En cours
+        </UiText></span>
       )
     }
     if (status === 'EN_PREPARATION' || status === 'En préparation') {
       return (
         <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-lg text-xs font-semibold">
-          En préparation
-        </span>
+          <UiText>En préparation
+        </UiText></span>
       )
     }
     return null
@@ -140,26 +142,26 @@ export default function MobileHomePage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-2xl font-black">OpenBTP Mobile</h1>
-              <p className="text-sm text-blue-100 mt-1">Sélectionnez un chantier</p>
+              <p className="text-sm text-blue-100 mt-1"><UiText>Sélectionnez un chantier</UiText></p>
             </div>
             <div className="flex items-center gap-2">
               {isManagerOrAdmin && (
                 <button
                   onClick={() => router.push('/mobile/logistique/tache-rapide')}
                   className="flex items-center gap-2 px-3 py-2 bg-amber-500/80 hover:bg-amber-500 backdrop-blur-sm rounded-lg text-white transition-colors duration-200 border border-amber-400/50"
-                  title="Nouvelle tâche magasinier"
+                  title={tx("Nouvelle tâche magasinier")}
                 >
                   <ArchiveBoxIcon className="h-5 w-5" />
-                  <span className="text-sm font-medium hidden sm:inline">Logistique</span>
+                  <span className="text-sm font-medium hidden sm:inline"><UiText>Logistique</UiText></span>
                 </button>
               )}
               <button
                 onClick={() => signOut({ callbackUrl: '/login?callbackUrl=/mobile' })}
                 className="flex items-center gap-2 px-3 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg text-white transition-colors duration-200 border border-white/30"
-                title="Déconnexion"
+                title={tx("Déconnexion")}
               >
                 <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                <span className="text-sm font-medium hidden sm:inline">Déconnexion</span>
+                <span className="text-sm font-medium hidden sm:inline"><UiText>Déconnexion</UiText></span>
               </button>
             </div>
           </div>
@@ -169,15 +171,15 @@ export default function MobileHomePage() {
             <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 mb-4 border border-white/30">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-blue-100 mb-1">Chantier actuel</p>
+                  <p className="text-xs text-blue-100 mb-1"><UiText>Chantier actuel</UiText></p>
                   <p className="font-semibold truncate">{selectedChantier.nomChantier}</p>
                 </div>
                 <button
                   onClick={() => router.push('/mobile/dashboard')}
                   className="ml-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
                 >
-                  Ouvrir
-                </button>
+                  <UiText>Ouvrir
+                </UiText></button>
               </div>
             </div>
           )}
@@ -187,7 +189,7 @@ export default function MobileHomePage() {
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-blue-200" />
             <input
               type="text"
-              placeholder="Rechercher un chantier..."
+              placeholder={tx("Rechercher un chantier...")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50"
@@ -201,7 +203,7 @@ export default function MobileHomePage() {
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Chargement des chantiers...</p>
+            <p className="mt-4 text-gray-600"><UiText>Chargement des chantiers...</UiText></p>
           </div>
         ) : filteredChantiers.length === 0 ? (
           <div className="text-center py-12">
@@ -246,7 +248,7 @@ export default function MobileHomePage() {
                 )}
 
                 <div className="flex items-center justify-end mt-3 text-blue-600">
-                  <span className="text-sm font-medium">Sélectionner</span>
+                  <span className="text-sm font-medium"><UiText>Sélectionner</UiText></span>
                   <ArrowRightIcon className="h-4 w-4 ml-1" />
                 </div>
               </button>

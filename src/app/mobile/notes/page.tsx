@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useSelectedChantier } from '@/contexts/SelectedChantierContext'
@@ -81,7 +82,7 @@ export default function MobileNotesPage() {
             >
               <ArrowLeftIcon className="h-6 w-6" />
             </button>
-            <h1 className="text-xl font-black">Notes</h1>
+            <h1 className="text-xl font-black"><UiText>Notes</UiText></h1>
             <button
               onClick={() => router.push('/mobile/notes/nouveau')}
               className="p-2 hover:bg-white/20 rounded-lg transition-colors"
@@ -98,19 +99,19 @@ export default function MobileNotesPage() {
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Chargement des notes...</p>
+            <p className="mt-4 text-gray-600"><UiText>Chargement des notes...</UiText></p>
           </div>
         ) : notes.length === 0 ? (
           <div className="text-center py-12">
             <DocumentTextIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 font-medium">Aucune note</p>
-            <p className="text-sm text-gray-500 mt-1">Créez votre première note</p>
+            <p className="text-gray-600 font-medium"><UiText>Aucune note</UiText></p>
+            <p className="text-sm text-gray-500 mt-1"><UiText>Créez votre première note</UiText></p>
             <button
               onClick={() => router.push('/mobile/notes/nouveau')}
               className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-colors"
             >
-              Créer une note
-            </button>
+              <UiText>Créer une note
+            </UiText></button>
           </div>
         ) : (
           <div className="space-y-3">

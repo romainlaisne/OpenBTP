@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect } from 'react'
 
 export default function ErrorBoundary({
@@ -14,8 +15,8 @@ export default function ErrorBoundary({
 
   return (
     <div className="p-8">
-      <h2>Une erreur est survenue</h2>
-      <button onClick={reset}>Réessayer</button>
+      <h2><UiText>Une erreur est survenue</UiText></h2>
+      <button onClick={reset}><UiText>Réessayer</UiText></button>
     </div>
   )
 } 

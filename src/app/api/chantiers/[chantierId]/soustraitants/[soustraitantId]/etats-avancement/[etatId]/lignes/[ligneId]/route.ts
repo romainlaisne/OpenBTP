@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
@@ -8,10 +10,11 @@ export async function PUT(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; etatId: string; ligneId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -23,7 +26,7 @@ export async function PUT(
     const idNum = parseInt(ligneId)
     const etatNum = parseInt(etatId)
     if (!etatNum || Number.isNaN(etatNum)) {
-      return NextResponse.json({ error: 'etatId invalide' }, { status: 400 })
+      return localizedJson({ error: 'etatId invalide' }, { status: 400 })
     }
 
     // Si ligneId invalide (0/NaN) ou ligne inexistante, on bascule en création
@@ -83,10 +86,10 @@ export async function PUT(
       }
     }
 
-    return NextResponse.json(ligne)
+    return localizedJson(ligne)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la ligne' },
       { status: 500 }
     )

@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
@@ -120,7 +122,7 @@ export default function TemplatesContratsPage() {
   }
 
   const deleteTemplate = async (templateId: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce template ?')) return
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer ce template ?"))) return
 
     try {
       const response = await fetch(`/api/admin/contract-templates/${templateId}`, {
@@ -163,8 +165,8 @@ export default function TemplatesContratsPage() {
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Templates"
-        subtitle="Centralisez tous les contenus HTML injectés dans vos documents et communications."
+        title={tx("Templates")}
+        subtitle={tx("Centralisez tous les contenus HTML injectés dans vos documents et communications.")}
         icon={ClipboardDocumentListIcon}
         badgeColor={currentPalette.badgeColor}
         gradientColor={currentPalette.gradientColor}
@@ -266,9 +268,9 @@ export default function TemplatesContratsPage() {
                         </p>
                       )}
                       <p className="text-xs text-gray-400 dark:text-gray-500">
-                        Créé le {new Date(template.createdAt).toLocaleDateString('fr-FR')}
+                        <UiText>Créé le </UiText>{new Date(template.createdAt).toLocaleDateString(intlLocale(getActiveLocale()))}
                         {template.updatedAt !== template.createdAt && (
-                          <span> • Modifié le {new Date(template.updatedAt).toLocaleDateString('fr-FR')}</span>
+                          <span> <UiText>• Modifié le </UiText>{new Date(template.updatedAt).toLocaleDateString(intlLocale(getActiveLocale()))}</span>
                         )}
                       </p>
                     </div>
@@ -277,7 +279,7 @@ export default function TemplatesContratsPage() {
                       <button
                         onClick={() => previewTemplate(template)}
                         className="rounded-lg border border-transparent p-2 text-gray-400 transition hover:border-blue-200 hover:text-blue-600 dark:hover:border-blue-400/40 dark:hover:text-blue-300"
-                        title="Aperçu"
+                        title={tx("Aperçu")}
                       >
                         <DocumentTextIcon className="h-5 w-5" />
                       </button>
@@ -285,7 +287,7 @@ export default function TemplatesContratsPage() {
                         <button
                           onClick={() => deactivateTemplate(template.id)}
                           className="rounded-lg border border-transparent p-2 text-gray-400 transition hover:border-amber-200 hover:text-amber-600 dark:hover:border-amber-400/40 dark:hover:text-amber-300"
-                          title="Désactiver (ne sera plus inclus dans les PDFs)"
+                          title={tx("Désactiver (ne sera plus inclus dans les PDFs)")}
                         >
                           <XMarkIcon className="h-5 w-5" />
                         </button>
@@ -301,7 +303,7 @@ export default function TemplatesContratsPage() {
                       <button
                         onClick={() => router.push(`/admin/templates-contrats/${template.id}/modifier?category=${template.category}`)}
                         className="rounded-lg border border-transparent p-2 text-gray-400 transition hover:border-amber-200 hover:text-amber-600 dark:hover:border-amber-400/40 dark:hover:text-amber-300"
-                        title="Modifier"
+                        title={tx("Modifier")}
                       >
                         <PencilIcon className="h-5 w-5" />
                       </button>
@@ -320,8 +322,8 @@ export default function TemplatesContratsPage() {
 
               {templates.length === 0 && !loading && (
                 <div className="px-6 py-16 text-center text-sm text-gray-500 dark:text-gray-400">
-                  Aucun template disponible pour cette catégorie.
-                </div>
+                  <UiText>Aucun template disponible pour cette catégorie.
+                </UiText></div>
               )}
 
               {loading && (
@@ -341,10 +343,10 @@ export default function TemplatesContratsPage() {
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 dark:border-gray-700">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Aperçu du template : {editingTemplate.name}
+                  <UiText>Aperçu du template : </UiText>{editingTemplate.name}
                 </h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Catégorie : {editingTemplate.category === 'CONTRAT' ? 'Contrat' : 'Conditions générales de vente'}
+                  <UiText>Catégorie : </UiText>{editingTemplate.category === 'CONTRAT' ? 'Contrat' : 'Conditions générales de vente'}
                 </p>
               </div>
               <button

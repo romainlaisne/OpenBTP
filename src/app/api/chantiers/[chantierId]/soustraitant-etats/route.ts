@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -12,11 +14,12 @@ const createSchema = z.object({
 
 // GET - Récupérer tous les états d'avancement d'un sous-traitant
 export async function GET(request: NextRequest, props: { params: Promise<{ chantierId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId } = params
@@ -24,7 +27,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ chant
     const soustraitantId = searchParams.get('soustraitantId')
 
     if (!soustraitantId) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID du sous-traitant requis' },
         { status: 400 }
       )
@@ -42,7 +45,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ chant
     })
 
     if (!soustraitant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé' },
         { status: 404 }
       )
@@ -55,7 +58,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ chant
     });
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
     }
     const chantierIdInterne = chantierData.id;
 
@@ -74,13 +77,13 @@ export async function GET(request: NextRequest, props: { params: Promise<{ chant
       }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       soustraitant,
       etats
     })
   } catch (error) {
     console.error('Erreur lors de la récupération:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des états d\'avancement' },
       { status: 500 }
     )
@@ -89,11 +92,12 @@ export async function GET(request: NextRequest, props: { params: Promise<{ chant
 
 // POST - Créer un nouvel état d'avancement
 export async function POST(request: NextRequest, props: { params: Promise<{ chantierId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId } = params
@@ -102,7 +106,7 @@ export async function POST(request: NextRequest, props: { params: Promise<{ chan
     // Validation des données
     const validationResult = createSchema.safeParse(data)
     if (!validationResult.success) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Données invalides', details: validationResult.error.format() },
         { status: 400 }
       )
@@ -118,7 +122,7 @@ export async function POST(request: NextRequest, props: { params: Promise<{ chan
     })
 
     if (!soustraitant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé' },
         { status: 404 }
       )
@@ -135,7 +139,7 @@ export async function POST(request: NextRequest, props: { params: Promise<{ chan
     })
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -179,7 +183,7 @@ export async function POST(request: NextRequest, props: { params: Promise<{ chan
     })
 
     if (!commandeSousTraitant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Commande sous-traitant non trouvée' },
         { status: 404 }
       )
@@ -217,10 +221,10 @@ export async function POST(request: NextRequest, props: { params: Promise<{ chan
       }
     })
 
-    return NextResponse.json(newEtat)
+    return localizedJson(newEtat)
   } catch (error) {
     console.error('Erreur lors de la création:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de l\'état d\'avancement' },
       { status: 500 }
     )

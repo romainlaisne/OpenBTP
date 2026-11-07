@@ -2,6 +2,9 @@ import { gabaritEmail, paragraphe, encadre, echapperHtml, texteEnHtml } from '@/
 import { societeEmail } from '@/lib/email/societe'
 import { prisma } from '@/lib/prisma/client'
 import { sendEmail } from '@/lib/email-sender'
+import { bindLocale, getActiveLocale } from '@/lib/i18n/locale'
+import { getRequestLocale } from '@/lib/i18n/server'
+import { translateText } from '@/lib/i18n/translate'
 
 // Types pour les métadonnées de notification
 export interface NotificationMetadata {
@@ -110,9 +113,11 @@ export class NotificationService {
         select: { id: true, email: true, name: true, role: true },
       })
 
-      // Générer le contenu de la notification
+      const locale = await getRequestLocale()
+      bindLocale(locale)
+      const sourceTemplate = notificationType.inAppTemplate || notificationType.libelle
       const { titre, message } = this.generateNotificationContent(
-        notificationType.inAppTemplate || notificationType.libelle,
+        translateText(locale, sourceTemplate),
         metadata
       )
 
@@ -281,7 +286,9 @@ export class NotificationService {
   ): Promise<void> {
     try {
       // Remplacer les variables dans le sujet de l'email
-      const subjectTemplate = notificationType.emailSubject || titre
+      const locale = await getRequestLocale()
+      bindLocale(locale)
+      const subjectTemplate = translateText(locale, notificationType.emailSubject || titre)
       const subject = this.replaceTemplateVariables(subjectTemplate, metadata)
       
       // Template HTML de base si pas de template personnalisé
@@ -358,11 +365,12 @@ export class NotificationService {
     return gabaritEmail({
       titre: libelle || titre,
       apercu: texte,
-      contenuHtml: paragraphe(`Bonjour ${echapperHtml(name)},`) + (texte ? encadre(texteEnHtml(texte)) : ''),
+      contenuHtml: paragraphe(`${echapperHtml(translateText(getActiveLocale(), 'Bonjour'))} ${echapperHtml(name)},`) + (texte ? encadre(texteEnHtml(texte)) : ''),
       bouton: lien ? { libelle: 'Voir dans OpenBTP', url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}${lien}` } : undefined,
-      mention:
-        'Vous recevez cet email car vous êtes inscrit aux notifications de l’application. ' +
-        'Préférences : Configuration → Gestion des notifications.',
+      mention: translateText(
+        getActiveLocale(),
+        'Vous recevez cet email car vous êtes inscrit aux notifications de l’application. Préférences : Configuration → Gestion des notifications.',
+      ),
       societe,
     })
   }

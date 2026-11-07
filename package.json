@@ -12,6 +12,8 @@
     "analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
+    "test:i18n": "node scripts/i18n-check.mjs",
+    "typecheck": "tsc --noEmit --pretty false",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "production:build": "npm run prisma:generate && npm run build",

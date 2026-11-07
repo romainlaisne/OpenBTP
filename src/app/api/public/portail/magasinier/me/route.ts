@@ -1,12 +1,15 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getMagasinierIdFromCookie } from '@/app/public/portail/auth'
 
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const magasinierId = getMagasinierIdFromCookie(request.headers.get('cookie'))
     if (!magasinierId) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const magasinier = await prisma.magasinier.findUnique({
@@ -15,7 +18,7 @@ export async function GET(request: NextRequest) {
     })
 
     if (!magasinier) {
-      return NextResponse.json({ error: 'Magasinier introuvable' }, { status: 404 })
+      return localizedJson({ error: 'Magasinier introuvable' }, { status: 404 })
     }
 
     const aFaire = await prisma.tacheMagasinier.count({
@@ -26,9 +29,9 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return NextResponse.json({ magasinier, tachesAFaire: aFaire })
+    return localizedJson({ magasinier, tachesAFaire: aFaire })
   } catch (error) {
     console.error('Erreur GET magasinier me:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

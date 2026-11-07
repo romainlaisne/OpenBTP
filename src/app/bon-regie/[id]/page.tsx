@@ -1,9 +1,10 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { ArrowLeftIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline'
 
 interface BonRegie {
@@ -124,8 +125,8 @@ export default function BonRegieDetailPage({ params }: { params: Promise<{ id: s
               onClick={() => router.push('/bons-regie')}
               className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
             >
-              Retour à la liste
-            </button>
+              <UiText>Retour à la liste
+            </UiText></button>
           </div>
         </div>
       </div>
@@ -144,8 +145,8 @@ export default function BonRegieDetailPage({ params }: { params: Promise<{ id: s
               <ArrowLeftIcon className="h-6 w-6" />
             </button>
             <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
-              Détails du bon de régie
-            </h1>
+              <UiText>Détails du bon de régie
+            </UiText></h1>
           </div>
           <button
             onClick={handleGeneratePDF}
@@ -170,8 +171,8 @@ export default function BonRegieDetailPage({ params }: { params: Promise<{ id: s
             
             <div>
               <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                Chantier
-              </h3>
+                <UiText>Chantier
+              </UiText></h3>
               <p className="text-base font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 px-4 py-3 rounded-lg">
                 {bon.nomChantier}
               </p>
@@ -191,15 +192,15 @@ export default function BonRegieDetailPage({ params }: { params: Promise<{ id: s
                 Date de signature
               </h3>
               <p className="text-base font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 px-4 py-3 rounded-lg">
-                {format(new Date(bon.dateSignature), 'dd/MM/yyyy', { locale: fr })}
+                {format(new Date(bon.dateSignature), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
               </p>
             </div>
           </div>
           
           <div className="mb-8">
             <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100 mb-2">
-              Travail réalisé
-            </h3>
+              <UiText>Travail réalisé
+            </UiText></h3>
             <p className="text-base text-gray-900 dark:text-gray-100 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border-2 border-gray-200 dark:border-gray-600">
               {bon.description}
             </p>
@@ -208,8 +209,8 @@ export default function BonRegieDetailPage({ params }: { params: Promise<{ id: s
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
               <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                Temps sur chantier
-              </h3>
+                <UiText>Temps sur chantier
+              </UiText></h3>
               <p className="text-base font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 px-4 py-3 rounded-lg">
                 {bon.tempsChantier} heures
               </p>
@@ -217,8 +218,8 @@ export default function BonRegieDetailPage({ params }: { params: Promise<{ id: s
             
             <div>
               <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                Nombre d&apos;ouvriers
-              </h3>
+                <UiText>Nombre d&apos;ouvriers
+              </UiText></h3>
               <p className="text-base font-medium text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 px-4 py-3 rounded-lg">
                 {bon.nombreTechniciens || 1}
               </p>
@@ -228,8 +229,8 @@ export default function BonRegieDetailPage({ params }: { params: Promise<{ id: s
           {bon.materiaux && (
             <div className="mb-8">
               <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                Matériaux utilisés
-              </h3>
+                <UiText>Matériaux utilisés
+              </UiText></h3>
               <p className="text-base text-gray-900 dark:text-gray-100 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border-2 border-gray-200 dark:border-gray-600 whitespace-pre-wrap">
                 {bon.materiaux}
               </p>
@@ -239,8 +240,8 @@ export default function BonRegieDetailPage({ params }: { params: Promise<{ id: s
           <div className="border-t-2 border-gray-300 dark:border-gray-600 pt-6 mt-8">
             <div className="flex flex-col items-end">
               <h3 className="text-base font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                Signé par
-              </h3>
+                <UiText>Signé par
+              </UiText></h3>
               <p className="text-base font-medium text-gray-900 dark:text-gray-100 mb-3 bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg">
                 {bon.nomSignataire}
               </p>

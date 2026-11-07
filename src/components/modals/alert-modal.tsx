@@ -1,5 +1,6 @@
 'use client';
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from "react";
 import Button from "@/components/ui/Button"; // Corrigé
 
@@ -37,11 +38,11 @@ export const AlertModal: React.FC<AlertModalProps> = ({
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{description}</p>
         <div className="mt-6 flex justify-end space-x-3">
           <Button variant="outline" onClick={onClose} disabled={loading}>
-            Annuler
-          </Button>
+            <UiText>Annuler
+          </UiText></Button>
           <Button variant="danger" onClick={onConfirm} isLoading={loading}>
-            Confirmer
-          </Button>
+            <UiText>Confirmer
+          </UiText></Button>
         </div>
       </div>
     </div>

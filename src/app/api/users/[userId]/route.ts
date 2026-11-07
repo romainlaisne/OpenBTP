@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -6,11 +8,12 @@ import bcrypt from 'bcrypt'
 
 // GET /api/users/[userId] - Récupère un utilisateur spécifique
 export async function GET(request: Request, props: { params: Promise<{ userId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -28,16 +31,16 @@ export async function GET(request: Request, props: { params: Promise<{ userId: s
     })
 
     if (!user) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Utilisateur non trouvé' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(user)
+    return localizedJson(user)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Erreur lors de la récupération de l'utilisateur" },
       { status: 500 }
     )
@@ -46,11 +49,12 @@ export async function GET(request: Request, props: { params: Promise<{ userId: s
 
 // PUT /api/users/[userId] - Met à jour un utilisateur
 export async function PUT(request: Request, props: { params: Promise<{ userId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -62,7 +66,7 @@ export async function PUT(request: Request, props: { params: Promise<{ userId: s
     })
 
     if (!existingUser) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Utilisateur non trouvé' },
         { status: 404 }
       )
@@ -94,10 +98,10 @@ export async function PUT(request: Request, props: { params: Promise<{ userId: s
       }
     })
 
-    return NextResponse.json(updatedUser)
+    return localizedJson(updatedUser)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Erreur lors de la mise à jour de l'utilisateur" },
       { status: 500 }
     )
@@ -106,11 +110,12 @@ export async function PUT(request: Request, props: { params: Promise<{ userId: s
 
 // DELETE /api/users/[userId] - Supprime un utilisateur
 export async function DELETE(request: Request, props: { params: Promise<{ userId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -122,7 +127,7 @@ export async function DELETE(request: Request, props: { params: Promise<{ userId
     })
 
     if (!user) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Utilisateur non trouvé' },
         { status: 404 }
       )
@@ -135,7 +140,7 @@ export async function DELETE(request: Request, props: { params: Promise<{ userId
       })
 
       if (adminCount <= 1) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Impossible de supprimer le dernier administrateur' },
           { status: 400 }
         )
@@ -146,13 +151,13 @@ export async function DELETE(request: Request, props: { params: Promise<{ userId
       where: { id: params.userId }
     })
 
-    return NextResponse.json(
+    return localizedJson(
       { message: 'Utilisateur supprimé avec succès' },
       { status: 200 }
     )
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Erreur lors de la suppression de l'utilisateur" },
       { status: 500 }
     )

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,11 +7,12 @@ import { prisma } from '@/lib/prisma/client'
 import { isTemplateCategory, TEMPLATE_CATEGORIES, type TemplateCategory } from '@/lib/templates/template-categories'
 
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session?.user || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -26,10 +29,10 @@ export async function GET(request: Request) {
       }
     })
 
-    return NextResponse.json(templates)
+    return localizedJson(templates)
   } catch (error) {
     console.error('Erreur lors de la récupération des templates:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des templates' },
       { status: 500 }
     )
@@ -37,17 +40,18 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session?.user || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { name, description, htmlContent, isActive, category } = await request.json()
 
     if (!name || !htmlContent) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le nom et le contenu HTML sont requis' },
         { status: 400 }
       )
@@ -75,10 +79,10 @@ export async function POST(request: Request) {
       }
     })
 
-    return NextResponse.json(template)
+    return localizedJson(template)
   } catch (error) {
     console.error('Erreur lors de la création du template:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du template' },
       { status: 500 }
     )

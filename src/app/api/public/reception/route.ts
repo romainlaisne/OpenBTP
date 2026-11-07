@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 
@@ -64,12 +66,13 @@ async function ajouterPhotoAuxDocuments(chantierId: string, remarqueId: string, 
 // POST /api/public/reception
 // Vérifier l'accès avec un code PIN et récupérer les remarques associées
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const body = await request.json()
     const { codePIN } = body
 
     if (!codePIN) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le code PIN est requis' },
         { status: 400 }
       )
@@ -122,7 +125,7 @@ export async function POST(request: Request) {
     if (soustraitantPIN) {
       // Vérifier que la réception n'est pas finalisée
       if (soustraitantPIN.reception.estFinalise) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Cette réception est finalisée et n\'est plus accessible' },
           { status: 404 }
         );
@@ -204,7 +207,7 @@ export async function POST(request: Request) {
         remarques: remarquesCompletes
       };
 
-      return NextResponse.json(response);
+      return localizedJson(response);
     }
 
     // Si ce n'est pas un PIN de sous-traitant, vérifier s'il s'agit d'un PIN global (ancien système)
@@ -224,7 +227,7 @@ export async function POST(request: Request) {
     `;
 
     if (!reception || reception.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Code PIN invalide ou réception finalisée' },
         { status: 404 }
       );
@@ -281,10 +284,10 @@ export async function POST(request: Request) {
       estInterne: true // Le PIN global donne accès à tout, comme un PIN interne
     };
 
-    return NextResponse.json(response);
+    return localizedJson(response);
   } catch (error) {
     console.error('Erreur:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la vérification du code PIN' },
       { status: 500 }
     );

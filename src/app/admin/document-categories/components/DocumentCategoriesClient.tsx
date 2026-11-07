@@ -1,5 +1,7 @@
 'use client';
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, FormEvent, useCallback } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import Button from '@/components/ui/Button';
@@ -172,7 +174,7 @@ export default function DocumentCategoriesClient() {
         onConfirm={confirmDelete}
         loading={loading}
         title={`Supprimer la catégorie "${categoryToDelete?.nom}" ?`}
-        description="Cette action est irréversible. Tous les documents associés à cette catégorie perdront leur catégorisation."
+        description={tx("Cette action est irréversible. Tous les documents associés à cette catégorie perdront leur catégorisation.")}
       />
 
       {isModalOpen && (
@@ -186,7 +188,7 @@ export default function DocumentCategoriesClient() {
                 name="nom"
                 value={formData.nom}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, nom: e.target.value })}
-                placeholder="Nom de la catégorie"
+                placeholder={tx("Nom de la catégorie")}
                 required
                 className="mb-4"
                 disabled={loading}
@@ -194,8 +196,8 @@ export default function DocumentCategoriesClient() {
               {/* Afficher les erreurs de l'API ici si nécessaire */}
               <div className="flex justify-end space-x-3">
                 <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} disabled={loading}>
-                  Annuler
-                </Button>
+                  <UiText>Annuler
+                </UiText></Button>
                 <Button type="submit" isLoading={loading} disabled={loading || !formData.nom.trim()}>
                   {editingCategory ? 'Mettre à jour' : 'Ajouter'}
                 </Button>
@@ -208,8 +210,8 @@ export default function DocumentCategoriesClient() {
       <div className="flex items-center justify-end mb-4">
         <Button onClick={handleOpenAddModal}>
           <PlusIcon className="-ml-1 mr-2 h-5 w-5" /> 
-          Ajouter une catégorie
-        </Button>
+          <UiText>Ajouter une catégorie
+        </UiText></Button>
       </div>
       <DataTable columns={categoryColumns} data={categories} loading={loading} enableColumnFilters={true} />
     </>

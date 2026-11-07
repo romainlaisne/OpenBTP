@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,9 +7,10 @@ import { prisma } from '@/lib/prisma/client'
 
 // PATCH: mise à jour (drag & drop, assignations, statut)
 export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     const { id } = await props.params
     const body = await request.json()
 
@@ -53,21 +56,22 @@ export async function PATCH(request: NextRequest, props: { params: Promise<{ id:
       })
     })
 
-    return NextResponse.json(updated)
+    return localizedJson(updated)
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 // DELETE: suppression
 export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     const { id } = await props.params
     await prisma.task.delete({ where: { id } })
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

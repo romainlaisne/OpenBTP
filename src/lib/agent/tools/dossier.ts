@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 // Outils d'encodage d'un dossier : client → chantier → fiche → commande.
 //
 // Règles communes (voir src/lib/agent/tools/index.ts) :
@@ -412,7 +413,7 @@ export const creerChantier: ToolDefinition = {
     if (v.erreur) return `Création impossible : ${v.erreur}`
     const client = v.clientNom ? ` pour ${v.clientNom}` : ''
     const ref = v.numeroIdentification ? ` (réf. ${v.numeroIdentification})` : ''
-    const date = v.dateDebut ? `, début le ${v.dateDebut.toLocaleDateString('fr-FR')}` : ''
+    const date = v.dateDebut ? `, début le ${v.dateDebut.toLocaleDateString(intlLocale(getActiveLocale()))}` : ''
     return `Créer le chantier « ${v.nomChantier} »${client}${ref}${date} — statut ${v.statut}.`
   },
   preview: async (args) => {

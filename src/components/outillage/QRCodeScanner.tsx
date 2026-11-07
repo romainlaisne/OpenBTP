@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useRef, useState } from 'react'
 import type { Html5QrcodeScanner } from 'html5-qrcode'
 
@@ -150,11 +151,11 @@ export default function QRCodeScanner({ onScanSuccess, onScanError }: QRCodeScan
       {isScanning && (
         <div className="mt-4">
           <p className="text-sm text-gray-500 text-center">
-            Placez le QR code devant la caméra
-          </p>
+            <UiText>Placez le QR code devant la caméra
+          </UiText></p>
           <p className="text-xs text-gray-400 text-center mt-1">
-            La caméra arrière sera utilisée par défaut si disponible
-          </p>
+            <UiText>La caméra arrière sera utilisée par défaut si disponible
+          </UiText></p>
         </div>
       )}
     </div>

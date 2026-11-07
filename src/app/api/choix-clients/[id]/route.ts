@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -11,10 +13,11 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await params
@@ -45,20 +48,20 @@ export async function GET(
     })
 
     if (!choixClient) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Choix client non trouvé' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       choixClient
     })
 
   } catch (error) {
     console.error('Erreur lors de la récupération du choix client:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du choix client' },
       { status: 500 }
     )
@@ -70,10 +73,11 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await params
@@ -101,7 +105,7 @@ export async function PUT(
     })
 
     if (!existingChoix) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Choix client non trouvé' },
         { status: 404 }
       )
@@ -227,14 +231,14 @@ export async function PUT(
       )
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       choixClient: updatedChoixClient
     })
 
   } catch (error) {
     console.error('Erreur lors de la mise à jour du choix client:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour du choix client' },
       { status: 500 }
     )
@@ -246,10 +250,11 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await params
@@ -260,7 +265,7 @@ export async function DELETE(
     })
 
     if (!existingChoix) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Choix client non trouvé' },
         { status: 404 }
       )
@@ -276,14 +281,14 @@ export async function DELETE(
       where: { id }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       message: 'Choix client supprimé avec succès'
     })
 
   } catch (error) {
     console.error('Erreur lors de la suppression du choix client:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du choix client' },
       { status: 500 }
     )

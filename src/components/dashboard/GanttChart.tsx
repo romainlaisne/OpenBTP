@@ -1,3 +1,6 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
@@ -252,14 +255,14 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
         document.body.removeChild(a)
         
         console.log('✅ PDF exporté avec succès')
-        toast.success('PDF exporté avec succès')
+        toast.success(tx("PDF exporté avec succès"))
       } else {
         console.error('❌ Erreur lors de l\'export PDF')
-        toast.error('Erreur lors de l\'export PDF')
+        toast.error(tx("Erreur lors de l'export PDF"))
       }
     } catch (error) {
       console.error('❌ Erreur lors de l\'export PDF:', error)
-      toast.error('Erreur lors de l\'export PDF')
+      toast.error(tx("Erreur lors de l'export PDF"))
     }
   }
   
@@ -295,7 +298,7 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
   if (!chantiers.length) {
     return (
       <div className="bg-white rounded-lg shadow-md p-8 text-center">
-        <div className="text-gray-500">Aucun chantier à afficher</div>
+        <div className="text-gray-500"><UiText>Aucun chantier à afficher</UiText></div>
       </div>
     )
   }
@@ -326,13 +329,13 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
                 <button 
                   onClick={goToPrevious}
                   className="p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-gray-600 dark:hover:to-gray-600 transition-all duration-200 group" 
-                  aria-label="Période précédente"
+                  aria-label={tx("Période précédente")}
                 >
                   <ChevronLeftIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
                 </button>
                 
                 <div className="px-6 py-3 border-x border-gray-200 dark:border-gray-600 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-600 dark:to-gray-600">
-                  <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5">Période</div>
+                  <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5"><UiText>Période</UiText></div>
                   <div className="text-sm font-bold text-gray-900 dark:text-white whitespace-nowrap">
                     {periodDisplay}
                   </div>
@@ -341,7 +344,7 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
                 <button 
                   onClick={goToNext} 
                   className="p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-gray-600 dark:hover:to-gray-600 transition-all duration-200 group"
-                  aria-label="Période suivante"
+                  aria-label={tx("Période suivante")}
                 >
                   <ChevronRightIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
                 </button>
@@ -362,7 +365,7 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Rechercher un chantier ou client..."
+                  placeholder={tx("Rechercher un chantier ou client...")}
                   className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl shadow-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm font-medium placeholder:text-gray-400"
                 />
                 {searchTerm && (
@@ -412,7 +415,7 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-xl">
                 <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-                <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Échelle</span>
+                <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"><UiText>Échelle</UiText></span>
               </div>
               <div className="inline-flex bg-white dark:bg-gray-700 rounded-xl shadow-lg p-1 border border-gray-200 dark:border-gray-600">
                 {(['Jours', 'Semaines', 'Mois'] as const).map((option) => (
@@ -435,7 +438,7 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
             {showFiltersPanel && (
               <div className="flex flex-wrap items-center gap-3 p-4 bg-white dark:bg-gray-700 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600 animate-in slide-in-from-top-2 duration-300">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">États:</span>
+                  <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"><UiText>États:</UiText></span>
                   {Object.entries(filters).map(([key, value]) => (
                     <button
                       key={key}
@@ -491,7 +494,7 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 </div>
-                <span className="text-gray-800 dark:text-white uppercase tracking-wide text-xs">Chantiers</span>
+                <span className="text-gray-800 dark:text-white uppercase tracking-wide text-xs"><UiText>Chantiers</UiText></span>
               </div>
             </div>
             
@@ -832,7 +835,7 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
-                    <span className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Durée</span>
+                    <span className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Durée</UiText></span>
                   </div>
                   <div className="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg text-xs font-bold shadow-lg">
                     {tooltip.chantier.dureeEnJours || (tooltip.chantier.end ? dayjs(tooltip.chantier.end).diff(dayjs(tooltip.chantier.start), 'day') : '?')} jours
@@ -840,7 +843,7 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-lg p-2">
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Début</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1"><UiText>Début</UiText></div>
                     <div className="text-sm font-bold text-gray-900 dark:text-white">{dayjs(tooltip.chantier.start).format('DD/MM/YYYY')}</div>
                   </div>
                   <div className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-lg p-2">
@@ -861,9 +864,9 @@ const GanttChart: React.FC<GanttChartProps> = ({ chantiers, loading = false }) =
                         </svg>
                       </div>
                       <div>
-                        <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Montant Total</div>
+                        <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wider"><UiText>Montant Total</UiText></div>
                         <div className="text-xl font-black text-emerald-700 dark:text-emerald-300">
-                          {tooltip.chantier.montant.toLocaleString('fr-FR')} €
+                          {tooltip.chantier.montant.toLocaleString(intlLocale(getActiveLocale()))} €
                         </div>
                       </div>
                     </div>

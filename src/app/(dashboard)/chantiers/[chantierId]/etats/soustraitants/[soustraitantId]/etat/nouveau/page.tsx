@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react'
@@ -347,7 +348,7 @@ export default function NouvelEtatAvancementPage(
       const updatedEtat = await response.json()
       setEtatAvancement(updatedEtat)
       
-      toast.success('État d\'avancement réouvert avec succès !')
+      toast.success(tx("État d'avancement réouvert avec succès !"))
     } catch (error) {
       console.error('Erreur:', error)
       toast.error(error instanceof Error ? error.message : 'Erreur lors de la réouverture')
@@ -364,7 +365,7 @@ export default function NouvelEtatAvancementPage(
     if (!etatAvancement || etatAvancement.id <= 0) return
     
     try {
-      toast.loading('Génération du PDF en cours...', { id: 'pdf-generation' })
+      toast.loading(tx("Génération du PDF en cours..."), { id: 'pdf-generation' })
       
       const response = await fetch(`/api/chantiers/${params.chantierId}/soustraitants/${params.soustraitantId}/etats-avancement/${etatAvancement.id}/pdf-modern`, {
         method: 'GET',
@@ -390,7 +391,7 @@ export default function NouvelEtatAvancementPage(
       
       if (blob.size === 0) {
         toast.dismiss('pdf-generation')
-        toast.error('Le PDF généré est vide')
+        toast.error(tx("Le PDF généré est vide"))
         return
       }
 
@@ -405,11 +406,11 @@ export default function NouvelEtatAvancementPage(
       document.body.removeChild(a)
       
       toast.dismiss('pdf-generation')
-      toast.success('PDF téléchargé avec succès')
+      toast.success(tx("PDF téléchargé avec succès"))
     } catch (error) {
       console.error('Erreur lors de la génération du PDF:', error)
       toast.dismiss('pdf-generation')
-      toast.error('Erreur lors de la génération du PDF')
+      toast.error(tx("Erreur lors de la génération du PDF"))
     }
   }
 
@@ -488,7 +489,7 @@ export default function NouvelEtatAvancementPage(
             <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <XMarkIcon className="h-8 w-8 text-red-500" />
             </div>
-            <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Erreur</h3>
+            <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2"><UiText>Erreur</UiText></h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
             <Link
               href={`/chantiers/${params.chantierId}/etats/soustraitants`}
@@ -534,14 +535,14 @@ export default function NouvelEtatAvancementPage(
                   </div>
 
                   <span className="inline-flex items-center gap-2 px-3 py-1 bg-white/25 text-white border border-white/40 rounded-full text-xs font-semibold shadow-sm">
-                    <span className="font-semibold">État #{etatAvancement.numero}</span>
+                    <span className="font-semibold"><UiText>État #</UiText>{etatAvancement.numero}</span>
                   </span>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-white/90">
                   {commandeValidee?.soustraitantNom && (
                     <span className="inline-flex items-center gap-2">
-                      <span className="opacity-90">Sous-traitant</span>
+                      <span className="opacity-90"><UiText>Sous-traitant</UiText></span>
                       <span className="font-semibold">{commandeValidee.soustraitantNom}</span>
                     </span>
                   )}
@@ -552,7 +553,7 @@ export default function NouvelEtatAvancementPage(
                     </span>
                   )}
                   <span className="inline-flex items-center gap-2">
-                    <span className="opacity-90">Créé par</span>
+                    <span className="opacity-90"><UiText>Créé par</UiText></span>
                     <span className="font-semibold">{session?.user?.email || '—'}</span>
                   </span>
                 </div>
@@ -597,13 +598,13 @@ export default function NouvelEtatAvancementPage(
                     {validating ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                        Réouverture...
-                      </>
+                        <UiText>Réouverture...
+                      </UiText></>
                     ) : (
                       <>
                         <PencilSquareIcon className="h-5 w-5" />
-                        Réouvrir l'état
-                      </>
+                        <UiText>Réouvrir l'état
+                      </UiText></>
                     )}
                   </button>
                 )}

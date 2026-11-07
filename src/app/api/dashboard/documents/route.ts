@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,10 +8,11 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/dashboard/documents - Récupère les documents et rapports récents pour le dashboard
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -59,7 +63,7 @@ export async function GET() {
       id: rapport.id.toString(),
       nom: rapport.nom,
       type: rapport.type,
-      date: new Date(rapport.createdAt).toLocaleDateString('fr-FR'),
+      date: new Date(rapport.createdAt).toLocaleDateString(intlLocale(getActiveLocale())),
       createdBy: rapport.user.name || rapport.user.email
     }))
 
@@ -68,17 +72,17 @@ export async function GET() {
       id: document.id.toString(),
       nom: document.nom,
       type: document.type,
-      date: new Date(document.createdAt).toLocaleDateString('fr-FR'),
+      date: new Date(document.createdAt).toLocaleDateString(intlLocale(getActiveLocale())),
       createdBy: document.user.name || document.user.email
     }))
 
-    return NextResponse.json({
+    return localizedJson({
       rapports: formattedRapports,
       documents: formattedDocuments
     })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des documents' },
       { status: 500 }
     )

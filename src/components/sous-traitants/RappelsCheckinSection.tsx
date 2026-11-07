@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 // Fiche sous-traitant — historique des rappels Checkinatwork : date, heure,
 // destinataire, statut ; email exact envoyé ; export PDF « Attestation de
 // rappels » par période ; envoi manuel pour ce seul sous-traitant.
@@ -58,7 +60,7 @@ export default function RappelsCheckinSection({ soustraitantId }: { soustraitant
   }
 
   const envoyer = async () => {
-    if (!confirm('Envoyer maintenant le rappel à ce sous-traitant (selon le mode des réglages) ?')) return
+    if (!confirm(tx("Envoyer maintenant le rappel à ce sous-traitant (selon le mode des réglages) ?"))) return
     setEnvoi(true)
     setMessage(null)
     try {
@@ -100,8 +102,8 @@ export default function RappelsCheckinSection({ soustraitantId }: { soustraitant
               Rappels Checkinatwork
               {rappels && (
                 <span className="ml-2 text-gray-400 dark:text-gray-500 font-normal text-sm">
-                  ({rappels.filter((r) => !r.modeTest && r.statut === 'ENVOYE').length} envoyé
-                  {rappels.filter((r) => !r.modeTest && r.statut === 'ENVOYE').length > 1 ? 's' : ''})
+                  ({rappels.filter((r) => !r.modeTest && r.statut === 'ENVOYE').length} <UiText>envoyé
+                  </UiText>{rappels.filter((r) => !r.modeTest && r.statut === 'ENVOYE').length > 1 ? 's' : ''})
                 </span>
               )}
             </span>
@@ -116,7 +118,7 @@ export default function RappelsCheckinSection({ soustraitantId }: { soustraitant
             <a
               href={lienAttestation}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-              title="Sans dates : du premier rappel à aujourd'hui"
+              title={tx("Sans dates : du premier rappel à aujourd'hui")}
             >
               <DocumentArrowDownIcon className="h-3.5 w-3.5" />
               Attestation PDF
@@ -138,17 +140,17 @@ export default function RappelsCheckinSection({ soustraitantId }: { soustraitant
 
       <div className="overflow-x-auto">
         {rappels === null ? (
-          <p className="p-6 text-sm text-gray-500">Chargement…</p>
+          <p className="p-6 text-sm text-gray-500"><UiText>Chargement…</UiText></p>
         ) : visibles.length === 0 ? (
-          <p className="p-6 text-sm text-gray-500">Aucun rappel envoyé à ce sous-traitant.</p>
+          <p className="p-6 text-sm text-gray-500"><UiText>Aucun rappel envoyé à ce sous-traitant.</UiText></p>
         ) : (
           <table className="min-w-full text-sm">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-700/40 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                <th className="px-4 py-2 text-left">Date</th>
+                <th className="px-4 py-2 text-left"><UiText>Date</UiText></th>
                 <th className="px-4 py-2 text-left">Heure</th>
                 <th className="px-4 py-2 text-left">Destinataire</th>
-                <th className="px-4 py-2 text-left">Statut</th>
+                <th className="px-4 py-2 text-left"><UiText>Statut</UiText></th>
                 <th className="px-4 py-2" />
               </tr>
             </thead>
@@ -166,9 +168,9 @@ export default function RappelsCheckinSection({ soustraitantId }: { soustraitant
                   </td>
                   <td className="px-4 py-2">
                     {r.statut === 'ENVOYE' ? (
-                      <span className="text-green-700 dark:text-green-400">Envoyé</span>
+                      <span className="text-green-700 dark:text-green-400"><UiText>Envoyé</UiText></span>
                     ) : (
-                      <span className="text-red-600" title={r.erreur || ''}>Échec</span>
+                      <span className="text-red-600" title={r.erreur || ''}><UiText>Échec</UiText></span>
                     )}
                   </td>
                   <td className="px-4 py-2 text-right">
@@ -203,16 +205,16 @@ export default function RappelsCheckinSection({ soustraitantId }: { soustraitant
                   {detail.messageId && <span className="block break-all">Message-ID : {detail.messageId}</span>}
                 </p>
               </div>
-              <button type="button" onClick={() => setDetail(null)} className="text-gray-400 hover:text-gray-600" aria-label="Fermer">
+              <button type="button" onClick={() => setDetail(null)} className="text-gray-400 hover:text-gray-600" aria-label={tx("Fermer")}>
                 <XMarkIcon className="h-5 w-5" />
               </button>
             </div>
             <div className="overflow-y-auto p-5 space-y-4">
               {/* sandbox vide : aucun script ni navigation depuis le contenu affiché */}
-              <iframe srcDoc={detail.contenuHtml} sandbox="" title="Email envoyé" className="h-[50vh] w-full rounded border border-gray-200 bg-white" />
+              <iframe srcDoc={detail.contenuHtml} sandbox="" title={tx("Email envoyé")} className="h-[50vh] w-full rounded border border-gray-200 bg-white" />
               <div>
                 <p className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
-                  Chantiers communiqués ce jour-là ({detail.chantiers.length})
+                  <UiText>Chantiers communiqués ce jour-là (</UiText>{detail.chantiers.length})
                 </p>
                 <ul className="space-y-0.5 text-xs text-gray-700 dark:text-gray-300">
                   {detail.chantiers.map((c, i) => (

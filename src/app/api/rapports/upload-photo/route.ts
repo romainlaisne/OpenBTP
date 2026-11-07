@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -10,10 +12,11 @@ import { validateImageFile } from '@/lib/utils/image-validation'
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const formData = await request.formData()
@@ -23,7 +26,7 @@ export async function POST(request: NextRequest) {
     const tags = formData.get('tags') as string | null
 
     if (!file || !chantierId) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Fichier ou chantierId manquant' },
         { status: 400 }
       )
@@ -36,7 +39,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -57,7 +60,7 @@ export async function POST(request: NextRequest) {
     // Valider le fichier image par magic bytes
     const validation = await validateImageFile(file)
     if (!validation.isValid) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le fichier doit être une image valide (JPEG, PNG ou WEBP)' },
         { status: 400 }
       )
@@ -115,7 +118,7 @@ export async function POST(request: NextRequest) {
     console.log(`📸 Photo uploadée (durable): ${documentUrl}`)
     console.log(`📝 Document créé en BDD: ID=${document.id}, type=${document.type}, url=${document.url}`)
 
-    return NextResponse.json({
+    return localizedJson({
       url: documentUrl,
       documentId: document.id,
       filename,
@@ -124,7 +127,7 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('❌ Erreur lors de l\'upload de la photo:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'upload' },
       { status: 500 }
     )

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // API pour vérifier la santé du système RAG
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
@@ -7,10 +9,11 @@ import { vectorStore } from '@/lib/rag/vector-store';
 import { RAGConversationService } from '@/lib/rag/conversation-service';
 
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
 
     console.log('🏥 Vérification de la santé RAG...');
@@ -56,11 +59,11 @@ export async function GET() {
       modelsCount: availableModels.length
     });
 
-    return NextResponse.json(health);
+    return localizedJson(health);
 
   } catch (error) {
     console.error('❌ Erreur vérification santé RAG:', error);
-    return NextResponse.json(
+    return localizedJson(
       { 
         ollama: { healthy: false, error: error instanceof Error ? error.message : 'Erreur inconnue' },
         vectorStore: { healthy: false, error: error instanceof Error ? error.message : 'Erreur inconnue' },

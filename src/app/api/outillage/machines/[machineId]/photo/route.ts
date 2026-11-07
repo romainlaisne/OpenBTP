@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -12,13 +14,14 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ machineId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const params = await context.params
     const machineId = params.machineId
 
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -31,7 +34,7 @@ export async function GET(
     })
 
     if (!machine) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Machine non trouvée' },
         { status: 404 }
       )
@@ -45,17 +48,17 @@ export async function GET(
     for (const ext of extensions) {
       const photoPath = join(uploadDir, `${machineId}.${ext}`)
       if (existsSync(photoPath)) {
-        return NextResponse.json({
+        return localizedJson({
           exists: true,
           url: `/uploads/machines/${machineId}.${ext}`
         })
       }
     }
 
-    return NextResponse.json({ exists: false })
+    return localizedJson({ exists: false })
   } catch (error) {
     console.error('Erreur lors de la vérification de la photo:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la vérification de la photo' },
       { status: 500 }
     )
@@ -67,13 +70,14 @@ export async function POST(
   request: NextRequest,
   context: { params: Promise<{ machineId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const params = await context.params
     const machineId = params.machineId
 
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -86,7 +90,7 @@ export async function POST(
     })
 
     if (!machine) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Machine non trouvée' },
         { status: 404 }
       )
@@ -96,7 +100,7 @@ export async function POST(
     const file = formData.get('file') as File | null
 
     if (!file) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Aucun fichier fourni' },
         { status: 400 }
       )
@@ -105,7 +109,7 @@ export async function POST(
     // Vérifier que c'est une image (Content-Type + magic bytes réels)
     const validation = await validateImageFile(file)
     if (!validation.isValid) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le fichier doit être une image valide (JPEG, PNG, WEBP ou HEIC)' },
         { status: 400 }
       )
@@ -113,7 +117,7 @@ export async function POST(
 
     // Vérifier la taille (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le fichier est trop volumineux (max 10MB)' },
         { status: 400 }
       )
@@ -145,13 +149,13 @@ export async function POST(
 
     const url = `/uploads/machines/${filename}`
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       url
     })
   } catch (error) {
     console.error('Erreur lors de l\'upload de la photo:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'upload de la photo' },
       { status: 500 }
     )
@@ -163,13 +167,14 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ machineId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const params = await context.params
     const machineId = params.machineId
 
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -182,7 +187,7 @@ export async function DELETE(
     })
 
     if (!machine) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Machine non trouvée' },
         { status: 404 }
       )
@@ -202,16 +207,16 @@ export async function DELETE(
     }
 
     if (!deleted) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Photo non trouvée' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la suppression de la photo:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de la photo' },
       { status: 500 }
     )

@@ -1,3 +1,6 @@
+import { getActiveLocale, type AppLocale } from '@/lib/i18n/locale'
+import { localizeGeneratedHtml, translateText } from '@/lib/i18n/translate'
+
 // Gabarit commun des emails envoyés par OpenBTP.
 //
 // Couleurs de l'identité OpenBTP : bleu nuit #05122B, orange #FF6B00.
@@ -87,18 +90,20 @@ export function sousTitre(texte: string): string {
   return `<h2 style="margin:24px 0 8px 0;font-size:16px;line-height:22px;font-weight:700;color:${COULEURS_EMAIL.nuit};">${texte}</h2>`
 }
 
-export function gabaritEmail(o: GabaritEmail): string {
+export function gabaritEmail(o: GabaritEmail, locale: AppLocale = getActiveLocale()): string {
   const c = COULEURS_EMAIL
   const nom = echapperHtml(o.societe.nom || 'OpenBTP')
   const pied = [o.societe.nom, o.societe.adresse, o.societe.tva].filter(Boolean).map((x) => echapperHtml(x)).join(' · ')
 
+  const boutonLabel = o.bouton ? translateText(locale, o.bouton.libelle) : ''
+  const lienSecours = translateText(locale, 'Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :')
   const bouton = o.bouton
     ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 20px 0;">
 <tr><td style="border-radius:8px;background:${c.orange};">
-<a href="${echapperHtml(o.bouton.url)}" target="_blank" style="display:inline-block;padding:13px 26px;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px;">${echapperHtml(o.bouton.libelle)}</a>
+<a href="${echapperHtml(o.bouton.url)}" target="_blank" style="display:inline-block;padding:13px 26px;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:8px;">${echapperHtml(boutonLabel)}</a>
 </td></tr></table>${
         o.lienEnClair
-          ? `<p style="margin:0 0 20px 0;font-size:13px;line-height:20px;color:${c.texteDoux};">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br><a href="${echapperHtml(o.bouton.url)}" style="color:${c.orange};word-break:break-all;">${echapperHtml(o.bouton.url)}</a></p>`
+          ? `<p style="margin:0 0 20px 0;font-size:13px;line-height:20px;color:${c.texteDoux};">${echapperHtml(lienSecours)}<br><a href="${echapperHtml(o.bouton.url)}" style="color:${c.orange};word-break:break-all;">${echapperHtml(o.bouton.url)}</a></p>`
           : ''
       }`
     : ''
@@ -107,8 +112,10 @@ export function gabaritEmail(o: GabaritEmail): string {
     ? `<tr><td style="background:${o.bandeau.couleur || '#B91C1C'};padding:12px 32px;font-size:13px;line-height:20px;font-weight:700;color:#ffffff;">${texteEnHtml(o.bandeau.texte)}</td></tr>`
     : ''
 
-  return `<!DOCTYPE html>
-<html lang="fr">
+  const titre = translateText(locale, o.titre)
+  const mention = o.mention ? translateText(locale, o.mention) : ''
+  const html = `<!DOCTYPE html>
+<html lang="${locale}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -126,17 +133,18 @@ ${o.apercu ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;">
 <tr><td style="background:${c.orange};height:4px;line-height:4px;font-size:0;">&nbsp;</td></tr>
 ${bandeau}
 <tr><td style="padding:32px 32px 12px 32px;">
-<h1 style="margin:0 0 20px 0;font-size:22px;line-height:30px;font-weight:700;color:${c.nuit};">${echapperHtml(o.titre)}</h1>
+<h1 style="margin:0 0 20px 0;font-size:22px;line-height:30px;font-weight:700;color:${c.nuit};">${echapperHtml(titre)}</h1>
 ${o.contenuHtml}
 ${bouton}
 </td></tr>
-${o.mention ? `<tr><td style="padding:0 32px 24px 32px;"><p style="margin:0;padding-top:16px;border-top:1px solid ${c.bordure};font-size:12px;line-height:18px;color:${c.texteDoux};">${echapperHtml(o.mention)}</p></td></tr>` : ''}
+${mention ? `<tr><td style="padding:0 32px 24px 32px;"><p style="margin:0;padding-top:16px;border-top:1px solid ${c.bordure};font-size:12px;line-height:18px;color:${c.texteDoux};">${echapperHtml(mention)}</p></td></tr>` : ''}
 </table>
 ${pied ? `<p style="margin:16px 0 0 0;font-size:12px;line-height:18px;color:${c.texteDoux};text-align:center;">${pied}</p>` : ''}
 </td></tr>
 </table>
 </body>
 </html>`
+  return localizeGeneratedHtml(locale, html, [o.societe.nom, o.societe.adresse, o.societe.tva, o.bouton?.url], 12)
 }
 
 /** Rangée de chiffres clés (valeurs et libellés en texte brut). 2 à 4 tuiles. */

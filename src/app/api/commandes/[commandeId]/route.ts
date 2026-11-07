@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,17 +7,18 @@ import { prisma } from '@/lib/prisma'
 import { generateAndStoreCommandePDF } from '@/lib/pdf/commande-pdf-storage'
 
 export async function GET(request: Request, props: { params: Promise<{ commandeId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const id = parseInt(params.commandeId)
 
     if (isNaN(id)) {
-      return NextResponse.json({ error: 'ID de commande invalide' }, { status: 400 })
+      return localizedJson({ error: 'ID de commande invalide' }, { status: 400 })
     }
 
     const commande = await prisma.commande.findUnique({
@@ -24,13 +27,13 @@ export async function GET(request: Request, props: { params: Promise<{ commandeI
     })
 
     if (!commande) {
-      return NextResponse.json({ error: 'Commande non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Commande non trouvée' }, { status: 404 })
     }
 
-    return NextResponse.json(commande)
+    return localizedJson(commande)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de la commande' },
       { status: 500 }
     )
@@ -38,17 +41,18 @@ export async function GET(request: Request, props: { params: Promise<{ commandeI
 }
 
 export async function PUT(request: Request, props: { params: Promise<{ commandeId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || !['ADMIN', 'MANAGER'].includes(session.user.role)) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const id = parseInt(params.commandeId)
 
     if (isNaN(id)) {
-      return NextResponse.json({ error: 'ID de commande invalide' }, { status: 400 })
+      return localizedJson({ error: 'ID de commande invalide' }, { status: 400 })
     }
 
     // Vérifier que la commande existe
@@ -57,7 +61,7 @@ export async function PUT(request: Request, props: { params: Promise<{ commandeI
     })
 
     if (!existingCommande) {
-      return NextResponse.json({ error: 'Commande non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Commande non trouvée' }, { status: 404 })
     }
 
     // Vérifier si c'est une nouvelle validation (passage à VALIDEE)
@@ -83,7 +87,7 @@ export async function PUT(request: Request, props: { params: Promise<{ commandeI
     }
 
     if (!targetChantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 400 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 400 })
     }
 
     const targetChantierId = targetChantier.id
@@ -189,10 +193,10 @@ export async function PUT(request: Request, props: { params: Promise<{ commandeI
       })
     }
 
-    return NextResponse.json(commandeWithLignes)
+    return localizedJson(commandeWithLignes)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la commande' },
       { status: 500 }
     )
@@ -200,17 +204,18 @@ export async function PUT(request: Request, props: { params: Promise<{ commandeI
 }
 
 export async function DELETE(request: Request, props: { params: Promise<{ commandeId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || !['ADMIN', 'MANAGER'].includes(session.user.role)) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const id = parseInt(params.commandeId)
 
     if (isNaN(id)) {
-      return NextResponse.json({ error: 'ID de commande invalide' }, { status: 400 })
+      return localizedJson({ error: 'ID de commande invalide' }, { status: 400 })
     }
 
     // Récupérer la commande pour obtenir le chantierId
@@ -219,7 +224,7 @@ export async function DELETE(request: Request, props: { params: Promise<{ comman
     })
 
     if (!commande) {
-      return NextResponse.json({ error: 'Commande non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Commande non trouvée' }, { status: 404 })
     }
 
     // Supprimer d'abord les lignes de commande
@@ -249,10 +254,10 @@ export async function DELETE(request: Request, props: { params: Promise<{ comman
       data: { budget: montantTotal }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de la commande' },
       { status: 500 }
     )

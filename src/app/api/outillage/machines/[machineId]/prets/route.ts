@@ -1,14 +1,17 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
 export async function GET(request: Request, props: { params: Promise<{ machineId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -31,10 +34,10 @@ export async function GET(request: Request, props: { params: Promise<{ machineId
       }
     })
 
-    return NextResponse.json(prets)
+    return localizedJson(prets)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des prêts' },
       { status: 500 }
     )
@@ -42,13 +45,14 @@ export async function GET(request: Request, props: { params: Promise<{ machineId
 }
 
 export async function POST(request: Request, props: { params: Promise<{ machineId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     console.log('Session:', session)
 
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -63,7 +67,7 @@ export async function POST(request: Request, props: { params: Promise<{ machineI
     console.log('User trouvé:', user)
 
     if (!user) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Utilisateur non trouvé' },
         { status: 404 }
       )
@@ -79,14 +83,14 @@ export async function POST(request: Request, props: { params: Promise<{ machineI
     console.log('Machine trouvée:', machine)
 
     if (!machine) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Machine non trouvée' },
         { status: 404 }
       )
     }
 
     if (machine.statut !== 'DISPONIBLE') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Machine non disponible' },
         { status: 400 }
       )
@@ -112,7 +116,7 @@ export async function POST(request: Request, props: { params: Promise<{ machineI
       })
     ])
 
-    return NextResponse.json(pret)
+    return localizedJson(pret)
   } catch (error) {
     console.error('Erreur détaillée:', {
       error,
@@ -120,7 +124,7 @@ export async function POST(request: Request, props: { params: Promise<{ machineI
       stack: error instanceof Error ? error.stack : undefined
     })
     
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du prêt' },
       { status: 500 }
     )

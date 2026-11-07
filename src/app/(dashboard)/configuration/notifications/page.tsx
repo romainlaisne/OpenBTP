@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { Fragment, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
@@ -184,11 +185,11 @@ export default function NotificationsConfigPage() {
         // Recharger
         await loadUserConfig(selectedUserId)
       } else {
-        toast.error('Erreur lors de la sauvegarde')
+        toast.error(tx("Erreur lors de la sauvegarde"))
       }
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error)
-      toast.error('Erreur lors de la sauvegarde')
+      toast.error(tx("Erreur lors de la sauvegarde"))
     } finally {
       setSaving(false)
     }
@@ -235,11 +236,11 @@ export default function NotificationsConfigPage() {
           await loadUserConfig(session.user.id)
         }
       } else {
-        toast.error('Erreur lors de l\'initialisation')
+        toast.error(tx("Erreur lors de l'initialisation"))
       }
     } catch (error) {
       console.error('Erreur lors du seeding:', error)
-      toast.error('Erreur lors de l\'initialisation')
+      toast.error(tx("Erreur lors de l'initialisation"))
     } finally {
       setIsSeeding(false)
     }
@@ -307,8 +308,8 @@ export default function NotificationsConfigPage() {
               <UiText>Gestion des notifications</UiText>
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
-              Configurez vos préférences de notifications par email et in-app
-            </p>
+              <UiText>Configurez vos préférences de notifications par email et in-app
+            </UiText></p>
           </div>
         </div>
       </div>
@@ -330,15 +331,15 @@ export default function NotificationsConfigPage() {
             </div>
           </div>
           <h2 className="text-2xl font-black text-gray-900 dark:text-white mb-3">
-            🚀 Initialiser le système de notifications
-          </h2>
+            <UiText>🚀 Initialiser le système de notifications
+          </UiText></h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-            Le système de notifications n'est pas encore configuré. Cliquez sur le bouton ci-dessous pour créer
-            automatiquement les <strong>61 types de notifications</strong> prédéfinis (chantiers, métrés, réceptions, SAV, etc.).
-          </p>
+            <UiText>Le système de notifications n'est pas encore configuré. Cliquez sur le bouton ci-dessous pour créer
+            automatiquement les </UiText><strong>61 types de notifications</strong> <UiText>prédéfinis (chantiers, métrés, réceptions, SAV, etc.).
+          </UiText></p>
           <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">
-            ⚠️ Cette opération est nécessaire une seule fois et ne peut être effectuée que par un administrateur.
-          </p>
+            <UiText>⚠️ Cette opération est nécessaire une seule fois et ne peut être effectuée que par un administrateur.
+          </UiText></p>
           <button
             onClick={handleSeed}
             disabled={isSeeding}
@@ -347,8 +348,8 @@ export default function NotificationsConfigPage() {
             {isSeeding ? (
               <>
                 <ArrowPathIcon className="h-6 w-6 animate-spin" />
-                Initialisation en cours...
-              </>
+                <UiText>Initialisation en cours...
+              </UiText></>
             ) : (
               <>
                 <BellIcon className="h-6 w-6" />
@@ -371,8 +372,8 @@ export default function NotificationsConfigPage() {
             <UiText>Système non initialisé</UiText>
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Le système de notifications n'est pas encore configuré. Veuillez contacter un administrateur pour l'initialiser.
-          </p>
+            <UiText>Le système de notifications n'est pas encore configuré. Veuillez contacter un administrateur pour l'initialiser.
+          </UiText></p>
         </div>
       )}
 
@@ -380,14 +381,14 @@ export default function NotificationsConfigPage() {
       {isAdmin && !needsSeeding && (
         <div className="mb-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
           <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">
-            📋 Configurer pour l'utilisateur :
-          </label>
+            <UiText>📋 Configurer pour l'utilisateur :
+          </UiText></label>
           <select
             value={selectedUserId}
             onChange={(e) => handleUserChange(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 font-medium"
           >
-            <option value="">Sélectionner un utilisateur</option>
+            <option value=""><UiText>Sélectionner un utilisateur</UiText></option>
             {Array.isArray(users) && users.map(user => (
               <option key={user.id} value={user.id}>
                 {user.name || user.email} ({user.role})
@@ -411,7 +412,7 @@ export default function NotificationsConfigPage() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Rechercher une notification..."
+              placeholder={tx("Rechercher une notification...")}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
             />
           </div>

@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect } from 'react'
 import { useProjectStore } from '@/store/metres-plan/useProjectStore'
 import { useToolStore } from '@/store/metres-plan/useToolStore'
@@ -34,7 +36,7 @@ const CalibrationModal: React.FC = () => {
     if (!data || !realValue) return
     const rv = parseFloat(realValue)
     if (isNaN(rv) || rv <= 0) {
-      alert('Entrez une valeur réelle positive.')
+      alert(tx("Entrez une valeur réelle positive."))
       return
     }
     const ratio = rv / data.pixelDistance
@@ -63,7 +65,7 @@ const CalibrationModal: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Crosshair size={20} className="text-red-500 dark:text-red-400" />
-            <h2 className="text-gray-900 dark:text-white font-semibold">Calibration de l&apos;échelle</h2>
+            <h2 className="text-gray-900 dark:text-white font-semibold"><UiText>Calibration de l&apos;échelle</UiText></h2>
           </div>
           <button onClick={handleClose} className="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors">
             <X size={18} />
@@ -72,13 +74,13 @@ const CalibrationModal: React.FC = () => {
 
         {/* Pixel distance display */}
         <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 mb-4">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Distance mesurée sur le plan</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400"><UiText>Distance mesurée sur le plan</UiText></p>
           <p className="text-lg font-bold text-gray-900 dark:text-white mt-0.5">{data?.pixelDistance.toFixed(1)} px</p>
         </div>
 
         {/* Real distance input */}
         <div className="mb-4">
-          <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">Distance réelle correspondante</label>
+          <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1"><UiText>Distance réelle correspondante</UiText></label>
           <div className="grid gap-2" style={{ gridTemplateColumns: '1fr 5rem' }}>
             <input
               type="number"
@@ -108,7 +110,7 @@ const CalibrationModal: React.FC = () => {
         {/* Calculated ratio preview */}
         {realValue && !isNaN(parseFloat(realValue)) && parseFloat(realValue) > 0 && data && (
           <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4">
-            <p className="text-xs text-blue-600 dark:text-blue-300">Ratio calculé</p>
+            <p className="text-xs text-blue-600 dark:text-blue-300"><UiText>Ratio calculé</UiText></p>
             <p className="text-sm font-semibold text-blue-700 dark:text-blue-200 mt-0.5">
               1 px = {(parseFloat(realValue) / data.pixelDistance).toFixed(5)} {unit}
             </p>
@@ -121,15 +123,15 @@ const CalibrationModal: React.FC = () => {
             onClick={handleClose}
             className="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm transition-colors"
           >
-            Annuler
-          </button>
+            <UiText>Annuler
+          </UiText></button>
           <button
             onClick={handleConfirm}
             disabled={!realValue || isNaN(parseFloat(realValue)) || parseFloat(realValue) <= 0}
             className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors"
           >
-            Valider la calibration
-          </button>
+            <UiText>Valider la calibration
+          </UiText></button>
         </div>
       </div>
     </div>

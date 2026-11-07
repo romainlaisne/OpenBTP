@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment } from 'react'
@@ -126,7 +127,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 >
                   <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
                     <button type="button" className="-m-2.5 p-2.5" onClick={onClose}>
-                      <span className="sr-only">Fermer la sidebar</span>
+                      <span className="sr-only"><UiText>Fermer la sidebar</UiText></span>
                       <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
                     </button>
                   </div>

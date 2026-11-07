@@ -190,7 +190,7 @@ function EditMetrePage({ params }: { params: { type: 'ouvrier'|'soustraitant'; a
                             <option value="M²">M²</option>
                             <option value="M³">M³</option>
                             <option value="Heures">Heures</option>
-                            <option value="Pièces">Pièces</option>
+                            <option value="Pièces">{t('pieces')}</option>
                             <option value="Fft">Forfait</option>
                             <option value="U">U</option>
                             <option value="m">m</option>

@@ -1,4 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback } from 'react'
 import {
   DocumentTextIcon,
@@ -199,18 +202,18 @@ export default function DossiersTechniquesManager({ chantierId, onReopenDossier 
               Dossiers techniques existants
             </h3>
             <span className="ml-auto text-sm text-gray-600 dark:text-gray-400">
-              0 dossier
-            </span>
+              <UiText>0 dossier
+            </UiText></span>
           </div>
         </div>
         <div className="text-center py-12">
           <DocumentTextIcon className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
           <p className="text-gray-500 dark:text-gray-400">
-            Aucun dossier technique généré
-          </p>
+            <UiText>Aucun dossier technique généré
+          </UiText></p>
           <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
-            Générez votre premier dossier en sélectionnant des fiches techniques ci-dessous
-          </p>
+            <UiText>Générez votre premier dossier en sélectionnant des fiches techniques ci-dessous
+          </UiText></p>
         </div>
       </div>
     )
@@ -229,11 +232,11 @@ export default function DossiersTechniquesManager({ chantierId, onReopenDossier 
                 📚 Dossiers techniques existants
               </h3>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                Gérez vos dossiers, modifiez les statuts des fiches et régénérez les PDFs
-              </p>
+                <UiText>Gérez vos dossiers, modifiez les statuts des fiches et régénérez les PDFs
+              </UiText></p>
             </div>
             <span className="ml-auto px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 rounded-full text-sm font-semibold">
-              {dossiers.length} dossier{dossiers.length > 1 ? 's' : ''}
+              {dossiers.length} <UiText>dossier</UiText>{dossiers.length > 1 ? 's' : ''}
             </span>
           </div>
         </div>
@@ -276,7 +279,7 @@ export default function DossiersTechniquesManager({ chantierId, onReopenDossier 
                 {expandedDossier === dossier.id && (
                   <div className="ml-8 mt-3 space-y-2">
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      <p>Généré le : {new Date(dossier.dateGeneration).toLocaleDateString('fr-FR', { 
+                      <p><UiText>Généré le : </UiText>{new Date(dossier.dateGeneration).toLocaleDateString(intlLocale(getActiveLocale()), { 
                         day: '2-digit', 
                         month: '2-digit', 
                         year: 'numeric',
@@ -284,7 +287,7 @@ export default function DossiersTechniquesManager({ chantierId, onReopenDossier 
                         minute: '2-digit'
                       })}</p>
                       {dossier.dateModification !== dossier.dateGeneration && (
-                        <p>Modifié le : {new Date(dossier.dateModification).toLocaleDateString('fr-FR', { 
+                        <p><UiText>Modifié le : </UiText>{new Date(dossier.dateModification).toLocaleDateString(intlLocale(getActiveLocale()), { 
                           day: '2-digit', 
                           month: '2-digit', 
                           year: 'numeric',
@@ -296,8 +299,8 @@ export default function DossiersTechniquesManager({ chantierId, onReopenDossier 
 
                     <div className="mt-3">
                       <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Fiches du dossier :
-                      </p>
+                        <UiText>Fiches du dossier :
+                      </UiText></p>
                       <div className="space-y-1">
                         {dossier.fiches.map((fiche) => (
                           <div
@@ -310,7 +313,7 @@ export default function DossiersTechniquesManager({ chantierId, onReopenDossier 
                               </span>
                               {fiche.ficheReference && (
                                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                                  (Réf: {fiche.ficheReference})
+                                  <UiText>(Réf: </UiText>{fiche.ficheReference})
                                 </span>
                               )}
                               {fiche.version > 1 && (
@@ -406,14 +409,14 @@ export default function DossiersTechniquesManager({ chantierId, onReopenDossier 
                     }
                   }}
                   className="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded transition-colors"
-                  title="Télécharger"
+                  title={tx("Télécharger")}
                 >
                   <ArrowDownTrayIcon className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => onReopenDossier(dossier)}
                   className="p-2 text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/20 rounded transition-colors"
-                  title="Réouvrir pour modification"
+                  title={tx("Réouvrir pour modification")}
                 >
                   <PencilIcon className="h-5 w-5" />
                 </button>
@@ -421,7 +424,7 @@ export default function DossiersTechniquesManager({ chantierId, onReopenDossier 
                   <button
                     onClick={() => setDossierToDelete(dossier.id)}
                     className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
-                    title="Supprimer le dossier"
+                    title={tx("Supprimer le dossier")}
                   >
                     <TrashIcon className="h-5 w-5" />
                   </button>
@@ -437,7 +440,7 @@ export default function DossiersTechniquesManager({ chantierId, onReopenDossier 
         isOpen={dossierToDelete !== null}
         onClose={() => setDossierToDelete(null)}
         onConfirm={handleDeleteDossier}
-        title="Supprimer le dossier technique"
+        title={tx("Supprimer le dossier technique")}
         message="Êtes-vous sûr de vouloir supprimer ce dossier technique ? Cette action est irréversible."
         confirmText="Supprimer"
         cancelText="Annuler"

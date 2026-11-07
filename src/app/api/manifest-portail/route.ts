@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { existsSync } from 'fs'
 import path from 'path'
@@ -8,6 +10,7 @@ import path from 'path'
  * l'URL spécifique du sous-traitant/ouvrier (et non la page d'accueil desktop).
  */
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const { searchParams } = new URL(request.url)
     const startUrl = searchParams.get('start_url') || '/'
@@ -40,7 +43,7 @@ export async function GET(request: NextRequest) {
       ],
     }
 
-    return NextResponse.json(manifest, {
+    return localizedJson(manifest, {
       headers: {
         'Content-Type': 'application/manifest+json',
         'Cache-Control': 'public, max-age=3600',
@@ -48,7 +51,7 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error('Erreur manifest portail:', error)
-    return NextResponse.json(
+    return localizedJson(
       { name: 'OpenBTP Portail', start_url: '/', display: 'standalone' },
       { headers: { 'Content-Type': 'application/manifest+json' } }
     )

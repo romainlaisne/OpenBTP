@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
@@ -173,12 +174,12 @@ export default function MobileDocumentsPage() {
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Chargement...</p>
+            <p className="mt-4 text-gray-600"><UiText>Chargement...</UiText></p>
           </div>
         ) : displayItems.length === 0 ? (
           <div className="text-center py-12">
             <FolderIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 font-medium">Aucun document</p>
+            <p className="text-gray-600 font-medium"><UiText>Aucun document</UiText></p>
             <p className="text-sm text-gray-500 mt-1">
               {activeTab === 'photos'
                 ? 'Aucune photo disponible'

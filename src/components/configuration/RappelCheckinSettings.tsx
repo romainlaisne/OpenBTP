@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 // Rappel Checkinatwork quotidien : mode, heure, jours sans rappel, envoi manuel
 // et état du jour. Chaque envoi est journalisé (preuve pour l'inspection).
 
@@ -56,7 +58,7 @@ export default function RappelCheckinSettings() {
 
   const enregistrer = async () => {
     if (form.mode === 'ACTIF' && etat?.mode !== 'ACTIF' &&
-      !confirm('Mode actif : les rappels partiront réellement aux sous-traitants chaque matin. Continuer ?')) return
+      !confirm(tx("Mode actif : les rappels partiront réellement aux sous-traitants chaque matin. Continuer ?"))) return
     setEnCours(true)
     setMessage(null)
     try {
@@ -100,7 +102,7 @@ export default function RappelCheckinSettings() {
   if (!etat) {
     return (
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
-        <p className="text-sm text-gray-500">Chargement…</p>
+        <p className="text-sm text-gray-500"><UiText>Chargement…</UiText></p>
       </div>
     )
   }
@@ -114,18 +116,18 @@ export default function RappelCheckinSettings() {
   return (
     <div className="space-y-5 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Rappel Checkinatwork quotidien</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Rappel Checkinatwork quotidien</UiText></h2>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Chaque jour ouvrable, un email en français, portugais, roumain et anglais au représentant de chaque sous-traitant actif ayant un contrat-cadre signé :
+          <UiText>Chaque jour ouvrable, un email en français, portugais, roumain et anglais au représentant de chaque sous-traitant actif ayant un contrat-cadre signé :
           obligation d&apos;enregistrement, interdiction d&apos;accès sans enregistrement et lien vers la page des chantiers.
           Chaque envoi est conservé (texte exact + liste des chantiers du jour). Réponses vers info@secotech.be.
-        </p>
+        </UiText></p>
       </div>
 
       {!etat.lienConfigure && (
         <p className="rounded-md bg-amber-50 dark:bg-amber-900/20 px-3 py-2 text-sm text-amber-800 dark:text-amber-300">
-          Génère d&apos;abord le lien de la page Checkinatwork ci-dessus : aucun rappel ne part sans lui.
-        </p>
+          <UiText>Génère d&apos;abord le lien de la page Checkinatwork ci-dessus : aucun rappel ne part sans lui.
+        </UiText></p>
       )}
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -152,7 +154,7 @@ export default function RappelCheckinSettings() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="block">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Adresse de test</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-200"><UiText>Adresse de test</UiText></span>
           <input
             type="email"
             value={form.emailTest}
@@ -171,12 +173,12 @@ export default function RappelCheckinSettings() {
             onChange={(e) => setForm({ ...form, heure: e.target.value })}
             className={`mt-1 w-full ${champ}`}
           />
-          <span className="mt-1 block text-xs text-gray-500">Si le serveur était arrêté, envoi au plus tard vers 11h.</span>
+          <span className="mt-1 block text-xs text-gray-500"><UiText>Si le serveur était arrêté, envoi au plus tard vers 11h.</UiText></span>
         </label>
       </div>
 
       <label className="block">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Adresse d&apos;alerte</span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-200"><UiText>Adresse d&apos;alerte</UiText></span>
         <input
           type="email"
           value={form.emailAlerte}
@@ -185,14 +187,14 @@ export default function RappelCheckinSettings() {
           className={`mt-1 w-full sm:w-1/2 ${champ}`}
         />
         <span className="mt-1 block text-xs text-gray-500">
-          Vers 7h00, uniquement en cas de problème : rappel en échec ou pas parti, sous-traitant actif sans contrat
+          <UiText>Vers 7h00, uniquement en cas de problème : rappel en échec ou pas parti, sous-traitant actif sans contrat
           signé ou sans email, chantier sans numéro Checkinatwork. Vide = email de la société.
-        </span>
+        </UiText></span>
       </label>
 
       <div className="rounded-md bg-gray-50 dark:bg-gray-700/40 px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
-        Aucun rappel les samedis, dimanches et jours fériés légaux belges (calculés automatiquement).
-        {etat.prochainsFeries.length > 0 && (
+        <UiText>Aucun rappel les samedis, dimanches et jours fériés légaux belges (calculés automatiquement).
+        </UiText>{etat.prochainsFeries.length > 0 && (
           <span className="block text-xs text-gray-500 dark:text-gray-400">
             Prochains :{' '}
             {etat.prochainsFeries.map((f) => `${f.nom} ${f.date.split('-').reverse().join('/')}`).join(' · ')}
@@ -201,7 +203,7 @@ export default function RappelCheckinSettings() {
       </div>
 
       <label className="block">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Autres jours sans rappel (facultatif — congés du bâtiment…)</span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-200"><UiText>Autres jours sans rappel (facultatif — congés du bâtiment…)</UiText></span>
         <textarea
           rows={3}
           value={form.joursFeries}
@@ -210,8 +212,8 @@ export default function RappelCheckinSettings() {
           className={`mt-1 w-full font-mono ${champ}`}
         />
         <span className="mt-1 block text-xs text-gray-500">
-          Une date AAAA-MM-JJ ou une période AAAA-MM-JJ:AAAA-MM-JJ par ligne ; texte après # ignoré.
-        </span>
+          <UiText>Une date AAAA-MM-JJ ou une période AAAA-MM-JJ:AAAA-MM-JJ par ligne ; texte après # ignoré.
+        </UiText></span>
       </label>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -221,8 +223,8 @@ export default function RappelCheckinSettings() {
           disabled={enCours || !modifie}
           className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
         >
-          Enregistrer
-        </button>
+          <UiText>Enregistrer
+        </UiText></button>
         <button
           type="button"
           onClick={envoyerMaintenant}
@@ -248,12 +250,12 @@ export default function RappelCheckinSettings() {
                 {d.nom} <span className="text-gray-500">— {d.email}</span>
               </li>
             ))}
-            {aContacter.length === 0 && <li className="text-gray-500">Aucun.</li>}
+            {aContacter.length === 0 && <li className="text-gray-500"><UiText>Aucun.</UiText></li>}
           </ul>
           {aProbleme.length > 0 && (
             <>
               <h3 className="mt-4 text-sm font-semibold text-amber-700 dark:text-amber-400">
-                Non contactés ({aProbleme.length})
+                <UiText>Non contactés (</UiText>{aProbleme.length})
               </h3>
               <ul className="mt-2 space-y-1 text-sm text-gray-700 dark:text-gray-300">
                 {aProbleme.map((d) => (
@@ -278,10 +280,10 @@ export default function RappelCheckinSettings() {
                 {l.soustraitantNom} → {l.destinataire}
                 {l.modeTest && <span className="ml-1 rounded bg-gray-200 dark:bg-gray-700 px-1 text-xs">TEST</span>}
                 {l.declencheur === 'MANUEL' && <span className="ml-1 rounded bg-gray-200 dark:bg-gray-700 px-1 text-xs">manuel</span>}
-                {l.statut === 'ECHEC' && <span className="ml-1 text-red-600">échec : {l.erreur}</span>}
+                {l.statut === 'ECHEC' && <span className="ml-1 text-red-600"><UiText>échec : </UiText>{l.erreur}</span>}
               </li>
             ))}
-            {etat.duJour.length === 0 && <li className="text-gray-500">Aucun rappel aujourd&apos;hui.</li>}
+            {etat.duJour.length === 0 && <li className="text-gray-500"><UiText>Aucun rappel aujourd&apos;hui.</UiText></li>}
           </ul>
         </div>
       </div>

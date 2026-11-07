@@ -1,4 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useMemo } from 'react'
 import { SoustraitantEtat, EtatAvancementSummary } from '@/types/etat-avancement'
 import { TrashIcon, PlusIcon, PencilSquareIcon } from '@heroicons/react/24/outline'
@@ -8,7 +11,7 @@ import NumericInput from '@/components/ui/NumericInput'
 import { roundToTwoDecimals } from '@/utils/calculs'
 
 // Fonction helper pour formater les montants avec 2 décimales
-const formatMontant = (value: number) => value.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+const formatMontant = (value: number) => value.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 interface EtatAvancementSoustraitantProps {
   etatAvancement: SoustraitantEtat
@@ -224,7 +227,7 @@ export default function EtatAvancementSoustraitant({
 
     } catch (error) {
       console.error('Erreur détaillée:', error)
-      toast.error('Erreur lors de la mise à jour de la quantité')
+      toast.error(tx("Erreur lors de la mise à jour de la quantité"))
     }
   }
 
@@ -279,10 +282,10 @@ export default function EtatAvancementSoustraitant({
         }
       })
 
-      toast.success('Avenant ajouté avec succès')
+      toast.success(tx("Avenant ajouté avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de l\'ajout de l\'avenant')
+      toast.error(tx("Erreur lors de l'ajout de l'avenant"))
     }
   }
 
@@ -376,7 +379,7 @@ export default function EtatAvancementSoustraitant({
 
     } catch (error) {
       console.error('Erreur lors de la mise à jour de l\'avenant:', error)
-      toast.error('Erreur lors de la mise à jour de l\'avenant')
+      toast.error(tx("Erreur lors de la mise à jour de l'avenant"))
     } finally {
       setIsLoading(false)
     }
@@ -407,18 +410,18 @@ export default function EtatAvancementSoustraitant({
       setIsEditingComments(false);
       setCommentaires(updatedEtat.commentaires || '');
       
-      toast.success('Commentaires enregistrés avec succès');
+      toast.success(tx("Commentaires enregistrés avec succès"));
       
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la mise à jour des commentaires')
+      toast.error(tx("Erreur lors de la mise à jour des commentaires"))
       setIsEditingComments(true);
     }
   }
 
   // Suppression d'avenant
   const handleDeleteAvenant = async (avenantId: number) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet avenant ?')) {
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer cet avenant ?"))) {
       return
     }
 
@@ -437,10 +440,10 @@ export default function EtatAvancementSoustraitant({
 
       // Mettre à jour l'état local
       setAvenants(avenants.filter(a => a.id !== avenantId))
-      toast.success('Avenant supprimé avec succès')
+      toast.success(tx("Avenant supprimé avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la suppression de l\'avenant')
+      toast.error(tx("Erreur lors de la suppression de l'avenant"))
     } finally {
       setIsLoading(false)
     }
@@ -450,10 +453,10 @@ export default function EtatAvancementSoustraitant({
     <div className="space-y-8">
       {/* Résumé financier */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-6 border border-blue-200 dark:border-blue-700">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Résumé financier</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4"><UiText>Résumé financier</UiText></h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Commande initiale</h3>
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Commande initiale</UiText></h3>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">
               {formatMontant(summary.totalCommandeInitiale.total)} €
             </p>
@@ -465,7 +468,7 @@ export default function EtatAvancementSoustraitant({
             </p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total général</h3>
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Total général</UiText></h3>
             <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
               {formatMontant(summary.totalGeneral.total)} €
             </p>
@@ -477,23 +480,23 @@ export default function EtatAvancementSoustraitant({
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Lignes de commande
-          </h2>
+            <UiText>Lignes de commande
+          </UiText></h2>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-900">
               <tr>
-                <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Article</th>
-                <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Unité</th>
+                <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Article</UiText></th>
+                <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Description</UiText></th>
+                <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Type</UiText></th>
+                <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Unité</UiText></th>
                 <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">P.U.</th>
-                <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Qté</th>
-                <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Précédent</th>
+                <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Qté</UiText></th>
+                <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Précédent</UiText></th>
                 <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">Actuel</th>
                 <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
-                <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Mont. Préc.</th>
+                <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Mont. Préc.</UiText></th>
                 <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">Mont. Act.</th>
                 <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Mont. Tot.</th>
               </tr>
@@ -537,9 +540,9 @@ export default function EtatAvancementSoustraitant({
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 text-center">{ligne.unite}</td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 text-right">{formatMontant(ligne.prixUnitaire)} €</td>
-                    <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 text-right">{ligne.quantite.toLocaleString('fr-FR')}</td>
+                    <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 text-right">{ligne.quantite.toLocaleString(intlLocale(getActiveLocale()))}</td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">
-                      {ligne.quantitePrecedente.toLocaleString('fr-FR')}
+                      {ligne.quantitePrecedente.toLocaleString(intlLocale(getActiveLocale()))}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/20 border-r border-blue-200 dark:border-blue-700 shadow-sm">
                       {!etatAvancement.estFinalise ? (
@@ -552,12 +555,12 @@ export default function EtatAvancementSoustraitant({
                         />
                       ) : (
                         <span className="font-bold text-center text-blue-800 dark:text-blue-300 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent block">
-                          {ligne.quantiteActuelle.toLocaleString('fr-FR')}
+                          {ligne.quantiteActuelle.toLocaleString(intlLocale(getActiveLocale()))}
                         </span>
                       )}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right font-medium">
-                      {ligne.quantiteTotale.toLocaleString('fr-FR')}
+                      {ligne.quantiteTotale.toLocaleString(intlLocale(getActiveLocale()))}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{formatMontant(ligne.montantPrecedent)} €</td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right font-medium">
@@ -586,8 +589,8 @@ export default function EtatAvancementSoustraitant({
               className="inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
             >
               <PlusIcon className="h-4 w-4 mr-2" />
-              Ajouter un avenant
-            </button>
+              <UiText>Ajouter un avenant
+            </UiText></button>
           )}
         </div>
         
@@ -596,19 +599,19 @@ export default function EtatAvancementSoustraitant({
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-900">
                 <tr>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Article</th>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                  <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                  <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Unité</th>
+                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Article</UiText></th>
+                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Description</UiText></th>
+                  <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Type</UiText></th>
+                  <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Unité</UiText></th>
                   <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">P.U.</th>
-                  <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Qté</th>
-                  <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Précédent</th>
+                  <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Qté</UiText></th>
+                  <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Précédent</UiText></th>
                   <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">Actuel</th>
                   <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
-                  <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Mont. Préc.</th>
+                  <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Mont. Préc.</UiText></th>
                   <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20">Mont. Act.</th>
                   <th className="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Mont. Tot.</th>
-                  <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                  <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Actions</UiText></th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -703,7 +706,7 @@ export default function EtatAvancementSoustraitant({
                           <option value="M2">M²</option>
                           <option value="M3">M³</option>
                           <option value="Heures">Heures</option>
-                          <option value="Pièces">Pièces</option>
+                          <option value="Pièces"><UiText>Pièces</UiText></option>
                           <option value="Fft">Forfait</option>
                         </select>
                       ) : (
@@ -734,12 +737,12 @@ export default function EtatAvancementSoustraitant({
                         />
                       ) : (
                         <span className="text-gray-700 dark:text-gray-300">
-                          {avenant.quantite.toLocaleString('fr-FR')}
+                          {avenant.quantite.toLocaleString(intlLocale(getActiveLocale()))}
                         </span>
                       )}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">
-                      {avenant.quantitePrecedente.toLocaleString('fr-FR')}
+                      {avenant.quantitePrecedente.toLocaleString(intlLocale(getActiveLocale()))}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/20 border-r border-green-200 dark:border-green-700 shadow-sm">
                       {!etatAvancement.estFinalise ? (
@@ -751,12 +754,12 @@ export default function EtatAvancementSoustraitant({
                         />
                       ) : (
                         <span className="font-bold text-center text-green-800 dark:text-green-300 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent block">
-                          {avenant.quantiteActuelle.toLocaleString('fr-FR')}
+                          {avenant.quantiteActuelle.toLocaleString(intlLocale(getActiveLocale()))}
                         </span>
                       )}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right font-medium">
-                      {avenant.quantiteTotale.toLocaleString('fr-FR')}
+                      {avenant.quantiteTotale.toLocaleString(intlLocale(getActiveLocale()))}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">
                       {formatMontant(avenant.montantPrecedent)} €
@@ -786,9 +789,9 @@ export default function EtatAvancementSoustraitant({
         ) : (
           <div className="p-8 text-center text-gray-500 dark:text-gray-400">
             <PlusIcon className="h-12 w-12 mx-auto mb-3 opacity-50" />
-            <p>Aucun avenant ajouté</p>
+            <p><UiText>Aucun avenant ajouté</UiText></p>
             {!etatAvancement.estFinalise && (
-              <p className="text-sm mt-1">Cliquez sur "Ajouter un avenant" pour commencer</p>
+              <p className="text-sm mt-1"><UiText>Cliquez sur "Ajouter un avenant" pour commencer</UiText></p>
             )}
           </div>
         )}
@@ -810,8 +813,8 @@ export default function EtatAvancementSoustraitant({
                   onClick={handleSaveComments}
                   className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-500 dark:bg-green-700 dark:hover:bg-green-600"
                 >
-                  Enregistrer
-                </button>
+                  <UiText>Enregistrer
+                </UiText></button>
                 <button
                   onClick={() => {
                     setCommentaires(etatAvancement.commentaires || '')
@@ -819,8 +822,8 @@ export default function EtatAvancementSoustraitant({
                   }}
                   className="bg-gray-500 text-white px-3 py-1 rounded text-sm hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
                 >
-                  Annuler
-                </button>
+                  <UiText>Annuler
+                </UiText></button>
               </div>
             ) : (
               <button
@@ -828,8 +831,8 @@ export default function EtatAvancementSoustraitant({
                 className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 flex items-center text-sm"
               >
                 <PencilSquareIcon className="h-4 w-4 mr-1" />
-                Modifier
-              </button>
+                <UiText>Modifier
+              </UiText></button>
             )
           )}
         </div>
@@ -847,7 +850,7 @@ export default function EtatAvancementSoustraitant({
               {commentaires ? (
                 <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{commentaires}</p>
               ) : (
-                <p className="text-gray-500 dark:text-gray-400 italic">Aucun commentaire</p>
+                <p className="text-gray-500 dark:text-gray-400 italic"><UiText>Aucun commentaire</UiText></p>
               )}
             </div>
           )}

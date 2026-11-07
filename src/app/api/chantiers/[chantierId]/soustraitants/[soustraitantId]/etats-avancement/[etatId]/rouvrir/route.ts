@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -12,10 +14,12 @@ type Params = {
 }
 
 export async function POST(request: NextRequest, props: Params) {
+  await bindRequestLocale()
   return await handleReouvrir(request, props);
 }
 
 export async function PUT(request: NextRequest, props: Params) {
+  await bindRequestLocale()
   return await handleReouvrir(request, props);
 }
 
@@ -24,7 +28,7 @@ async function handleReouvrir(request: NextRequest, props: Params) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   }
 
   const { soustraitantId, etatId } = params
@@ -42,7 +46,7 @@ async function handleReouvrir(request: NextRequest, props: Params) {
     })
     
     if (!userHasAccess) {
-      return NextResponse.json({ error: 'Accès non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Accès non autorisé' }, { status: 403 })
     }
     
     // Récupérer l'état d'avancement
@@ -54,11 +58,11 @@ async function handleReouvrir(request: NextRequest, props: Params) {
     })
     
     if (!etat) {
-      return NextResponse.json({ error: 'État d\'avancement non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'État d\'avancement non trouvé' }, { status: 404 })
     }
     
     if (!etat.estFinalise) {
-      return NextResponse.json({ error: 'Cet état d\'avancement n\'est pas finalisé' }, { status: 400 })
+      return localizedJson({ error: 'Cet état d\'avancement n\'est pas finalisé' }, { status: 400 })
     }
     
     // Rouvrir l'état d'avancement
@@ -82,9 +86,9 @@ async function handleReouvrir(request: NextRequest, props: Params) {
       avenants: etatRouvert.avenant_soustraitant_etat_avancement
     };
     
-    return NextResponse.json(formattedEtat)
+    return localizedJson(formattedEtat)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 } 

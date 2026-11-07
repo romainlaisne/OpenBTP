@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,9 +7,10 @@ import { prisma } from '@/lib/prisma/client'
 
 // GET: liste paginée/filtrée des tasks
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
 
     const { searchParams } = new URL(request.url)
     const from = searchParams.get('from')
@@ -52,25 +55,26 @@ export async function GET(request: NextRequest) {
       })
     ])
 
-    return NextResponse.json({
+    return localizedJson({
       data: tasks,
       meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) }
     })
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 // POST: création
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
 
     const body = await request.json()
     const { title, description, start, end, status, chantierId, savTicketId, ouvrierInterneIds, soustraitantIds } = body
 
-    if (!title || !start || !end) return NextResponse.json({ error: 'Champs requis manquants' }, { status: 400 })
+    if (!title || !start || !end) return localizedJson({ error: 'Champs requis manquants' }, { status: 400 })
 
     const created = await prisma.task.create({
       data: {
@@ -96,8 +100,8 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(created, { status: 201 })
+    return localizedJson(created, { status: 201 })
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { DepenseFormData, CATEGORIES_DEPENSE } from '@/types/depense'
 import { toast } from 'react-hot-toast'
@@ -54,7 +56,7 @@ export default function DepenseForm({
       setMontantInput(depense.montant > 0 ? depense.montant.toString() : '')
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la récupération de la dépense')
+      toast.error(tx("Erreur lors de la récupération de la dépense"))
     } finally {
       setLoading(false)
     }
@@ -101,14 +103,14 @@ export default function DepenseForm({
     
     // Validation des champs obligatoires
     if (!formData.date || !formData.description || !formData.categorie || montantInput === '') {
-      toast.error('Veuillez remplir tous les champs obligatoires')
+      toast.error(tx("Veuillez remplir tous les champs obligatoires"))
       return
     }
     
     // Validation du montant
     const montant = parseFloat(montantInput.replace(',', '.'))
     if (isNaN(montant) || montant <= 0) {
-      toast.error('Le montant doit être un nombre positif')
+      toast.error(tx("Le montant doit être un nombre positif"))
       return
     }
     
@@ -163,7 +165,7 @@ export default function DepenseForm({
   }
 
   if (loading && isEditing) {
-    return <div className="p-4 text-center">Chargement...</div>
+    return <div className="p-4 text-center"><UiText>Chargement...</UiText></div>
   }
 
   return (
@@ -171,7 +173,7 @@ export default function DepenseForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="date" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Date <span className="text-red-500">*</span>
+            <UiText>Date </UiText><span className="text-red-500">*</span>
           </label>
           <input
             type="date"
@@ -186,7 +188,7 @@ export default function DepenseForm({
         
         <div>
           <label htmlFor="montant" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Montant (€) <span className="text-red-500">*</span>
+            <UiText>Montant (€) </UiText><span className="text-red-500">*</span>
           </label>
           <input
             type="number"
@@ -205,7 +207,7 @@ export default function DepenseForm({
       
       <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Description <span className="text-red-500">*</span>
+          <UiText>Description </UiText><span className="text-red-500">*</span>
         </label>
         <textarea
           id="description"
@@ -220,7 +222,7 @@ export default function DepenseForm({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SelectField
-          label="Catégorie"
+          label={tx("Catégorie")}
           id="categorie"
           name="categorie"
           value={formData.categorie}
@@ -251,8 +253,8 @@ export default function DepenseForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="reference" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Référence
-          </label>
+            <UiText>Référence
+          </UiText></label>
           <input
             type="text"
             id="reference"
@@ -283,8 +285,8 @@ export default function DepenseForm({
           onClick={onCancel}
           className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
         >
-          Annuler
-        </button>
+          <UiText>Annuler
+        </UiText></button>
         <button
           type="submit"
           disabled={loading}

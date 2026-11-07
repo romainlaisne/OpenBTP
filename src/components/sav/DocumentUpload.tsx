@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useRef } from 'react'
 import { 
   DocumentIcon, 
@@ -135,7 +136,7 @@ export default function DocumentUpload({
         <ArrowUpTrayIcon className="mx-auto h-12 w-12 text-gray-400" />
         <div className="mt-2">
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Glissez-déposez vos documents ici ou{' '}
+            <UiText>Glissez-déposez vos documents ici ou</UiText>{' '}
             <button
               type="button"
               className="text-blue-600 hover:text-blue-500 underline"
@@ -145,7 +146,7 @@ export default function DocumentUpload({
             </button>
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            PDF, DOC, DOCX, XLS, XLSX, images jusqu&apos;à 50MB ({documents.length}/{maxDocuments} documents)
+            <UiText>PDF, DOC, DOCX, XLS, XLSX, images jusqu&apos;à 50MB (</UiText>{documents.length}/{maxDocuments} documents)
           </p>
         </div>
         
@@ -163,7 +164,7 @@ export default function DocumentUpload({
       {documents.length > 0 && (
         <div className="space-y-4">
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Documents ajoutés ({documents.length})
+            <UiText>Documents ajoutés (</UiText>{documents.length})
           </h4>
           
           <div className="space-y-3">
@@ -198,8 +199,8 @@ export default function DocumentUpload({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Type de document
-                        </label>
+                          <UiText>Type de document
+                        </UiText></label>
                         <select
                           value={document.type}
                           onChange={(e) => updateDocumentDetails(index, 'type', e.target.value as TypeDocumentSAV)}
@@ -228,8 +229,8 @@ export default function DocumentUpload({
                     
                     <div>
                       <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Description
-                      </label>
+                        <UiText>Description
+                      </UiText></label>
                       <textarea
                         rows={2}
                         value={document.description || ''}

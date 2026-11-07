@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 // Documents de la SOCIÉTÉ sous-traitante (extrait BCE, attestations ONSS /
 // fiscale, assurance RC, statuts…) : ajout, correction (type, date, précision)
 // et archivage — jamais de suppression, l'historique reste consultable.
@@ -8,7 +9,7 @@ import { UiText } from '@/contexts/LocaleContext'
 import { use, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import {
   PlusIcon, ArrowDownTrayIcon, ArrowLeftIcon, ExclamationCircleIcon, BuildingOfficeIcon,
   PencilSquareIcon, ArchiveBoxIcon, ChevronDownIcon, ChevronRightIcon, EyeIcon,
@@ -37,7 +38,7 @@ const btnSecondaire =
 const btnPrimaire =
   'px-4 py-2 text-sm font-medium text-white bg-blue-600 dark:bg-blue-500 border border-transparent rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50'
 
-const dateFr = (d: string) => format(new Date(d), 'dd/MM/yyyy', { locale: fr })
+const dateFr = (d: string) => format(new Date(d), 'dd/MM/yyyy', { locale: dateFnsLocale() })
 
 function Modale({ titre, children }: { titre: string; children: React.ReactNode }) {
   return (
@@ -58,8 +59,8 @@ function ChampsDocument(p: {
 }) {
   return (
     <>
-      <SelectField label="Type de document" id="type" name="type" required value={p.type} onChange={(e) => p.setType(e.target.value)} className="mt-1">
-        <option value="">Sélectionner un type</option>
+      <SelectField label={tx("Type de document")} id="type" name="type" required value={p.type} onChange={(e) => p.setType(e.target.value)} className="mt-1">
+        <option value=""><UiText>Sélectionner un type</UiText></option>
         {TYPES_DOCUMENT_SOCIETE.map((t) => (
           <option key={t.code} value={t.code}>{t.libelle}</option>
         ))}
@@ -99,7 +100,7 @@ function ModaleAjout({ onClose, onUpload, enCours }: { onClose: () => void; onUp
       >
         <ChampsDocument type={type} setType={setType} precision={precision} setPrecision={setPrecision} date={date} setDate={setDate} />
         <div>
-          <label htmlFor="file" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Fichier *</label>
+          <label htmlFor="file" className="block text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Fichier *</UiText></label>
           <input
             id="file"
             type="file"
@@ -108,7 +109,7 @@ function ModaleAjout({ onClose, onUpload, enCours }: { onClose: () => void; onUp
             onChange={(e) => setFichier(e.target.files?.[0] || null)}
             className="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300"
           />
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Un document du même type déjà en vigueur sera archivé (conservé).</p>
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400"><UiText>Un document du même type déjà en vigueur sera archivé (conservé).</UiText></p>
         </div>
         <div className="mt-5 flex justify-end space-x-3">
           <button type="button" onClick={onClose} disabled={enCours} className={btnSecondaire}><UiText>Annuler</UiText></button>
@@ -208,7 +209,7 @@ export default function DocumentsSocietePage(props: { params: Promise<{ id: stri
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <PageHeader
         title={`Documents de la société${nom ? ` — ${nom}` : ''}`}
-        subtitle="Extrait BCE, attestations ONSS et fiscale, assurance RC, statuts…"
+        subtitle={tx("Extrait BCE, attestations ONSS et fiscale, assurance RC, statuts…")}
         icon={BuildingOfficeIcon}
         actions={
           <div className="flex gap-2">
@@ -240,7 +241,7 @@ export default function DocumentsSocietePage(props: { params: Promise<{ id: stri
               {chargement ? (
                 <tr><td colSpan={4} className="px-3 py-6 text-sm text-gray-500"><UiText>Chargement…</UiText></td></tr>
               ) : enVigueur.length === 0 ? (
-                <tr><td colSpan={4} className="px-3 py-6 text-sm text-gray-500 dark:text-gray-400">Aucun document de société en vigueur.</td></tr>
+                <tr><td colSpan={4} className="px-3 py-6 text-sm text-gray-500 dark:text-gray-400"><UiText>Aucun document de société en vigueur.</UiText></td></tr>
               ) : (
                 enVigueur.map((d) => (
                   <tr key={d.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
@@ -258,10 +259,10 @@ export default function DocumentsSocietePage(props: { params: Promise<{ id: stri
                         <button onClick={() => setApercu(d)} className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" title="Voir">
                           <EyeIcon className="h-5 w-5" />
                         </button>
-                        <a href={d.url} download={d.nom} className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" title="Télécharger">
+                        <a href={d.url} download={d.nom} className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" title={tx("Télécharger")}>
                           <ArrowDownTrayIcon className="h-5 w-5" />
                         </a>
-                        <button onClick={() => setEdition(d)} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" title="Modifier le type, la date ou la précision">
+                        <button onClick={() => setEdition(d)} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" title={tx("Modifier le type, la date ou la précision")}>
                           <PencilSquareIcon className="h-5 w-5" />
                         </button>
                         <button onClick={() => setAArchiver(d)} className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300" title="Archiver">
@@ -280,7 +281,7 @@ export default function DocumentsSocietePage(props: { params: Promise<{ id: stri
           <div className="bg-white/80 dark:bg-gray-800/80 rounded-xl shadow border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
             <button onClick={() => setVoirArchives(!voirArchives)} className="w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
               {voirArchives ? <ChevronDownIcon className="h-4 w-4" /> : <ChevronRightIcon className="h-4 w-4" />}
-              Historique archivé ({archives.length})
+              <UiText>Historique archivé (</UiText>{archives.length})
             </button>
             {voirArchives && (
               <ul className="divide-y divide-gray-100 dark:divide-gray-700 border-t border-gray-100 dark:border-gray-700">
@@ -289,7 +290,7 @@ export default function DocumentsSocietePage(props: { params: Promise<{ id: stri
                     <span className="flex-1 text-gray-700 dark:text-gray-300">
                       {libelleType(d.type)}{d.precision ? ` (${d.precision})` : ''}
                       <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
-                        ajouté le {dateFr(d.createdAt)}{d.archiveLe ? ` · archivé le ${dateFr(d.archiveLe)}` : ''}
+                        <UiText>ajouté le </UiText>{dateFr(d.createdAt)}{d.archiveLe ? ` · archivé le ${dateFr(d.archiveLe)}` : ''}
                         {d.dateExpiration ? ` · valable jusqu'au ${dateFr(d.dateExpiration)}` : ''}
                       </span>
                     </span>
@@ -331,8 +332,8 @@ export default function DocumentsSocietePage(props: { params: Promise<{ id: stri
       {aArchiver && (
         <Modale titre="Archiver ce document ?">
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            « {libelleType(aArchiver.type)} » ne sera plus en vigueur. Il est conservé dans l&apos;historique (et dans _Archives sur le NAS), pas supprimé.
-          </p>
+            « {libelleType(aArchiver.type)} <UiText>» ne sera plus en vigueur. Il est conservé dans l&apos;historique (et dans _Archives sur le NAS), pas supprimé.
+          </UiText></p>
           <div className="mt-4 flex justify-end space-x-3">
             <button onClick={() => setAArchiver(null)} disabled={enCours} className={btnSecondaire}><UiText>Annuler</UiText></button>
             <button

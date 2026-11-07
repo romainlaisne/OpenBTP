@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
@@ -64,12 +65,12 @@ export default function EditChoixClientPage({ params }: { params: Promise<{ id: 
       if (data.success) {
         setChoixClient(data.choixClient)
       } else {
-        toast.error('Choix client non trouvé')
+        toast.error(tx("Choix client non trouvé"))
         router.push('/choix-clients')
       }
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors du chargement')
+      toast.error(tx("Erreur lors du chargement"))
       router.push('/choix-clients')
     } finally {
       setLoading(false)
@@ -127,14 +128,14 @@ export default function EditChoixClientPage({ params }: { params: Promise<{ id: 
       const result = await response.json()
       
       if (result.success) {
-        toast.success('Choix client mis à jour avec succès')
+        toast.success(tx("Choix client mis à jour avec succès"))
         setChoixClient(result.choixClient)
       } else {
         throw new Error(result.error || 'Erreur lors de la mise à jour')
       }
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la mise à jour')
+      toast.error(tx("Erreur lors de la mise à jour"))
     } finally {
       setSaving(false)
     }
@@ -160,7 +161,7 @@ export default function EditChoixClientPage({ params }: { params: Promise<{ id: 
       <Toaster position="top-right" />
 
       <PageHeader
-        title="Modifier le Choix Client"
+        title={tx("Modifier le Choix Client")}
         subtitle={choixClient.nomClient}
         icon={DocumentTextIcon}
         badgeColor="from-purple-600 via-pink-600 to-rose-700"
@@ -169,7 +170,7 @@ export default function EditChoixClientPage({ params }: { params: Promise<{ id: 
           <button
             onClick={() => router.push('/choix-clients')}
             className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-            title="Retour à la liste des choix clients"
+            title={tx("Retour à la liste des choix clients")}
           >
             <ArrowLeftIcon className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>

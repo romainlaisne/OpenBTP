@@ -1,16 +1,19 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { signPortalSession } from '@/app/public/portail/auth'
 import bcrypt from 'bcryptjs'
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const body = await request.json()
     const { pin } = body as { pin: string }
 
     const codePIN = String(pin || '').replace(/\D/g, '')
     if (!codePIN || codePIN.length < 4) {
-      return NextResponse.json({ error: 'PIN invalide' }, { status: 400 })
+      return localizedJson({ error: 'PIN invalide' }, { status: 400 })
     }
 
     // Avec des PINs hachés, on ne peut pas filtrer par valeur directement.
@@ -28,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!access) {
-      return NextResponse.json({ error: 'PIN invalide' }, { status: 401 })
+      return localizedJson({ error: 'PIN invalide' }, { status: 401 })
     }
 
     const magasinier = await prisma.magasinier.findUnique({
@@ -37,10 +40,10 @@ export async function POST(request: NextRequest) {
     })
 
     if (!magasinier || !magasinier.actif) {
-      return NextResponse.json({ error: 'PIN invalide' }, { status: 401 })
+      return localizedJson({ error: 'PIN invalide' }, { status: 401 })
     }
 
-    const res = NextResponse.json({ ok: true, magasinierId: magasinier.id, nom: magasinier.nom })
+    const res = localizedJson({ ok: true, magasinierId: magasinier.id, nom: magasinier.nom })
     const value = signPortalSession('MAGASINIER', magasinier.id)
 
     res.cookies.set('portalSession', value, {
@@ -54,6 +57,6 @@ export async function POST(request: NextRequest) {
     return res
   } catch (error) {
     console.error('Erreur login magasinier:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

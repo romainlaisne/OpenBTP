@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { TrashIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 
@@ -145,8 +147,8 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
           {/* Couleur de repérage */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Couleur de repérage sur le plan
-            </label>
+              <UiText>Couleur de repérage sur le plan
+            </UiText></label>
             <div className="flex flex-wrap gap-2">
               {paletteColors.map((color) => (
                 <button
@@ -204,7 +206,7 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
                 value={nouvelleLocalisation}
                 onChange={(e) => setNouvelleLocalisation(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddLocalisation())}
-                placeholder="Ajouter une localisation personnalisée"
+                placeholder={tx("Ajouter une localisation personnalisée")}
                 className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
               />
               <button
@@ -212,16 +214,16 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
                 onClick={handleAddLocalisation}
                 className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm"
               >
-                Ajouter
-              </button>
+                <UiText>Ajouter
+              </UiText></button>
             </div>
           </div>
 
           {/* Type de pose */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Type
-            </label>
+              <UiText>Type
+            </UiText></label>
             <div className="flex gap-4">
               {[
                 { value: 'SOL', label: 'Sol' },
@@ -273,8 +275,8 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Modèle *
-              </label>
+                <UiText>Modèle *
+              </UiText></label>
               <input
                 type="text"
                 value={detail.modele}
@@ -286,8 +288,8 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Référence
-              </label>
+                <UiText>Référence
+              </UiText></label>
               <input
                 type="text"
                 value={detail.reference}
@@ -317,7 +319,7 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
                 onChange={(e) => handleFieldChange('finition', e.target.value || null)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
-                <option value="">Sélectionner...</option>
+                <option value=""><UiText>Sélectionner...</UiText></option>
                 {FINITIONS.map((f) => (
                   <option key={f.value} value={f.value}>{f.label}</option>
                 ))}
@@ -355,8 +357,8 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Épaisseur (mm)
-              </label>
+                <UiText>Épaisseur (mm)
+              </UiText></label>
               <input
                 type="number"
                 step="0.01"
@@ -370,8 +372,8 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
           {/* Surface */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Surface estimée (m²)
-            </label>
+              <UiText>Surface estimée (m²)
+            </UiText></label>
             <input
               type="number"
               step="0.01"
@@ -417,7 +419,7 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
                 onChange={(e) => handleFieldChange('typeJoint', e.target.value || null)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
-                <option value="">Sélectionner...</option>
+                <option value=""><UiText>Sélectionner...</UiText></option>
                 {TYPES_JOINT.map((t) => (
                   <option key={t.value} value={t.value}>{t.label}</option>
                 ))}
@@ -456,8 +458,8 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Particularités de pose
-            </label>
+              <UiText>Particularités de pose
+            </UiText></label>
             <textarea
               value={detail.particularitesPose}
               onChange={(e) => handleFieldChange('particularitesPose', e.target.value)}
@@ -469,8 +471,8 @@ export default function DetailChoixCard({ detail, index, onUpdate, onDelete, pal
           {/* Notes */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Notes
-            </label>
+              <UiText>Notes
+            </UiText></label>
             <textarea
               value={detail.notes}
               onChange={(e) => handleFieldChange('notes', e.target.value)}

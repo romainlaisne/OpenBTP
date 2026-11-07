@@ -1,3 +1,5 @@
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { 
   PlusIcon, 
@@ -100,7 +102,7 @@ export default function AdminTaskTypesManager() {
 
   // Delete task type
   const handleDelete = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce type de tâche ?')) {
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer ce type de tâche ?"))) {
       return
     }
     
@@ -228,7 +230,7 @@ export default function AdminTaskTypesManager() {
   }
 
   if (loading) {
-    return <div className="p-6 text-center">Chargement des types de tâches...</div>
+    return <div className="p-6 text-center"><UiText>Chargement des types de tâches...</UiText></div>
   }
 
   return (
@@ -240,20 +242,20 @@ export default function AdminTaskTypesManager() {
       )}
       
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-medium dark:text-white">Types de tâches administratives</h3>
+        <h3 className="text-lg font-medium dark:text-white"><UiText>Types de tâches administratives</UiText></h3>
         <button
           onClick={handleAdd}
           className="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600"
         >
           <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
-          Ajouter un type
-        </button>
+          <UiText>Ajouter un type
+        </UiText></button>
       </div>
       
       {taskTypes.length === 0 ? (
         <div className="text-center py-4 text-gray-500 dark:text-gray-400">
-          Aucun type de tâche administrative n&apos;a été défini
-        </div>
+          <UiText>Aucun type de tâche administrative n&apos;a été défini
+        </UiText></div>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -263,20 +265,20 @@ export default function AdminTaskTypesManager() {
                   Ordre
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Type
-                </th>
+                  <UiText>Type
+                </UiText></th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Libellé
-                </th>
+                  <UiText>Libellé
+                </UiText></th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Catégorie
-                </th>
+                  <UiText>Catégorie
+                </UiText></th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Statut
-                </th>
+                  <UiText>Statut
+                </UiText></th>
                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Actions
-                </th>
+                  <UiText>Actions
+                </UiText></th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -339,14 +341,14 @@ export default function AdminTaskTypesManager() {
                       <button
                         onClick={() => handleEdit(type)}
                         className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
-                        title="Modifier"
+                        title={tx("Modifier")}
                       >
                         <PencilIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handleDelete(type.id)}
                         className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                        title="Supprimer"
+                        title={tx("Supprimer")}
                       >
                         <TrashIcon className="h-5 w-5" />
                       </button>
@@ -379,7 +381,7 @@ export default function AdminTaskTypesManager() {
                   disabled={!!editingType}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-600"
                   required
-                  placeholder="declaration_chantier"
+                  placeholder={tx("declaration_chantier")}
                 />
                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                   Format: lettres minuscules, chiffres et underscore uniquement
@@ -388,22 +390,22 @@ export default function AdminTaskTypesManager() {
               
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Libellé (affiché à l&apos;utilisateur)
-                </label>
+                  <UiText>Libellé (affiché à l&apos;utilisateur)
+                </UiText></label>
                 <input
                   type="text"
                   value={formData.label}
                   onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-white"
                   required
-                  placeholder="Déclaration de chantier"
+                  placeholder={tx("Déclaration de chantier")}
                 />
               </div>
               
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Catégorie
-                </label>
+                  <UiText>Catégorie
+                </UiText></label>
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -412,7 +414,7 @@ export default function AdminTaskTypesManager() {
                   <option value="administrative">Administrative</option>
                   <option value="technique">Technique</option>
                   <option value="juridique">Juridique</option>
-                  <option value="securite">Sécurité</option>
+                  <option value="securite"><UiText>Sécurité</UiText></option>
                   <option value="autre">Autre</option>
                 </select>
               </div>
@@ -437,8 +439,8 @@ export default function AdminTaskTypesManager() {
                   onClick={() => setIsModalOpen(false)}
                   className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
-                  Annuler
-                </button>
+                  <UiText>Annuler
+                </UiText></button>
                 <button
                   type="submit"
                   className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600"

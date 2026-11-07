@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 
 interface DetailChoix {
   numeroChoix: number
@@ -375,7 +375,7 @@ export function generateChoixClientHTML(data: ChoixClientData): string {
     <!-- Titre -->
     <div class="document-title">
       <h1>Récapitulatif des Choix Client</h1>
-      <div class="subtitle">Document généré le ${format(new Date(), 'dd MMMM yyyy', { locale: fr })}</div>
+      <div class="subtitle">Document généré le ${format(new Date(), 'dd MMMM yyyy', { locale: dateFnsLocale() })}</div>
     </div>
 
     <!-- Informations client -->
@@ -400,7 +400,7 @@ export function generateChoixClientHTML(data: ChoixClientData): string {
         ` : ''}
         <div class="info-item">
           <div class="info-label">Date de visite</div>
-          <div class="info-value">${format(new Date(data.dateVisite), 'dd MMMM yyyy', { locale: fr })}</div>
+          <div class="info-value">${format(new Date(data.dateVisite), 'dd MMMM yyyy', { locale: dateFnsLocale() })}</div>
         </div>
         <div class="info-item">
           <div class="info-label">Statut</div>

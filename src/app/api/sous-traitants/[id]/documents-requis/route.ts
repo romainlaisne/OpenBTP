@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Documents exigés pour un sous-traitant (personnes et société).
 // PUT { ouvrier?: string[] | null, societe?: string[] | null } — null = règle par défaut.
 
@@ -8,8 +10,9 @@ import { prisma } from '@/lib/prisma/client'
 import { CODES_OUVRIER, CODES_SOCIETE } from '@/lib/documents/types'
 
 export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
-  if (!session?.user) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  if (!session?.user) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   const { id } = await context.params
   const body = await request.json().catch(() => ({}))
   const data: Record<string, string | null> = {}
@@ -22,10 +25,10 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
       data[champ] = null
       continue
     }
-    if (!Array.isArray(body[cle])) return NextResponse.json({ error: `${cle} doit être une liste` }, { status: 400 })
+    if (!Array.isArray(body[cle])) return localizedJson({ error: `${cle} doit être une liste` }, { status: 400 })
     const liste = [...new Set((body[cle] as unknown[]).map(String))].filter((c) => (codes as readonly string[]).includes(c))
     data[champ] = JSON.stringify(liste)
   }
   await prisma.soustraitant.update({ where: { id }, data })
-  return NextResponse.json({ ok: true })
+  return localizedJson({ ok: true })
 }

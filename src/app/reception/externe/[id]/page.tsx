@@ -1,11 +1,13 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ClipboardDocumentCheckIcon, LockClosedIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 
 interface RemarqueProps {
   id: string
@@ -141,11 +143,11 @@ export default function ExternalReceptionPage({
               <ClipboardDocumentCheckIcon className="h-12 w-12 text-red-500" />
             </div>
             <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">
-              Accès à la réception
-            </h2>
+              <UiText>Accès à la réception
+            </UiText></h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              Veuillez entrer le code PIN pour accéder aux remarques de réception
-            </p>
+              <UiText>Veuillez entrer le code PIN pour accéder aux remarques de réception
+            </UiText></p>
             
             {error && (
               <div className="mt-4 rounded-md bg-red-50 p-4">
@@ -195,8 +197,8 @@ export default function ExternalReceptionPage({
                   {isVerifying ? (
                     <>
                       <ArrowPathIcon className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" />
-                      Vérification...
-                    </>
+                      <UiText>Vérification...
+                    </UiText></>
                   ) : (
                     'Accéder à la réception'
                   )}
@@ -221,8 +223,8 @@ export default function ExternalReceptionPage({
     return (
       <div className="min-h-screen flex justify-center items-center flex-col">
         <ClipboardDocumentCheckIcon className="h-16 w-16 text-red-500 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900">Réception non trouvée</h2>
-        <p className="mt-2 text-gray-600">La réception que vous recherchez n&apos;existe pas ou a été supprimée.</p>
+        <h2 className="text-2xl font-bold text-gray-900"><UiText>Réception non trouvée</UiText></h2>
+        <p className="mt-2 text-gray-600"><UiText>La réception que vous recherchez n&apos;existe pas ou a été supprimée.</UiText></p>
       </div>
     )
   }
@@ -267,7 +269,7 @@ export default function ExternalReceptionPage({
         return "Date non disponible";
       }
       
-      return format(date, 'dd MMMM yyyy', { locale: fr });
+      return format(date, 'dd MMMM yyyy', { locale: dateFnsLocale() });
     } catch (error) {
       console.error("Erreur lors du formatage de la date externe:", error, "pour la valeur:", dateString);
       return "Date non disponible";
@@ -282,7 +284,7 @@ export default function ExternalReceptionPage({
             <ClipboardDocumentCheckIcon className="h-8 w-8 text-red-500 mr-3" />
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                Réception - {reception.chantier.nomChantier}
+                <UiText>Réception - </UiText>{reception.chantier.nomChantier}
               </h1>
               <p className="text-sm text-gray-500">
                 {reception.chantier.adresseChantier}
@@ -294,11 +296,11 @@ export default function ExternalReceptionPage({
 
       <main className="max-w-[1600px] mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <div className="bg-white shadow rounded-lg p-6 mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Informations de la réception</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-4"><UiText>Informations de la réception</UiText></h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <p className="text-sm font-medium text-gray-500">Date de création</p>
+              <p className="text-sm font-medium text-gray-500"><UiText>Date de création</UiText></p>
               <p className="mt-1">{formatDate(reception.dateCreation)}</p>
             </div>
             <div>
@@ -306,7 +308,7 @@ export default function ExternalReceptionPage({
               <p className="mt-1">{formatDate(reception.dateLimite)}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">État</p>
+              <p className="text-sm font-medium text-gray-500"><UiText>État</UiText></p>
               <p className="mt-1">
                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                   reception.estFinalise 
@@ -318,20 +320,20 @@ export default function ExternalReceptionPage({
               </p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Créé par</p>
+              <p className="text-sm font-medium text-gray-500"><UiText>Créé par</UiText></p>
               <p className="mt-1">{reception.createdBy.name || reception.createdBy.email}</p>
             </div>
           </div>
 
           <div className="mt-6">
-            <h3 className="text-sm font-medium text-gray-500 mb-2">Progression de résolution</h3>
+            <h3 className="text-sm font-medium text-gray-500 mb-2"><UiText>Progression de résolution</UiText></h3>
             <div className="w-full bg-gray-200 rounded-full h-2.5">
               <div 
                 className={`h-2.5 rounded-full ${percentResolved === 100 ? 'bg-green-600' : 'bg-blue-600'}`}
                 style={{ width: `${percentResolved}%` }}
               ></div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">{resolvedRemarques} sur {totalRemarques} remarques résolues</p>
+            <p className="text-xs text-gray-500 mt-1">{resolvedRemarques} sur {totalRemarques} <UiText>remarques résolues</UiText></p>
           </div>
         </div>
 
@@ -340,7 +342,7 @@ export default function ExternalReceptionPage({
           
           {remarques.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500">Aucune remarque n&apos;a été ajoutée pour cette réception.</p>
+              <p className="text-gray-500"><UiText>Aucune remarque n&apos;a été ajoutée pour cette réception.</UiText></p>
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
@@ -364,13 +366,13 @@ export default function ExternalReceptionPage({
                             <div key={photo.id} className="flex-shrink-0">
                               <Image 
                                 src={photo.url} 
-                                alt="Photo de la remarque" 
+                                alt={tx("Photo de la remarque")} 
                                 className={`h-24 w-24 object-cover rounded-md ${photo.estPreuve ? 'border-2 border-green-500' : ''}`} 
                                 width={96}
                                 height={96}
                               />
                               {photo.estPreuve && (
-                                <span className="text-xs text-green-600 mt-1 block">Preuve de résolution</span>
+                                <span className="text-xs text-green-600 mt-1 block"><UiText>Preuve de résolution</UiText></span>
                               )}
                             </div>
                           ))}
@@ -379,7 +381,7 @@ export default function ExternalReceptionPage({
                       
                       {remarque.tags && remarque.tags.length > 0 && (
                         <div className="mt-2">
-                          <p className="text-xs text-gray-500 mb-1">Assigné à:</p>
+                          <p className="text-xs text-gray-500 mb-1"><UiText>Assigné à:</UiText></p>
                           <div className="flex flex-wrap gap-1">
                             {remarque.tags.map((tag) => (
                               <span 
@@ -395,13 +397,13 @@ export default function ExternalReceptionPage({
                       
                       {remarque.estResolue && (
                         <div className="mt-2 text-sm text-green-600">
-                          <p>Résolu le {remarque.dateResolution ? formatDate(remarque.dateResolution) : 'Date non disponible'}</p>
+                          <p><UiText>Résolu le </UiText>{remarque.dateResolution ? formatDate(remarque.dateResolution) : 'Date non disponible'}</p>
                         </div>
                       )}
                       
                       {remarque.estRejetee && remarque.raisonRejet && (
                         <div className="mt-2 text-sm text-red-600">
-                          <p>Rejeté: {remarque.raisonRejet}</p>
+                          <p><UiText>Rejeté: </UiText>{remarque.raisonRejet}</p>
                         </div>
                       )}
                     </div>

@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback } from 'react'
 import { 
   DocumentTextIcon, 
@@ -550,7 +552,7 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
                       maxLength={20}
                       style={{ width: '120px', minWidth: '120px', maxWidth: '120px' }}
                       className="px-1.5 py-0.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white mr-2"
-                      title="Numéro du poste du cahier des charges (max 20 caractères)"
+                      title={tx("Numéro du poste du cahier des charges (max 20 caractères)")}
                     />
                   )}
                   
@@ -591,7 +593,7 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
                       style={{ width: '150px', minWidth: '150px', maxWidth: '150px' }}
                       className="px-2 py-0.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ml-2"
                     >
-                      <option value="">Sous-traitant</option>
+                      <option value=""><UiText>Sous-traitant</UiText></option>
                       {soustraitants.map(st => (
                         <option key={st.id} value={st.id}>{st.nom}</option>
                       ))}
@@ -610,7 +612,7 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600 dark:text-gray-300">Chargement des fiches techniques...</span>
+        <span className="ml-2 text-gray-600 dark:text-gray-300"><UiText>Chargement des fiches techniques...</UiText></span>
       </div>
     )
   }
@@ -626,7 +628,7 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
             type="text"
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
-            placeholder="Rechercher une fiche technique..."
+            placeholder={tx("Rechercher une fiche technique...")}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
           {searchFilter && (
@@ -646,8 +648,8 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
           <div className="text-center py-12">
             <FolderIcon className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
             <p className="text-gray-500 dark:text-gray-400">
-              Aucune fiche technique disponible
-            </p>
+              <UiText>Aucune fiche technique disponible
+            </UiText></p>
             <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
               Ajoutez des fiches techniques via la page de Configuration
             </p>
@@ -656,8 +658,8 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
           <div className="text-center py-12">
             <MagnifyingGlassIcon className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
             <p className="text-gray-500 dark:text-gray-400">
-              Aucune fiche technique ne correspond à votre recherche
-            </p>
+              <UiText>Aucune fiche technique ne correspond à votre recherche
+            </UiText></p>
           </div>
         ) : (
           <div className="space-y-1">
@@ -735,7 +737,7 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
 
   // Gérer la suppression du dossier personnalisé
   const handleClearCustom = async () => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer le dossier personnalisé de fiches techniques ? Cette action est irréversible.')) {
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer le dossier personnalisé de fiches techniques ? Cette action est irréversible."))) {
       return
     }
 
@@ -781,8 +783,8 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex-1">
             <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
-              Dossier de fiches techniques
-            </h3>
+              <UiText>Dossier de fiches techniques
+            </UiText></h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {hasCustomFiches 
                 ? 'Ce chantier utilise un dossier personnalisé de fiches techniques'
@@ -797,8 +799,8 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Import en cours...
-                </>
+                  <UiText>Import en cours...
+                </UiText></>
               ) : (
                 <>
                   <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
@@ -825,8 +827,8 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Suppression...
-                  </>
+                    <UiText>Suppression...
+                  </UiText></>
                 ) : (
                   'Vider le dossier'
                 )}
@@ -869,7 +871,7 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
               <div className="flex items-center gap-3">
                 <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                   <DocumentTextIcon className="w-6 h-6 mr-3 text-emerald-900 dark:text-white" />
-                  <span className="font-bold text-xl text-emerald-900 dark:text-white">📋 Sélection des Fiches Techniques</span>
+                  <span className="font-bold text-xl text-emerald-900 dark:text-white"><UiText>📋 Sélection des Fiches Techniques</UiText></span>
                 </div>
                 <button
                   onClick={() => {
@@ -878,7 +880,7 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
                     window.open(url, '_blank', 'noopener,noreferrer')
                   }}
                   className="inline-flex items-center px-3 py-2 bg-white/20 backdrop-blur-sm rounded-lg shadow-md ring-1 ring-white/30 hover:bg-white/30 transition-all duration-200"
-                  title="Ouvrir en mode plein écran (nouvel onglet)"
+                  title={tx("Ouvrir en mode plein écran (nouvel onglet)")}
                 >
                   <ArrowsPointingOutIcon className="w-5 h-5 text-emerald-900 dark:text-white" />
                 </button>
@@ -886,8 +888,8 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
             </div>
 
             <p className="text-sm text-emerald-800 dark:text-white/90">
-              Sélectionnez les fiches techniques à inclure dans votre dossier. Un PDF sera généré avec une page de garde et une table des matières.
-            </p>
+              <UiText>Sélectionnez les fiches techniques à inclure dans votre dossier. Un PDF sera généré avec une page de garde et une table des matières.
+            </UiText></p>
           </div>
         </div>
 
@@ -902,13 +904,13 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
                 className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">
-                Inclure la table des matières
-              </span>
+                <UiText>Inclure la table des matières
+              </UiText></span>
             </label>
 
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                {selectedFiches.size} fiche{selectedFiches.size > 1 ? 's' : ''} sélectionnée{selectedFiches.size > 1 ? 's' : ''}
+                {selectedFiches.size} fiche{selectedFiches.size > 1 ? 's' : ''} <UiText>sélectionnée</UiText>{selectedFiches.size > 1 ? 's' : ''}
               </span>
               <button
                 onClick={handleGeneratePDF}
@@ -921,13 +923,13 @@ export default function FichesTechniquesTabContent({ chantierId }: FichesTechniq
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Génération...
-                  </>
+                    <UiText>Génération...
+                  </UiText></>
                 ) : (
                   <>
                     <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
-                    Générer le dossier PDF
-                  </>
+                    <UiText>Générer le dossier PDF
+                  </UiText></>
                 )}
               </button>
             </div>

@@ -1,3 +1,4 @@
+import { tx } from '@/lib/i18n/translate'
 import { Heading } from "@/components/ui/Heading";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
@@ -15,8 +16,8 @@ export default async function DocumentCategoriesPage() {
       <div className="flex-1 space-y-4 p-8 pt-6">
         <div className="flex items-center justify-between">
           <Heading
-            title="Catégories de Documents"
-            description="Gérez les catégories utilisées pour classer les documents."
+            title={tx("Catégories de Documents")}
+            description={tx("Gérez les catégories utilisées pour classer les documents.")}
           />
           {/* Bouton d'ajout sera dans le composant client */}
         </div>

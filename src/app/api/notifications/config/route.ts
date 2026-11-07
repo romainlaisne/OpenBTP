@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,10 +7,11 @@ import { prisma } from '@/lib/prisma/client'
 
 // GET /api/notifications/config - Récupérer la configuration de l'utilisateur
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -16,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     // Seul un admin peut voir la config des autres utilisateurs
     if (userId !== session.user.id && session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     const configs = await prisma.notificationUserConfig.findMany({
@@ -33,10 +36,10 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(configs)
+    return localizedJson(configs)
   } catch (error) {
     console.error('Erreur lors de la récupération de la configuration:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de la configuration' },
       { status: 500 }
     )
@@ -45,10 +48,11 @@ export async function GET(request: NextRequest) {
 
 // POST /api/notifications/config - Mettre à jour la configuration de l'utilisateur
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -58,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     // Seul un admin peut modifier la config des autres utilisateurs
     if (targetUserId !== session.user.id && session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     // Vérifier que le type de notification existe
@@ -67,7 +71,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (!notificationType) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Type de notification non trouvé' },
         { status: 404 }
       )
@@ -102,10 +106,10 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(config)
+    return localizedJson(config)
   } catch (error) {
     console.error('Erreur lors de la mise à jour de la configuration:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la configuration' },
       { status: 500 }
     )
@@ -114,10 +118,11 @@ export async function POST(request: NextRequest) {
 
 // PUT /api/notifications/config - Mettre à jour la configuration en masse
 export async function PUT(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -134,7 +139,7 @@ export async function PUT(request: NextRequest) {
 
     // Seul un admin peut modifier la config des autres utilisateurs
     if (targetUserId !== session.user.id && session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     // Mettre à jour toutes les configurations
@@ -161,13 +166,13 @@ export async function PUT(request: NextRequest) {
       )
     )
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       updated: results.length,
     })
   } catch (error) {
     console.error('Erreur lors de la mise à jour en masse:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la configuration' },
       { status: 500 }
     )

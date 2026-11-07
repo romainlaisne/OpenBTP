@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -17,6 +19,7 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ chantierId: string; etatId: string; avenantId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   const chantierReadableId = params.chantierId;
   const etatNumero = parseInt(params.etatId);
@@ -25,7 +28,7 @@ export async function PUT(
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -37,7 +40,7 @@ export async function PUT(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour PUT avenant' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour PUT avenant' }, { status: 404 });
     }
 
     const body = await request.json()
@@ -66,14 +69,14 @@ export async function PUT(
     })
 
     if (!etatAvancement) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
     }
 
     if (etatAvancement.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'L\'état d\'avancement est finalisé' },
         { status: 400 }
       )
@@ -88,7 +91,7 @@ export async function PUT(
     })
 
     if (!avenant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Avenant non trouvé' },
         { status: 404 }
       )
@@ -102,10 +105,10 @@ export async function PUT(
       data: dataToUpdate
     })
 
-    return NextResponse.json(updatedAvenant)
+    return localizedJson(updatedAvenant)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de l\'avenant' },
       { status: 500 }
     )
@@ -117,6 +120,7 @@ export async function DELETE(
   request: Request,
   props: { params: Promise<{ chantierId: string; etatId: string; avenantId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   const chantierReadableId = params.chantierId;
   const etatNumero = parseInt(params.etatId);
@@ -125,7 +129,7 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -137,7 +141,7 @@ export async function DELETE(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour DELETE avenant' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour DELETE avenant' }, { status: 404 });
     }
 
     // Vérifier que l'état d'avancement existe et appartient au chantier
@@ -149,14 +153,14 @@ export async function DELETE(
     })
 
     if (!etatAvancement) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
     }
 
     if (etatAvancement.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'L\'état d\'avancement est finalisé' },
         { status: 400 }
       )
@@ -171,7 +175,7 @@ export async function DELETE(
     })
 
     if (!avenant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Avenant non trouvé' },
         { status: 404 }
       )
@@ -184,10 +188,10 @@ export async function DELETE(
       }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de l\'avenant' },
       { status: 500 }
     )

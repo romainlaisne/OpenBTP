@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -86,7 +88,7 @@ export default function UserModal({
           <form onSubmit={handleSubmit} className="space-y-4">
             <FormInput
               id="name"
-              label="Nom"
+              label={tx("Nom")}
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
             />
@@ -94,7 +96,7 @@ export default function UserModal({
             <FormInput
               id="email"
               type="email"
-              label="Email"
+              label={tx("Email")}
               required
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
@@ -104,7 +106,7 @@ export default function UserModal({
               <FormInput
                 id="password"
                 type="password"
-                label="Mot de passe"
+                label={tx("Mot de passe")}
                 required={!isEdit}
                 value={formData.password}
                 onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
@@ -113,7 +115,7 @@ export default function UserModal({
 
             <FormSelect
               id="role"
-              label="Rôle"
+              label={tx("Rôle")}
               value={formData.role}
               options={roleOptions}
               onChange={(e) => setFormData(prev => ({ 
@@ -132,8 +134,8 @@ export default function UserModal({
                 variant="outline"
                 onClick={onClose}
               >
-                Annuler
-              </Button>
+                <UiText>Annuler
+              </UiText></Button>
               <Button
                 type="submit"
                 variant="primary"

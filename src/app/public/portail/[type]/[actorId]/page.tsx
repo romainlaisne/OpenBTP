@@ -1,9 +1,9 @@
 'use client'
-
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeftIcon, LockClosedIcon, CalendarIcon, ClipboardDocumentListIcon, WrenchScrewdriverIcon, DocumentPlusIcon, ArrowRightIcon, BuildingOfficeIcon, DocumentArrowUpIcon, BookOpenIcon } from '@heroicons/react/24/outline'
-import { PortalI18nProvider, usePortalI18n } from '../../i18n'
+import { PortalI18nProvider, portalIntlLocale, usePortalI18n } from '../../i18n'
+import { tx } from '@/lib/i18n/translate'
 
 function InnerPortail(props: { params: { type: 'ouvrier'|'soustraitant'; actorId: string } }) {
   const { type, actorId } = props.params
@@ -295,7 +295,7 @@ export default function PortailPublicPage(props: { params: Promise<{ type: 'ouvr
         <div className="w-full max-w-sm bg-white/10 backdrop-blur rounded-2xl p-6 text-center">
           <h1 className="text-xl font-semibold mb-2">Lien invalide</h1>
           <p className="text-sm text-blue-100">
-            Ce lien d&apos;accès ne correspond à aucun espace. Demandez un nouveau lien à votre contact.
+            {tx("Ce lien d'accès ne correspond à aucun espace. Demandez un nouveau lien à votre contact.")}
           </p>
         </div>
       </div>
@@ -359,7 +359,7 @@ const METRE_STATUS_STYLES: Record<string, { key: string; cls: string }> = {
 }
 
 function MesMetres({ type, actorId }: { type: 'ouvrier'|'soustraitant'; actorId: string }) {
-  const { t } = usePortalI18n()
+  const { t, lang } = usePortalI18n()
   const router = useRouter()
   const [items, setItems] = useState<{ id: string; statut: string; createdAt: string; chantier: { chantierId: string; nomChantier: string } }[]>([])
   useEffect(() => {
@@ -394,7 +394,7 @@ function MesMetres({ type, actorId }: { type: 'ouvrier'|'soustraitant'; actorId:
                 >
                   <div className="min-w-0">
                     <div className="font-medium text-gray-800 truncate">{m.chantier.nomChantier}</div>
-                    <div className="text-xs text-gray-500">{new Date(m.createdAt).toLocaleDateString('fr-FR')}</div>
+                    <div className="text-xs text-gray-500">{new Date(m.createdAt).toLocaleDateString(portalIntlLocale(lang))}</div>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full border shrink-0 ${style.cls}`}>
                     {style.key ? t(style.key) : m.statut}

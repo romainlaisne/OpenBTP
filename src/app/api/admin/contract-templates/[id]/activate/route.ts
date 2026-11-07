@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,11 +10,12 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session?.user || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await params
@@ -20,7 +23,7 @@ export async function POST(
     const target = await prisma.contractTemplate.findUnique({ where: { id } })
 
     if (!target) {
-      return NextResponse.json({ error: 'Template non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Template non trouvé' }, { status: 404 })
     }
 
     const category: TemplateCategory = target.category
@@ -37,10 +40,10 @@ export async function POST(
       data: { isActive: true }
     })
 
-    return NextResponse.json(template)
+    return localizedJson(template)
   } catch (error) {
     console.error('Erreur lors de l\'activation du template:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'activation du template' },
       { status: 500 }
     )

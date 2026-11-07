@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
@@ -234,8 +235,8 @@ export default function OutillagePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Outillage"
-        subtitle="Gestion des machines et outils"
+        title={tx("Outillage")}
+        subtitle={tx("Gestion des machines et outils")}
         icon={WrenchScrewdriverIcon}
         badgeColor="from-blue-600 via-indigo-600 to-purple-700"
         gradientColor="from-blue-600/10 via-indigo-600/10 to-purple-700/10"
@@ -296,7 +297,7 @@ export default function OutillagePage() {
             </div>
             <input
               type="text"
-              placeholder="Rechercher par nom, modèle, localisation ou statut..."
+              placeholder={tx("Rechercher par nom, modèle, localisation ou statut...")}
               className="block w-full pl-12 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-500 dark:placeholder-gray-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -312,7 +313,7 @@ export default function OutillagePage() {
           </div>
           {searchTerm && (
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              {filteredMachines.length} machine{filteredMachines.length !== 1 ? 's' : ''} trouvée{filteredMachines.length !== 1 ? 's' : ''} sur {machines.length}
+              {filteredMachines.length} machine{filteredMachines.length !== 1 ? 's' : ''} <UiText>trouvée</UiText>{filteredMachines.length !== 1 ? 's' : ''} sur {machines.length}
             </p>
           )}
         </div>
@@ -418,14 +419,14 @@ export default function OutillagePage() {
                         className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium hover:underline transition-colors duration-200"
                       >
                         <EyeIcon className="h-4 w-4 mr-1" />
-                        Voir détails
-                      </Link>
+                        <UiText>Voir détails
+                      </UiText></Link>
                       
                       {machine.statut === 'DISPONIBLE' && (
                         <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400">
                           <CheckCircleIcon className="h-3 w-3 mr-1" />
-                          Prêt à utiliser
-                        </span>
+                          <UiText>Prêt à utiliser
+                        </UiText></span>
                       )}
                       
                       {machine.statut === 'EN_PANNE' && (
@@ -538,7 +539,7 @@ export default function OutillagePage() {
       {machineToDelete && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-80 flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">Confirmer la suppression</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white"><UiText>Confirmer la suppression</UiText></h3>
             
             {deleteError && (
               <div className="mt-4 p-3 bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-md text-sm">
@@ -547,8 +548,8 @@ export default function OutillagePage() {
             )}
             
             <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
-              Êtes-vous sûr de vouloir supprimer cette machine ? Cette action est irréversible.
-            </p>
+              <UiText>Êtes-vous sûr de vouloir supprimer cette machine ? Cette action est irréversible.
+            </UiText></p>
             <div className="mt-4 flex justify-end space-x-3">
               <button
                 onClick={cancelDelete}

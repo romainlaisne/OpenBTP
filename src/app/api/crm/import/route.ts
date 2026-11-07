@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,20 +10,21 @@ export const dynamic = 'force-dynamic'
 
 // POST /api/crm/import - Import/fusion de prospects depuis un fichier Excel
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     // Lire le fichier uploadé
     const formData = await request.formData()
     const file = formData.get('file') as File
     if (!file) {
-      return NextResponse.json({ error: 'Fichier manquant' }, { status: 400 })
+      return localizedJson({ error: 'Fichier manquant' }, { status: 400 })
     }
 
     const arrayBuffer = await file.arrayBuffer()
@@ -238,14 +241,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       entreprises: entreprisesStats,
       contacts: contactsStats,
     })
   } catch (error) {
     console.error('Erreur POST /api/crm/import:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Erreur lors de l'import Excel" },
       { status: 500 }
     )

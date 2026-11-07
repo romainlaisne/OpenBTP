@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,10 +10,11 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId } = await params
@@ -33,10 +36,10 @@ export async function GET(
       },
     })
 
-    return NextResponse.json(gestionnaires)
+    return localizedJson(gestionnaires)
   } catch (error) {
     console.error('Erreur lors de la récupération des gestionnaires:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
@@ -45,15 +48,16 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Seuls les ADMIN et MANAGER peuvent ajouter des gestionnaires
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Permission refusée' }, { status: 403 })
+      return localizedJson({ error: 'Permission refusée' }, { status: 403 })
     }
 
     const { chantierId } = await params
@@ -61,7 +65,7 @@ export async function POST(
     const { userId } = body
 
     if (!userId) {
-      return NextResponse.json({ error: 'userId requis' }, { status: 400 })
+      return localizedJson({ error: 'userId requis' }, { status: 400 })
     }
 
     // Vérifier que le chantier existe
@@ -70,7 +74,7 @@ export async function POST(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Vérifier que l'utilisateur existe
@@ -79,7 +83,7 @@ export async function POST(
     })
 
     if (!user) {
-      return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Utilisateur non trouvé' }, { status: 404 })
     }
 
     // Vérifier si le gestionnaire n'existe pas déjà
@@ -93,7 +97,7 @@ export async function POST(
     })
 
     if (existingGestionnaire) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Cet utilisateur est déjà gestionnaire de ce chantier' },
         { status: 409 }
       )
@@ -117,10 +121,10 @@ export async function POST(
       },
     })
 
-    return NextResponse.json(gestionnaire, { status: 201 })
+    return localizedJson(gestionnaire, { status: 201 })
   } catch (error) {
     console.error('Erreur lors de l\'ajout du gestionnaire:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
@@ -129,15 +133,16 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Seuls les ADMIN et MANAGER peuvent retirer des gestionnaires
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Permission refusée' }, { status: 403 })
+      return localizedJson({ error: 'Permission refusée' }, { status: 403 })
     }
 
     const { chantierId } = await params
@@ -145,7 +150,7 @@ export async function DELETE(
     const userId = searchParams.get('userId')
 
     if (!userId) {
-      return NextResponse.json({ error: 'userId requis' }, { status: 400 })
+      return localizedJson({ error: 'userId requis' }, { status: 400 })
     }
 
     // Vérifier que le gestionnaire existe
@@ -159,7 +164,7 @@ export async function DELETE(
     })
 
     if (!gestionnaire) {
-      return NextResponse.json({ error: 'Gestionnaire non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Gestionnaire non trouvé' }, { status: 404 })
     }
 
     // Supprimer le gestionnaire
@@ -169,10 +174,10 @@ export async function DELETE(
       },
     })
 
-    return NextResponse.json({ success: true, message: 'Gestionnaire retiré avec succès' })
+    return localizedJson({ success: true, message: 'Gestionnaire retiré avec succès' })
   } catch (error) {
     console.error('Erreur lors de la suppression du gestionnaire:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 

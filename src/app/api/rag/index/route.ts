@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // API pour indexer les données RAG
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
@@ -6,10 +8,11 @@ import { ragService } from '@/lib/rag/rag-service';
 import { vectorStore } from '@/lib/rag/vector-store';
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -20,32 +23,32 @@ export async function POST(request: Request) {
     switch (action) {
       case 'index-all':
         await ragService.indexAllData();
-        return NextResponse.json({ 
+        return localizedJson({ 
           message: 'Indexation complète terminée avec succès',
           action: 'index-all'
         });
 
       case 'clear':
         await vectorStore.clearStore();
-        return NextResponse.json({ 
+        return localizedJson({ 
           message: 'Vector store vidé avec succès',
           action: 'clear'
         });
 
       case 'stats':
         const stats = await vectorStore.getStats();
-        return NextResponse.json({ 
+        return localizedJson({ 
           stats,
           action: 'stats'
         });
 
       default:
-        return NextResponse.json({ error: 'Action non reconnue' }, { status: 400 });
+        return localizedJson({ error: 'Action non reconnue' }, { status: 400 });
     }
 
   } catch (error) {
     console.error('❌ Erreur API RAG index:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'indexation' },
       { status: 500 }
     );

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
 import { prisma } from '@/lib/prisma/client'
 import { PDFGenerator } from '@/lib/pdf/pdf-generator'
 import { generateCommandeHTML, type CommandeData } from '@/lib/pdf/templates/commande-template'
@@ -115,7 +117,8 @@ export async function generateAndStoreCommandePDF(
     }
 
     // Générer le HTML
-    const htmlContent = generateCommandeHTML(commandeData)
+    const __locale = await bindRequestLocale()
+    const htmlContent = localizeGeneratedHtml(__locale, generateCommandeHTML(commandeData), collectStrings(commandeData))
 
     // Générer le PDF avec Puppeteer
     console.log('📄 Génération du PDF avec Puppeteer...')

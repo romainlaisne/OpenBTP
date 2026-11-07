@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -11,7 +13,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { Button } from '@/components/ui'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 
 interface TagProps {
   id: string
@@ -215,7 +217,7 @@ export default function PublicReceptionDetailPage({
     }
   }
 
-  if (loading) return <div className="p-8 text-center">Chargement...</div>
+  if (loading) return <div className="p-8 text-center"><UiText>Chargement...</UiText></div>
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
@@ -225,21 +227,21 @@ export default function PublicReceptionDetailPage({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Erreur d&apos;accès</h2>
+          <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white"><UiText>Erreur d&apos;accès</UiText></h2>
           <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
           <Button
             variant="primary"
             onClick={() => router.push('/public/reception')}
             className="w-full"
           >
-            Retour à l&apos;accueil
-          </Button>
+            <UiText>Retour à l&apos;accueil
+          </UiText></Button>
         </div>
       </div>
     )
   }
 
-  if (!reception) return <div className="p-8 text-center">Données non disponibles</div>
+  if (!reception) return <div className="p-8 text-center"><UiText>Données non disponibles</UiText></div>
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -250,15 +252,15 @@ export default function PublicReceptionDetailPage({
               <ClipboardDocumentCheckIcon className="h-7 w-7 text-red-600 dark:text-red-500 mr-3 flex-shrink-0" />
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 truncate">
-                  Réception - {reception.chantier.nomChantier}
+                  <UiText>Réception - </UiText>{reception.chantier.nomChantier}
                 </h1>
                 <p className="text-sm md:text-base font-medium text-gray-700 dark:text-gray-300 mt-1">
-                  Date limite: <span className="font-semibold text-gray-900 dark:text-gray-100">{format(new Date(reception.dateLimite), 'dd MMMM yyyy', { locale: fr })}</span>
+                  Date limite: <span className="font-semibold text-gray-900 dark:text-gray-100">{format(new Date(reception.dateLimite), 'dd MMMM yyyy', { locale: dateFnsLocale() })}</span>
                 </p>
                 {reception.soustraitant && (
                   <div className="mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">
                     <BuildingOfficeIcon className="h-3 w-3 mr-1" />
-                    Accès pour: {reception.soustraitant.nom}
+                    <UiText>Accès pour: </UiText>{reception.soustraitant.nom}
                   </div>
                 )}
                 {reception.estInterne && !reception.soustraitant && (
@@ -266,8 +268,8 @@ export default function PublicReceptionDetailPage({
                     <svg className="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
                     </svg>
-                    Accès équipe interne
-                  </div>
+                    <UiText>Accès équipe interne
+                  </UiText></div>
                 )}
               </div>
             </div>
@@ -280,8 +282,8 @@ export default function PublicReceptionDetailPage({
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              Retour
-            </Button>
+              <UiText>Retour
+            </UiText></Button>
           </div>
         </div>
       </header>
@@ -291,7 +293,7 @@ export default function PublicReceptionDetailPage({
         {reception.remarques.length === 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center mb-6">
             <ClipboardDocumentCheckIcon className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Aucune remarque trouvée</h2>
+          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-2"><UiText>Aucune remarque trouvée</UiText></h2>
           <p className="text-gray-600 dark:text-gray-400">
             {reception.soustraitant 
               ? `Aucune remarque n\'est actuellement assignée à ${reception.soustraitant.nom}.` 
@@ -311,8 +313,8 @@ export default function PublicReceptionDetailPage({
                 <div className="ml-5 w-0 flex-1">
                   <dl>
                     <dt className="text-sm md:text-base font-semibold text-gray-800 dark:text-gray-100 truncate">
-                      Remarques résolues
-                    </dt>
+                      <UiText>Remarques résolues
+                    </UiText></dt>
                     <dd>
                       <div className="text-xl font-bold text-gray-900 dark:text-gray-100">
                         {reception.remarques.filter(r => r.estResolue).length} / {reception.remarques.length}
@@ -384,17 +386,17 @@ export default function PublicReceptionDetailPage({
               Liste des remarques
             </h3>
             <p className="mt-2 text-base font-medium text-gray-700 dark:text-gray-300">
-              {reception.remarques.length} remarque{reception.remarques.length > 1 ? 's' : ''} à traiter
-            </p>
+              {reception.remarques.length} <UiText>remarque</UiText>{reception.remarques.length > 1 ? 's' : ''} <UiText>à traiter
+            </UiText></p>
           </div>
           
           {reception.remarques.length === 0 ? (
             <div className="text-center py-12">
               <CheckIcon className="mx-auto h-12 w-12 text-green-500" />
-              <h3 className="mt-2 text-lg font-medium text-gray-900 dark:text-white">Aucune remarque</h3>
+              <h3 className="mt-2 text-lg font-medium text-gray-900 dark:text-white"><UiText>Aucune remarque</UiText></h3>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                Toutes les remarques ont été résolues.
-              </p>
+                <UiText>Toutes les remarques ont été résolues.
+              </UiText></p>
             </div>
           ) : (
             <ul className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -473,8 +475,8 @@ export default function PublicReceptionDetailPage({
                       {remarque.estResolue ? (
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
                           <CheckIcon className="h-4 w-4 mr-1" />
-                          Résolu
-                        </span>
+                          <UiText>Résolu
+                        </UiText></span>
                       ) : (
                         <Button
                           variant="primary"
@@ -482,13 +484,13 @@ export default function PublicReceptionDetailPage({
                           onClick={() => handleStartResolution(remarque.id)}
                           className="px-4 w-full sm:w-auto"
                         >
-                          Marquer comme résolu
-                        </Button>
+                          <UiText>Marquer comme résolu
+                        </UiText></Button>
                       )}
                       
                       {remarque.dateResolution && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                          Résolu le {format(new Date(remarque.dateResolution), 'dd/MM/yyyy', { locale: fr })}
+                          <UiText>Résolu le </UiText>{format(new Date(remarque.dateResolution), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                         </p>
                       )}
                     </div>
@@ -499,12 +501,12 @@ export default function PublicReceptionDetailPage({
                     <div className="mt-6 ml-3 sm:ml-7 pt-6 border-t-2 border-gray-300 dark:border-gray-600">
                       <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border-2 border-gray-300 dark:border-gray-600 shadow-lg">
                         <h4 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-5">
-                          Preuve de résolution
-                        </h4>
+                          <UiText>Preuve de résolution
+                        </UiText></h4>
                         
                         {resolutionError && (
                           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                            <p className="font-medium">Erreur:</p>
+                            <p className="font-medium"><UiText>Erreur:</UiText></p>
                             <p>{resolutionError}</p>
                           </div>
                         )}
@@ -512,14 +514,14 @@ export default function PublicReceptionDetailPage({
                         <div className="space-y-5 sm:space-y-6">
                           <div>
                             <label className="block text-base font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                              Commentaire <span className="text-sm font-normal text-gray-600 dark:text-gray-400">(optionnel)</span>
+                              <UiText>Commentaire </UiText><span className="text-sm font-normal text-gray-600 dark:text-gray-400">(optionnel)</span>
                             </label>
                             <textarea
                               value={commentaire}
                               onChange={(e) => setCommentaire(e.target.value)}
                               className="w-full px-4 py-3 text-base border-2 border-gray-300 dark:border-gray-500 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
                               rows={3}
-                              placeholder="Décrivez comment vous avez résolu cette remarque..."
+                              placeholder={tx("Décrivez comment vous avez résolu cette remarque...")}
                             />
                           </div>
                           
@@ -531,7 +533,7 @@ export default function PublicReceptionDetailPage({
                               <div className="relative w-full max-w-md">
                                 <Image
                                   src={photoPreview}
-                                  alt="Prévisualisation"
+                                  alt={tx("Prévisualisation")}
                                   className="w-full h-auto object-cover rounded-lg shadow-md"
                                   width={600}
                                   height={400}
@@ -559,7 +561,7 @@ export default function PublicReceptionDetailPage({
                                   <div className="flex flex-col items-center justify-center py-4 sm:py-6">
                                     <PhotoIcon className="w-8 sm:w-10 h-8 sm:h-10 mb-2 sm:mb-3 text-gray-400" />
                                     <p className="mb-1 sm:mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                      <span className="font-semibold">Cliquez pour ajouter</span>
+                                      <span className="font-semibold"><UiText>Cliquez pour ajouter</UiText></span>
                                     </p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">
                                       PNG, JPG, JPEG (max. 10Mo)
@@ -577,8 +579,8 @@ export default function PublicReceptionDetailPage({
                               </div>
                             )}
                             <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                              Prenez une photo pour documenter la résolution (optionnel).
-                            </p>
+                              <UiText>Prenez une photo pour documenter la résolution (optionnel).
+                            </UiText></p>
                           </div>
                           
                           <div className="flex flex-col sm:flex-row justify-end gap-2 sm:space-x-3">
@@ -587,8 +589,8 @@ export default function PublicReceptionDetailPage({
                               onClick={handleCancelResolution}
                               className="w-full sm:w-auto"
                             >
-                              Annuler
-                            </Button>
+                              <UiText>Annuler
+                            </UiText></Button>
                             <Button
                               variant="primary"
                               onClick={() => handleSubmitResolution(remarque.id)}

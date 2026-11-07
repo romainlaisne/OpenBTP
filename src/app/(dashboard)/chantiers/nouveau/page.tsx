@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -156,12 +157,12 @@ export default function NouveauChantierPage() {
 
       if (!response.ok) throw new Error('Erreur lors de la création')
 
-      toast.success('Chantier créé avec succès !')
+      toast.success(tx("Chantier créé avec succès !"))
       router.push('/chantiers')
     } catch (error) {
       console.error('Erreur:', error)
       setError('Erreur lors de la création du chantier')
-      toast.error('Erreur lors de la création du chantier')
+      toast.error(tx("Erreur lors de la création du chantier"))
     } finally {
       setSaving(false)
     }
@@ -181,8 +182,8 @@ export default function NouveauChantierPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-amber-50/20 to-orange-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Nouveau Chantier"
-        subtitle="Créez un nouveau projet de construction"
+        title={tx("Nouveau Chantier")}
+        subtitle={tx("Créez un nouveau projet de construction")}
         icon={BuildingOffice2Icon}
         badgeColor="from-red-700 via-red-800 to-red-900"
         gradientColor="from-red-700/10 via-red-800/10 to-red-900/10"
@@ -216,7 +217,7 @@ export default function NouveauChantierPage() {
           <div className="px-6 py-8">
             <div className="flex items-center mb-8">
               <BuildingOfficeIcon className="h-6 w-6 text-amber-600 mr-3" />
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Informations du chantier</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white"><UiText>Informations du chantier</UiText></h2>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
@@ -234,8 +235,8 @@ export default function NouveauChantierPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Nom du chantier *
-                  </label>
+                    <UiText>Nom du chantier *
+                  </UiText></label>
                   <input
                     type="text"
                     name="nomChantier"
@@ -246,7 +247,7 @@ export default function NouveauChantierPage() {
                     }))}
                     required
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                    placeholder="Ex: Rénovation appartement rue de la Paix"
+                    placeholder={tx("Ex: Rénovation appartement rue de la Paix")}
                   />
                 </div>
 
@@ -263,7 +264,7 @@ export default function NouveauChantierPage() {
                       numeroIdentification: e.target.value
                     }))}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                    placeholder="Ex: CH-2025-001 (optionnel)"
+                    placeholder={tx("Ex: CH-2025-001 (optionnel)")}
                   />
                 </div>
 
@@ -283,9 +284,9 @@ export default function NouveauChantierPage() {
                       setSelectedClientId(clientId)
                       setFormData(prev => ({ ...prev, clientId }))
                     }}
-                    placeholder="Sélectionner un client"
-                    searchPlaceholder="Rechercher un client..."
-                    emptyMessage="Aucun client trouvé"
+                    placeholder={tx("Sélectionner un client")}
+                    searchPlaceholder={tx("Rechercher un client...")}
+                    emptyMessage={tx("Aucun client trouvé")}
                     showAllOption={false}
                   />
                 </div>
@@ -312,8 +313,8 @@ export default function NouveauChantierPage() {
                         (contacts.length === 0 ? "Aucun contact pour ce client" : 
                          "Sélectionner un contact (optionnel)")
                       }
-                      searchPlaceholder="Rechercher un contact..."
-                      emptyMessage="Aucun contact trouvé"
+                      searchPlaceholder={tx("Rechercher un contact...")}
+                      emptyMessage={tx("Aucun contact trouvé")}
                       showAllOption={false}
                     />
                   </div>
@@ -337,7 +338,7 @@ export default function NouveauChantierPage() {
                           maitreOuvrageNom: e.target.value
                         }))}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                        placeholder="Nom du maître d'ouvrage"
+                        placeholder={tx("Nom du maître d'ouvrage")}
                       />
                     </div>
                     <div className="space-y-2">
@@ -352,13 +353,13 @@ export default function NouveauChantierPage() {
                           maitreOuvrageAdresse: e.target.value
                         }))}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                        placeholder="Adresse du maître d'ouvrage"
+                        placeholder={tx("Adresse du maître d'ouvrage")}
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Localité / Province
-                      </label>
+                        <UiText>Localité / Province
+                      </UiText></label>
                       <input
                         type="text"
                         value={formData.maitreOuvrageLocalite || ''}
@@ -367,7 +368,7 @@ export default function NouveauChantierPage() {
                           maitreOuvrageLocalite: e.target.value
                         }))}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                        placeholder="Localité, Province"
+                        placeholder={tx("Localité, Province")}
                       />
                     </div>
                   </div>
@@ -391,7 +392,7 @@ export default function NouveauChantierPage() {
                           bureauArchitectureNom: e.target.value
                         }))}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                        placeholder="Nom du bureau d'architecture"
+                        placeholder={tx("Nom du bureau d'architecture")}
                       />
                     </div>
                     <div className="space-y-2">
@@ -406,13 +407,13 @@ export default function NouveauChantierPage() {
                           bureauArchitectureAdresse: e.target.value
                         }))}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                        placeholder="Adresse du bureau d'architecture"
+                        placeholder={tx("Adresse du bureau d'architecture")}
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Localité / Province
-                      </label>
+                        <UiText>Localité / Province
+                      </UiText></label>
                       <input
                         type="text"
                         value={formData.bureauArchitectureLocalite || ''}
@@ -421,7 +422,7 @@ export default function NouveauChantierPage() {
                           bureauArchitectureLocalite: e.target.value
                         }))}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                        placeholder="Localité, Province"
+                        placeholder={tx("Localité, Province")}
                       />
                     </div>
                   </div>
@@ -463,8 +464,8 @@ export default function NouveauChantierPage() {
 
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    État du chantier
-                  </label>
+                    <UiText>État du chantier
+                  </UiText></label>
                   <select
                     name="etatChantier"
                     value={formData.etatChantier}
@@ -474,9 +475,9 @@ export default function NouveauChantierPage() {
                     }))}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
                   >
-                    <option value="En préparation">En préparation</option>
-                    <option value="En cours">En cours</option>
-                    <option value="Terminé">Terminé</option>
+                    <option value="En préparation"><UiText>En préparation</UiText></option>
+                    <option value="En cours"><UiText>En cours</UiText></option>
+                    <option value="Terminé"><UiText>Terminé</UiText></option>
                   </select>
                 </div>
               </div>
@@ -489,14 +490,14 @@ export default function NouveauChantierPage() {
                     <MapPinIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                    Localisation du chantier
-                  </h3>
+                    <UiText>Localisation du chantier
+                  </UiText></h3>
                 </div>
               
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Adresse du chantier
-                </label>
+                  <UiText>Adresse du chantier
+                </UiText></label>
                 <div className="relative">
                   <MapPinIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
@@ -521,15 +522,15 @@ export default function NouveauChantierPage() {
                     <ClockIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                    Planning et durée
-                  </h3>
+                    <UiText>Planning et durée
+                  </UiText></h3>
                 </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Durée (en jours)
-                  </label>
+                    <UiText>Durée (en jours)
+                  </UiText></label>
                   <input
                     type="number"
                     name="dureeEnJours"
@@ -546,8 +547,8 @@ export default function NouveauChantierPage() {
 
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Type de durée
-                  </label>
+                    <UiText>Type de durée
+                  </UiText></label>
                   <select
                     name="typeDuree"
                     value={formData.typeDuree}

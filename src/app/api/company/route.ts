@@ -1,17 +1,20 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
 export async function GET() {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
   if (!session?.user?.email) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   }
   try {
     const c = await prisma.companysettings.findFirst()
-    if (!c) return NextResponse.json({}, { status: 200 })
-    return NextResponse.json({
+    if (!c) return localizedJson({}, { status: 200 })
+    return localizedJson({
       name: c.name,
       address: c.address,
       zipCode: c.zipCode,
@@ -24,7 +27,7 @@ export async function GET() {
       logoSquare: c.logoSquare || null,
     })
   } catch {
-    return NextResponse.json({ error: 'Erreur récupération société' }, { status: 500 })
+    return localizedJson({ error: 'Erreur récupération société' }, { status: 500 })
   }
 }
 

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,10 +7,11 @@ import { NotificationService } from '@/lib/services/notificationService'
 
 // GET /api/notifications - Récupérer les notifications de l'utilisateur
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -22,10 +25,10 @@ export async function GET(request: NextRequest) {
       onlyUnread,
     })
 
-    return NextResponse.json(result)
+    return localizedJson(result)
   } catch (error) {
     console.error('Erreur lors de la récupération des notifications:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des notifications' },
       { status: 500 }
     )

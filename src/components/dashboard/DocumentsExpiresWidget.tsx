@@ -1,6 +1,7 @@
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import Link from 'next/link'
 import { ExclamationCircleIcon, ClockIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 
@@ -80,7 +81,7 @@ export default function DocumentsExpiresWidget() {
   if (error) {
     return (
       <div className="bg-gradient-to-br from-white via-red-50/30 to-white dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 rounded-2xl shadow-xl border border-red-200/50 dark:border-red-700/50 p-6">
-        <h3 className="text-lg font-black text-gray-900 dark:text-white mb-4">Documents expirés</h3>
+        <h3 className="text-lg font-black text-gray-900 dark:text-white mb-4"><UiText>Documents expirés</UiText></h3>
         <div className="flex items-center gap-2">
           <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
           <p className="text-red-600 dark:text-red-400 font-semibold">{error}</p>
@@ -97,8 +98,8 @@ export default function DocumentsExpiresWidget() {
             <ClockIcon className="h-4 w-4 text-white"/>
           </div>
           <div>
-            <h3 className="text-lg font-black text-gray-900 dark:text-white">Documents à surveiller</h3>
-            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Expirés ou expirant prochainement</p>
+            <h3 className="text-lg font-black text-gray-900 dark:text-white"><UiText>Documents à surveiller</UiText></h3>
+            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium"><UiText>Expirés ou expirant prochainement</UiText></p>
           </div>
         </div>
         {documents.length > 0 && (
@@ -115,7 +116,7 @@ export default function DocumentsExpiresWidget() {
         {loading ? (
           <div className="p-6 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto"></div>
-            <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 font-medium">Chargement...</p>
+            <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 font-medium"><UiText>Chargement...</UiText></p>
           </div>
         ) : error ? (
           <div className="p-6 text-center">
@@ -131,8 +132,8 @@ export default function DocumentsExpiresWidget() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 font-semibold">Aucun document expiré ou à surveiller</p>
-            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Tous vos documents sont à jour !</p>
+            <p className="text-gray-600 dark:text-gray-400 font-semibold"><UiText>Aucun document expiré ou à surveiller</UiText></p>
+            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1"><UiText>Tous vos documents sont à jour !</UiText></p>
           </div>
         ) : (
           <table className="min-w-full divide-y-2 divide-gray-200/50 dark:divide-gray-700/50">
@@ -142,13 +143,13 @@ export default function DocumentsExpiresWidget() {
                   Document
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Ouvrier
-                </th>
+                  <UiText>Ouvrier
+                </UiText></th>
                 <th className="px-4 py-3 text-left text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Expiration
                 </th>
                 <th className="relative px-4 py-3">
-                  <span className="sr-only">Actions</span>
+                  <span className="sr-only"><UiText>Actions</UiText></span>
                 </th>
               </tr>
             </thead>
@@ -175,7 +176,7 @@ export default function DocumentsExpiresWidget() {
                   </td>
                   <td className="px-4 py-3">
                     <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-sm font-bold ${doc.isExpired ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'}`}>
-                      {format(new Date(doc.dateExpiration), 'dd/MM/yyyy', { locale: fr })}
+                      {format(new Date(doc.dateExpiration), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                     </div>
                     <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
                       {doc.isExpired 

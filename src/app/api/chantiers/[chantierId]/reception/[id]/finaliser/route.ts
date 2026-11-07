@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { getServerSession } from 'next-auth';
@@ -35,6 +37,7 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ chantierId: string; id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Attendre la Promise params
     const resolvedParams = await params;
@@ -43,7 +46,7 @@ export async function POST(
     
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       );
@@ -56,7 +59,7 @@ export async function POST(
     `;
 
     if (!reception || reception.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Réception non trouvée' },
         { status: 404 }
       );
@@ -64,7 +67,7 @@ export async function POST(
 
     // Vérifier si la réception n'est pas déjà finalisée
     if (reception[0].estFinalise === 1) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Cette réception est déjà finalisée' },
         { status: 400 }
       );
@@ -79,7 +82,7 @@ export async function POST(
     `;
 
     if (remarquesNonResolues[0].nbRemarques > 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Toutes les remarques doivent être résolues et validées avant de finaliser la réception' },
         { status: 400 }
       );
@@ -113,14 +116,14 @@ export async function POST(
       },
     })
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       message: 'Réception finalisée avec succès',
       reception: receptionData
     });
   } catch (error) {
     console.error('Erreur:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la finalisation de la réception' },
       { status: 500 }
     );

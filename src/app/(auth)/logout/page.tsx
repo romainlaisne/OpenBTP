@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { signOut } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { 
@@ -142,8 +143,8 @@ export default function LogoutPage() {
             </div>
             
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              Déconnexion en cours
-            </h1>
+              <UiText>Déconnexion en cours
+            </UiText></h1>
             
             <p className={`text-lg font-medium transition-colors duration-500 ${getStepColor()}`}>
               {status}
@@ -166,12 +167,12 @@ export default function LogoutPage() {
           <div className="space-y-3 text-sm">
             <div className={`flex items-center ${step >= 1 ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'}`}>
               <div className={`w-2 h-2 rounded-full mr-3 ${step >= 1 ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
-              Nettoyage des données de session
-            </div>
+              <UiText>Nettoyage des données de session
+            </UiText></div>
             <div className={`flex items-center ${step >= 2 ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'}`}>
               <div className={`w-2 h-2 rounded-full mr-3 ${step >= 2 ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
-              Fermeture de la session sécurisée
-            </div>
+              <UiText>Fermeture de la session sécurisée
+            </UiText></div>
             <div className={`flex items-center ${step >= 3 ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
               <div className={`w-2 h-2 rounded-full mr-3 ${step >= 3 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
               Redirection vers la page de connexion
@@ -181,15 +182,15 @@ export default function LogoutPage() {
           {/* Message de sécurité */}
           <div className="mt-6 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
             <p className="text-xs text-blue-700 dark:text-blue-300 text-center">
-              🔒 Vos données sont en sécurité. Toutes les sessions actives ont été fermées.
-            </p>
+              <UiText>🔒 Vos données sont en sécurité. Toutes les sessions actives ont été fermées.
+            </UiText></p>
           </div>
 
           {/* Footer */}
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              OpenBTP - Plateforme sécurisée
-            </p>
+              <UiText>OpenBTP - Plateforme sécurisée
+            </UiText></p>
           </div>
         </div>
       </div>

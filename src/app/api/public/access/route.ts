@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { readPortalSessionFromCookie } from '@/app/public/portail/auth'
@@ -5,12 +7,13 @@ import { readPortalSessionFromCookie } from '@/app/public/portail/auth'
 // GET /api/public/access
 // Vérifie la session active via les cookies
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const cookieHeader = request.headers.get('cookie')
     const session = readPortalSessionFromCookie(cookieHeader)
     
     if (!session) {
-      return NextResponse.json({ error: 'Pas de session active' }, { status: 401 })
+      return localizedJson({ error: 'Pas de session active' }, { status: 401 })
     }
 
     // Récupérer le nom du sujet
@@ -39,13 +42,13 @@ export async function GET(request: NextRequest) {
       subjectName
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       token
     })
   } catch (error) {
     console.error('Erreur /api/public/access GET:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
@@ -53,16 +56,17 @@ export async function GET(request: NextRequest) {
 // Body: { codePIN: string }
 // Vérifie un code PIN et retourne un jeton d'accès public scellé et les métadonnées sujet
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const { codePIN } = await request.json()
-    if (!codePIN) return NextResponse.json({ error: 'PIN requis' }, { status: 400 })
+    if (!codePIN) return localizedJson({ error: 'PIN requis' }, { status: 400 })
 
     const pin = await prisma.publicAccessPIN.findUnique({
       where: { codePIN },
     })
 
     if (!pin || !pin.estActif || (pin.expiresAt && pin.expiresAt < new Date())) {
-      return NextResponse.json({ error: 'PIN invalide ou expiré' }, { status: 401 })
+      return localizedJson({ error: 'PIN invalide ou expiré' }, { status: 401 })
     }
 
     // Récupérer le nom du sujet
@@ -94,12 +98,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Pour rester simple, renvoyer le token en clair (peut évoluer vers JWT signé)
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       token,
     })
   } catch (error) {
     console.error('Erreur /api/public/access:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

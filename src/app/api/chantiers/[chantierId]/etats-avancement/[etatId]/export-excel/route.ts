@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,17 +10,18 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, etatId } = await context.params
     const etatNumero = parseInt(etatId, 10)
 
     if (Number.isNaN(etatNumero)) {
-      return NextResponse.json({ error: 'Identifiant d\'état invalide' }, { status: 400 })
+      return localizedJson({ error: 'Identifiant d\'état invalide' }, { status: 400 })
     }
 
     // Vérifier que le chantier existe et récupérer ses informations
@@ -35,7 +38,7 @@ export async function GET(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Récupérer l'état d'avancement avec ses lignes et ses avenants
@@ -70,7 +73,7 @@ export async function GET(
     })
 
     if (!etatAvancement) {
-      return NextResponse.json({ error: 'État d\'avancement non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'État d\'avancement non trouvé' }, { status: 404 })
     }
 
     const lignesPrincipales = etatAvancement.lignes.map(ligne => ({
@@ -138,7 +141,7 @@ export async function GET(
 
   } catch (error) {
     console.error('Erreur lors de l\'export Excel de l\'état d\'avancement:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'export Excel' },
       { status: 500 }
     )

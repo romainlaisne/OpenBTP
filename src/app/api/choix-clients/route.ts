@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,10 +10,11 @@ export const dynamic = 'force-dynamic'
 
 // GET - Liste de tous les choix clients
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -65,14 +68,14 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       choixClients
     })
 
   } catch (error) {
     console.error('Erreur lors de la récupération des choix clients:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des choix clients' },
       { status: 500 }
     )
@@ -81,10 +84,11 @@ export async function GET(request: NextRequest) {
 
 // POST - Créer un nouveau choix client
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -100,7 +104,7 @@ export async function POST(request: NextRequest) {
     } = body
 
     if (!nomClient) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le nom du client est requis' },
         { status: 400 }
       )
@@ -188,14 +192,14 @@ export async function POST(request: NextRequest) {
       console.error('Erreur indexation RAG:', err)
     )
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       choixClient
     }, { status: 201 })
 
   } catch (error) {
     console.error('Erreur lors de la création du choix client:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du choix client' },
       { status: 500 }
     )

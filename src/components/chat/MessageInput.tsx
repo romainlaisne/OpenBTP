@@ -1,3 +1,5 @@
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useRef, useEffect } from 'react';
 import { useChat } from './context/ChatContext';
 
@@ -92,7 +94,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ chatId }) => {
             </svg>
             <span className="text-base truncate font-medium">{file.name}</span>
             {file.size > MAX_FILE_SIZE && (
-              <span className="text-sm text-red-500 ml-2 font-medium">Fichier trop volumineux (max 5 Mo)</span>
+              <span className="text-sm text-red-500 ml-2 font-medium"><UiText>Fichier trop volumineux (max 5 Mo)</UiText></span>
             )}
           </div>
           <button 
@@ -114,7 +116,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ chatId }) => {
             ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Tapez votre message..."
+            placeholder={tx("Tapez votre message...")}
             className={`w-full py-4 px-4 pr-14 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-colors resize-none text-base leading-relaxed mobile-textarea ${
               isKeyboardVisible ? 'min-h-[48px] max-h-24' : 'min-h-[52px] max-h-36'
             }`}
@@ -149,7 +151,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ chatId }) => {
             <label 
               htmlFor="file-upload" 
               className="cursor-pointer text-gray-400 hover:text-blue-500 p-2 hover:bg-gray-100 rounded-full transition-colors block"
-              title="Joindre un fichier"
+              title={tx("Joindre un fichier")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clipRule="evenodd" />

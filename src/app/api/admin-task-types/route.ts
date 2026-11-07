@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -17,10 +19,11 @@ type AdminTaskTypeRow = {
 // GET /api/admin-task-types
 // Récupère tous les types de tâches administratives
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -32,10 +35,10 @@ export async function GET() {
       ORDER BY ordre ASC
     `
 
-    return NextResponse.json(taskTypes)
+    return localizedJson(taskTypes)
   } catch (error) {
     console.error('Erreur lors de la récupération des types de tâches:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des types de tâches' },
       { status: 500 }
     )
@@ -45,10 +48,11 @@ export async function GET() {
 // POST /api/admin-task-types
 // Crée un nouveau type de tâche administrative
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -57,7 +61,7 @@ export async function POST(request: Request) {
     const { taskType, label, category, isActive, ordre } = await request.json()
 
     if (!taskType || !label) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le type et le libellé sont requis' },
         { status: 400 }
       )
@@ -69,7 +73,7 @@ export async function POST(request: Request) {
     `
 
     if (existingTypes && existingTypes.length > 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Ce type de tâche existe déjà' },
         { status: 400 }
       )
@@ -97,10 +101,10 @@ export async function POST(request: Request) {
       SELECT * FROM admin_task_types WHERE id = ${uuid}
     `
 
-    return NextResponse.json(createdType[0])
+    return localizedJson(createdType[0])
   } catch (error) {
     console.error('Erreur lors de la création du type de tâche:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du type de tâche' },
       { status: 500 }
     )

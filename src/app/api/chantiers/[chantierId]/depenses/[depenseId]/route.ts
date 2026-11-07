@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -14,11 +16,12 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ chantierId: string, depenseId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -32,16 +35,16 @@ export async function GET(
     const depense = depenses[0]
 
     if (!depense) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Dépense non trouvée' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(depense)
+    return localizedJson(depense)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de la dépense' },
       { status: 500 }
     )
@@ -53,11 +56,12 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ chantierId: string, depenseId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -75,7 +79,7 @@ export async function PUT(
     
     // Vérifier les champs obligatoires
     if (!date || isNaN(montant) || !description || !categorie) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Tous les champs obligatoires doivent être remplis' },
         { status: 400 }
       )
@@ -90,7 +94,7 @@ export async function PUT(
     const existingDepense = existingDepenses[0]
 
     if (!existingDepense) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Dépense non trouvée' },
         { status: 404 }
       )
@@ -137,7 +141,7 @@ export async function PUT(
         justificatifUrl = document.url
       } catch (error) {
         console.error('Erreur lors du traitement du justificatif:', error)
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Erreur lors du traitement du justificatif' },
           { status: 500 }
         )
@@ -167,10 +171,10 @@ export async function PUT(
     
     const depense = updatedDepenses[0]
 
-    return NextResponse.json(depense)
+    return localizedJson(depense)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la dépense' },
       { status: 500 }
     )
@@ -182,11 +186,12 @@ export async function DELETE(
   request: Request,
   props: { params: Promise<{ chantierId: string, depenseId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -201,7 +206,7 @@ export async function DELETE(
     const existingDepense = existingDepenses[0]
 
     if (!existingDepense) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Dépense non trouvée' },
         { status: 404 }
       )
@@ -213,10 +218,10 @@ export async function DELETE(
       WHERE id = ${params.depenseId}
     `
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de la dépense' },
       { status: 500 }
     )

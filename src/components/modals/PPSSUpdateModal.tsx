@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { Fragment, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckCircleIcon, ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -116,8 +117,8 @@ export function PPSSUpdateModal({ isOpen, onClose, success, message, warning }: 
                       <div className="mb-4 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-700/50 rounded-lg">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                         <span className="text-xs font-semibold text-blue-900 dark:text-blue-200">
-                          PPSS automatiquement régénéré
-                        </span>
+                          <UiText>PPSS automatiquement régénéré
+                        </UiText></span>
                       </div>
                     )}
 

@@ -1,4 +1,5 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
@@ -131,8 +132,8 @@ export default function ChantierSAVPage() {
             <UiText>Service Après-Vente</UiText>
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Tickets SAV pour ce chantier
-          </p>
+            <UiText>Tickets SAV pour ce chantier
+          </UiText></p>
         </div>
         
         <Link href={`/sav/nouveau?chantierId=${chantierId}`}>
@@ -169,7 +170,7 @@ export default function ChantierSAVPage() {
           <div className="flex items-center">
             <ClockIcon className="h-8 w-8 text-orange-500" />
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">En cours</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400"><UiText>En cours</UiText></p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.enCours}</p>
             </div>
           </div>
@@ -179,7 +180,7 @@ export default function ChantierSAVPage() {
           <div className="flex items-center">
             <CheckCircleIcon className="h-8 w-8 text-green-500" />
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Résolus</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400"><UiText>Résolus</UiText></p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.resolus}</p>
             </div>
           </div>
@@ -220,13 +221,13 @@ export default function ChantierSAVPage() {
           {tickets.length === 0 ? (
             <div className="p-8 text-center">
               <p className="text-gray-500 dark:text-gray-400">
-                Aucun ticket SAV pour ce chantier
-              </p>
+                <UiText>Aucun ticket SAV pour ce chantier
+              </UiText></p>
               <Link href={`/sav/nouveau?chantierId=${chantierId}`}>
                 <Button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white">
                   <PlusIcon className="h-5 w-5 mr-2" />
-                  Créer le premier ticket
-                </Button>
+                  <UiText>Créer le premier ticket
+                </UiText></Button>
               </Link>
             </div>
           ) : (
@@ -250,9 +251,9 @@ export default function ChantierSAVPage() {
                     <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                       <span>📍 {ticket.localisation}</span>
                       {ticket.coutEstime && (
-                        <span>💰 {ticket.coutEstime}€ estimé</span>
+                        <span>💰 {ticket.coutEstime}<UiText>€ estimé</UiText></span>
                       )}
-                      <span>📅 {new Date(ticket.dateDemande).toLocaleDateString('fr-FR')}</span>
+                      <span>📅 {new Date(ticket.dateDemande).toLocaleDateString(intlLocale(getActiveLocale()))}</span>
                     </div>
                     
                     <div className="flex items-center space-x-3 mt-3">

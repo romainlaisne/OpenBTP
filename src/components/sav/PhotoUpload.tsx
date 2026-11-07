@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useRef } from 'react'
 import Image from 'next/image'
 import { 
@@ -110,7 +111,7 @@ export default function PhotoUpload({
         <PhotoIcon className="mx-auto h-12 w-12 text-gray-400" />
         <div className="mt-2">
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Glissez-déposez vos photos ici ou{' '}
+            <UiText>Glissez-déposez vos photos ici ou</UiText>{' '}
             <button
               type="button"
               className="text-blue-600 hover:text-blue-500 underline"
@@ -120,7 +121,7 @@ export default function PhotoUpload({
             </button>
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            PNG, JPG, JPEG jusqu&apos;à 10MB ({photos.length}/{maxPhotos} photos)
+            <UiText>PNG, JPG, JPEG jusqu&apos;à 10MB (</UiText>{photos.length}/{maxPhotos} photos)
           </p>
         </div>
         
@@ -138,7 +139,7 @@ export default function PhotoUpload({
       {photos.length > 0 && (
         <div className="space-y-4">
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Photos ajoutées ({photos.length})
+            <UiText>Photos ajoutées (</UiText>{photos.length})
           </h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -184,8 +185,8 @@ export default function PhotoUpload({
                     
                     <div>
                       <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Description
-                      </label>
+                        <UiText>Description
+                      </UiText></label>
                       <textarea
                         rows={2}
                         value={photo.description || ''}

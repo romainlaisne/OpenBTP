@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use, useCallback, useMemo } from 'react';
 import { useSession } from 'next-auth/react'
@@ -140,7 +142,7 @@ export default function CommandeSousTraitantPage(
 
   const handleEditLigne = (id: number) => {
     if (commande && commande.estVerrouillee) {
-      toast.error('La commande est verrouillée et ne peut pas être modifiée')
+      toast.error(tx("La commande est verrouillée et ne peut pas être modifiée"))
       return
     }
     
@@ -195,10 +197,10 @@ export default function CommandeSousTraitantPage(
       await fetchCommande()
       
       setLigneEnEdition(null)
-      toast.success('Ligne mise à jour avec succès')
+      toast.success(tx("Ligne mise à jour avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la mise à jour de la ligne')
+      toast.error(tx("Erreur lors de la mise à jour de la ligne"))
     } finally {
       setSubmitting(false)
     }
@@ -208,11 +210,11 @@ export default function CommandeSousTraitantPage(
     if (!commande) return
     
     if (commande.estVerrouillee) {
-      toast.error('La commande est verrouillée et ne peut pas être modifiée')
+      toast.error(tx("La commande est verrouillée et ne peut pas être modifiée"))
       return
     }
     
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette ligne ?')) {
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer cette ligne ?"))) {
       return
     }
     
@@ -235,10 +237,10 @@ export default function CommandeSousTraitantPage(
       // Recalculer les totaux
       await fetchCommande()
       
-      toast.success('Ligne supprimée avec succès')
+      toast.success(tx("Ligne supprimée avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la suppression de la ligne')
+      toast.error(tx("Erreur lors de la suppression de la ligne"))
     } finally {
       setSubmitting(false)
     }
@@ -292,7 +294,7 @@ export default function CommandeSousTraitantPage(
         setLigneEnEdition(nouvelleLigne.id as number)
       }
     } catch {
-      toast.error('Erreur lors de l\'ajout de la ligne')
+      toast.error(tx("Erreur lors de l'ajout de la ligne"))
     }
   }
 
@@ -334,7 +336,7 @@ export default function CommandeSousTraitantPage(
       console.error('Erreur lors du réordonnancement:', error)
       // On recharge : l'affichage doit refléter la base, pas un ordre qui n'a
       // pas été enregistré.
-      toast.error("L'ordre n'a pas pu être enregistré")
+      toast.error(tx("L'ordre n'a pas pu être enregistré"))
       fetchCommande()
     }
   }, [commande, params.chantierId, params.soustraitantId, params.commandeId, fetchCommande])
@@ -442,10 +444,10 @@ export default function CommandeSousTraitantPage(
         throw new Error('Erreur lors de l\'envoi de l\'email')
       }
       
-      toast.success('Email envoyé avec succès')
+      toast.success(tx("Email envoyé avec succès"))
     } catch {
       console.error('Erreur: envoi email')
-      toast.error('Erreur lors de l\'envoi de l\'email')
+      toast.error(tx("Erreur lors de l'envoi de l'email"))
     } finally {
       setSubmitting(false)
     }
@@ -463,7 +465,7 @@ export default function CommandeSousTraitantPage(
         const data = await response.json()
         throw new Error(data.error || 'Erreur lors de la suppression')
       }
-      toast.success('Commande supprimée avec succès')
+      toast.success(tx("Commande supprimée avec succès"))
       router.push(`/chantiers/${params.chantierId}/etats`)
     } catch (error: unknown) {
       console.error('Erreur:', error)
@@ -490,7 +492,7 @@ export default function CommandeSousTraitantPage(
           <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <XMarkIcon className="h-8 w-8 text-red-500" />
           </div>
-          <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Erreur</h3>
+          <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2"><UiText>Erreur</UiText></h3>
           <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
           <Link
             href={`/chantiers/${params.chantierId}/etats`}
@@ -511,8 +513,8 @@ export default function CommandeSousTraitantPage(
           <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <DocumentCheckIcon className="h-8 w-8 text-yellow-500" />
           </div>
-          <h3 className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mb-2">Commande introuvable</h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">La commande demandée n'existe pas ou n'est plus accessible.</p>
+          <h3 className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mb-2"><UiText>Commande introuvable</UiText></h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-6"><UiText>La commande demandée n'existe pas ou n'est plus accessible.</UiText></p>
           <Link
             href={`/chantiers/${params.chantierId}/etats`}
             className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-md hover:shadow-lg"
@@ -542,13 +544,13 @@ export default function CommandeSousTraitantPage(
                   <UiText>Supprimer la commande</UiText>
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                  Vous êtes sur le point de supprimer la commande&nbsp;
-                  <strong className="text-gray-900 dark:text-white">{commande.reference || `#${commande.id}`}</strong> de&nbsp;
+                  <UiText>Vous êtes sur le point de supprimer la commande&nbsp;
+                  </UiText><strong className="text-gray-900 dark:text-white">{commande.reference || `#${commande.id}`}</strong> de&nbsp;
                   <strong className="text-gray-900 dark:text-white">{commande.soustraitantNom}</strong>.
                 </p>
                 <p className="text-sm text-red-600 dark:text-red-400 font-medium">
-                  Cette action est irréversible. Les lignes de commande seront également supprimées.
-                </p>
+                  <UiText>Cette action est irréversible. Les lignes de commande seront également supprimées.
+                </UiText></p>
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-3">
@@ -572,8 +574,8 @@ export default function CommandeSousTraitantPage(
                 ) : (
                   <>
                     <TrashIcon className="h-4 w-4" />
-                    Confirmer la suppression
-                  </>
+                    <UiText>Confirmer la suppression
+                  </UiText></>
                 )}
               </button>
             </div>
@@ -598,14 +600,14 @@ export default function CommandeSousTraitantPage(
 
                   <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30 text-white">
                     <ClipboardDocumentListIcon className="h-5 w-5 mr-3" />
-                    <span className="text-base sm:text-lg font-bold">Commande sous-traitant</span>
+                    <span className="text-base sm:text-lg font-bold"><UiText>Commande sous-traitant</UiText></span>
                   </div>
 
                   {commande.estVerrouillee && (
                     <span className="inline-flex items-center px-3 py-1 bg-white/25 text-white border border-white/40 rounded-full text-xs font-semibold shadow-sm">
                       <LockClosedIcon className="h-4 w-4 mr-1" />
-                      Verrouillée
-                    </span>
+                      <UiText>Verrouillée
+                    </UiText></span>
                   )}
                 </div>
 
@@ -620,7 +622,7 @@ export default function CommandeSousTraitantPage(
                   </span>
                   <span className="inline-flex items-center gap-2">
                     <CurrencyEuroIcon className="h-4 w-4" />
-                    {commande.total.toLocaleString('fr-FR')} € TTC
+                    {commande.total.toLocaleString(intlLocale(getActiveLocale()))} € TTC
                   </span>
                 </div>
               </div>
@@ -631,7 +633,7 @@ export default function CommandeSousTraitantPage(
                     onClick={() => setShowDeleteModal(true)}
                     disabled={deletingCommande || submitting}
                     className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/80 backdrop-blur-sm rounded-lg text-sm font-semibold text-white shadow-lg hover:bg-red-600/90 transition disabled:opacity-60"
-                    title="Supprimer la commande (admin uniquement)"
+                    title={tx("Supprimer la commande (admin uniquement)")}
                   >
                     <TrashIcon className="h-5 w-5" />
                     <UiText>Supprimer</UiText>
@@ -696,8 +698,8 @@ export default function CommandeSousTraitantPage(
                   ) : (
                     <>
                       <LockClosedIcon className="h-5 w-5" />
-                      Valider et verrouiller
-                    </>
+                      <UiText>Valider et verrouiller
+                    </UiText></>
                   )}
                 </button>
 
@@ -707,8 +709,8 @@ export default function CommandeSousTraitantPage(
                     className="inline-flex items-center gap-2 px-4 py-2 bg-white/25 backdrop-blur-sm rounded-lg text-sm font-semibold text-white shadow-lg hover:bg-white/35 transition"
                   >
                     <PlusIcon className="h-5 w-5" />
-                    Nouvel état
-                  </Link>
+                    <UiText>Nouvel état
+                  </UiText></Link>
                 )}
               </div>
             </div>
@@ -722,14 +724,14 @@ export default function CommandeSousTraitantPage(
                 <div className="flex items-center gap-3">
                   <span className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-200 rounded-full text-sm font-semibold">
                     <ClipboardDocumentListIcon className="h-4 w-4" />
-                    Lignes de commande
-                  </span>
+                    <UiText>Lignes de commande
+                  </UiText></span>
                   <span className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                     {commande.lignes.length} ligne{commande.lignes.length > 1 ? 's' : ''}
                   </span>
                 </div>
                 <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  Total HT : {commande.sousTotal.toLocaleString('fr-FR')} €
+                  Total HT : {commande.sousTotal.toLocaleString(intlLocale(getActiveLocale()))} €
                 </span>
               </div>
 
@@ -748,7 +750,7 @@ export default function CommandeSousTraitantPage(
                   </colgroup>
                   <thead className="bg-gray-50 dark:bg-gray-800/70">
                     <tr>
-                      <th className="px-2 py-3" aria-label="Réorganiser"></th>
+                      <th className="px-2 py-3" aria-label={tx("Réorganiser")}></th>
                       <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">Art.</th>
                       <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300"><UiText>Description</UiText></th>
                       <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300"><UiText>Unité</UiText></th>
@@ -824,7 +826,7 @@ export default function CommandeSousTraitantPage(
                       onChange={(e) => setCommande({ ...commande, reference: e.target.value })}
                       disabled={commande.estVerrouillee}
                       className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:text-gray-700 dark:disabled:text-gray-200 transition"
-                      placeholder="Référence de la commande"
+                      placeholder={tx("Référence de la commande")}
                     />
                   </div>
                   <div className="space-y-2">
@@ -882,15 +884,15 @@ export default function CommandeSousTraitantPage(
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600 dark:text-gray-300">Sous-total HT</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">{commande.sousTotal.toLocaleString('fr-FR')} €</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{commande.sousTotal.toLocaleString(intlLocale(getActiveLocale()))} €</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600 dark:text-gray-300">TVA ({commande.tauxTVA}%)</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">{commande.tva.toLocaleString('fr-FR')} €</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{commande.tva.toLocaleString(intlLocale(getActiveLocale()))} €</span>
                   </div>
                   <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
                     <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">Total TTC</span>
-                    <span className="text-xl font-bold text-orange-600 dark:text-orange-300">{commande.total.toLocaleString('fr-FR')} €</span>
+                    <span className="text-xl font-bold text-orange-600 dark:text-orange-300">{commande.total.toLocaleString(intlLocale(getActiveLocale()))} €</span>
                   </div>
                 </div>
               </div>
@@ -914,7 +916,7 @@ export default function CommandeSousTraitantPage(
           <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <input
               type="text"
-              placeholder="Rechercher..."
+              placeholder={tx("Rechercher...")}
               value={tarifsSearch}
               onChange={e => setTarifsSearch(e.target.value)}
               className="w-full text-sm px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -952,7 +954,7 @@ export default function CommandeSousTraitantPage(
                         <div className="text-right shrink-0">
                           {tarif.prixUnitaire != null && (
                             <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 whitespace-nowrap">
-                              {tarif.prixUnitaire.toLocaleString('fr-FR')} €
+                              {tarif.prixUnitaire.toLocaleString(intlLocale(getActiveLocale()))} €
                             </p>
                           )}
                           {tarif.unite && <p className="text-xs text-gray-400">{tarif.unite}</p>}

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -8,11 +10,12 @@ export async function POST(
   request: Request,
   props: { params: Promise<{ chantierId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -28,7 +31,7 @@ export async function POST(
     })
 
     if (!etatAvancement) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
@@ -53,10 +56,10 @@ export async function POST(
       }
     })
 
-    return NextResponse.json(ligne)
+    return localizedJson(ligne)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de la ligne' },
       { status: 500 }
     )
@@ -68,11 +71,12 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ chantierId: string; etatId: string; ligneId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -92,10 +96,10 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json(ligne)
+    return localizedJson(ligne)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la ligne' },
       { status: 500 }
     )
@@ -107,11 +111,12 @@ export async function DELETE(
   request: Request,
   props: { params: Promise<{ chantierId: string; etatId: string; ligneId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -123,10 +128,10 @@ export async function DELETE(
       }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de la ligne' },
       { status: 500 }
     )

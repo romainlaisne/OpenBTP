@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use, useRef } from 'react';
 import { useRouter } from 'next/navigation'
@@ -154,7 +155,7 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
   }
 
   const handlePhotoDelete = async () => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')) {
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer cette photo ?"))) {
       return
     }
 
@@ -210,7 +211,7 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
               <div className="relative w-full h-64 rounded-lg overflow-hidden bg-gray-100 border border-gray-300">
                 <Image
                   src={photoUrl}
-                  alt="Photo de la machine"
+                  alt={tx("Photo de la machine")}
                   fill
                   className="object-cover"
                   unoptimized
@@ -253,7 +254,7 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
                 <div className="flex flex-col items-center justify-center py-6">
                   <PhotoIcon className="w-12 h-12 mb-3 text-gray-400" />
                   <p className="mb-2 text-sm text-gray-500">
-                    <span className="font-semibold">Cliquez pour ajouter une photo</span>
+                    <span className="font-semibold"><UiText>Cliquez pour ajouter une photo</UiText></span>
                   </p>
                   <p className="text-xs text-gray-500">
                     PNG, JPG, JPEG (max. 10Mo)
@@ -269,7 +270,7 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
                 />
               </label>
               {uploadingPhoto && (
-                <p className="mt-2 text-sm text-gray-500 text-center">Upload en cours...</p>
+                <p className="mt-2 text-sm text-gray-500 text-center"><UiText>Upload en cours...</UiText></p>
               )}
             </div>
           )}
@@ -292,8 +293,8 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
 
         <div>
           <label htmlFor="modele" className="block text-sm font-medium text-gray-700">
-            Modèle *
-          </label>
+            <UiText>Modèle *
+          </UiText></label>
           <input
             type="text"
             name="modele"
@@ -307,8 +308,8 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
 
         <div>
           <label htmlFor="numeroSerie" className="block text-sm font-medium text-gray-700">
-            Numéro de série
-          </label>
+            <UiText>Numéro de série
+          </UiText></label>
           <input
             type="text"
             name="numeroSerie"
@@ -335,7 +336,7 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
         </div>
 
         <SelectField
-          label="Statut"
+          label={tx("Statut")}
           name="statut"
           id="statut"
           required
@@ -344,16 +345,16 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
           className="mt-1"
         >
           <option value="DISPONIBLE">Disponible</option>
-          <option value="PRETE">Prêtée</option>
+          <option value="PRETE"><UiText>Prêtée</UiText></option>
           <option value="EN_PANNE">En panne</option>
-          <option value="EN_REPARATION">En réparation</option>
+          <option value="EN_REPARATION"><UiText>En réparation</UiText></option>
           <option value="MANQUE_CONSOMMABLE">Manque consommable</option>
         </SelectField>
 
         <div>
           <label htmlFor="dateAchat" className="block text-sm font-medium text-gray-700">
-            Date d'achat
-          </label>
+            <UiText>Date d'achat
+          </UiText></label>
           <input
             type="date"
             name="dateAchat"

@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 // ===================================
 // UTILITAIRES pour le module SAV
 // ===================================
@@ -146,7 +147,7 @@ export function getCouleurStatut(statut: StatutSAV): string {
  */
 export function formaterDateFr(date: string | Date): string {
   const d = typeof date === 'string' ? new Date(date) : date
-  return d.toLocaleDateString('fr-FR', {
+  return d.toLocaleDateString(intlLocale(getActiveLocale()), {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric'
@@ -158,7 +159,7 @@ export function formaterDateFr(date: string | Date): string {
  */
 export function formaterDateHeureFr(date: string | Date): string {
   const d = typeof date === 'string' ? new Date(date) : date
-  return d.toLocaleDateString('fr-FR', {
+  return d.toLocaleDateString(intlLocale(getActiveLocale()), {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

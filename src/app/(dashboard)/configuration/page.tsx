@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -450,7 +451,7 @@ export default function ConfigurationPage() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-lg border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400">
             <h2 className="text-lg font-semibold mb-2"><UiText>Accès non autorisé</UiText></h2>
-            <p>Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
+            <p><UiText>Vous n'avez pas les permissions nécessaires pour accéder à cette page.</UiText></p>
           </div>
         </div>
       </div>
@@ -473,8 +474,8 @@ export default function ConfigurationPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-slate-50/20 to-gray-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Configuration"
-        subtitle="Configuration de l'entreprise et paramètres système"
+        title={tx("Configuration")}
+        subtitle={tx("Configuration de l'entreprise et paramètres système")}
         icon={Cog6ToothIcon}
         badgeColor="from-slate-600 via-gray-600 to-slate-700"
         gradientColor="from-slate-600/10 via-gray-600/10 to-slate-700/10"
@@ -499,8 +500,8 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Logo (général)
-            </label>
+              <UiText>Logo (général)
+            </UiText></label>
             <input
               type="file"
               accept="image/*"
@@ -511,7 +512,7 @@ export default function ConfigurationPage() {
               <>
               <img 
                 src={settings.logo} 
-                alt="Logo de l'entreprise" 
+                alt={tx("Logo de l'entreprise")} 
                 className="mt-2 h-20 object-contain"
               />
               </>
@@ -520,9 +521,9 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Logo carré (navbar) <span className="text-xs text-gray-500">(recommandé)</span>
+              <UiText>Logo carré (navbar) </UiText><span className="text-xs text-gray-500"><UiText>(recommandé)</UiText></span>
             </label>
-            <p className="text-xs text-gray-500 mb-1">Logo carré optimisé pour la barre de navigation. Si non défini, la marque OpenBTP par défaut est utilisée.</p>
+            <p className="text-xs text-gray-500 mb-1"><UiText>Logo carré optimisé pour la barre de navigation. Si non défini, la marque OpenBTP par défaut est utilisée.</UiText></p>
             <input
               type="file"
               accept="image/*"
@@ -533,7 +534,7 @@ export default function ConfigurationPage() {
               <div className="mt-2 flex items-center gap-3">
                 <img
                   src={settings.logoSquare}
-                  alt="Logo carré de l'entreprise"
+                  alt={tx("Logo carré de l'entreprise")}
                   className="h-20 w-20 object-contain rounded-lg border border-gray-300 dark:border-gray-600"
                 />
                 <button
@@ -541,8 +542,8 @@ export default function ConfigurationPage() {
                   onClick={() => setSettings(prev => ({ ...prev, logoSquare: '' }))}
                   className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline"
                 >
-                  Retirer ce logo (revenir à la marque OpenBTP)
-                </button>
+                  <UiText>Retirer ce logo (revenir à la marque OpenBTP)
+                </UiText></button>
               </div>
             )}
           </div>
@@ -561,7 +562,7 @@ export default function ConfigurationPage() {
               <>
               <img 
                 src={settings.signature} 
-                alt="Signature de l'entreprise" 
+                alt={tx("Signature de l'entreprise")} 
                 className="mt-2 h-20 object-contain border border-gray-300 dark:border-gray-600"
               />
               </>
@@ -716,8 +717,8 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Connexion sécurisée
-            </label>
+              <UiText>Connexion sécurisée
+            </UiText></label>
             <div className="mt-2">
               <label className="inline-flex items-center dark:text-gray-300">
                 <input
@@ -733,8 +734,8 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Utilisateur SMTP
-            </label>
+              <UiText>Utilisateur SMTP
+            </UiText></label>
             <input
               type="text"
               value={settings.emailUser}
@@ -746,8 +747,8 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Mot de passe SMTP
-            </label>
+              <UiText>Mot de passe SMTP
+            </UiText></label>
             <input
               type="password"
               value={settings.emailPassword}
@@ -759,8 +760,8 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Email expéditeur
-            </label>
+              <UiText>Email expéditeur
+            </UiText></label>
             <input
               type="email"
               value={settings.emailFrom}
@@ -772,8 +773,8 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Nom de l'expéditeur
-            </label>
+              <UiText>Nom de l'expéditeur
+            </UiText></label>
             <input
               type="text"
               value={settings.emailFromName}
@@ -795,14 +796,14 @@ export default function ConfigurationPage() {
               className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Adresse(s) email en copie (séparées par des virgules). Tous les emails envoyés seront copiés à cette adresse.
-            </p>
+              <UiText>Adresse(s) email en copie (séparées par des virgules). Tous les emails envoyés seront copiés à cette adresse.
+            </UiText></p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Email Cci (Copie cachée)
-            </label>
+              <UiText>Email Cci (Copie cachée)
+            </UiText></label>
             <input
               type="email"
               value={settings.emailBcc}
@@ -811,8 +812,8 @@ export default function ConfigurationPage() {
               className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Adresse(s) email en copie cachée (séparées par des virgules). Tous les emails envoyés seront copiés à cette adresse sans que les destinataires le voient.
-            </p>
+              <UiText>Adresse(s) email en copie cachée (séparées par des virgules). Tous les emails envoyés seront copiés à cette adresse sans que les destinataires le voient.
+            </UiText></p>
           </div>
 
           {/* Bouton de test SMTP */}
@@ -831,8 +832,8 @@ export default function ConfigurationPage() {
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                   </div>
-                  Test en cours...
-                </>
+                  <UiText>Test en cours...
+                </UiText></>
               ) : (
                 <>
                   <CheckCircleIcon className="h-4 w-4 mr-2" />
@@ -896,9 +897,9 @@ export default function ConfigurationPage() {
           Rapport mensuel automatique
         </h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Un email récapitulatif des états d&apos;avancement du mois précédent est envoyé automatiquement le 15 de chaque mois à 8h00 à tous les administrateurs.
+          <UiText>Un email récapitulatif des états d&apos;avancement du mois précédent est envoyé automatiquement le 15 de chaque mois à 8h00 à tous les administrateurs.
           Il contient un tableau détaillé, des graphiques d&apos;évolution sur 6 mois et la répartition des statuts.
-        </p>
+        </UiText></p>
 
         <div className="flex items-center gap-4">
           <button
@@ -917,8 +918,8 @@ export default function ConfigurationPage() {
                 <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                Envoyer un rapport test (mois précédent)
-              </>
+                <UiText>Envoyer un rapport test (mois précédent)
+              </UiText></>
             )}
           </button>
         </div>
@@ -951,21 +952,21 @@ export default function ConfigurationPage() {
       <div className="mt-12 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
         <h2 className="text-xl font-bold mb-6 flex items-center gap-2 dark:text-white">
           <Cog6ToothIcon className="h-5 w-5 text-blue-600" />
-          Icônes de l'application
-        </h2>
+          <UiText>Icônes de l'application
+        </UiText></h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-          Personnalisez les icônes de l'application pour la version desktop et mobile. Les icônes seront automatiquement redimensionnées aux différentes tailles nécessaires.
-        </p>
+          <UiText>Personnalisez les icônes de l'application pour la version desktop et mobile. Les icônes seront automatiquement redimensionnées aux différentes tailles nécessaires.
+        </UiText></p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Icône Desktop */}
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Icône Desktop (Version complète)
-            </label>
+              <UiText>Icône Desktop (Version complète)
+            </UiText></label>
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-              Icône utilisée pour les favoris et l'onglet du navigateur. Formats acceptés : PNG, JPG, SVG. Tailles générées : 16x16, 32x32, 192x192, 512x512.
-            </p>
+              <UiText>Icône utilisée pour les favoris et l'onglet du navigateur. Formats acceptés : PNG, JPG, SVG. Tailles générées : 16x16, 32x32, 192x192, 512x512.
+            </UiText></p>
             <input
               type="file"
               accept="image/*"
@@ -991,11 +992,11 @@ export default function ConfigurationPage() {
               <div className="mt-4 flex items-center gap-4">
                 <img 
                   src={desktopIconUrl} 
-                  alt="Icône desktop" 
+                  alt={tx("Icône desktop")} 
                   className="h-16 w-16 object-contain border border-gray-300 dark:border-gray-600 rounded"
                 />
                 <div>
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Icône actuelle</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Icône actuelle</UiText></p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Taille : 192x192</p>
                 </div>
               </div>
@@ -1005,11 +1006,11 @@ export default function ConfigurationPage() {
           {/* Icône Mobile */}
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Icône Mobile (iOS/Android)
-            </label>
+              <UiText>Icône Mobile (iOS/Android)
+            </UiText></label>
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-              Icône utilisée pour l'écran d'accueil sur mobile. Formats acceptés : PNG, JPG, SVG. Tailles générées : 180x180 (iOS), 192x192, 512x512.
-            </p>
+              <UiText>Icône utilisée pour l'écran d'accueil sur mobile. Formats acceptés : PNG, JPG, SVG. Tailles générées : 180x180 (iOS), 192x192, 512x512.
+            </UiText></p>
             <input
               type="file"
               accept="image/*"
@@ -1035,11 +1036,11 @@ export default function ConfigurationPage() {
               <div className="mt-4 flex items-center gap-4">
                 <img 
                   src={mobileIconUrl} 
-                  alt="Icône mobile" 
+                  alt={tx("Icône mobile")} 
                   className="h-16 w-16 object-contain border border-gray-300 dark:border-gray-600 rounded"
                 />
                 <div>
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Icône actuelle</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Icône actuelle</UiText></p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Taille : 180x180 (iOS)</p>
                 </div>
               </div>
@@ -1049,8 +1050,8 @@ export default function ConfigurationPage() {
         
         <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <p className="text-sm text-blue-800 dark:text-blue-200">
-            <strong>Note :</strong> Après avoir uploadé une icône, vous devrez peut-être vider le cache de votre navigateur ou redémarrer l'application pour voir les changements. Les icônes sont mises en cache par les navigateurs et les systèmes d'exploitation.
-          </p>
+            <strong>Note :</strong> <UiText>Après avoir uploadé une icône, vous devrez peut-être vider le cache de votre navigateur ou redémarrer l'application pour voir les changements. Les icônes sont mises en cache par les navigateurs et les systèmes d'exploitation.
+          </UiText></p>
         </div>
       </div>
 
@@ -1077,8 +1078,8 @@ export default function ConfigurationPage() {
           
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Outils d'administration pour le système RAG et l'assistant IA
-            </p>
+              <UiText>Outils d'administration pour le système RAG et l'assistant IA
+            </UiText></p>
             
             <button
               onClick={handleRAGAdminClick}
@@ -1093,8 +1094,8 @@ export default function ConfigurationPage() {
                     <UiText>Administration RAG</UiText>
                   </h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Gérer l'indexation des données et les conversations IA
-                  </p>
+                    <UiText>Gérer l'indexation des données et les conversations IA
+                  </UiText></p>
                 </div>
               </div>
               <ArrowTopRightOnSquareIcon className="h-5 w-5 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
@@ -1113,8 +1114,8 @@ export default function ConfigurationPage() {
           
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Gérer les modèles de contrats de sous-traitance
-            </p>
+              <UiText>Gérer les modèles de contrats de sous-traitance
+            </UiText></p>
             
             <button
               onClick={handleTemplatesContratsClick}
@@ -1129,8 +1130,8 @@ export default function ConfigurationPage() {
                     <UiText>Gestion des Templates</UiText>
                   </h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Créer et modifier les modèles de contrats
-                  </p>
+                    <UiText>Créer et modifier les modèles de contrats
+                  </UiText></p>
                 </div>
               </div>
               <ArrowTopRightOnSquareIcon className="h-5 w-5 text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors" />
@@ -1142,13 +1143,13 @@ export default function ConfigurationPage() {
       {/* Section Notifications */}
       <h2 className="text-xl font-bold mt-12 mb-6 flex items-center gap-2 dark:text-white">
         <BellIcon className="h-5 w-5 text-purple-500" />
-        Gestion des Notifications
-      </h2>
+        <UiText>Gestion des Notifications
+      </UiText></h2>
       
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Configurer vos préférences de notifications (email et in-app)
-        </p>
+          <UiText>Configurer vos préférences de notifications (email et in-app)
+        </UiText></p>
         
         <button
           onClick={handleNotificationsClick}
@@ -1163,8 +1164,8 @@ export default function ConfigurationPage() {
                 <UiText>Configurer les notifications</UiText>
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Gérer les types de notifications et les préférences utilisateurs
-              </p>
+                <UiText>Gérer les types de notifications et les préférences utilisateurs
+              </UiText></p>
             </div>
           </div>
           <ArrowTopRightOnSquareIcon className="h-5 w-5 text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors" />

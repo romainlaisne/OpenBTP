@@ -1,4 +1,5 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
 import { useNotification } from '@/hooks/useNotification'
 
@@ -57,7 +58,7 @@ export default function ExportPdfButton({ title = 'Exporter PDF', fileName = 'pl
       const company = companyResp && companyResp.ok ? await companyResp.json() : {}
 
       const headerRow: unknown[] = [{ text: 'Ressource', style: 'th', fillColor: '#f3f4f6' }]
-      for (const d of days) headerRow.push({ text: new Date(d).toLocaleDateString('fr-FR', { weekday:'short', day:'2-digit' }), style: 'th', fillColor: '#f3f4f6' })
+      for (const d of days) headerRow.push({ text: new Date(d).toLocaleDateString(intlLocale(getActiveLocale()), { weekday:'short', day:'2-digit' }), style: 'th', fillColor: '#f3f4f6' })
 
       const body: unknown[] = [headerRow]
       for (const r of resources) {

@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useRef, useEffect } from 'react'
 import { useLigneDeplacable } from './useLigneDeplacable'
 import { BarsArrowUpIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -65,7 +67,7 @@ export default function LigneCommande({
         <div
           ref={dragIconRef}
           className="inline-flex items-center justify-center cursor-move hover:bg-gray-200 dark:hover:bg-gray-600 rounded p-1 transition-colors"
-          title="Glisser pour réorganiser"
+          title={tx("Glisser pour réorganiser")}
         >
           <BarsArrowUpIcon className={`h-5 w-5 ${isSectionHeader ? 'text-blue-500 dark:text-blue-300' : 'text-gray-400'}`} />
         </div>
@@ -111,7 +113,7 @@ export default function LigneCommande({
               target.style.height = 'auto';
               target.style.height = target.scrollHeight + 'px';
             }}
-            placeholder="Description"
+            placeholder={tx("Description")}
             style={{ minHeight: '2.5rem' }}
           />
         )}
@@ -149,7 +151,7 @@ export default function LigneCommande({
             <option value="M2">M²</option>
             <option value="M3">M³</option>
             <option value="Heures">Heures</option>
-            <option value="Pièces">Pièces</option>
+            <option value="Pièces"><UiText>Pièces</UiText></option>
             <option value="Fft">Forfait</option>
           </select>
         )}

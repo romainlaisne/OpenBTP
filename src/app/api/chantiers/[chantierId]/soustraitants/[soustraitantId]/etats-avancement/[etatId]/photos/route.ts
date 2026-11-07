@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -22,11 +24,12 @@ export async function POST(
   request: Request,
   props: { params: Promise<{ chantierId: string; soustraitantId: string, etatId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -40,7 +43,7 @@ export async function POST(
     })
 
     if (!etatAvancement) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
@@ -51,7 +54,7 @@ export async function POST(
     const photos = formData.getAll('photos')
 
     if (!photos || photos.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Aucune photo fournie' },
         { status: 400 }
       )
@@ -96,10 +99,10 @@ export async function POST(
       savedPhotos.push(insertedPhoto[0])
     }
 
-    return NextResponse.json(savedPhotos)
+    return localizedJson(savedPhotos)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'upload des photos' },
       { status: 500 }
     )

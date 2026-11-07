@@ -1,3 +1,4 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
 import NextAuth from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { NextRequest } from 'next/server'
@@ -6,6 +7,7 @@ const handler = NextAuth(authOptions)
 
 // Wrapper pour gérer les erreurs et logger les problèmes
 export async function GET(req: NextRequest, context: { params: Promise<{ nextauth: string[] }> }) {
+  await bindRequestLocale()
   try {
     return await handler(req, context)
   } catch (error) {
@@ -16,6 +18,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ nextaut
 }
 
 export async function POST(req: NextRequest, context: { params: Promise<{ nextauth: string[] }> }) {
+  await bindRequestLocale()
   try {
     const params = await context.params
     const action = params.nextauth?.[0]

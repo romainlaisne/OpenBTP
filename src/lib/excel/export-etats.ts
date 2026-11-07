@@ -1,3 +1,5 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import ExcelJS from 'exceljs';
 import { 
   createWorkbook, 
@@ -103,8 +105,8 @@ async function createInfoSheet(
   const etatData = [
     ['Numéro d\'état', etatInfo.numeroEtat],
     ['ID État', etatInfo.id.toString()],
-    ['Date de création', new Date(etatInfo.dateCreation).toLocaleDateString('fr-FR')],
-    ['Date de validation', etatInfo.dateValidation ? new Date(etatInfo.dateValidation).toLocaleDateString('fr-FR') : 'Non validé'],
+    ['Date de création', new Date(etatInfo.dateCreation).toLocaleDateString(intlLocale(getActiveLocale()))],
+    ['Date de validation', etatInfo.dateValidation ? new Date(etatInfo.dateValidation).toLocaleDateString(intlLocale(getActiveLocale())) : 'Non validé'],
     ['Statut', etatInfo.statut],
     ['Sous-traitant', etatInfo.soustraitantNom || 'Non spécifié'],
     ['Description', etatInfo.description || 'Non spécifiée'],
@@ -137,7 +139,7 @@ async function createLignesSheet(
   totalEtat: number
 ) {
   // En-têtes
-  const headers = ['Poste', 'Description', 'Quantité', 'Unité', 'Prix Unitaire', 'Total'];
+  const headers = [tx('Poste'), tx('Description'), tx('Quantité'), tx('Unité'), tx('Prix Unitaire'), tx('Total')];
   
   headers.forEach((header, index) => {
     worksheet.getCell(1, index + 1).value = header;

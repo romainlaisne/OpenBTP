@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
@@ -11,7 +12,7 @@ import {
   EnvelopeIcon
 } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import toast, { Toaster } from 'react-hot-toast'
 import { PageHeader } from '@/components/PageHeader'
 
@@ -98,12 +99,12 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
       if (data.success) {
         setChoixClient(data.choixClient)
       } else {
-        toast.error('Choix client non trouvé')
+        toast.error(tx("Choix client non trouvé"))
         router.push('/choix-clients')
       }
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors du chargement')
+      toast.error(tx("Erreur lors du chargement"))
       router.push('/choix-clients')
     } finally {
       setLoading(false)
@@ -113,7 +114,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
   const handleGeneratePDF = async () => {
     try {
       setGeneratingPDF(true)
-      toast.loading('Génération du PDF en cours...')
+      toast.loading(tx("Génération du PDF en cours..."))
       
       const response = await fetch(`/api/choix-clients/${id}/generate-pdf`, {
         method: 'POST'
@@ -134,11 +135,11 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
       document.body.removeChild(a)
       
       toast.dismiss()
-      toast.success('PDF généré avec succès')
+      toast.success(tx("PDF généré avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
       toast.dismiss()
-      toast.error('Erreur lors de la génération du PDF')
+      toast.error(tx("Erreur lors de la génération du PDF"))
     } finally {
       setGeneratingPDF(false)
     }
@@ -147,7 +148,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
   const handleSendEmail = async () => {
     try {
       setSendingEmail(true)
-      toast.loading('Envoi de l\'email en cours...')
+      toast.loading(tx("Envoi de l'email en cours..."))
       
       const response = await fetch(`/api/choix-clients/${id}/send-email`, {
         method: 'POST'
@@ -160,11 +161,11 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
       }
       
       toast.dismiss()
-      toast.success('Email envoyé avec succès')
+      toast.success(tx("Email envoyé avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
       toast.dismiss()
-      toast.error('Erreur lors de l\'envoi de l\'email')
+      toast.error(tx("Erreur lors de l'envoi de l'email"))
     } finally {
       setSendingEmail(false)
     }
@@ -191,7 +192,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
 
       <PageHeader
         title={choixClient.nomClient}
-        subtitle={`Visite du ${format(new Date(choixClient.dateVisite), 'dd MMMM yyyy', { locale: fr })}`}
+        subtitle={`Visite du ${format(new Date(choixClient.dateVisite), 'dd MMMM yyyy', { locale: dateFnsLocale() })}`}
         icon={DocumentTextIcon}
         badge={
           <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${STATUTS[choixClient.statut as keyof typeof STATUTS].color}`}>
@@ -204,7 +205,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
           <button
             onClick={() => router.push('/choix-clients')}
             className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-            title="Retour à la liste des choix clients"
+            title={tx("Retour à la liste des choix clients")}
           >
             <ArrowLeftIcon className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
@@ -246,8 +247,8 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
       {/* Informations générales */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-          Informations Générales
-        </h2>
+          <UiText>Informations Générales
+        </UiText></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <span className="text-sm text-gray-500 dark:text-gray-400"><UiText>Statut</UiText></span>
@@ -271,7 +272,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
           )}
           {choixClient.chantier && (
             <div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">Chantier associé</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400"><UiText>Chantier associé</UiText></span>
               <Link
                 href={`/chantiers/${choixClient.chantier.chantierId}`}
                 className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mt-1 block"
@@ -283,7 +284,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
         </div>
         {choixClient.notesGenerales && (
           <div className="mt-4">
-            <span className="text-sm text-gray-500 dark:text-gray-400">Notes générales</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400"><UiText>Notes générales</UiText></span>
             <p className="text-gray-900 dark:text-white mt-1 whitespace-pre-wrap">
               {choixClient.notesGenerales}
             </p>
@@ -294,7 +295,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
       {/* Détails des choix */}
       <div>
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-          Choix des Revêtements ({choixClient.detailsChoix?.length || 0})
+          <UiText>Choix des Revêtements (</UiText>{choixClient.detailsChoix?.length || 0})
         </h2>
         
         {choixClient.detailsChoix && choixClient.detailsChoix.length > 0 ? (
@@ -342,12 +343,12 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
                         </div>
                       )}
                       <div>
-                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Modèle: </span>
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Modèle: </UiText></span>
                         <span className="text-gray-900 dark:text-white">{detail.modele}</span>
                       </div>
                       {detail.reference && (
                         <div>
-                          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Référence: </span>
+                          <span className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Référence: </UiText></span>
                           <span className="text-gray-900 dark:text-white">{detail.reference}</span>
                         </div>
                       )}
@@ -385,7 +386,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
                     {/* Surface */}
                     {detail.surfaceEstimee && (
                       <div className="mb-3">
-                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Surface estimée: </span>
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Surface estimée: </UiText></span>
                         <span className="text-gray-900 dark:text-white">{detail.surfaceEstimee} m²</span>
                       </div>
                     )}
@@ -415,7 +416,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
 
                     {detail.particularitesPose && (
                       <div className="mb-3">
-                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Particularités: </span>
+                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Particularités: </UiText></span>
                         <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{detail.particularitesPose}</p>
                       </div>
                     )}
@@ -433,7 +434,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
           </div>
         ) : (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
-            <p className="text-gray-600 dark:text-gray-400">Aucun choix ajouté</p>
+            <p className="text-gray-600 dark:text-gray-400"><UiText>Aucun choix ajouté</UiText></p>
           </div>
         )}
       </div>

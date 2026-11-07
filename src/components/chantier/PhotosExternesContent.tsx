@@ -1,10 +1,12 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import MediaChantier from '@/components/media/MediaChantier'
 import React, { useState, useEffect } from 'react'
 import { TrashIcon, EyeIcon, CalendarIcon, UserIcon, DocumentIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { toast } from 'react-hot-toast'
 
 interface PhotoExterne {
@@ -55,7 +57,7 @@ export default function PhotosExternesContent({ chantierId }: PhotosExternesCont
 
   // Supprimer une photo
   const handleDeletePhoto = async (photoId: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')) {
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer cette photo ?"))) {
       return
     }
 
@@ -72,10 +74,10 @@ export default function PhotosExternesContent({ chantierId }: PhotosExternesCont
       } else {
         throw new Error(data.error || 'Erreur lors de la suppression')
       }
-      toast.success('Photo supprimée avec succès')
+      toast.success(tx("Photo supprimée avec succès"))
     } catch (error) {
       console.error('Erreur lors de la suppression:', error)
-      toast.error('Erreur lors de la suppression de la photo')
+      toast.error(tx("Erreur lors de la suppression de la photo"))
     } finally {
       setDeleting(null)
     }
@@ -95,7 +97,7 @@ export default function PhotosExternesContent({ chantierId }: PhotosExternesCont
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600">Chargement des photos...</span>
+        <span className="ml-2 text-gray-600"><UiText>Chargement des photos...</UiText></span>
       </div>
     )
   }
@@ -112,8 +114,8 @@ export default function PhotosExternesContent({ chantierId }: PhotosExternesCont
     return (
       <div className="text-center py-12">
         <DocumentIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Aucune photo externe</h3>
-        <p className="text-gray-500">Aucune photo n'a encore été envoyée par les ouvriers ou sous-traitants.</p>
+        <h3 className="text-lg font-medium text-gray-900 mb-2"><UiText>Aucune photo externe</UiText></h3>
+        <p className="text-gray-500"><UiText>Aucune photo n'a encore été envoyée par les ouvriers ou sous-traitants.</UiText></p>
       </div>
     )
   }
@@ -124,8 +126,8 @@ export default function PhotosExternesContent({ chantierId }: PhotosExternesCont
       <div className="bg-gray-50 rounded-lg p-4">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">Photos externes</h3>
         <p className="text-sm text-gray-600">
-          {photos.length} envoi(s) de photos par les équipes terrain
-        </p>
+          {photos.length} <UiText>envoi(s) de photos par les équipes terrain
+        </UiText></p>
       </div>
 
       {/* Liste des photos */}
@@ -161,8 +163,8 @@ export default function PhotosExternesContent({ chantierId }: PhotosExternesCont
                   ) : (
                     <TrashIcon className="h-4 w-4 mr-1" />
                   )}
-                  Supprimer
-                </button>
+                  <UiText>Supprimer
+                </UiText></button>
               </div>
             </div>
 
@@ -171,7 +173,7 @@ export default function PhotosExternesContent({ chantierId }: PhotosExternesCont
               <div className="flex items-center space-x-1">
                 <CalendarIcon className="h-4 w-4" />
                 <span>
-                  {format(new Date(photo.dateUpload), 'dd/MM/yyyy à HH:mm', { locale: fr })}
+                  {format(new Date(photo.dateUpload), 'dd/MM/yyyy à HH:mm', { locale: dateFnsLocale() })}
                 </span>
               </div>
               <div className="flex items-center space-x-1">
@@ -221,7 +223,7 @@ export default function PhotosExternesContent({ chantierId }: PhotosExternesCont
               <div>
                 <h3 className="text-lg font-semibold">Photos de {selectedPhoto.uploadedByName}</h3>
                 <p className="text-sm text-gray-600">
-                  {format(new Date(selectedPhoto.dateUpload), 'dd/MM/yyyy à HH:mm', { locale: fr })} • 
+                  {format(new Date(selectedPhoto.dateUpload), 'dd/MM/yyyy à HH:mm', { locale: dateFnsLocale() })} • 
                   {selectedPhoto.uploadedByTypeLibelle}
                 </p>
               </div>

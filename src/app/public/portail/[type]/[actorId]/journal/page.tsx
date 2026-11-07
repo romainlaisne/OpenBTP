@@ -487,9 +487,9 @@ function JournalForm({
         
         // Messages d'erreur plus sympas
         let errorMessage = t('error_save')
-        if (errorData.error === 'Chantier ou lieu libre requis') {
+        if (errorData.code === 'Chantier ou lieu libre requis' || errorData.error === 'Chantier ou lieu libre requis' || errorData.error === 'Project or free location required') {
           errorMessage = `⚠️ ${t('error_chantier_required')}`
-        } else if (errorData.error === 'Données manquantes') {
+        } else if (errorData.code === 'Données manquantes' || errorData.error === 'Données manquantes' || errorData.error === 'Missing data') {
           errorMessage = `⚠️ ${t('error_fill_required')}`
         } else {
           errorMessage = `❌ ${errorData.error || t('error_unknown')}`

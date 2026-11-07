@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
@@ -421,7 +422,7 @@ export default function PlanificationChargementsPage() {
         <div className="max-w-[1600px] mx-auto">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4"><UiText>Accès non autorisé</UiText></h1>
-            <p className="text-gray-600 dark:text-gray-300">Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
+            <p className="text-gray-600 dark:text-gray-300"><UiText>Vous n'avez pas les permissions nécessaires pour accéder à cette page.</UiText></p>
           </div>
         </div>
       </div>
@@ -449,7 +450,7 @@ export default function PlanificationChargementsPage() {
         <div className="flex items-center gap-2">
           <CheckIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
           <div>
-            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Chargés</div>
+            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase"><UiText>Chargés</UiText></div>
             <div className="text-sm font-black text-gray-900 dark:text-white">{chargementsCharges}</div>
           </div>
         </div>
@@ -458,7 +459,7 @@ export default function PlanificationChargementsPage() {
         <div className="flex items-center gap-2">
           <XMarkIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
           <div>
-            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">En attente</div>
+            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase"><UiText>En attente</UiText></div>
             <div className="text-sm font-black text-gray-900 dark:text-white">{chargementsEnAttente}</div>
           </div>
         </div>
@@ -474,7 +475,7 @@ export default function PlanificationChargementsPage() {
         {showAddPaysModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-md shadow-2xl">
-              <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Ajouter un pays</h3>
+              <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white"><UiText>Ajouter un pays</UiText></h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom du pays *</label>
@@ -498,7 +499,7 @@ export default function PlanificationChargementsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Icône (emoji)</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Icône (emoji)</UiText></label>
                   <input
                     type="text"
                     value={newPays.icone}
@@ -533,10 +534,10 @@ export default function PlanificationChargementsPage() {
         {showAddUsineModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-md shadow-2xl">
-              <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Ajouter une usine</h3>
+              <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white"><UiText>Ajouter une usine</UiText></h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom de l'usine *</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Nom de l'usine *</UiText></label>
                   <input
                     type="text"
                     value={newUsine.nom}
@@ -552,7 +553,7 @@ export default function PlanificationChargementsPage() {
                     onChange={(e) => setNewUsine({ ...newUsine, paysId: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 dark:bg-gray-800 dark:text-white"
                   >
-                    <option value="">Sélectionner un pays</option>
+                    <option value=""><UiText>Sélectionner un pays</UiText></option>
                     {pays.map((p) => (
                       <option key={p.id} value={p.id}>
                         {p.icone} {p.nom}
@@ -586,7 +587,7 @@ export default function PlanificationChargementsPage() {
         {showAddChargementModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-md shadow-2xl">
-              <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Ajouter un chargement</h3>
+              <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white"><UiText>Ajouter un chargement</UiText></h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Usine</label>
@@ -595,7 +596,7 @@ export default function PlanificationChargementsPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Semaine</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Semaine</UiText></label>
                   <div className="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-900 dark:text-white font-medium">
                     {selectedWeekForChargement && formatWeek(selectedWeekForChargement.week, selectedWeekForChargement.year)}
                   </div>
@@ -607,7 +608,7 @@ export default function PlanificationChargementsPage() {
                     value={newChargement.contenu}
                     onChange={(e) => setNewChargement({ ...newChargement, contenu: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white"
-                    placeholder="Ex: Carrelage 20 tonnes"
+                    placeholder={tx("Ex: Carrelage 20 tonnes")}
                   />
                 </div>
               </div>
@@ -641,8 +642,8 @@ export default function PlanificationChargementsPage() {
     <>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-amber-50/20 to-orange-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Planification des Chargements"
-        subtitle="Gérez les chargements de vos usines par semaine"
+        title={tx("Planification des Chargements")}
+        subtitle={tx("Gérez les chargements de vos usines par semaine")}
         icon={TruckIcon}
         badgeColor="from-amber-600 via-orange-600 to-red-700"
         gradientColor="from-amber-600/10 via-orange-600/10 to-red-700/10"
@@ -654,14 +655,14 @@ export default function PlanificationChargementsPage() {
               className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
             >
               <PlusIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Ajouter un pays</span>
+              <span className="hidden sm:inline"><UiText>Ajouter un pays</UiText></span>
             </button>
             <button
               onClick={() => setShowAddUsineModal(true)}
               className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-amber-600 to-orange-700 hover:from-amber-700 hover:to-orange-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
             >
               <PlusIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Ajouter une usine</span>
+              <span className="hidden sm:inline"><UiText>Ajouter une usine</UiText></span>
             </button>
           </div>
         }
@@ -687,7 +688,7 @@ export default function PlanificationChargementsPage() {
                       }`}
                     >
                       {label}
-                      {isPast && <div className="text-[9px] text-red-500 dark:text-red-400">Passée</div>}
+                      {isPast && <div className="text-[9px] text-red-500 dark:text-red-400"><UiText>Passée</UiText></div>}
                     </th>
                   ))}
                   <th className="px-4 py-3 text-center text-sm font-bold text-gray-900 dark:text-white min-w-[100px]">
@@ -700,7 +701,7 @@ export default function PlanificationChargementsPage() {
                   <tr>
                     <td colSpan={weeks.length + 2} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">
                       <TruckIcon className="mx-auto h-12 w-12 mb-4 opacity-50" />
-                      <p className="text-lg font-medium">Aucune usine configurée</p>
+                      <p className="text-lg font-medium"><UiText>Aucune usine configurée</UiText></p>
                       <p className="text-sm mt-1">Ajoutez une usine pour commencer la planification</p>
                     </td>
                   </tr>
@@ -763,7 +764,7 @@ export default function PlanificationChargementsPage() {
                                                 handleReporter(chargement.id)
                                               }}
                                               className="hover:bg-orange-200 dark:hover:bg-orange-800/50 rounded p-0.5"
-                                              title="Reporter à la semaine suivante"
+                                              title={tx("Reporter à la semaine suivante")}
                                             >
                                               <ChevronRightIcon className="h-3 w-3" />
                                             </button>
@@ -774,7 +775,7 @@ export default function PlanificationChargementsPage() {
                                               handleSupprimer(chargement.id)
                                             }}
                                             className="hover:bg-red-200 dark:hover:bg-red-800/50 rounded p-0.5"
-                                            title="Supprimer"
+                                            title={tx("Supprimer")}
                                           >
                                             <TrashIcon className="h-3 w-3" />
                                           </button>
@@ -810,7 +811,7 @@ export default function PlanificationChargementsPage() {
                         <button
                           onClick={() => handleSupprimerUsine(usine.id)}
                           className="inline-flex items-center px-2 py-1 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-200 rounded hover:bg-red-200 dark:hover:bg-red-800/50 transition-colors"
-                          title="Supprimer l'usine"
+                          title={tx("Supprimer l'usine")}
                         >
                           <TrashIcon className="h-3 w-3" />
                         </button>

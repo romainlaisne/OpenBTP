@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
@@ -214,7 +215,7 @@ export function ChantierHeader({ chantierId, chantier }: ChantierHeaderProps) {
                     </p>
                   )}
                   <p className={`text-xs text-emerald-700/80 dark:text-emerald-200/80 transition-opacity ${isCompact ? 'mt-1 hidden lg:block' : 'mt-1'}`}>
-                    Statut : {getStatutLabel(chantier.etatChantier)}
+                    <UiText>Statut : </UiText>{getStatutLabel(chantier.etatChantier)}
                   </p>
                 </div>
               </div>
@@ -307,7 +308,7 @@ export function ChantierHeader({ chantierId, chantier }: ChantierHeaderProps) {
                     </p>
                   )}
                   <p className="text-xs text-emerald-700/80 dark:text-emerald-200/80 mt-1">
-                    Statut : {getStatutLabel(chantier.etatChantier)}
+                    <UiText>Statut : </UiText>{getStatutLabel(chantier.etatChantier)}
                   </p>
                 </div>
               </div>

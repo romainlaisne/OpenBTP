@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import React, { Suspense, useEffect } from 'react'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -27,7 +28,7 @@ const ReceptionRedirect = () => {
 const LoadingFallback = () => (
   <div className="min-h-screen flex justify-center items-center">
     <ArrowPathIcon className="animate-spin h-10 w-10 text-red-500 mr-2" />
-    <span>Redirection en cours...</span>
+    <span><UiText>Redirection en cours...</UiText></span>
   </div>
 )
 

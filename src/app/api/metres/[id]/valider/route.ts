@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { notifier } from '@/lib/services/notificationService'
@@ -5,6 +7,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
 export async function POST(_request: Request, props: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   const { id } = await props.params
   try {
     const session = await getServerSession(authOptions)
@@ -35,8 +38,8 @@ export async function POST(_request: Request, props: { params: Promise<{ id: str
       },
     })
 
-    return NextResponse.json(metre)
+    return localizedJson(metre)
   } catch {
-    return NextResponse.json({ error: 'Validation impossible' }, { status: 400 })
+    return localizedJson({ error: 'Validation impossible' }, { status: 400 })
   }
 }

@@ -1,5 +1,8 @@
 'use client';
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react';
 import { 
   PlusIcon, 
@@ -215,7 +218,7 @@ function TaskCard({ task, onEdit, onDelete, chantierColorMap }: {
       
       <div className="flex items-center justify-end">
         <span className="text-xs text-gray-500 dark:text-gray-400">
-          {new Date(task.start).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })} - {new Date(task.end).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
+          {new Date(task.start).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit' })} - {new Date(task.end).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit' })}
         </span>
       </div>
     </div>
@@ -256,8 +259,8 @@ function TimeSlot({ slot, tasks, onAddTask, onEditTask, onDeleteTask, chantierCo
           className="w-full p-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-gray-500 dark:text-gray-400 hover:border-blue-500 hover:text-blue-500 transition-colors text-xs flex items-center justify-center gap-1"
         >
           <PlusIcon className="h-3 w-3" />
-          Ajouter
-        </button>
+          <UiText>Ajouter
+        </UiText></button>
       </div>
     </div>
   );
@@ -365,7 +368,7 @@ export default function ResourceScheduler({ onAddTask, onEditTask, onDeleteTask 
         
         slots.push({
           date: date.toISOString().split('T')[0],
-          dayName: date.toLocaleDateString('fr-FR', { weekday: 'short' }),
+          dayName: date.toLocaleDateString(intlLocale(getActiveLocale()), { weekday: 'short' }),
           dayNumber: date.getDate(),
           isToday: date.toDateString() === today.toDateString(),
           isWeekend: date.getDay() === 0 || date.getDay() === 6
@@ -528,7 +531,7 @@ export default function ResourceScheduler({ onAddTask, onEditTask, onDeleteTask 
     const lastDate = new Date(lastDay.date);
     
     const formatDate = (date: Date) => {
-      return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+      return date.toLocaleDateString(intlLocale(getActiveLocale()), { day: 'numeric', month: 'short' });
     };
     
     return `${formatDate(firstDate)} - ${formatDate(lastDate)}`;
@@ -573,7 +576,7 @@ export default function ResourceScheduler({ onAddTask, onEditTask, onDeleteTask 
             onClick={handlePreviousWeek}
             disabled={weekOffset <= -2}
             className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            title="Semaine précédente"
+            title={tx("Semaine précédente")}
           >
             <ChevronLeftIcon className="h-5 w-5" />
           </button>
@@ -587,7 +590,7 @@ export default function ResourceScheduler({ onAddTask, onEditTask, onDeleteTask 
             onClick={handleNextWeek}
             disabled={weekOffset >= 3}
             className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            title="Semaine suivante"
+            title={tx("Semaine suivante")}
           >
             <ChevronRightIcon className="h-5 w-5" />
           </button>

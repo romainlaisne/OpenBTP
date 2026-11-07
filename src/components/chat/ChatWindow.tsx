@@ -1,3 +1,5 @@
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useRef, useState, useEffect } from 'react';
 import { useChat } from './context/ChatContext';
 import ConversationList from '../chat/ConversationList';
@@ -188,12 +190,12 @@ const ChatWindow: React.FC = () => {
             <button 
               onClick={closeChat}
               className="flex items-center gap-2 min-h-[44px] min-w-[44px] text-white/95 hover:text-white p-2 rounded-xl hover:bg-white/20 transition-colors -ml-1"
-              aria-label="Fermer le chat"
+              aria-label={tx("Fermer le chat")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
-              <span className="font-semibold text-base">Fermer</span>
+              <span className="font-semibold text-base"><UiText>Fermer</UiText></span>
             </button>
             <span className="text-white/90 text-sm font-medium">Chat</span>
             <div className="w-[72px]" />
@@ -202,7 +204,7 @@ const ChatWindow: React.FC = () => {
           <button 
             onClick={closeChat}
             className="absolute text-white/90 hover:text-white p-2 rounded-full hover:bg-white/20 transition-colors top-2 right-2"
-            aria-label="Fermer le chat"
+            aria-label={tx("Fermer le chat")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -279,7 +281,7 @@ const ChatWindow: React.FC = () => {
                       <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                       </svg>
-                      <span className="text-base font-medium">Retour</span>
+                      <span className="text-base font-medium"><UiText>Retour</UiText></span>
                     </button>
                     <span className="font-medium text-gray-800 text-lg">
                       {activeChat.name || 'Discussion'}
@@ -299,7 +301,7 @@ const ChatWindow: React.FC = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-300 mb-4" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                 </svg>
-                <p className="text-center text-gray-600">Sélectionnez une conversation pour commencer à discuter</p>
+                <p className="text-center text-gray-600"><UiText>Sélectionnez une conversation pour commencer à discuter</UiText></p>
               </div>
             )}
           </div>

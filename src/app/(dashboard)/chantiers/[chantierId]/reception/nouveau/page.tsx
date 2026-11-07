@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -113,8 +114,8 @@ export default function NouvelleReceptionPage({ params }: { params: Promise<{ ch
                 <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                   <ClipboardDocumentCheckIcon className="w-6 h-6 mr-3 text-red-900 dark:text-white" />
                   <h1 className="text-xl font-bold text-red-900 dark:text-white">
-                    Nouvelle réception
-                  </h1>
+                    <UiText>Nouvelle réception
+                  </UiText></h1>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -132,8 +133,8 @@ export default function NouvelleReceptionPage({ params }: { params: Promise<{ ch
                   ) : (
                     <>
                       <PlusCircleIcon className="h-5 w-5" />
-                      Créer la réception
-                    </>
+                      <UiText>Créer la réception
+                    </UiText></>
                   )}
                 </button>
               </div>
@@ -162,18 +163,18 @@ export default function NouvelleReceptionPage({ params }: { params: Promise<{ ch
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
-                Informations de la réception
-              </h3>
+                <UiText>Informations de la réception
+              </UiText></h3>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                Définissez la date limite pour résoudre toutes les remarques.
-              </p>
+                <UiText>Définissez la date limite pour résoudre toutes les remarques.
+              </UiText></p>
             </div>
 
             <FormInput
               id="dateLimite"
               name="dateLimite"
               type="date"
-              label="Date limite d'intervention"
+              label={tx("Date limite d'intervention")}
               value={formData.dateLimite}
               onChange={handleChange}
               required

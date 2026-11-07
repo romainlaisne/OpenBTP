@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import * as React from "react"
 import {
   ColumnDef,
@@ -82,7 +83,7 @@ function ColumnFilter<TData, TValue>({ column }: { column: Column<TData, TValue>
           <SelectValue placeholder={filterMeta.filterPlaceholder || "Tous"} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Tous</SelectItem>
+          <SelectItem value="all"><UiText>Tous</UiText></SelectItem>
           {filterMeta.filterOptions.map(option => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}
@@ -161,8 +162,8 @@ export function DataTable<TData, TValue>({
             {loading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  Chargement...
-                </TableCell>
+                  <UiText>Chargement...
+                </UiText></TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row: Row<TData>) => (
@@ -180,8 +181,8 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  Aucun résultat.
-                </TableCell>
+                  <UiText>Aucun résultat.
+                </UiText></TableCell>
               </TableRow>
             )}
           </TableBody>
@@ -194,16 +195,16 @@ export function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Précédent
-        </Button>
+          <UiText>Précédent
+        </UiText></Button>
         <Button
           variant="outline"
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Suivant
-        </Button>
+          <UiText>Suivant
+        </UiText></Button>
       </div>
     </div>
   )

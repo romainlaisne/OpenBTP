@@ -1,9 +1,12 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
 export async function GET(request: Request, props: { params: Promise<{ chantierId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     console.log('Récupération des tâches pour le chantier:', params.chantierId)
@@ -11,7 +14,7 @@ export async function GET(request: Request, props: { params: Promise<{ chantierI
     const session = await getServerSession(authOptions)
     if (!session) {
       console.log('Erreur: Utilisateur non authentifié')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -33,7 +36,7 @@ export async function GET(request: Request, props: { params: Promise<{ chantierI
 
     if (!chantier) {
       console.log(`Erreur: Chantier ${params.chantierId} non trouvé`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -114,10 +117,10 @@ export async function GET(request: Request, props: { params: Promise<{ chantierI
 
       console.log('Tâches combinées à retourner:', tasksToReturn);
 
-      return NextResponse.json(tasksToReturn);
+      return localizedJson(tasksToReturn);
     } catch (prismaError: unknown) {
       console.error('Erreur Prisma:', prismaError)
-      return NextResponse.json(
+      return localizedJson(
         { 
           error: 'Erreur lors de la récupération des tâches dans la base de données',
           details: (prismaError as Error).message 
@@ -127,7 +130,7 @@ export async function GET(request: Request, props: { params: Promise<{ chantierI
     }
   } catch (error: unknown) {
     console.error('Erreur générale:', error)
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la récupération des tâches',
         details: (error as Error).message 

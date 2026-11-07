@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -9,10 +11,11 @@ const METRES_PLAN_BASE_PATH = join(process.cwd(), 'public', 'uploads', 'metres-p
 
 // GET /api/metres-plan
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const url = new URL(request.url)
@@ -38,10 +41,10 @@ export async function GET(request: Request) {
       orderBy: { createdAt: 'desc' },
     })
 
-    return NextResponse.json(metresPlan)
+    return localizedJson(metresPlan)
   } catch (error) {
     console.error('Erreur GET /api/metres-plan:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des métrés sur plan' },
       { status: 500 }
     )
@@ -50,17 +53,18 @@ export async function GET(request: Request) {
 
 // POST /api/metres-plan
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
     const { nom, chantierId } = body as { nom: string; chantierId?: string }
 
     if (!nom) {
-      return NextResponse.json({ error: 'Le nom est requis' }, { status: 400 })
+      return localizedJson({ error: 'Le nom est requis' }, { status: 400 })
     }
 
     const metrePlan = await prisma.metrePlan.create({
@@ -84,10 +88,10 @@ export async function POST(request: Request) {
     const dir = join(METRES_PLAN_BASE_PATH, metrePlan.id)
     await mkdir(dir, { recursive: true })
 
-    return NextResponse.json(metrePlan, { status: 201 })
+    return localizedJson(metrePlan, { status: 201 })
   } catch (error) {
     console.error('Erreur POST /api/metres-plan:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du métré sur plan' },
       { status: 500 }
     )

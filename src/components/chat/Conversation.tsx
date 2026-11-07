@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Chat as ChatType, ChatMessage } from './context/ChatContext';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { dateFnsLocale } from '@/lib/i18n/dates';
 import { useSession } from 'next-auth/react';
 
 interface ConversationProps {
@@ -102,7 +102,7 @@ const Conversation: React.FC<ConversationProps> = ({ chat }) => {
                   date.getFullYear() === yesterday.getFullYear()) {
           return 'Hier';
         } else {
-          return format(date, 'EEEE d MMMM', { locale: fr });
+          return format(date, 'EEEE d MMMM', { locale: dateFnsLocale() });
         }
       }
       
@@ -123,7 +123,7 @@ const Conversation: React.FC<ConversationProps> = ({ chat }) => {
       } else if (format(date, formatCompare) === format(yesterday, formatCompare)) {
         return 'Hier';
       } else {
-        return format(date, 'EEEE d MMMM', { locale: fr });
+        return format(date, 'EEEE d MMMM', { locale: dateFnsLocale() });
       }
     } catch (error) {
       console.error('Erreur dans formatDay:', error, 'pour la date:', dateStr);

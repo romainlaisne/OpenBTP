@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -14,13 +16,14 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ chantierId: string; id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const resolvedParams = await params
     const { chantierId, id: receptionId } = resolvedParams
 
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -35,7 +38,7 @@ export async function GET(
     })
 
     if (!reception) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Réception non trouvée ou n\'appartient pas à ce chantier' },
         { status: 404 }
       )
@@ -73,10 +76,10 @@ export async function GET(
         : null,
     }))
 
-    return NextResponse.json(formattedPins)
+    return localizedJson(formattedPins)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des PINs' },
       { status: 500 }
     )
@@ -89,13 +92,14 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ chantierId: string; id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const resolvedParams = await params
     const { chantierId, id: receptionId } = resolvedParams
 
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -110,7 +114,7 @@ export async function POST(
     })
 
     if (!reception) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Réception non trouvée ou n\'appartient pas à ce chantier' },
         { status: 404 }
       )
@@ -122,7 +126,7 @@ export async function POST(
 
     // Vérifier si les champs requis sont présents
     if ((!soustraitantId && !estInterne) || (soustraitantId && estInterne)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Vous devez fournir soit un soustraitantId, soit marquer comme équipe interne' },
         { status: 400 }
       )
@@ -137,7 +141,7 @@ export async function POST(
       `;
 
       if (Array.isArray(existingPins) && (existingPins as unknown[]).length > 0) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Un PIN existe déjà pour ce sous-traitant dans cette réception' },
           { status: 400 }
         )
@@ -219,10 +223,10 @@ export async function POST(
       }
     });
     
-    return NextResponse.json(pin)
+    return localizedJson(pin)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du PIN' },
       { status: 500 }
     )
@@ -235,13 +239,14 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ chantierId: string; id: string; pinId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const resolvedParams = await params
     const { chantierId, id: receptionId, pinId } = resolvedParams
 
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -256,7 +261,7 @@ export async function DELETE(
     })
 
     if (!reception) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Réception non trouvée ou n\'appartient pas à ce chantier' },
         { status: 404 }
       )
@@ -270,7 +275,7 @@ export async function DELETE(
     `;
 
     if (!existingPINs || (existingPINs as unknown[]).length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'PIN non trouvé ou n\'appartient pas à cette réception' },
         { status: 404 }
       )
@@ -282,10 +287,10 @@ export async function DELETE(
       WHERE id = ${pinId}
     `;
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du PIN' },
       { status: 500 }
     )

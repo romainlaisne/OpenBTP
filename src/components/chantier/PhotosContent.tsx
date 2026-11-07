@@ -1,10 +1,12 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import MediaChantier, { estVideo } from '@/components/media/MediaChantier'
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { EyeIcon, CalendarIcon, UserIcon, CameraIcon, TrashIcon, PencilIcon, TagIcon, XMarkIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import toast from 'react-hot-toast'
 import { useNotification } from '@/hooks/useNotification'
 
@@ -463,7 +465,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600">Chargement des photos...</span>
+        <span className="ml-2 text-gray-600"><UiText>Chargement des photos...</UiText></span>
       </div>
     )
   }
@@ -488,7 +490,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
           <div className="flex items-center">
             <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
               <CameraIcon className="w-6 h-6 mr-3 text-emerald-900 dark:text-white" />
-              <span className="font-bold text-xl text-emerald-900 dark:text-white">📸 Photos de chantier</span>
+              <span className="font-bold text-xl text-emerald-900 dark:text-white"><UiText>📸 Photos de chantier</UiText></span>
             </div>
           </div>
           <div className="flex items-center space-x-4">
@@ -673,7 +675,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                       confirmDeletePhoto(photo.id, `Photo de ${photo.uploadedByName}`)
                     }}
                     className="opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg"
-                    title="Supprimer la photo"
+                    title={tx("Supprimer la photo")}
                   >
                     <TrashIcon className="h-4 w-4" />
                   </button>
@@ -742,7 +744,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                   <button
                     onClick={() => confirmDeletePhoto(selectedPhoto.id, `Photo de ${selectedPhoto.uploadedByName}`)}
                     className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-colors"
-                    title="Supprimer la photo"
+                    title={tx("Supprimer la photo")}
                   >
                     <TrashIcon className="h-5 w-5" />
                   </button>
@@ -791,7 +793,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                   <div 
                     className="absolute left-0 top-0 w-1/2 h-full cursor-w-resize opacity-0 hover:opacity-10 hover:bg-blue-500 transition-opacity"
                     onClick={goToPreviousPhoto}
-                    title="Photo précédente (←)"
+                    title={tx("Photo précédente (←)")}
                   />
                   
                   {/* Zone de clic droite */}
@@ -810,7 +812,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                 <>
                   <div className="flex items-center space-x-2">
                     <UserIcon className="h-4 w-4" />
-                    <span>Envoyé par: {selectedPhoto.uploadedByName}</span>
+                    <span><UiText>Envoyé par: </UiText>{selectedPhoto.uploadedByName}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CalendarIcon className="h-4 w-4" />
@@ -831,7 +833,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                             return 'Date invalide';
                           }
                           
-                          return format(date, 'dd/MM/yyyy à HH:mm', { locale: fr });
+                          return format(date, 'dd/MM/yyyy à HH:mm', { locale: dateFnsLocale() });
                         } catch (error) {
                           console.error('Erreur de formatage de date:', error, 'dateValue:', (selectedPhoto.type === 'externe' || selectedPhoto.type === 'manuelle') ? 
                             (selectedPhoto.dateUpload || selectedPhoto.createdAt) : 
@@ -853,7 +855,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                 <>
                   <div className="flex items-center space-x-2">
                     <UserIcon className="h-4 w-4" />
-                    <span>Ajouté par: {selectedPhoto.uploadedBy}</span>
+                    <span><UiText>Ajouté par: </UiText>{selectedPhoto.uploadedBy}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CalendarIcon className="h-4 w-4" />
@@ -869,7 +871,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                             return 'Date invalide';
                           }
                           
-                          return format(date, 'dd/MM/yyyy à HH:mm', { locale: fr });
+                          return format(date, 'dd/MM/yyyy à HH:mm', { locale: dateFnsLocale() });
                         } catch (error) {
                           console.error('Erreur de formatage de date:', error, 'dateValue:', selectedPhoto.createdAt);
                           return 'Date non disponible';
@@ -879,8 +881,8 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                   </div>
                   {selectedPhoto.estPreuve && (
                     <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                      Preuve de résolution
-                    </div>
+                      <UiText>Preuve de résolution
+                    </UiText></div>
                   )}
                 </>
               )}
@@ -905,7 +907,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                             return 'Date invalide';
                           }
                           
-                          return format(date, 'dd/MM/yyyy à HH:mm', { locale: fr });
+                          return format(date, 'dd/MM/yyyy à HH:mm', { locale: dateFnsLocale() });
                         } catch (error) {
                           console.error('Erreur de formatage de date:', error, 'dateValue:', selectedPhoto.createdAt);
                           return 'Date non disponible';
@@ -925,7 +927,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                 <>
                   <div className="flex items-center space-x-2">
                     <UserIcon className="h-4 w-4" />
-                    <span>Ajouté par: {selectedPhoto.uploadedBy}</span>
+                    <span><UiText>Ajouté par: </UiText>{selectedPhoto.uploadedBy}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CalendarIcon className="h-4 w-4" />
@@ -941,7 +943,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                             return 'Date invalide';
                           }
                           
-                          return format(date, 'dd/MM/yyyy à HH:mm', { locale: fr });
+                          return format(date, 'dd/MM/yyyy à HH:mm', { locale: dateFnsLocale() });
                         } catch (error) {
                           console.error('Erreur de formatage de date:', error, 'dateValue:', selectedPhoto.createdAt);
                           return 'Date non disponible';
@@ -969,8 +971,8 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                           className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium flex items-center gap-1"
                         >
                           <PencilIcon className="h-4 w-4" />
-                          Modifier
-                        </button>
+                          <UiText>Modifier
+                        </UiText></button>
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {selectedPhoto.tags.map((tag, idx) => (
@@ -1011,12 +1013,12 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
             
             <div className="text-center">
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                Supprimer la photo
-              </h3>
+                <UiText>Supprimer la photo
+              </UiText></h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                Êtes-vous sûr de vouloir supprimer <strong>{deleteConfirm.photoName}</strong> ? 
+                <UiText>Êtes-vous sûr de vouloir supprimer </UiText><strong>{deleteConfirm.photoName}</strong> <UiText>? 
                 Cette action est irréversible.
-              </p>
+              </UiText></p>
               
               <div className="flex space-x-3 justify-center">
                 <button
@@ -1024,8 +1026,8 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                   disabled={deleting}
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors disabled:opacity-50"
                 >
-                  Annuler
-                </button>
+                  <UiText>Annuler
+                </UiText></button>
                 <button
                   onClick={deletePhoto}
                   disabled={deleting}
@@ -1037,8 +1039,8 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Suppression...
-                    </>
+                      <UiText>Suppression...
+                    </UiText></>
                   ) : (
                     'Supprimer'
                   )}
@@ -1055,8 +1057,8 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                Modifier les tags
-              </h3>
+                <UiText>Modifier les tags
+              </UiText></h3>
               <button
                 onClick={() => setEditTagsModal({ show: false, photo: null })}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
@@ -1104,7 +1106,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                       }
                     }
                   }}
-                  placeholder="Ajouter un tag..."
+                  placeholder={tx("Ajouter un tag...")}
                   className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
                 <button
@@ -1127,8 +1129,8 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                 disabled={savingTags}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors disabled:opacity-50"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 onClick={async () => {
                   if (!editTagsModal.photo?.documentId || !chantierId) return
@@ -1148,7 +1150,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                       throw new Error('Erreur lors de la mise à jour des tags')
                     }
 
-                    toast.success('Tags mis à jour avec succès')
+                    toast.success(tx("Tags mis à jour avec succès"))
                     
                     // Recharger les photos pour afficher les nouveaux tags
                     const fetchAllPhotos = async () => {
@@ -1184,7 +1186,7 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                     setEditTagsModal({ show: false, photo: null })
                   } catch (error) {
                     console.error('Erreur:', error)
-                    toast.error('Erreur lors de la mise à jour des tags')
+                    toast.error(tx("Erreur lors de la mise à jour des tags"))
                   } finally {
                     setSavingTags(false)
                   }
@@ -1198,8 +1200,8 @@ export default function PhotosContent({ chantierId }: PhotosContentProps) {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Enregistrement...
-                  </>
+                    <UiText>Enregistrement...
+                  </UiText></>
                 ) : (
                   'Enregistrer'
                 )}

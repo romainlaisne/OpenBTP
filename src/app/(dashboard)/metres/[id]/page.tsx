@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
@@ -135,7 +137,7 @@ export default function MetreDetailPage() {
       }
 
       await loadMetre()
-      toast.success('Statut mis à jour avec succès')
+      toast.success(tx("Statut mis à jour avec succès"))
     } catch (err) {
       console.error('Erreur:', err)
       toast.error(err instanceof Error ? err.message : 'Erreur lors de la mise à jour')
@@ -161,7 +163,7 @@ export default function MetreDetailPage() {
 
       await loadMetre()
       setSelectedChantierId(null)
-      toast.success('Chantier associé avec succès')
+      toast.success(tx("Chantier associé avec succès"))
     } catch (err) {
       console.error('Erreur:', err)
       toast.error(err instanceof Error ? err.message : 'Erreur lors de l\'association')
@@ -171,7 +173,7 @@ export default function MetreDetailPage() {
   }
 
   const formatMontant = (montant: number) => {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat(intlLocale(getActiveLocale()), {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(montant)
@@ -222,7 +224,7 @@ export default function MetreDetailPage() {
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
       
-      toast.success('PDF généré avec succès')
+      toast.success(tx("PDF généré avec succès"))
     } catch (err) {
       console.error('Erreur:', err)
       toast.error(err instanceof Error ? err.message : 'Erreur lors de la génération du PDF')
@@ -234,7 +236,7 @@ export default function MetreDetailPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Détail du métré"
+        title={tx("Détail du métré")}
         subtitle={metre ? `Métré soumis par ${metre.soustraitant.nom} pour ${metre.chantier.nomChantier}` : 'Chargement...'}
         icon={ChartBarIcon}
         badgeColor="from-purple-600 via-indigo-600 to-blue-700"
@@ -277,7 +279,7 @@ export default function MetreDetailPage() {
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div>
-                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Chantier</label>
+                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Chantier</UiText></label>
                     <Link
                       href={`/chantiers/${metre.chantier.chantierId}`}
                       className="mt-1 block text-base font-semibold text-blue-600 dark:text-blue-400 hover:underline"
@@ -289,7 +291,7 @@ export default function MetreDetailPage() {
                     )}
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Sous-traitant</label>
+                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Sous-traitant</UiText></label>
                     <p className="mt-1 text-base font-semibold text-gray-900 dark:text-white">{metre.soustraitant.nom}</p>
                     {metre.soustraitant.email && (
                       <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{metre.soustraitant.email}</p>
@@ -306,7 +308,7 @@ export default function MetreDetailPage() {
                   <div>
                     <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date de soumission</label>
                     <p className="mt-1 text-base text-gray-900 dark:text-white">
-                      {new Date(metre.createdAt).toLocaleDateString('fr-FR', {
+                      {new Date(metre.createdAt).toLocaleDateString(intlLocale(getActiveLocale()), {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric',
@@ -317,7 +319,7 @@ export default function MetreDetailPage() {
                   </div>
                   {metre.commande && (
                     <div>
-                      <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Commande associée</label>
+                      <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Commande associée</UiText></label>
                       <p className="mt-1 text-base text-gray-900 dark:text-white">
                         {metre.commande.reference || `Commande #${metre.commande.id}`}
                       </p>
@@ -353,8 +355,8 @@ export default function MetreDetailPage() {
                     ) : (
                       <>
                         <DocumentArrowDownIcon className="h-5 w-5" />
-                        Télécharger le PDF
-                      </>
+                        <UiText>Télécharger le PDF
+                      </UiText></>
                     )}
                   </button>
                 </div>
@@ -370,8 +372,8 @@ export default function MetreDetailPage() {
                     {metre.chantier.chantierId.startsWith('CH-LIBRE-') && (
                       <div className="mb-6 p-4 bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-xl shadow-lg">
                         <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
-                          Associer à un chantier existant
-                        </label>
+                          <UiText>Associer à un chantier existant
+                        </UiText></label>
                         <div className="flex gap-3">
                           <div className="flex-1">
                             <SearchableSelect
@@ -383,8 +385,8 @@ export default function MetreDetailPage() {
                               value={selectedChantierId}
                               onChange={(v) => setSelectedChantierId(v as string)}
                               placeholder={loadingChantiers ? "Chargement..." : "Sélectionner un chantier"}
-                              searchPlaceholder="Rechercher un chantier..."
-                              emptyMessage="Aucun chantier trouvé"
+                              searchPlaceholder={tx("Rechercher un chantier...")}
+                              emptyMessage={tx("Aucun chantier trouvé")}
                               showAllOption={false}
                               disabled={loadingChantiers || updating}
                             />
@@ -427,8 +429,8 @@ export default function MetreDetailPage() {
                             ) : (
                               <>
                                 <CheckIcon className="h-5 w-5" />
-                                Valider
-                              </>
+                                <UiText>Valider
+                              </UiText></>
                             )}
                           </button>
                           <button
@@ -499,8 +501,8 @@ export default function MetreDetailPage() {
                           ) : (
                             <>
                               <CheckIcon className="h-5 w-5" />
-                              Valider
-                            </>
+                              <UiText>Valider
+                            </UiText></>
                           )}
                         </button>
                       )}
@@ -514,7 +516,7 @@ export default function MetreDetailPage() {
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-purple-500/10 to-indigo-500/10">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                  Lignes du métré ({metre.lignes.length})
+                  <UiText>Lignes du métré (</UiText>{metre.lignes.length})
                 </h2>
               </div>
               <div className="overflow-x-auto">
@@ -551,7 +553,7 @@ export default function MetreDetailPage() {
                           {formatMontant(ligne.prixUnitaire)} €
                         </td>
                         <td className="px-4 py-3 text-sm text-right text-gray-700 dark:text-gray-300">
-                          {ligne.quantite.toLocaleString('fr-FR')}
+                          {ligne.quantite.toLocaleString(intlLocale(getActiveLocale()))}
                         </td>
                         <td className="px-4 py-3 text-sm text-right font-semibold text-gray-900 dark:text-white">
                           {formatMontant(ligne.prixUnitaire * ligne.quantite)} €
@@ -578,7 +580,7 @@ export default function MetreDetailPage() {
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                 <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-green-500/10 to-emerald-500/10">
                   <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                    Pièces jointes ({metre.piecesJointes.length})
+                    <UiText>Pièces jointes (</UiText>{metre.piecesJointes.length})
                   </h2>
                 </div>
                 <div className="p-6">

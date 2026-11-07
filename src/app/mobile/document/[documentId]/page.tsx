@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useRouter, useParams } from 'next/navigation'
 import { useSelectedChantier } from '@/contexts/SelectedChantierContext'
 import { ArrowLeftIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline'
@@ -84,7 +86,7 @@ export default function MobileDocumentPDFPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
+          <p className="mt-4 text-gray-600"><UiText>Chargement...</UiText></p>
         </div>
       </div>
     )
@@ -99,8 +101,8 @@ export default function MobileDocumentPDFPage() {
             onClick={() => router.push('/mobile/documents')}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg"
           >
-            Retour
-          </button>
+            <UiText>Retour
+          </UiText></button>
         </div>
       </div>
     )
@@ -116,7 +118,7 @@ export default function MobileDocumentPDFPage() {
             className="p-2 -ml-2 active:bg-gray-100 rounded-lg transition-colors flex items-center gap-2 touch-manipulation"
           >
             <ArrowLeftIcon className="h-6 w-6 text-gray-700" />
-            <span className="text-gray-700 font-medium">Retour</span>
+            <span className="text-gray-700 font-medium"><UiText>Retour</UiText></span>
           </button>
           <h1 className="text-lg font-semibold text-gray-900 flex-1 text-center truncate px-2">
             {documentName}
@@ -124,7 +126,7 @@ export default function MobileDocumentPDFPage() {
           <button
             onClick={handleDownload}
             className="p-2 -mr-2 active:bg-gray-100 rounded-lg transition-colors touch-manipulation"
-            aria-label="Télécharger"
+            aria-label={tx("Télécharger")}
           >
             <ArrowDownTrayIcon className="h-6 w-6 text-gray-700" />
           </button>
@@ -139,11 +141,11 @@ export default function MobileDocumentPDFPage() {
               onClick={() => window.open(documentUrl.startsWith('http') ? documentUrl : `${window.location.origin}${documentUrl}`, '_blank', 'noopener')}
               className="w-full py-2 px-4 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-sm"
             >
-              Ouvrir le PDF en plein écran
-            </button>
+              <UiText>Ouvrir le PDF en plein écran
+            </UiText></button>
             <p className="text-xs text-amber-800 dark:text-amber-200 mt-1 text-center">
-              Sur iPhone, ouvrez en plein écran pour faire défiler toutes les pages
-            </p>
+              <UiText>Sur iPhone, ouvrez en plein écran pour faire défiler toutes les pages
+            </UiText></p>
           </div>
         )}
         <div className="flex-1 min-h-0 overflow-hidden">
@@ -173,10 +175,10 @@ export default function MobileDocumentPDFPage() {
         style={{
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
         }}
-        aria-label="Retour"
+        aria-label={tx("Retour")}
       >
         <ArrowLeftIcon className="h-6 w-6" />
-        <span className="font-medium hidden sm:inline">Retour</span>
+        <span className="font-medium hidden sm:inline"><UiText>Retour</UiText></span>
       </button>
     </div>
   )

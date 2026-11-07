@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { PageHeader } from '@/components/PageHeader'
@@ -129,7 +131,7 @@ export default function MetresPlanPage() {
       if (newId) router.push(`/metres-plan/${newId}`)
       else loadProjets()
     } catch {
-      toast.error('Impossible de créer le métré sur plan.')
+      toast.error(tx("Impossible de créer le métré sur plan."))
     } finally {
       setCreating(false)
     }
@@ -143,9 +145,9 @@ export default function MetresPlanPage() {
       const res = await fetch(`/api/metres-plan/${deleteId}`, { method: 'DELETE' })
       if (!res.ok) throw new Error()
       setProjets(prev => prev.filter(p => p.id !== deleteId))
-      toast.success('Métré supprimé')
+      toast.success(tx("Métré supprimé"))
     } catch {
-      toast.error('Erreur lors de la suppression')
+      toast.error(tx("Erreur lors de la suppression"))
     } finally {
       setDeleting(false)
       setDeleteId(null)
@@ -153,7 +155,7 @@ export default function MetresPlanPage() {
   }
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
-  const fmt = (d: string) => new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+  const fmt = (d: string) => new Date(d).toLocaleDateString(intlLocale(getActiveLocale()), { day: 'numeric', month: 'short', year: 'numeric' })
 
   const actionButton = (
     <button
@@ -176,8 +178,8 @@ export default function MetresPlanPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Métrés sur plan"
-        subtitle="Dessinez et mesurez directement sur vos plans PDF"
+        title={tx("Métrés sur plan")}
+        subtitle={tx("Dessinez et mesurez directement sur vos plans PDF")}
         icon={PencilSquareIcon}
         badgeColor="from-indigo-600 via-blue-600 to-sky-700"
         gradientColor="from-indigo-600/10 via-blue-600/10 to-sky-700/10"
@@ -195,7 +197,7 @@ export default function MetresPlanPage() {
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Rechercher…"
+                placeholder={tx("Rechercher…")}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -218,7 +220,7 @@ export default function MetresPlanPage() {
                     <input
                       autoFocus
                       type="text"
-                      placeholder="Rechercher un chantier…"
+                      placeholder={tx("Rechercher un chantier…")}
                       value={chantierSearch}
                       onChange={e => setChantierSearch(e.target.value)}
                       className="w-full px-3 py-1.5 text-sm bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-gray-900 dark:text-white outline-none focus:border-indigo-500"
@@ -228,8 +230,8 @@ export default function MetresPlanPage() {
                     <li>
                       <button type="button" onClick={() => { setFilterChantier(''); setChantierDropdownOpen(false) }}
                         className={`w-full text-left px-3 py-2 text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 ${!filterChantier ? 'font-semibold text-indigo-600 dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300'}`}>
-                        Tous les chantiers
-                      </button>
+                        <UiText>Tous les chantiers
+                      </UiText></button>
                     </li>
                     {chantiers
                       .filter(c => !chantierSearch || c.nomChantier.toLowerCase().includes(chantierSearch.toLowerCase()))
@@ -256,7 +258,7 @@ export default function MetresPlanPage() {
               onChange={e => setSort(e.target.value as SortKey)}
               className="flex-1 min-w-0 px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none"
             >
-              <option value="recent">Plus récent</option>
+              <option value="recent"><UiText>Plus récent</UiText></option>
               <option value="oldest">Plus ancien</option>
               <option value="name_asc">Nom A → Z</option>
               <option value="name_desc">Nom Z → A</option>
@@ -266,7 +268,7 @@ export default function MetresPlanPage() {
           {/* Result count */}
           {!loading && (
             <span className="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
-              {filtered.length} métré{filtered.length !== 1 ? 's' : ''}
+              {filtered.length} <UiText>métré</UiText>{filtered.length !== 1 ? 's' : ''}
             </span>
           )}
 
@@ -275,14 +277,14 @@ export default function MetresPlanPage() {
             <button
               onClick={() => setView('list')}
               className={`p-1.5 rounded transition-colors ${view === 'list' ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
-              title="Vue liste"
+              title={tx("Vue liste")}
             >
               <List size={16} />
             </button>
             <button
               onClick={() => setView('grid')}
               className={`p-1.5 rounded transition-colors ${view === 'grid' ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
-              title="Vue grille"
+              title={tx("Vue grille")}
             >
               <LayoutGrid size={16} />
             </button>
@@ -324,7 +326,7 @@ export default function MetresPlanPage() {
             <div className="grid grid-cols-[1fr_auto_auto_auto] gap-4 px-4 py-2 border-b border-gray-100 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               <span><UiText>Nom / Chantier</UiText></span>
               <span className="text-right w-36"><UiText>Mis à jour</UiText></span>
-              <span className="w-20 text-center">Ouvrir</span>
+              <span className="w-20 text-center"><UiText>Ouvrir</UiText></span>
               <span className="w-8" />
             </div>
             {filtered.map((projet, i) => (
@@ -342,7 +344,7 @@ export default function MetresPlanPage() {
                     {projet.chantier ? (
                       <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{projet.chantier.nomChantier}</p>
                     ) : (
-                      <p className="text-xs text-gray-400 dark:text-gray-500 italic">Sans chantier</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 italic"><UiText>Sans chantier</UiText></p>
                     )}
                   </div>
                 </div>
@@ -357,14 +359,14 @@ export default function MetresPlanPage() {
                   onClick={() => router.push(`/metres-plan/${projet.id}`)}
                   className="w-20 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold transition-colors"
                 >
-                  <FolderOpenIcon className="h-3.5 w-3.5" /> Ouvrir
-                </button>
+                  <FolderOpenIcon className="h-3.5 w-3.5" /> <UiText>Ouvrir
+                </UiText></button>
 
                 {/* Delete */}
                 <button
                   onClick={() => setDeleteId(projet.id)}
                   className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                  title="Supprimer ce métré"
+                  title={tx("Supprimer ce métré")}
                 >
                   <TrashIcon className="h-4 w-4" />
                 </button>
@@ -388,22 +390,22 @@ export default function MetresPlanPage() {
                     {projet.chantier ? (
                       <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">{projet.chantier.nomChantier}</p>
                     ) : (
-                      <p className="text-xs text-gray-400 italic mt-0.5">Sans chantier</p>
+                      <p className="text-xs text-gray-400 italic mt-0.5"><UiText>Sans chantier</UiText></p>
                     )}
                   </div>
                 </div>
-                <p className="text-xs text-gray-400 dark:text-gray-500">Mis à jour le {fmt(projet.updatedAt)}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500"><UiText>Mis à jour le </UiText>{fmt(projet.updatedAt)}</p>
                 <div className="mt-auto flex gap-2">
                   <button
                     onClick={() => router.push(`/metres-plan/${projet.id}`)}
                     className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white rounded-lg text-xs font-semibold transition-all"
                   >
-                    <FolderOpenIcon className="h-3.5 w-3.5" /> Ouvrir
-                  </button>
+                    <FolderOpenIcon className="h-3.5 w-3.5" /> <UiText>Ouvrir
+                  </UiText></button>
                   <button
                     onClick={() => setDeleteId(projet.id)}
                     className="px-2.5 py-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-700 transition-colors"
-                    title="Supprimer"
+                    title={tx("Supprimer")}
                   >
                     <TrashIcon className="h-3.5 w-3.5" />
                   </button>
@@ -429,21 +431,21 @@ export default function MetresPlanPage() {
                   value={nomProjet}
                   onChange={e => setNomProjet(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleCreate()}
-                  placeholder="Ex : Façade lot A"
+                  placeholder={tx("Ex : Façade lot A")}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                   autoFocus
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Chantier associé <span className="text-gray-400">(optionnel)</span>
+                  <UiText>Chantier associé </UiText><span className="text-gray-400">(optionnel)</span>
                 </label>
                 <select
                   value={chantierId}
                   onChange={e => setChantierId(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                 >
-                  <option value="">— Aucun chantier —</option>
+                  <option value=""><UiText>— Aucun chantier —</UiText></option>
                   {chantiers.map(c => (
                     <option key={c.id} value={c.id}>{c.nomChantier}</option>
                   ))}
@@ -480,8 +482,8 @@ export default function MetresPlanPage() {
               <h2 className="text-base font-bold text-gray-900 dark:text-white"><UiText>Supprimer ce métré ?</UiText></h2>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
-              Le métré <strong className="text-gray-700 dark:text-gray-200">{projets.find(p => p.id === deleteId)?.nom}</strong> et tous ses fichiers seront définitivement supprimés. Cette action est irréversible.
-            </p>
+              <UiText>Le métré </UiText><strong className="text-gray-700 dark:text-gray-200">{projets.find(p => p.id === deleteId)?.nom}</strong> <UiText>et tous ses fichiers seront définitivement supprimés. Cette action est irréversible.
+            </UiText></p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteId(null)}

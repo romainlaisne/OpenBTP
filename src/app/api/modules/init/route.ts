@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -49,11 +51,12 @@ async function initializeFeatureModules() {
 }
 
 export async function POST() {
+  await bindRequestLocale()
   try {
     // Vérifier que l'utilisateur est admin
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== 'ADMIN') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Accès non autorisé' },
         { status: 403 }
       );
@@ -62,13 +65,13 @@ export async function POST() {
     // Initialiser les modules
     await initializeFeatureModules();
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       message: 'Modules initialisés avec succès'
     });
   } catch (error) {
     console.error('Erreur lors de l\'initialisation des modules:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'initialisation des modules' },
       { status: 500 }
     );
@@ -77,20 +80,21 @@ export async function POST() {
 
 // GET pour vérifier le statut des modules
 export async function GET() {
+  await bindRequestLocale()
   try {
     const moduleCount = await prisma.featureModule.count();
     const activeModules = await prisma.featureModule.count({
       where: { isActive: true }
     });
 
-    return NextResponse.json({
+    return localizedJson({
       total: moduleCount,
       active: activeModules,
       needsInit: moduleCount === 0
     });
   } catch (error) {
     console.error('Erreur lors de la vérification des modules:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la vérification des modules' },
       { status: 500 }
     );

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -22,10 +24,11 @@ interface TaskCreateData {
 
 // GET - Récupérer toutes les tâches avec leurs assignations
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -88,11 +91,11 @@ export async function GET(request: Request) {
       }
     });
 
-    return NextResponse.json(tasks);
+    return localizedJson(tasks);
 
   } catch (error) {
     console.error('Erreur lors de la récupération des tâches:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des tâches' },
       { status: 500 }
     );
@@ -101,10 +104,11 @@ export async function GET(request: Request) {
 
 // POST - Créer une nouvelle tâche
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const data = await request.json();
@@ -119,7 +123,7 @@ export async function POST(request: Request) {
     } = data;
 
     if (!title || !start || !end) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le titre, date de début et date de fin sont requis' },
         { status: 400 }
       );
@@ -205,11 +209,11 @@ export async function POST(request: Request) {
       }
     });
 
-    return NextResponse.json(taskComplete, { status: 201 });
+    return localizedJson(taskComplete, { status: 201 });
 
   } catch (error) {
     console.error('Erreur lors de la création de la tâche:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de la tâche' },
       { status: 500 }
     );

@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Breadcrumb } from '@/components/Breadcrumb'
@@ -204,7 +205,7 @@ export default function InventoryScannerPage() {
         {loading ? (
           <div className="text-center py-10">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-2">Chargement des données...</p>
+            <p className="mt-2"><UiText>Chargement des données...</UiText></p>
           </div>
         ) : error ? (
           <div className="w-full max-w-md bg-red-50 text-red-700 p-4 rounded-lg mb-4">
@@ -213,8 +214,8 @@ export default function InventoryScannerPage() {
               onClick={handleReset}
               className="mt-2 text-sm text-red-700 underline"
             >
-              Réessayer
-            </button>
+              <UiText>Réessayer
+            </UiText></button>
           </div>
         ) : foundEmplacement ? (
           <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
@@ -237,11 +238,11 @@ export default function InventoryScannerPage() {
               // Affichage des détails du matériau trouvé
               <div className="mb-6">
                 <div className="bg-blue-50 p-4 rounded-md mb-4">
-                  <h3 className="font-medium text-blue-800">Matériau trouvé</h3>
+                  <h3 className="font-medium text-blue-800"><UiText>Matériau trouvé</UiText></h3>
                   <p className="text-blue-700 font-bold text-lg">{scannedMateriau.nom}</p>
                   <p className="text-blue-600 mt-1">{scannedMateriau.description || 'Aucune description'}</p>
                   <p className="text-blue-600 mt-1">
-                    <span className="font-medium">Quantité:</span> {typeof scannedMateriau.quantite === 'number' ? scannedMateriau.quantite.toFixed(2) : scannedMateriau.quantite}
+                    <span className="font-medium"><UiText>Quantité:</UiText></span> {typeof scannedMateriau.quantite === 'number' ? scannedMateriau.quantite.toFixed(2) : scannedMateriau.quantite}
                   </p>
                 </div>
                 
@@ -257,8 +258,8 @@ export default function InventoryScannerPage() {
               // Emplacement libre, proposition d'ajout
               <div className="mb-6">
                 <div className="bg-green-50 p-4 rounded-md mb-4">
-                  <h3 className="font-medium text-green-800">Emplacement libre</h3>
-                  <p className="text-green-600">Cet emplacement est disponible pour l&apos;ajout d&apos;un nouveau matériau.</p>
+                  <h3 className="font-medium text-green-800"><UiText>Emplacement libre</UiText></h3>
+                  <p className="text-green-600"><UiText>Cet emplacement est disponible pour l&apos;ajout d&apos;un nouveau matériau.</UiText></p>
                 </div>
                 
                 <button
@@ -266,15 +267,15 @@ export default function InventoryScannerPage() {
                   disabled={processingAction}
                   className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-md font-medium"
                 >
-                  Ajouter un matériau
-                </button>
+                  <UiText>Ajouter un matériau
+                </UiText></button>
               </div>
             )}
             
             <div className="mt-4 text-center">
               <Link href="/inventory" className="text-blue-600 hover:text-blue-800">
-                Retour à l&apos;inventaire
-              </Link>
+                <UiText>Retour à l&apos;inventaire
+              </UiText></Link>
             </div>
           </div>
         ) : (

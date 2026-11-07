@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeftIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
@@ -62,14 +63,14 @@ export default function NouveauChoixClientPage() {
       const result = await response.json()
       
       if (result.success) {
-        toast.success('Choix client créé avec succès')
+        toast.success(tx("Choix client créé avec succès"))
         router.push(`/choix-clients/${result.choixClient.id}/edit`)
       } else {
         throw new Error(result.error || 'Erreur lors de la création')
       }
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la création du choix client')
+      toast.error(tx("Erreur lors de la création du choix client"))
     } finally {
       setSaving(false)
     }
@@ -80,8 +81,8 @@ export default function NouveauChoixClientPage() {
       <Toaster position="top-right" />
       
       <PageHeader
-        title="Nouveau Choix Client"
-        subtitle="Enregistrer les choix de carrelage du client"
+        title={tx("Nouveau Choix Client")}
+        subtitle={tx("Enregistrer les choix de carrelage du client")}
         icon={DocumentTextIcon}
         badgeColor="from-purple-600 via-pink-600 to-rose-700"
         gradientColor="from-purple-600/10 via-pink-600/10 to-rose-700/10"
@@ -89,7 +90,7 @@ export default function NouveauChoixClientPage() {
           <button
             onClick={() => router.push('/choix-clients')}
             className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-            title="Retour à la liste des choix clients"
+            title={tx("Retour à la liste des choix clients")}
           >
             <ArrowLeftIcon className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
