@@ -1,6 +1,6 @@
 'use client'
 
-import { UiText } from '@/contexts/LocaleContext'
+import { UiText, localizeUiText, useLocale } from '@/contexts/LocaleContext'
 import { evaluateFormula } from '@/lib/formula'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
@@ -107,6 +107,7 @@ export default function EditDevisPage() {
   const router = useRouter()
   const params = useParams()
   const devisId = params?.id as string
+  const { locale, uiTranslationsEnabled } = useLocale()
 
   const [typeDevis, setTypeDevis] = useState<'DEVIS' | 'AVENANT'>('DEVIS')
   const [reference, setReference] = useState('')
@@ -180,8 +181,8 @@ export default function EditDevisPage() {
         // Vérifier que le devis est modifiable
         if (devis.statut !== 'BROUILLON') {
           showConfirmationRef.current({
-            title: 'Modification impossible',
-            message: 'Seuls les devis en brouillon peuvent être modifiés',
+            title: localizeUiText('Modification impossible', locale, uiTranslationsEnabled),
+            message: localizeUiText('Seuls les devis en brouillon peuvent être modifiés', locale, uiTranslationsEnabled),
             type: 'warning',
             confirmText: 'OK',
             showCancel: false,
@@ -215,8 +216,8 @@ export default function EditDevisPage() {
         })))
       } else {
         showConfirmationRef.current({
-          title: 'Erreur',
-          message: 'Erreur lors du chargement du devis',
+          title: localizeUiText('Erreur', locale, uiTranslationsEnabled),
+          message: localizeUiText('Erreur lors du chargement du devis', locale, uiTranslationsEnabled),
           type: 'error',
           confirmText: 'OK',
           showCancel: false,
@@ -228,8 +229,8 @@ export default function EditDevisPage() {
     } catch (error) {
       console.error('Erreur:', error)
       showConfirmationRef.current({
-        title: 'Erreur',
-        message: 'Erreur lors du chargement du devis',
+        title: localizeUiText('Erreur', locale, uiTranslationsEnabled),
+        message: localizeUiText('Erreur lors du chargement du devis', locale, uiTranslationsEnabled),
         type: 'error',
         confirmText: 'OK',
         showCancel: false,
@@ -240,7 +241,7 @@ export default function EditDevisPage() {
     } finally {
       setLoading(false)
     }
-  }, [devisId, router])
+  }, [devisId, router, locale, uiTranslationsEnabled])
 
   useEffect(() => {
     void loadClients()
@@ -348,8 +349,8 @@ export default function EditDevisPage() {
     // Validation selon le type
     if (typeDevis === 'DEVIS' && !selectedClientId) {
       showConfirmation({
-        title: 'Client requis',
-        message: 'Veuillez sélectionner un client',
+        title: localizeUiText('Client requis', locale, uiTranslationsEnabled),
+        message: localizeUiText('Veuillez sélectionner un client', locale, uiTranslationsEnabled),
         type: 'warning',
         confirmText: 'OK',
         showCancel: false,
@@ -360,8 +361,8 @@ export default function EditDevisPage() {
 
     if (typeDevis === 'AVENANT' && !selectedChantierId) {
       showConfirmation({
-        title: 'Chantier requis',
-        message: 'Veuillez sélectionner un chantier',
+        title: localizeUiText('Chantier requis', locale, uiTranslationsEnabled),
+        message: localizeUiText('Veuillez sélectionner un chantier', locale, uiTranslationsEnabled),
         type: 'warning',
         confirmText: 'OK',
         showCancel: false,
@@ -372,8 +373,8 @@ export default function EditDevisPage() {
 
     if (lignes.length === 0) {
       showConfirmation({
-        title: 'Lignes requises',
-        message: 'Veuillez ajouter au moins une ligne',
+        title: localizeUiText('Lignes requises', locale, uiTranslationsEnabled),
+        message: localizeUiText('Veuillez ajouter au moins une ligne', locale, uiTranslationsEnabled),
         type: 'warning',
         confirmText: 'OK',
         showCancel: false,
@@ -413,8 +414,8 @@ export default function EditDevisPage() {
       } else {
         const error = await response.json()
         showConfirmation({
-          title: 'Erreur',
-          message: error.error || 'Erreur lors de la mise à jour du devis',
+          title: localizeUiText('Erreur', locale, uiTranslationsEnabled),
+          message: localizeUiText(error.error || 'Erreur lors de la mise à jour du devis', locale, uiTranslationsEnabled),
           type: 'error',
           confirmText: 'OK',
           showCancel: false,
@@ -424,8 +425,8 @@ export default function EditDevisPage() {
     } catch (error) {
       console.error('Erreur:', error)
       showConfirmation({
-        title: 'Erreur',
-        message: 'Erreur lors de la mise à jour du devis',
+        title: localizeUiText('Erreur', locale, uiTranslationsEnabled),
+        message: localizeUiText('Erreur lors de la mise à jour du devis', locale, uiTranslationsEnabled),
         type: 'error',
         confirmText: 'OK',
         showCancel: false,
@@ -486,7 +487,7 @@ export default function EditDevisPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                   </svg>
                   <span className="hidden sm:inline"><UiText>Enregistrer</UiText></span>
-                  <span className="sm:hidden">Sauver</span>
+                  <span className="sm:hidden"><UiText>Sauver</UiText></span>
                 </>
               )}
             </button>
@@ -506,14 +507,16 @@ export default function EditDevisPage() {
         {/* Type de devis : DEVIS ou AVENANT - En lecture seule en édition */}
         <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-600/50 rounded-xl p-4 border border-gray-200/50 dark:border-gray-600/50">
           <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Type de document (non modifiable)
+              <UiText>Type de document (non modifiable)</UiText>
           </label>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold shadow-sm bg-gradient-to-r from-orange-100 to-orange-200 dark:from-orange-900/50 dark:to-orange-800/50 text-orange-900 dark:text-orange-300 ring-2 ring-orange-300/50 dark:ring-orange-500/50">
-              {typeDevis === 'DEVIS' ? '📄 Devis' : '📋 Avenant'}
+              {locale === 'en'
+                ? (typeDevis === 'DEVIS' ? '📄 Quote' : '📋 Amendment')
+                : (typeDevis === 'DEVIS' ? '📄 Devis' : '📋 Avenant')}
             </span>
             <p className="text-xs text-gray-600 dark:text-gray-400">
-              Le type ne peut pas être modifié après création
+              <UiText>Le type ne peut pas être modifié après création</UiText>
             </p>
           </div>
         </div>
@@ -528,7 +531,7 @@ export default function EditDevisPage() {
               type="text"
               value={reference}
               onChange={(e) => setReference(e.target.value)}
-              placeholder="Ex: Carrelage premium app 3"
+              placeholder={localizeUiText('Ex: Carrelage premium app 3', locale, uiTranslationsEnabled)}
               className="block w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -540,14 +543,14 @@ export default function EditDevisPage() {
           {typeDevis === 'DEVIS' ? (
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                Client *
+                <UiText>Client *</UiText>
               </label>
               <select
                 value={selectedClientId}
                 onChange={(e) => setSelectedClientId(e.target.value)}
                 className="block w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all font-medium"
               >
-                <option value="">Sélectionner un client</option>
+                <option value=""><UiText>Sélectionner un client</UiText></option>
                 {clients.map((client) => (
                   <option key={client.id} value={client.id}>
                     {client.nom}
@@ -558,14 +561,14 @@ export default function EditDevisPage() {
           ) : (
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                Chantier *
+                <UiText>Chantier *</UiText>
               </label>
               <select
                 value={selectedChantierId}
                 onChange={(e) => handleChantierChange(e.target.value)}
                 className="block w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all font-medium"
               >
-                <option value="">Sélectionner un chantier</option>
+                <option value=""><UiText>Sélectionner un chantier</UiText></option>
                 {chantiers.map((chantier) => (
                   <option key={chantier.chantierId} value={chantier.chantierId}>
                     {chantier.nomChantier} - {chantier.clientNom}
@@ -590,15 +593,15 @@ export default function EditDevisPage() {
               onChange={(e) => setTauxTVA(parseFloat(e.target.value))}
               className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
             >
-              <option value="0">0% - Exonération</option>
-              <option value="6">6% - Taux réduit</option>
-              <option value="21">21% - Taux normal</option>
+              <option value="0"><UiText>0% - Exonération</UiText></option>
+              <option value="6"><UiText>6% - Taux réduit</UiText></option>
+              <option value="21"><UiText>21% - Taux normal</UiText></option>
             </select>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Remise globale (%)
+              <UiText>Remise globale (%)</UiText>
             </label>
             <input
               type="number"
@@ -621,13 +624,14 @@ export default function EditDevisPage() {
             onChange={(e) => setObservations(e.target.value)}
             rows={3}
             className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-            placeholder="Observations ou notes..."
+            placeholder={localizeUiText('Observations ou notes...', locale, uiTranslationsEnabled)}
           />
         </div>
 
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            <span className="font-medium">Note :</span> Les conditions générales de vente seront automatiquement ajoutées depuis le template configuré dans les paramètres de l'entreprise.
+            <span className="font-medium"><UiText>Note :</UiText></span>{' '}
+            <UiText>Les conditions générales de vente seront automatiquement ajoutées depuis le template configuré dans les paramètres de l'entreprise.</UiText>
           </p>
         </div>
       </div>
@@ -637,7 +641,7 @@ export default function EditDevisPage() {
           <div className="relative px-6 py-4 bg-gradient-to-br from-orange-600/10 via-orange-700/10 to-red-800/10 dark:from-orange-600/5 dark:via-orange-700/5 dark:to-red-800/5 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <h2 className="text-lg font-bold text-orange-900 dark:text-white">Lignes du devis</h2>
+                <h2 className="text-lg font-bold text-orange-900 dark:text-white"><UiText>Lignes du devis</UiText></h2>
               </div>
               <div className="flex items-center space-x-2">
                 <button
@@ -673,8 +677,8 @@ export default function EditDevisPage() {
                     <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Description</UiText></th>
                     <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28"><UiText>Unité</UiText></th>
                     <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Quantité</UiText></th>
-                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Prix Unit.</th>
-                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-24">Remise %</th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Prix Unit.</UiText></th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-24"><UiText>Remise %</UiText></th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28">Total</th>
                     <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-16"><UiText>Action</UiText></th>
                   </tr>
@@ -726,8 +730,8 @@ export default function EditDevisPage() {
 
         {lignes.length === 0 && (
           <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-            <p>Aucune ligne ajoutée</p>
-            <p className="text-sm mt-1">Cliquez sur "Ajouter une ligne" pour commencer</p>
+            <p><UiText>Aucune ligne ajoutée</UiText></p>
+            <p className="text-sm mt-1"><UiText>Cliquez sur "Ajouter une ligne" pour commencer</UiText></p>
           </div>
         )}
       </div>
@@ -742,25 +746,25 @@ export default function EditDevisPage() {
             
             <div className="space-y-3">
               <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Total HT:</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Total HT:</UiText></span>
                 <span className="font-semibold text-gray-900 dark:text-white">{totaux.totalHT.toFixed(2)} €</span>
               </div>
               {remiseGlobale > 0 && (
                 <div className="flex justify-between items-center p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                  <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Remise globale ({remiseGlobale}%):</span>
+                  <span className="text-sm font-medium text-orange-700 dark:text-orange-300"><UiText>Remise globale</UiText> ({remiseGlobale}%):</span>
                   <span className="font-semibold text-orange-700 dark:text-orange-300">-{totaux.montantRemise.toFixed(2)} €</span>
                 </div>
               )}
               <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Total HT après remise:</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Total HT après remise:</UiText></span>
                 <span className="font-semibold text-gray-900 dark:text-white">{totaux.totalHTApresRemise.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">TVA ({tauxTVA}%):</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>TVA</UiText> ({tauxTVA}%):</span>
                 <span className="font-semibold text-gray-900 dark:text-white">{totaux.totalTVA.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between items-center p-4 bg-gradient-to-br from-orange-600/10 via-orange-700/10 to-red-800/10 dark:from-orange-600/5 dark:via-orange-700/5 dark:to-red-800/5 rounded-lg border border-orange-200 dark:border-orange-800 mt-4">
-                <span className="font-bold text-lg text-gray-900 dark:text-white">Total TTC:</span>
+                <span className="font-bold text-lg text-gray-900 dark:text-white"><UiText>Total TTC:</UiText></span>
                 <span className="font-bold text-2xl text-orange-900 dark:text-white">{totaux.totalTTC.toFixed(2)} €</span>
               </div>
             </div>
@@ -792,6 +796,7 @@ function LigneDevisRow({
   onDelete: (id: string) => void
   moveLigne: (dragIndex: number, hoverIndex: number) => void
 }) {
+  const { locale, uiTranslationsEnabled } = useLocale()
   const ref = useRef<HTMLTableRowElement>(null)
   const dragRef = useRef<HTMLDivElement>(null)
   const isSectionHeader = ligne.type === 'TITRE' || ligne.type === 'SOUS_TITRE'
@@ -881,7 +886,7 @@ function LigneDevisRow({
                 ? 'text-base font-bold bg-orange-50 dark:bg-orange-900/20' 
                 : 'text-sm font-semibold bg-blue-50 dark:bg-blue-900/20'
             } text-gray-900 dark:text-white`}
-            placeholder={ligne.type === 'TITRE' ? 'Titre de section' : 'Sous-titre'}
+            placeholder={localizeUiText(ligne.type === 'TITRE' ? 'Titre de section' : 'Sous-titre', locale, uiTranslationsEnabled)}
           />
         </td>
         <td className="px-3 py-2">
@@ -914,7 +919,7 @@ function LigneDevisRow({
           value={ligne.article}
           onChange={(e) => onUpdate(ligne.id, 'article', e.target.value)}
           className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-1 focus:ring-orange-500"
-          placeholder="Réf."
+          placeholder={localizeUiText('Réf.', locale, uiTranslationsEnabled)}
         />
       </td>
       <td className="px-3 py-2">
@@ -935,9 +940,9 @@ function LigneDevisRow({
           <option value="Mct">Mct</option>
           <option value="M2">M²</option>
           <option value="M3">M³</option>
-          <option value="Heures">Heures</option>
-          <option value="Pièces">Pièces</option>
-          <option value="Fft">Forfait</option>
+          <option value="Heures"><UiText>Heures</UiText></option>
+          <option value="Pièces"><UiText>Pièces</UiText></option>
+          <option value="Fft"><UiText>Forfait</UiText></option>
         </select>
       </td>
       <td className="px-3 py-2">
