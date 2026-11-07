@@ -1,5 +1,6 @@
 'use client';
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -163,7 +164,7 @@ export default function ClientDetailPage() {
   if (loadingClient || loadingContacts) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-300">Chargement des détails du client...</div>
+        <div className="text-gray-600 dark:text-gray-300"><UiText>Chargement des détails du client...</UiText></div>
       </div>
     );
   }
@@ -198,14 +199,14 @@ export default function ClientDetailPage() {
               href="/clients"
               className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
             >
-              Retour
+              <UiText>Retour</UiText>
             </Link>
             <Link
               href={`/clients/${client.id}/edit`}
               className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
             >
               <PencilIcon className="h-4 w-4 mr-1.5" />
-              Modifier
+              <UiText>Modifier</UiText>
             </Link>
           </div>
         }
@@ -217,7 +218,7 @@ export default function ClientDetailPage() {
         <div className="bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-8">
           <div className="px-4 py-5 sm:px-6">
             <h2 className="text-xl font-semibold leading-6 text-gray-900 dark:text-white">
-              Informations générales
+              <UiText>Informations générales</UiText>
             </h2>
           </div>
         <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-0">
@@ -231,11 +232,11 @@ export default function ClientDetailPage() {
               <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{client.telephone || 'N/A'}</dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Adresse</dt>
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Adresse</UiText></dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{client.adresse || 'N/A'}</dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Numéro de TVA</dt>
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Numéro de TVA</UiText></dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
                 <div className="flex items-center gap-3 flex-wrap">
                   <span>{client.numeroTva || 'N/A'}</span>
@@ -254,7 +255,7 @@ export default function ClientDetailPage() {
                             className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                             title="Voir sur Companyweb"
                           >
-                            Voir sur Companyweb
+                            <UiText>Voir sur Companyweb</UiText>
                           </a>
                         );
                       })()}
@@ -271,7 +272,7 @@ export default function ClientDetailPage() {
       <div className="bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-8">
         <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
           <h3 className="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
-            Contacts Associés
+            <UiText>Contacts Associés</UiText>
           </h3>
           <button 
             onClick={handleOpenAddContactModal} 
@@ -291,10 +292,10 @@ export default function ClientDetailPage() {
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Prénom & Nom</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Fonction</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Téléphone</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Email</UiText></th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Téléphone</UiText></th>
                     <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Actions</span>
+                      <span className="sr-only"><UiText>Actions</UiText></span>
                     </th>
                   </tr>
                 </thead>
@@ -337,7 +338,7 @@ export default function ClientDetailPage() {
         <div className="bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-8">
           <div className="px-4 py-5 sm:px-6">
             <h3 className="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
-              Chantiers de ce client
+              <UiText>Chantiers de ce client</UiText>
             </h3>
           </div>
           <div className="border-t border-gray-200 dark:border-gray-700">
@@ -380,10 +381,10 @@ export default function ClientDetailPage() {
         <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
           <div>
             <h3 className="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
-              Nouveau chantier
+              <UiText>Nouveau chantier</UiText>
             </h3>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Créer un nouveau chantier pour ce client
+              <UiText>Créer un nouveau chantier pour ce client</UiText>
             </p>
           </div>
           <Link
@@ -391,7 +392,7 @@ export default function ClientDetailPage() {
             className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
           >
             <BuildingOfficeIcon className="h-5 w-5 mr-2" />
-            Créer un chantier
+            <UiText>Créer un chantier</UiText>
           </Link>
         </div>
       </div>

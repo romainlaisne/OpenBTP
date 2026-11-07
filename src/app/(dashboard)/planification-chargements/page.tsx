@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -419,7 +420,7 @@ export default function PlanificationChargementsPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
         <div className="max-w-[1600px] mx-auto">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Accès non autorisé</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4"><UiText>Accès non autorisé</UiText></h1>
             <p className="text-gray-600 dark:text-gray-300">Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
           </div>
         </div>
@@ -515,13 +516,13 @@ export default function PlanificationChargementsPage() {
                   }}
                   className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors"
                 >
-                  Annuler
+                  <UiText>Annuler</UiText>
                 </button>
                 <button
                   onClick={handleAddPays}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                 >
-                  Ajouter
+                  <UiText>Ajouter</UiText>
                 </button>
               </div>
             </div>
@@ -568,13 +569,13 @@ export default function PlanificationChargementsPage() {
                   }}
                   className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors"
                 >
-                  Annuler
+                  <UiText>Annuler</UiText>
                 </button>
                 <button
                   onClick={handleAddUsine}
                   className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
                 >
-                  Ajouter
+                  <UiText>Ajouter</UiText>
                 </button>
               </div>
             </div>
@@ -620,13 +621,13 @@ export default function PlanificationChargementsPage() {
                   }}
                   className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors"
                 >
-                  Annuler
+                  <UiText>Annuler</UiText>
                 </button>
                 <button
                   onClick={handleAddChargement}
                   className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
                 >
-                  Ajouter
+                  <UiText>Ajouter</UiText>
                 </button>
               </div>
             </div>
@@ -690,7 +691,7 @@ export default function PlanificationChargementsPage() {
                     </th>
                   ))}
                   <th className="px-4 py-3 text-center text-sm font-bold text-gray-900 dark:text-white min-w-[100px]">
-                    Actions
+                    <UiText>Actions</UiText>
                   </th>
                 </tr>
               </thead>

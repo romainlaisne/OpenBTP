@@ -160,7 +160,7 @@ export default function MetresPlanPage() {
       onClick={() => setDialogOpen(true)}
       className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-semibold"
     >
-      <PlusIcon className="h-4 w-4" /> Nouveau métré
+      <PlusIcon className="h-4 w-4" /> <UiText>Nouveau métré</UiText>
     </button>
   )
 
@@ -243,7 +243,7 @@ export default function MetresPlanPage() {
                         </li>
                     ))}
                     {chantiers.filter(c => !chantierSearch || c.nomChantier.toLowerCase().includes(chantierSearch.toLowerCase())).length === 0 && (
-                      <li className="px-3 py-2 text-sm text-gray-400 dark:text-gray-500">Aucun chantier trouvé</li>
+                      <li className="px-3 py-2 text-sm text-gray-400 dark:text-gray-500"><UiText>Aucun chantier trouvé</UiText></li>
                     )}
                   </ul>
                 </div>
@@ -295,7 +295,7 @@ export default function MetresPlanPage() {
         ) : error ? (
           <div className="text-center py-16">
             <p className="text-red-600 dark:text-red-400">{error}</p>
-            <button onClick={loadProjets} className="mt-4 text-sm text-indigo-600 hover:underline">Réessayer</button>
+            <button onClick={loadProjets} className="mt-4 text-sm text-indigo-600 hover:underline"><UiText>Réessayer</UiText></button>
           </div>
         ) : filtered.length === 0 && projets.length > 0 ? (
           <div className="text-center py-16">
@@ -418,7 +418,7 @@ export default function MetresPlanPage() {
       {dialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Nouveau métré sur plan</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4"><UiText>Nouveau métré sur plan</UiText></h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -455,7 +455,7 @@ export default function MetresPlanPage() {
                 onClick={() => { setDialogOpen(false); setNomProjet(''); setChantierId('') }}
                 className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={handleCreate}
@@ -488,7 +488,7 @@ export default function MetresPlanPage() {
                 disabled={deleting}
                 className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={handleDelete}

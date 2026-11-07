@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -568,7 +569,7 @@ export default function ReceptionDetailPage() {
           <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <form onSubmit={handleSubmit}>
               <div className="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Nouveau PIN d'accès</h3>
+                <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4"><UiText>Nouveau PIN d'accès</UiText></h3>
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <input id="estInterne" name="estInterne" type="checkbox" checked={isInterne}
@@ -590,7 +591,7 @@ export default function ReceptionDetailPage() {
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <Button type="submit" variant="primary" disabled={loadingPins} className="sm:ml-3">{loadingPins ? 'Création...' : 'Créer PIN'}</Button>
-                <Button type="button" variant="outline" onClick={handleClose} className="mt-3 sm:mt-0">Annuler</Button>
+                <Button type="button" variant="outline" onClick={handleClose} className="mt-3 sm:mt-0"><UiText>Annuler</UiText></Button>
               </div>
             </form>
           </div>
@@ -677,7 +678,7 @@ export default function ReceptionDetailPage() {
   };
 
   if (loadingState.page) return <div className="min-h-screen flex justify-center items-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-red-700"></div></div>;
-  if (error && !reception) return <div className="p-4 text-red-600 bg-red-100 rounded-md">{error} <Button onClick={fetchData}>Réessayer</Button></div>;
+  if (error && !reception) return <div className="p-4 text-red-600 bg-red-100 rounded-md">{error} <Button onClick={fetchData}><UiText>Réessayer</UiText></Button></div>;
   if (!reception) return <div className="p-4 text-gray-600">Aucune donnée de réception.</div>;
 
   return (
@@ -711,7 +712,7 @@ export default function ReceptionDetailPage() {
                 <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                   <ClipboardDocumentCheckIcon className="w-6 h-6 mr-3 text-red-900 dark:text-white" />
                   <h1 className="text-xl font-bold text-red-900 dark:text-white">
-                    Réception
+                    <UiText>Réception</UiText>
                   </h1>
                 </div>
               </div>
@@ -830,7 +831,7 @@ export default function ReceptionDetailPage() {
           <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">Liste des Remarques</h2>
           {!reception.estFinalise && isAdminOrManager && (
             <Link href={`/chantiers/${chantierId}/reception/${id}/nouvelle-remarque`}>
-              <Button variant="primary" size="sm"><PlusCircleIcon className="h-5 w-5 mr-2"/>Ajouter</Button>
+              <Button variant="primary" size="sm"><PlusCircleIcon className="h-5 w-5 mr-2"/><UiText>Ajouter</UiText></Button>
             </Link>
           )}
         </div>
@@ -917,7 +918,7 @@ export default function ReceptionDetailPage() {
                     {isAdminOrManager && !reception.estFinalise && (
                       <>
                         {!remarque.estResolue && !remarque.estValidee && (
-                           <Button size="sm" variant="outline" onClick={() => handleOpenEditModal(remarque)}><PencilIcon className="h-3.5 w-3.5 mr-1"/>Modifier</Button>
+                           <Button size="sm" variant="outline" onClick={() => handleOpenEditModal(remarque)}><PencilIcon className="h-3.5 w-3.5 mr-1"/><UiText>Modifier</UiText></Button>
                         )}
                         {remarque.estResolue && !remarque.estValidee && !remarque.estRejetee && (
                           <>
@@ -942,7 +943,7 @@ export default function ReceptionDetailPage() {
       ) : (
         <div className="text-center py-10 bg-white dark:bg-gray-800 rounded-lg shadow">
           <ClipboardDocumentCheckIcon className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">Aucune remarque trouvée</h3>
+          <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white"><UiText>Aucune remarque trouvée</UiText></h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {remarkFilter === 'all' ? 'Ajoutez une nouvelle remarque pour commencer.' : 'Essayez de changer vos filtres.'}
           </p>

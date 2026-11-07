@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -210,7 +211,7 @@ export default function TemplatesContratsPage() {
                   </div>
                   {isActive && (
                     <span className="inline-flex items-center rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-emerald-600 shadow-sm shadow-emerald-200 dark:bg-gray-900/60 dark:text-emerald-200">
-                      Catégorie active
+                      <UiText>Catégorie active</UiText>
                     </span>
                   )}
                 </div>
@@ -325,7 +326,7 @@ export default function TemplatesContratsPage() {
 
               {loading && (
                 <div className="px-6 py-16 text-center text-sm text-gray-500 dark:text-gray-400">
-                  Chargement des templates...
+                  <UiText>Chargement des templates...</UiText>
                 </div>
               )}
             </div>

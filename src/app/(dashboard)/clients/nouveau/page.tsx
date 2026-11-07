@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { FormInput, FormTextarea } from '@/components/ui'
@@ -89,7 +90,7 @@ export default function NouveauClientPage() {
           >
             <ArrowLeftIcon className="h-4 w-4 mr-1.5" />
             <span className="hidden sm:inline">Retour aux clients</span>
-            <span className="sm:hidden">Retour</span>
+            <span className="sm:hidden"><UiText>Retour</UiText></span>
           </button>
         }
       />
@@ -182,7 +183,7 @@ export default function NouveauClientPage() {
                   className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
                 >
                   <ArrowLeftIcon className="h-4 w-4 mr-2" />
-                  Annuler
+                  <UiText>Annuler</UiText>
                 </button>
                 <button
                   type="submit"
@@ -192,12 +193,12 @@ export default function NouveauClientPage() {
                   {saving ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                      Création...
+                      <UiText>Création...</UiText>
                     </>
                   ) : (
                     <>
                       <UserPlusIcon className="h-4 w-4 mr-2" />
-                      Créer le client
+                      <UiText>Créer le client</UiText>
                     </>
                   )}
                 </button>

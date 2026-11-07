@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -62,14 +63,14 @@ function DeleteModal({
             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600"
             onClick={onClose}
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </button>
           <button
             type="button"
             className="px-4 py-2 text-sm font-medium text-white bg-red-600 dark:bg-red-500 border border-transparent rounded-md hover:bg-red-700 dark:hover:bg-red-600"
             onClick={onConfirm}
           >
-            Supprimer
+            <UiText>Supprimer</UiText>
           </button>
         </div>
       </div>
@@ -178,7 +179,7 @@ export default function OuvriersPage(
   if (!sousTraitant) return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="flex justify-center items-center h-screen">
-        <div className="text-gray-500 dark:text-gray-400">Sous-traitant non trouvé</div>
+        <div className="text-gray-500 dark:text-gray-400"><UiText>Sous-traitant non trouvé</UiText></div>
       </div>
     </div>
   )
@@ -196,7 +197,7 @@ export default function OuvriersPage(
               className="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Retour</span>
+              <span className="hidden sm:inline"><UiText>Retour</UiText></span>
             </button>
             <button
               onClick={() => router.push(`/sous-traitants/${params.id}/ouvriers/nouveau`)}
@@ -221,7 +222,7 @@ export default function OuvriersPage(
             <thead className="bg-gray-50 dark:bg-gray-700/50">
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Nom
+                  <UiText>Nom</UiText>
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Poste
@@ -233,10 +234,10 @@ export default function OuvriersPage(
                   Date d'entrée
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Documents
+                  <UiText>Documents</UiText>
                 </th>
                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Actions
+                  <UiText>Actions</UiText>
                 </th>
               </tr>
             </thead>

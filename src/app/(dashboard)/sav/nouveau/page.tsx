@@ -7,6 +7,7 @@ const compress = async (files: File[]) => {
   return out
 }
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { 
@@ -249,7 +250,7 @@ export default function NouveauTicketSAVPage() {
               />
               {isChantierLibre && (
                 <div className="mt-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom libre (chantier/ticket)</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Nom libre (chantier/ticket)</UiText></label>
                   <input className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white" value={chantierLibreNom} onChange={e=>setChantierLibreNom(e.target.value)} placeholder="Ex: Intervention client Dupont" />
                 </div>
               )}
@@ -258,7 +259,7 @@ export default function NouveauTicketSAVPage() {
             {/* Titre */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Titre du problème *
+                <UiText>Titre du problème *</UiText>
               </label>
               <input
                 type="text"
@@ -273,7 +274,7 @@ export default function NouveauTicketSAVPage() {
             {/* Description */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Description détaillée *
+                <UiText>Description détaillée *</UiText>
               </label>
               <textarea
                 required
@@ -288,7 +289,7 @@ export default function NouveauTicketSAVPage() {
             {/* Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Type de problème *
+                <UiText>Type de problème *</UiText>
               </label>
               <select
                 required
@@ -307,7 +308,7 @@ export default function NouveauTicketSAVPage() {
             {/* Priorité */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Priorité *
+                <UiText>Priorité *</UiText>
               </label>
               <select
                 required
@@ -326,7 +327,7 @@ export default function NouveauTicketSAVPage() {
             {/* Localisation */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Localisation précise
+                <UiText>Localisation précise</UiText>
               </label>
               <input
                 type="text"
@@ -342,7 +343,7 @@ export default function NouveauTicketSAVPage() {
         {/* Planification */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-            Planification, assignation et contact
+            <UiText>Planification, assignation et contact</UiText>
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -401,7 +402,7 @@ export default function NouveauTicketSAVPage() {
           {/* Coordonnées de contact */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom du contact</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Nom du contact</UiText></label>
               <input
                 type="text"
                 value={formData.contactNom}
@@ -410,7 +411,7 @@ export default function NouveauTicketSAVPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Téléphone</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Téléphone</UiText></label>
               <input
                 type="tel"
                 value={formData.contactTelephone}
@@ -419,7 +420,7 @@ export default function NouveauTicketSAVPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Email</UiText></label>
               <input
                 type="email"
                 value={formData.contactEmail}
@@ -445,7 +446,7 @@ export default function NouveauTicketSAVPage() {
             variant="secondary"
             onClick={() => router.back()}
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </Button>
           <Button
             type="submit"

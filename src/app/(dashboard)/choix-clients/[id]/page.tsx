@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -174,7 +175,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
       <div className="container mx-auto py-6 px-4">
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-2 text-gray-600 dark:text-gray-400">Chargement...</span>
+          <span className="ml-2 text-gray-600 dark:text-gray-400"><UiText>Chargement...</UiText></span>
         </div>
       </div>
     )
@@ -215,7 +216,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
               className="inline-flex items-center px-3 py-2 text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-700 hover:from-purple-700 hover:to-pink-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
             >
               <PencilIcon className="h-4 w-4 mr-1.5" />
-              Modifier
+              <UiText>Modifier</UiText>
             </Link>
             <button
               onClick={handleGeneratePDF}
@@ -249,7 +250,7 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <span className="text-sm text-gray-500 dark:text-gray-400">Statut</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400"><UiText>Statut</UiText></span>
             <div className="mt-1">
               <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${STATUTS[choixClient.statut as keyof typeof STATUTS].color}`}>
                 {STATUTS[choixClient.statut as keyof typeof STATUTS].label}
@@ -258,13 +259,13 @@ export default function ViewChoixClientPage({ params }: { params: Promise<{ id: 
           </div>
           {choixClient.telephoneClient && (
             <div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">Téléphone</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400"><UiText>Téléphone</UiText></span>
               <p className="text-gray-900 dark:text-white mt-1">{choixClient.telephoneClient}</p>
             </div>
           )}
           {choixClient.emailClient && (
             <div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">Email</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400"><UiText>Email</UiText></span>
               <p className="text-gray-900 dark:text-white mt-1">{choixClient.emailClient}</p>
             </div>
           )}

@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { Fragment, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import {
@@ -287,7 +288,7 @@ export default function NotificationsConfigPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <ArrowPathIcon className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">Chargement...</p>
+          <p className="text-gray-600 dark:text-gray-400"><UiText>Chargement...</UiText></p>
         </div>
       </div>
     )
@@ -303,7 +304,7 @@ export default function NotificationsConfigPage() {
           </div>
           <div>
             <h1 className="text-3xl font-black text-gray-900 dark:text-white">
-              Gestion des notifications
+              <UiText>Gestion des notifications</UiText>
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
               Configurez vos préférences de notifications par email et in-app
@@ -367,7 +368,7 @@ export default function NotificationsConfigPage() {
             </div>
           </div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-            Système non initialisé
+            <UiText>Système non initialisé</UiText>
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
             Le système de notifications n'est pas encore configuré. Veuillez contacter un administrateur pour l'initialiser.
@@ -404,7 +405,7 @@ export default function NotificationsConfigPage() {
           <div>
             <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
               <MagnifyingGlassIcon className="h-4 w-4" />
-              Rechercher
+              <UiText>Rechercher</UiText>
             </label>
             <input
               type="text"
@@ -419,7 +420,7 @@ export default function NotificationsConfigPage() {
           <div>
             <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
               <FunnelIcon className="h-4 w-4" />
-              Catégorie
+              <UiText>Catégorie</UiText>
             </label>
             <select
               value={selectedCategory}
@@ -450,7 +451,7 @@ export default function NotificationsConfigPage() {
                 <th className="px-6 py-4 text-center text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   <div className="flex items-center justify-center gap-2">
                     <EnvelopeIcon className="h-4 w-4" />
-                    Email
+                    <UiText>Email</UiText>
                   </div>
                 </th>
                 <th className="px-6 py-4 text-center text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">

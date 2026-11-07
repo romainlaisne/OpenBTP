@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use, useCallback, useMemo } from 'react';
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -477,7 +478,7 @@ export default function CommandeSousTraitantPage(
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
       <div className="text-center space-y-4">
         <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto"></div>
-        <p className="text-gray-600 dark:text-gray-300 font-medium">Chargement de la commande...</p>
+        <p className="text-gray-600 dark:text-gray-300 font-medium"><UiText>Chargement de la commande...</UiText></p>
       </div>
     </div>
   )
@@ -496,7 +497,7 @@ export default function CommandeSousTraitantPage(
             className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-md hover:shadow-lg"
           >
             <ArrowLeftIcon className="h-5 w-5 mr-2" />
-            Retour
+            <UiText>Retour</UiText>
           </Link>
         </div>
       </div>
@@ -517,7 +518,7 @@ export default function CommandeSousTraitantPage(
             className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-md hover:shadow-lg"
           >
             <ArrowLeftIcon className="h-5 w-5 mr-2" />
-            Retour
+            <UiText>Retour</UiText>
           </Link>
         </div>
       </div>
@@ -538,7 +539,7 @@ export default function CommandeSousTraitantPage(
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                  Supprimer la commande
+                  <UiText>Supprimer la commande</UiText>
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                   Vous êtes sur le point de supprimer la commande&nbsp;
@@ -556,7 +557,7 @@ export default function CommandeSousTraitantPage(
                 disabled={deletingCommande}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition disabled:opacity-50"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={handleDeleteCommande}
@@ -566,7 +567,7 @@ export default function CommandeSousTraitantPage(
                 {deletingCommande ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                    Suppression...
+                    <UiText>Suppression...</UiText>
                   </>
                 ) : (
                   <>
@@ -592,7 +593,7 @@ export default function CommandeSousTraitantPage(
                     className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/40 bg-white/20 backdrop-blur-sm text-white shadow-sm shadow-orange-900/30 hover:bg-white/30 transition"
                   >
                     <ArrowLeftIcon className="h-4 w-4" />
-                    <span className="text-sm font-semibold">Retour</span>
+                    <span className="text-sm font-semibold"><UiText>Retour</UiText></span>
                   </Link>
 
                   <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30 text-white">
@@ -633,7 +634,7 @@ export default function CommandeSousTraitantPage(
                     title="Supprimer la commande (admin uniquement)"
                   >
                     <TrashIcon className="h-5 w-5" />
-                    Supprimer
+                    <UiText>Supprimer</UiText>
                   </button>
                 )}
 
@@ -690,7 +691,7 @@ export default function CommandeSousTraitantPage(
                   ) : commande.estVerrouillee ? (
                     <>
                       <LockOpenIcon className="h-5 w-5" />
-                      Déverrouiller
+                      <UiText>Déverrouiller</UiText>
                     </>
                   ) : (
                     <>
@@ -749,12 +750,12 @@ export default function CommandeSousTraitantPage(
                     <tr>
                       <th className="px-2 py-3" aria-label="Réorganiser"></th>
                       <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">Art.</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">Description</th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">Unité</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">Quantité</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300"><UiText>Description</UiText></th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300"><UiText>Unité</UiText></th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300"><UiText>Quantité</UiText></th>
                       <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">P.U.</th>
                       <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">Total</th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">Actions</th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300"><UiText>Actions</UiText></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -789,21 +790,21 @@ export default function CommandeSousTraitantPage(
                       className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg text-blue-900 dark:text-white bg-white/70 dark:bg-white/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-md"
                     >
                       <span className="text-lg leading-none font-bold">T</span>
-                      Ajouter un titre
+                      <UiText>Ajouter un titre</UiText>
                     </button>
                     <button
                       onClick={addSousTitreLigne}
                       className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg text-blue-900 dark:text-white bg-white/60 dark:bg-white/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-md"
                     >
                       <span className="text-base leading-none italic">t</span>
-                      Ajouter un sous-titre
+                      <UiText>Ajouter un sous-titre</UiText>
                     </button>
                     <button
                       onClick={addLigne}
                       className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                     >
                       <PlusIcon className="h-5 w-5" />
-                      Ajouter une ligne
+                      <UiText>Ajouter une ligne</UiText>
                     </button>
                   </div>
                 </div>
@@ -812,11 +813,11 @@ export default function CommandeSousTraitantPage(
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6">
                 <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Informations générales</h2>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Informations générales</UiText></h2>
                 </div>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Référence</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Référence</UiText></label>
                     <input
                       type="text"
                       value={commande.reference || ''}
@@ -827,7 +828,7 @@ export default function CommandeSousTraitantPage(
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Date</UiText></label>
                     <input
                       type="date"
                       value={commande.dateCommande ? new Date(commande.dateCommande).toISOString().slice(0, 10) : ''}
@@ -841,7 +842,7 @@ export default function CommandeSousTraitantPage(
 
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6">
                 <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Paramètres</h2>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Paramètres</UiText></h2>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Taux de TVA (%)</label>
@@ -876,7 +877,7 @@ export default function CommandeSousTraitantPage(
               </div>
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6">
                 <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Résumé financier</h2>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Résumé financier</UiText></h2>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -922,7 +923,7 @@ export default function CommandeSousTraitantPage(
 
           <div className="flex-1 overflow-y-auto">
             {tarifsLoading ? (
-              <div className="flex items-center justify-center py-12 text-gray-400 text-sm">Chargement...</div>
+              <div className="flex items-center justify-center py-12 text-gray-400 text-sm"><UiText>Chargement...</UiText></div>
             ) : filteredTarifs.length === 0 ? (
               <div className="flex items-center justify-center py-12 text-gray-400 text-sm">
                 {tarifsSearch ? 'Aucun résultat' : 'Aucune ligne de tarif'}

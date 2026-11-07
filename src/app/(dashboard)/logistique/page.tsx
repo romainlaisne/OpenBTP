@@ -611,7 +611,7 @@ export default function LogistiquePage() {
             }`}
           >
             <PlusIcon className="h-4 w-4" />
-            Nouvelle tâche
+            <UiText>Nouvelle tâche</UiText>
           </button>
           <button
             onClick={() => setActiveTab('magasiniers')}
@@ -657,7 +657,7 @@ export default function LogistiquePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Statut</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Statut</UiText></label>
                   <select
                     value={filterStatut}
                     onChange={(e) => setFilterStatut(e.target.value)}
@@ -675,7 +675,7 @@ export default function LogistiquePage() {
             {loading ? (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-10 text-center">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-600 mx-auto" />
-                <p className="mt-4 text-gray-500 dark:text-gray-400">Chargement...</p>
+                <p className="mt-4 text-gray-500 dark:text-gray-400"><UiText>Chargement...</UiText></p>
               </div>
             ) : taches.length === 0 ? (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-10 text-center">
@@ -692,11 +692,11 @@ export default function LogistiquePage() {
                     <thead className="bg-gray-50 dark:bg-gray-900">
                       <tr>
                         <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tâche</th>
-                        <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Statut</th>
+                        <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Statut</UiText></th>
                         <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Magasinier</th>
-                        <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                        <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Date</UiText></th>
                         <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Photos</th>
-                        <th className="px-5 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                        <th className="px-5 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Actions</UiText></th>
                       </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -1055,7 +1055,7 @@ export default function LogistiquePage() {
               <form onSubmit={handleAddMagasinier}>
                 <div className="grid gap-4 sm:grid-cols-2 mb-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Nom</UiText></label>
                     <input
                       type="text"
                       value={newMagasinierNom}
@@ -1146,7 +1146,7 @@ export default function LogistiquePage() {
                       {ps && (
                         <div className="border-t border-gray-200 dark:border-gray-600 px-4 py-3 bg-amber-50/50 dark:bg-amber-900/10">
                           {ps.loading ? (
-                            <p className="text-sm text-gray-500">Chargement du PIN...</p>
+                            <p className="text-sm text-gray-500"><UiText>Chargement du PIN...</UiText></p>
                           ) : (
                             <div className="flex items-center gap-2">
                               <KeyIcon className="h-4 w-4 text-amber-600 flex-shrink-0" />
@@ -1272,7 +1272,7 @@ export default function LogistiquePage() {
                       {/* Ligne 2 : quantité + unité */}
                       <div className="flex gap-2 pl-7">
                         <div className="flex-1">
-                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Quantité</label>
+                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1"><UiText>Quantité</UiText></label>
                           <input
                             type="number"
                             value={ligne.quantite}
@@ -1283,7 +1283,7 @@ export default function LogistiquePage() {
                           />
                         </div>
                         <div className="flex-1">
-                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Unité</label>
+                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1"><UiText>Unité</UiText></label>
                           <input
                             type="text"
                             value={ligne.unite}
@@ -1301,7 +1301,7 @@ export default function LogistiquePage() {
                   onClick={() => setEditBonLignes([...editBonLignes, { description: '', quantite: '', unite: '' }])}
                   className="mt-2 inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  <PlusIcon className="h-3.5 w-3.5" /> Ajouter une ligne
+                  <PlusIcon className="h-3.5 w-3.5" /> <UiText>Ajouter une ligne</UiText>
                 </button>
               </div>
             </div>
@@ -1310,7 +1310,7 @@ export default function LogistiquePage() {
                 onClick={() => setEditBon(null)}
                 className="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={handleSaveEditBon}
@@ -1397,7 +1397,7 @@ export default function LogistiquePage() {
                       </div>
                       <div className="flex gap-2 pl-7">
                         <div className="flex-1">
-                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Quantité</label>
+                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1"><UiText>Quantité</UiText></label>
                           <input
                             type="number"
                             value={ligne.quantite}
@@ -1410,7 +1410,7 @@ export default function LogistiquePage() {
                           />
                         </div>
                         <div className="flex-1">
-                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Unité</label>
+                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1"><UiText>Unité</UiText></label>
                           <input
                             type="text"
                             value={ligne.unite}
@@ -1430,7 +1430,7 @@ export default function LogistiquePage() {
                   onClick={() => setBonPrepLignes([...bonPrepLignes, { description: '', quantite: '', unite: '' }])}
                   className="mt-2 flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  <PlusIcon className="h-4 w-4" /> Ajouter une ligne
+                  <PlusIcon className="h-4 w-4" /> <UiText>Ajouter une ligne</UiText>
                 </button>
               </div>
             </div>
@@ -1440,7 +1440,7 @@ export default function LogistiquePage() {
                 onClick={() => setShowBonPrep(false)}
                 className="flex-1 py-3 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 type="button"
@@ -1449,7 +1449,7 @@ export default function LogistiquePage() {
                 className="flex-1 py-3 rounded-xl bg-blue-600 text-white font-medium disabled:opacity-50 hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
               >
                 {savingBonPrep ? (
-                  <><div className="h-4 w-4 animate-spin rounded-full border-b-2 border-white" /> Création...</>
+                  <><div className="h-4 w-4 animate-spin rounded-full border-b-2 border-white" /> <UiText>Création...</UiText></>
                 ) : (
                   <><ClipboardDocumentListIcon className="h-4 w-4" /> Créer le bon</>  
                 )}
@@ -1567,7 +1567,7 @@ export default function LogistiquePage() {
                 </button>
               )}
               <button onClick={() => setViewTache(null)} className="ml-auto px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm">
-                Fermer
+                <UiText>Fermer</UiText>
               </button>
             </div>
           </div>
@@ -1583,7 +1583,7 @@ export default function LogistiquePage() {
             </div>
             <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Titre *</UiText></label>
                 <input
                   type="text"
                   value={editTitre}
@@ -1592,7 +1592,7 @@ export default function LogistiquePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Description</UiText></label>
                 <textarea
                   value={editDesc}
                   onChange={(e) => setEditDesc(e.target.value)}
@@ -1675,7 +1675,7 @@ export default function LogistiquePage() {
                 onClick={() => { editPhotoURLs.forEach(u => URL.revokeObjectURL(u)); setEditTache(null); setEditPhotos([]); setEditPhotoURLs([]) }}
                 className="flex-1 py-3 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={handleSaveEdit}

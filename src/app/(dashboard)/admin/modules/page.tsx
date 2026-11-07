@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -276,7 +277,7 @@ export default function ModulesAdminPage() {
                             </h3>
                             {module.isSystem && (
                               <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium rounded">
-                                Système
+                                <UiText>Système</UiText>
                               </span>
                             )}
                           </div>

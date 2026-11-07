@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -220,7 +221,7 @@ export default function ClientsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="text-red-500 text-xl mb-4">Accès non autorisé</div>
+          <div className="text-red-500 text-xl mb-4"><UiText>Accès non autorisé</UiText></div>
           <p className="text-gray-600">Veuillez vous connecter pour accéder à cette page</p>
         </div>
       </div>
@@ -244,7 +245,7 @@ export default function ClientsPage() {
             onClick={() => window.location.reload()} 
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
           >
-            Réessayer
+            <UiText>Réessayer</UiText>
           </button>
         </div>
       </div>
@@ -257,7 +258,7 @@ export default function ClientsPage() {
         <div className="flex items-center gap-2">
           <UsersIcon className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Clients</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Clients</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{totalClients}</div>
           </div>
         </div>
@@ -266,7 +267,7 @@ export default function ClientsPage() {
         <div className="flex items-center gap-2">
           <BuildingOfficeIcon className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Chantiers</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Chantiers</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{totalChantiers}</div>
           </div>
         </div>
@@ -473,7 +474,7 @@ export default function ClientsPage() {
                         title="Modifier le client"
                       >
                         <PencilSquareIcon className="h-4 w-4 mr-1" />
-                        Modifier
+                        <UiText>Modifier</UiText>
                       </Link>
                     </div>
                     <button
@@ -517,7 +518,7 @@ export default function ClientsPage() {
                           onSort={handleSort}
                         />
                         <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
-                          Adresse
+                          <UiText>Adresse</UiText>
                         </th>
                         <SortableHeader
                           field="chantiers"
@@ -534,7 +535,7 @@ export default function ClientsPage() {
                           onSort={handleSort}
                         />
                         <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 dark:text-gray-200 pr-4 sm:pr-6">
-                          Actions
+                          <UiText>Actions</UiText>
                         </th>
                       </tr>
                     </thead>

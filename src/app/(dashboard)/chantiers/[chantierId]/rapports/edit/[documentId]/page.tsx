@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -27,7 +28,7 @@ export default function EditRapportPage(props: { params: Promise<{ chantierId: s
             <ArrowLeftIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Chargement de l'éditeur de rapport...
+            <UiText>Chargement de l'éditeur de rapport...</UiText>
           </h1>
         </div>
         

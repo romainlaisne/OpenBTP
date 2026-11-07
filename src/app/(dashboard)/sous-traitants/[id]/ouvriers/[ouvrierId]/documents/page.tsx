@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { TYPES_DOCUMENT_OUVRIER, libelleType } from '@/lib/documents/types'
 import { useState, useEffect, useRef, use } from 'react';
 import { useSession } from 'next-auth/react'
@@ -67,7 +68,7 @@ function DeleteModal({ isOpen, document, onClose, onConfirm, isDeleting }: Delet
             disabled={isDeleting}
             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600"
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </button>
           <button
             type="button"
@@ -135,7 +136,7 @@ function EditModal({ document, onClose, onSave, isSaving }: EditModalProps) {
 
           <div>
             <label htmlFor="edit-precision" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Précision (facultatif)
+              <UiText>Précision (facultatif)</UiText>
             </label>
             <input
               id="edit-precision"
@@ -168,7 +169,7 @@ function EditModal({ document, onClose, onSave, isSaving }: EditModalProps) {
               disabled={isSaving}
               className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
             >
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button
               type="submit"
@@ -268,7 +269,7 @@ function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadModalProp
               disabled={isUploading}
               className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
             >
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button
               type="submit"
@@ -410,7 +411,7 @@ export default function DocumentsOuvrierPage(
   if (!ouvrier) return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="flex justify-center items-center h-screen">
-        <div className="text-gray-500 dark:text-gray-400">Ouvrier non trouvé</div>
+        <div className="text-gray-500 dark:text-gray-400"><UiText>Ouvrier non trouvé</UiText></div>
       </div>
     </div>
   )
@@ -444,7 +445,7 @@ export default function DocumentsOuvrierPage(
               className="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Retour</span>
+              <span className="hidden sm:inline"><UiText>Retour</UiText></span>
             </button>
             <button
               onClick={() => setUploadModal(true)}
@@ -463,11 +464,11 @@ export default function DocumentsOuvrierPage(
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700/50">
                   <tr>
-                    <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Type</th>
+                    <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300"><UiText>Type</UiText></th>
                     <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Date d'ajout</th>
                     <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Expiration</th>
                     <th className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                      <span className="sr-only">Actions</span>
+                      <span className="sr-only"><UiText>Actions</UiText></span>
                     </th>
                   </tr>
                 </thead>

@@ -1057,7 +1057,7 @@ export default function CommandePage(props: CommandePageProps) {
   // Fonction pour gérer la navigation
   // removed unused handleNavigation
 
-  if (status === 'loading') return <div className="p-8">Chargement...</div>
+  if (status === 'loading') return <div className="p-8"><UiText>Chargement...</UiText></div>
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -1077,7 +1077,7 @@ export default function CommandePage(props: CommandePageProps) {
                   <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                     <CurrencyEuroIcon className="w-6 h-6 mr-3 text-blue-900 dark:text-white" />
                     <h1 className="text-xl font-bold text-blue-900 dark:text-white">
-                      Commande {commande.reference ? `#${commande.reference}` : 'Nouvelle'}
+                      <UiText>Commande</UiText> {commande.reference ? `#${commande.reference}` : 'Nouvelle'}
                     </h1>
                   </div>
                   {isLocked && (
@@ -1107,14 +1107,14 @@ export default function CommandePage(props: CommandePageProps) {
                     {saving ? (
                       <>
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-900 dark:border-white"></div>
-                        Enregistrement...
+                        <UiText>Enregistrement...</UiText>
                       </>
                     ) : (
                       <>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                         </svg>
-                        Enregistrer
+                        <UiText>Enregistrer</UiText>
                       </>
                     )}
                   </button>
@@ -1185,14 +1185,14 @@ export default function CommandePage(props: CommandePageProps) {
                         <tr>
                           <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-8">#</th>
                           <th scope="col" className="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Article</UiText></th>
-                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider min-w-[200px] max-w-[300px]">Description</th>
-                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-24">Type</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider min-w-[200px] max-w-[300px]"><UiText>Description</UiText></th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-24"><UiText>Type</UiText></th>
                           <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Unité</UiText></th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28">Quantité</th>
-                          <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Prix Unit. (€)</th>
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28"><UiText>Quantité</UiText></th>
+                          <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Prix Unit. (€)</UiText></th>
                           <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Total</th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-12">Option</th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-12">Action</th>
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-12"><UiText>Option</UiText></th>
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-12"><UiText>Action</UiText></th>
                         </tr>
                       </thead>
                       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -1227,14 +1227,14 @@ export default function CommandePage(props: CommandePageProps) {
                         className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg text-blue-900 dark:text-white bg-white/70 dark:bg-white/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-md"
                       >
                         <span className="text-lg leading-none">T</span>
-                        Ajouter un titre
+                        <UiText>Ajouter un titre</UiText>
                       </button>
                       <button
                         onClick={addSousTitreLigne}
                         className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg text-blue-900 dark:text-white bg-white/60 dark:bg-white/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-md"
                       >
                         <span className="text-lg leading-none">t</span>
-                        Ajouter un sous-titre
+                        <UiText>Ajouter un sous-titre</UiText>
                       </button>
                       <button
                         onClick={addLigne}
@@ -1243,7 +1243,7 @@ export default function CommandePage(props: CommandePageProps) {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
-                        Ajouter une ligne
+                        <UiText>Ajouter une ligne</UiText>
                       </button>
                     </div>
                   </div>
@@ -1395,12 +1395,12 @@ export default function CommandePage(props: CommandePageProps) {
                     
                     <div className="space-y-3">
                       <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Sous-total HT:</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Sous-total HT:</UiText></span>
                         <span className="font-semibold text-gray-900 dark:text-white">{commande.sousTotal.toFixed(2)} €</span>
                       </div>
                       {commande.totalOptions > 0 && (
                         <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Total options:</span>
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Total options:</UiText></span>
                           <span className="font-semibold text-gray-900 dark:text-white">{commande.totalOptions.toFixed(2)} €</span>
                         </div>
                       )}

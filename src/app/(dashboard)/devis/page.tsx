@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import type { ComponentType, SVGProps } from 'react'
 import Link from 'next/link'
@@ -255,7 +256,7 @@ export default function DevisPage() {
             className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200"
           >
             <PlusIcon className="h-5 w-5 mr-2" />
-            Nouveau devis
+            <UiText>Nouveau devis</UiText>
           </Link>
         }
       />
@@ -315,7 +316,7 @@ export default function DevisPage() {
             <thead className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
               <tr>
                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Type
+                  <UiText>Type</UiText>
                 </th>
                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Numéro
@@ -330,7 +331,7 @@ export default function DevisPage() {
                   Validité
                 </th>
                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Statut
+                  <UiText>Statut</UiText>
                 </th>
                 <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Montant HT
@@ -339,7 +340,7 @@ export default function DevisPage() {
                   Montant TTC
                 </th>
                 <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Actions
+                  <UiText>Actions</UiText>
                 </th>
               </tr>
             </thead>
@@ -349,7 +350,7 @@ export default function DevisPage() {
                 <td colSpan={9} className="px-6 py-12 text-center">
                   <div className="inline-flex flex-col items-center gap-3">
                     <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Chargement…</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Chargement…</UiText></p>
                   </div>
                 </td>
               </tr>

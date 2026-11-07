@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import {
@@ -180,7 +181,7 @@ export default function EtatsAvancementStatsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Statut</label>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"><UiText>Statut</UiText></label>
               <select
                 value={statut}
                 onChange={(e) => setStatut(e.target.value)}
@@ -227,22 +228,22 @@ export default function EtatsAvancementStatsPage() {
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
           {loading ? (
-            <div className="p-8 text-center text-gray-500 dark:text-gray-400">Chargement...</div>
+            <div className="p-8 text-center text-gray-500 dark:text-gray-400"><UiText>Chargement...</UiText></div>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700/50">
                   <tr>
                     <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Chantier</th>
-                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Réf.</th>
+                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>Réf.</UiText></th>
                     <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">N° état</th>
                     <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Client</th>
                     <th className="py-3 px-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Mt. base</th>
                     <th className="py-3 px-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Mt. avenants</th>
                     <th className="py-3 px-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Total période</th>
                     <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Période (mois)</th>
-                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Date</th>
-                    <th className="py-3 px-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Statut</th>
+                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>Date</UiText></th>
+                    <th className="py-3 px-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>Statut</UiText></th>
                     <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">N° facture</th>
                   </tr>
                 </thead>

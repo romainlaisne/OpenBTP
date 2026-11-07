@@ -7,6 +7,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
+import { UiText } from '@/contexts/LocaleContext'
 import {
   ArrowLeftIcon,
   ArrowPathIcon,
@@ -156,7 +157,7 @@ function ReglageRequis({ st, onEnregistre }: { st: Societe; onEnregistre: () => 
         ))}
         <div className="mt-4 flex flex-wrap gap-2">
           <button type="button" disabled={enCours} onClick={() => enregistrer()} className="rounded-md bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 disabled:opacity-50">
-            Enregistrer
+            <UiText>Enregistrer</UiText>
           </button>
           <button type="button" disabled={enCours} onClick={() => enregistrer(true)} className="rounded-md border border-gray-300 px-3 py-1.5 text-gray-700 dark:border-gray-600 dark:text-gray-200">
             Aucun supplément
@@ -314,9 +315,9 @@ export default function DocumentsSousTraitantsPage() {
       </div>
 
       {societes === null ? (
-        <p className="text-sm text-gray-500">Chargement…</p>
+        <p className="text-sm text-gray-500"><UiText>Chargement…</UiText></p>
       ) : filtrees.length === 0 ? (
-        <p className="text-sm text-gray-500">Aucun résultat.</p>
+        <p className="text-sm text-gray-500"><UiText>Aucun résultat.</UiText></p>
       ) : (
         <div className="space-y-6">
           {filtrees.map((st) => {

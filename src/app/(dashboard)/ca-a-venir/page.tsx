@@ -205,7 +205,7 @@ export default function CaAVenirPage() {
                 <tr>
                   <ThSortable col="nomChantier" className="text-left pl-6">Chantier</ThSortable>
                   <ThSortable col="clientNom" className="text-left">Client</ThSortable>
-                  <ThSortable col="statut" className="text-left">Statut</ThSortable>
+                  <ThSortable col="statut" className="text-left"><UiText>Statut</UiText></ThSortable>
                   <ThSortable col="totalCommandes" className="text-right">Commandes confirmées</ThSortable>
                   <ThSortable col="montantFacture" className="text-right">Déjà facturé</ThSortable>
                   <ThSortable col="caAvenir" className="text-right pr-6">CA à venir</ThSortable>

@@ -1,5 +1,6 @@
 'use client';
 
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -239,7 +240,7 @@ export default function SelectionPostesPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto"></div>
-          <p className="text-gray-600 dark:text-gray-300 font-medium">Chargement des postes disponibles...</p>
+          <p className="text-gray-600 dark:text-gray-300 font-medium"><UiText>Chargement des postes disponibles...</UiText></p>
         </div>
       </div>
     );
@@ -255,15 +256,15 @@ export default function SelectionPostesPage() {
             <Link href={`/chantiers/${chantierId}/etats/soustraitants`}>
               <Button variant="outline" className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-md transition-all duration-200">
                 <ArrowLeftIcon className="h-4 w-4 mr-2" />
-                Retour
+                <UiText>Retour</UiText>
               </Button>
             </Link>
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-blue-600 dark:from-white dark:to-blue-400 bg-clip-text text-transparent">
-                Sélection des postes
+                <UiText>Sélection des postes</UiText>
               </h1>
               <p className="text-gray-600 dark:text-gray-300 mt-1">
-                Choisissez les postes à sous-traiter
+                <UiText>Choisissez les postes à sous-traiter</UiText>
               </p>
             </div>
           </div>
@@ -355,10 +356,10 @@ export default function SelectionPostesPage() {
                           <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">
                             <div className="flex items-center gap-1"><HashtagIcon className="h-3.5 w-3.5" />Art.</div>
                           </th>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">Description</th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">Type</th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">Unité</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">Quantité</th>
+                          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide"><UiText>Description</UiText></th>
+                          <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide"><UiText>Type</UiText></th>
+                          <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide"><UiText>Unité</UiText></th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide"><UiText>Quantité</UiText></th>
                           <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">
                             <div className="flex items-center justify-end gap-1"><CurrencyEuroIcon className="h-3.5 w-3.5" />Prix unit.</div>
                           </th>
@@ -488,7 +489,7 @@ export default function SelectionPostesPage() {
                       disabled={submitting}
                       className="bg-white hover:bg-gray-50 border-gray-300 text-gray-700 hover:text-gray-900 shadow-sm transition-all duration-200"
                     >
-                      Annuler
+                      <UiText>Annuler</UiText>
                     </Button>
                     <Button
                       onClick={handleSubmit}
@@ -496,7 +497,7 @@ export default function SelectionPostesPage() {
                       className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {submitting ? (
-                        <><div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" />Création en cours...</>
+                        <><div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" /><UiText>Création en cours...</UiText></>
                       ) : (
                         <><CheckCircleIcon className="h-4 w-4 mr-2" />Valider et créer la commande</>
                       )}
@@ -534,7 +535,7 @@ export default function SelectionPostesPage() {
 
           <div className="flex-1 overflow-y-auto">
             {tarifsLoading ? (
-              <div className="flex items-center justify-center py-12 text-gray-400 text-sm">Chargement...</div>
+              <div className="flex items-center justify-center py-12 text-gray-400 text-sm"><UiText>Chargement...</UiText></div>
             ) : filteredTarifs.length === 0 ? (
               <div className="flex items-center justify-center py-12 text-gray-400 text-sm">
                 {tarifsSearch ? 'Aucun résultat' : 'Aucune ligne de tarif'}

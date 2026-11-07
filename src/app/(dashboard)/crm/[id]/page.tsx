@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback, useRef, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -230,11 +231,11 @@ function EditEntrepriseModal({ entreprise, isOpen, onClose, onUpdated, showNotif
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className={labelCls}>Nom <span className="text-red-500">*</span></label>
+            <label className={labelCls}><UiText>Nom</UiText> <span className="text-red-500">*</span></label>
             <input type="text" required value={form.nom} onChange={e => setForm(p => ({ ...p, nom: e.target.value }))} className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Type</label>
+            <label className={labelCls}><UiText>Type</UiText></label>
             <select value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value as TypeEntreprise }))} className={inputCls}>
               <option value="ENTREPRISE_GENERALE">Entreprise Générale</option>
               <option value="ARCHITECTE">Architecte</option>
@@ -243,16 +244,16 @@ function EditEntrepriseModal({ entreprise, isOpen, onClose, onUpdated, showNotif
             </select>
           </div>
           <div>
-            <label className={labelCls}>Adresse</label>
+            <label className={labelCls}><UiText>Adresse</UiText></label>
             <input type="text" value={form.adresse} onChange={e => setForm(p => ({ ...p, adresse: e.target.value }))} className={inputCls} placeholder="Rue et numéro" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>Code postal</label>
+              <label className={labelCls}><UiText>Code postal</UiText></label>
               <input type="text" value={form.codePostal} onChange={e => setForm(p => ({ ...p, codePostal: e.target.value }))} className={inputCls} placeholder="1000" />
             </div>
             <div>
-              <label className={labelCls}>Ville</label>
+              <label className={labelCls}><UiText>Ville</UiText></label>
               <input type="text" value={form.ville} onChange={e => setForm(p => ({ ...p, ville: e.target.value }))} className={inputCls} placeholder="Bruxelles" />
             </div>
           </div>
@@ -261,11 +262,11 @@ function EditEntrepriseModal({ entreprise, isOpen, onClose, onUpdated, showNotif
             <input type="text" value={form.pays} onChange={e => setForm(p => ({ ...p, pays: e.target.value }))} className={inputCls} placeholder="Belgique" />
           </div>
           <div>
-            <label className={labelCls}>Téléphone</label>
+            <label className={labelCls}><UiText>Téléphone</UiText></label>
             <input type="tel" value={form.telephone} onChange={e => setForm(p => ({ ...p, telephone: e.target.value }))} className={inputCls} placeholder="+32 2 000 00 00" />
           </div>
           <div>
-            <label className={labelCls}>Email</label>
+            <label className={labelCls}><UiText>Email</UiText></label>
             <input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className={inputCls} placeholder="contact@entreprise.be" />
           </div>
           <div>
@@ -274,7 +275,7 @@ function EditEntrepriseModal({ entreprise, isOpen, onClose, onUpdated, showNotif
           </div>
           <div className="flex justify-end gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
             <button type="button" onClick={onClose} disabled={saving} className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 border border-transparent rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'Enregistrement...' : 'Enregistrer'}
@@ -354,11 +355,11 @@ function CreateContactModal({ entrepriseId, isOpen, onClose, onCreated, showNoti
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>Prénom <span className="text-red-500">*</span></label>
+              <label className={labelCls}><UiText>Prénom</UiText> <span className="text-red-500">*</span></label>
               <input type="text" required value={form.prenom} onChange={e => setForm(p => ({ ...p, prenom: e.target.value }))} className={inputCls} placeholder="Jean" />
             </div>
             <div>
-              <label className={labelCls}>Nom <span className="text-red-500">*</span></label>
+              <label className={labelCls}><UiText>Nom</UiText> <span className="text-red-500">*</span></label>
               <input type="text" required value={form.nom} onChange={e => setForm(p => ({ ...p, nom: e.target.value }))} className={inputCls} placeholder="Dupont" />
             </div>
           </div>
@@ -368,7 +369,7 @@ function CreateContactModal({ entrepriseId, isOpen, onClose, onCreated, showNoti
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>Téléphone</label>
+              <label className={labelCls}><UiText>Téléphone</UiText></label>
               <input type="tel" value={form.telephone} onChange={e => setForm(p => ({ ...p, telephone: e.target.value }))} className={inputCls} placeholder="+32 2 000 00 00" />
             </div>
             <div>
@@ -377,16 +378,16 @@ function CreateContactModal({ entrepriseId, isOpen, onClose, onCreated, showNoti
             </div>
           </div>
           <div>
-            <label className={labelCls}>Email</label>
+            <label className={labelCls}><UiText>Email</UiText></label>
             <input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className={inputCls} placeholder="jean.dupont@entreprise.be" />
           </div>
           <div>
-            <label className={labelCls}>Notes</label>
+            <label className={labelCls}><UiText>Notes</UiText></label>
             <textarea rows={3} value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} className={inputCls} placeholder="Notes sur ce contact…" />
           </div>
           <div className="flex justify-end gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
             <button type="button" onClick={handleClose} disabled={saving} className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 border border-transparent rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'Enregistrement...' : 'Créer le contact'}
@@ -470,7 +471,7 @@ function EditContactModal({ entrepriseId, contact, isOpen, onClose, onUpdated, s
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             <PencilSquareIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            Modifier le contact
+            <UiText>Modifier le contact</UiText>
           </h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
             <XMarkIcon className="h-5 w-5" />
@@ -479,11 +480,11 @@ function EditContactModal({ entrepriseId, contact, isOpen, onClose, onUpdated, s
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>Prénom <span className="text-red-500">*</span></label>
+              <label className={labelCls}><UiText>Prénom</UiText> <span className="text-red-500">*</span></label>
               <input type="text" required value={form.prenom} onChange={e => setForm(p => ({ ...p, prenom: e.target.value }))} className={inputCls} />
             </div>
             <div>
-              <label className={labelCls}>Nom <span className="text-red-500">*</span></label>
+              <label className={labelCls}><UiText>Nom</UiText> <span className="text-red-500">*</span></label>
               <input type="text" required value={form.nom} onChange={e => setForm(p => ({ ...p, nom: e.target.value }))} className={inputCls} />
             </div>
           </div>
@@ -493,7 +494,7 @@ function EditContactModal({ entrepriseId, contact, isOpen, onClose, onUpdated, s
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>Téléphone</label>
+              <label className={labelCls}><UiText>Téléphone</UiText></label>
               <input type="tel" value={form.telephone} onChange={e => setForm(p => ({ ...p, telephone: e.target.value }))} className={inputCls} />
             </div>
             <div>
@@ -502,16 +503,16 @@ function EditContactModal({ entrepriseId, contact, isOpen, onClose, onUpdated, s
             </div>
           </div>
           <div>
-            <label className={labelCls}>Email</label>
+            <label className={labelCls}><UiText>Email</UiText></label>
             <input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Notes</label>
+            <label className={labelCls}><UiText>Notes</UiText></label>
             <textarea rows={3} value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} className={inputCls} />
           </div>
           <div className="flex justify-end gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
             <button type="button" onClick={onClose} disabled={saving} className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 border border-transparent rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'Enregistrement...' : 'Enregistrer'}
@@ -622,7 +623,7 @@ function CreateActiviteModal({ entrepriseId, isOpen, onClose, onCreated, showNot
 
           {/* Date */}
           <div>
-            <label className={labelCls}>Date</label>
+            <label className={labelCls}><UiText>Date</UiText></label>
             <input
               type="date"
               value={form.date}
@@ -633,7 +634,7 @@ function CreateActiviteModal({ entrepriseId, isOpen, onClose, onCreated, showNot
 
           {/* Description */}
           <div>
-            <label className={labelCls}>Description <span className="text-red-500">*</span></label>
+            <label className={labelCls}><UiText>Description</UiText> <span className="text-red-500">*</span></label>
             <textarea
               required
               rows={4}
@@ -646,7 +647,7 @@ function CreateActiviteModal({ entrepriseId, isOpen, onClose, onCreated, showNot
 
           <div className="flex justify-end gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
             <button type="button" onClick={handleClose} disabled={saving} className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 border border-transparent rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'Enregistrement...' : 'Enregistrer'}
@@ -732,7 +733,7 @@ function CreateRappelModal({ entrepriseId, isOpen, onClose, onCreated, showNotif
             />
           </div>
           <div>
-            <label className={labelCls}>Date <span className="text-red-500">*</span></label>
+            <label className={labelCls}><UiText>Date</UiText> <span className="text-red-500">*</span></label>
             <input
               type="date"
               required
@@ -742,7 +743,7 @@ function CreateRappelModal({ entrepriseId, isOpen, onClose, onCreated, showNotif
             />
           </div>
           <div>
-            <label className={labelCls}>Description</label>
+            <label className={labelCls}><UiText>Description</UiText></label>
             <textarea
               rows={3}
               value={form.description}
@@ -753,7 +754,7 @@ function CreateRappelModal({ entrepriseId, isOpen, onClose, onCreated, showNotif
           </div>
           <div className="flex justify-end gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
             <button type="button" onClick={handleClose} disabled={saving} className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 border border-transparent rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'Enregistrement...' : 'Créer le rappel'}
@@ -1048,7 +1049,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-blue-900 dark:text-white text-sm font-medium transition-all"
                       >
                         <ArrowLeftIcon className="h-4 w-4" />
-                        Retour
+                        <UiText>Retour</UiText>
                       </button>
                       <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                         <BuildingOffice2Icon className="w-6 h-6 mr-3 text-blue-900 dark:text-white" />
@@ -1068,7 +1069,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                       className="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-lg text-sm font-semibold shadow-lg hover:bg-white/40 transition-all duration-200 text-blue-900 dark:text-white border border-white/50"
                     >
                       <PencilSquareIcon className="h-4 w-4" />
-                      Modifier
+                      <UiText>Modifier</UiText>
                     </button>
                   </div>
                 </div>
@@ -1180,7 +1181,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition-colors shadow-sm"
                     >
                       <PlusIcon className="h-4 w-4" />
-                      Ajouter
+                      <UiText>Ajouter</UiText>
                     </button>
                   </div>
                 </div>
@@ -1269,7 +1270,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-700 dark:bg-gray-600 text-white hover:bg-gray-800 dark:hover:bg-gray-500 transition-colors shadow-sm"
                     >
                       <PlusIcon className="h-4 w-4" />
-                      Ajouter
+                      <UiText>Ajouter</UiText>
                     </button>
                   </div>
                 </div>
@@ -1346,7 +1347,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                   <div className="flex items-center justify-between">
                     <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full shadow-lg ring-2 ring-amber-200 dark:ring-amber-700">
                       <DocumentTextIcon className="w-5 h-5 mr-2" />
-                      <span className="font-bold text-lg">Notes</span>
+                      <span className="font-bold text-lg"><UiText>Notes</UiText></span>
                     </div>
                     {notesSaved && (
                       <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400 font-medium animate-pulse">
@@ -1391,7 +1392,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors shadow-sm"
                     >
                       <PlusIcon className="h-4 w-4" />
-                      Ajouter
+                      <UiText>Ajouter</UiText>
                     </button>
                   </div>
                 </div>

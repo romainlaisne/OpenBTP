@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -473,7 +474,7 @@ export default function NouvelEtatAvancementPage(
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">Chargement des données...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-300"><UiText>Chargement des données...</UiText></p>
         </div>
       </div>
     )
@@ -494,7 +495,7 @@ export default function NouvelEtatAvancementPage(
               className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-md hover:shadow-lg"
             >
               <ArrowLeftIcon className="h-5 w-5 mr-2" />
-              Retour
+              <UiText>Retour</UiText>
             </Link>
           </div>
         </div>
@@ -522,7 +523,7 @@ export default function NouvelEtatAvancementPage(
                     className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/40 bg-white/20 backdrop-blur-sm text-white shadow-sm shadow-indigo-900/30 hover:bg-white/30 transition"
                   >
                     <ArrowLeftIcon className="h-4 w-4" />
-                    <span className="text-sm font-semibold">Retour</span>
+                    <span className="text-sm font-semibold"><UiText>Retour</UiText></span>
                   </Link>
 
                   <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30 text-white">
@@ -546,7 +547,7 @@ export default function NouvelEtatAvancementPage(
                   )}
                   {commandeValidee?.reference && (
                     <span className="inline-flex items-center gap-2">
-                      <span className="opacity-90">Commande</span>
+                      <span className="opacity-90"><UiText>Commande</UiText></span>
                       <span className="font-semibold">{commandeValidee.reference}</span>
                     </span>
                   )}

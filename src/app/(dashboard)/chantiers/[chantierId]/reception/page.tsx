@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -97,7 +98,7 @@ export default function ReceptionPage({
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-lg w-full">
           <div className="flex items-center mb-4">
             <ExclamationTriangleIcon className="h-8 w-8 text-red-500 mr-3" />
-            <h2 className="text-xl font-semibold text-red-700">Erreur lors du chargement</h2>
+            <h2 className="text-xl font-semibold text-red-700"><UiText>Erreur lors du chargement</UiText></h2>
           </div>
           <p className="text-red-600 mb-4">{error}</p>
           <div className="flex justify-between">
@@ -105,7 +106,7 @@ export default function ReceptionPage({
               onClick={() => window.location.reload()}
               variant="secondary"
             >
-              Réessayer
+              <UiText>Réessayer</UiText>
             </Button>
             <Link href={`/chantiers/${chantierId}`}>
               <Button variant="primary">

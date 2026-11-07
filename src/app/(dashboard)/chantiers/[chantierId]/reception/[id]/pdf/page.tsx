@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import React from 'react'
@@ -64,9 +65,9 @@ export default function PDFViewPage({
     window.print()
   }
 
-  if (loading) return <div className="p-8">Chargement du PDF...</div>
+  if (loading) return <div className="p-8"><UiText>Chargement du PDF...</UiText></div>
   if (error) return <div className="p-8 text-red-500">Erreur: {error}</div>
-  if (!pdfData) return <div className="p-8">Aucune donnée disponible</div>
+  if (!pdfData) return <div className="p-8"><UiText>Aucune donnée disponible</UiText></div>
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -76,7 +77,7 @@ export default function PDFViewPage({
           className="flex items-center text-gray-600 hover:text-gray-900"
         >
           <ArrowLeftIcon className="h-5 w-5 mr-1" />
-          Retour
+          <UiText>Retour</UiText>
         </Link>
         <div className="flex space-x-2">
           <Button 
@@ -93,7 +94,7 @@ export default function PDFViewPage({
       <div className="bg-white shadow-lg rounded-lg overflow-hidden print:shadow-none">
         {/* En-tête */}
         <div className="bg-red-600 text-white p-6">
-          <h1 className="text-2xl font-bold">Rapport de réception de chantier</h1>
+          <h1 className="text-2xl font-bold"><UiText>Rapport de réception de chantier</UiText></h1>
           <p className="text-white/80 mt-1">
             Généré le {pdfData.dateGeneration} par {pdfData.generePar}
           </p>
@@ -101,7 +102,7 @@ export default function PDFViewPage({
 
         {/* Informations de la réception */}
         <div className="p-6 border-b">
-          <h2 className="text-xl font-semibold mb-4">Informations générales</h2>
+          <h2 className="text-xl font-semibold mb-4"><UiText>Informations générales</UiText></h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-gray-600">Chantier :</p>

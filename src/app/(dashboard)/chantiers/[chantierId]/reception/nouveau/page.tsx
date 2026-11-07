@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ClipboardDocumentCheckIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
@@ -95,8 +96,8 @@ export default function NouvelleReceptionPage({ params }: { params: Promise<{ ch
     }
   }
 
-  if (loading) return <div className="p-8">Chargement...</div>
-  if (!chantier) return <div className="p-8">Chantier non trouvé</div>
+  if (loading) return <div className="p-8"><UiText>Chargement...</UiText></div>
+  if (!chantier) return <div className="p-8"><UiText>Chantier non trouvé</UiText></div>
 
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -126,7 +127,7 @@ export default function NouvelleReceptionPage({ params }: { params: Promise<{ ch
                   {saving ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-900 dark:border-white"></div>
-                      Création...
+                      <UiText>Création...</UiText>
                     </>
                   ) : (
                     <>

@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
 import { DocumentExpirationAlert } from '@/components/DocumentExpirationAlert'
@@ -139,7 +140,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                   <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                     <EyeIcon className="w-6 h-6 mr-3 text-sky-900 dark:text-white" />
                     <h1 className="text-xl font-bold text-sky-900 dark:text-white">
-                      Consulter
+                      <UiText>Consulter</UiText>
                     </h1>
                   </div>
                   {chantier.numeroIdentification && (
@@ -154,7 +155,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                     className="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-lg text-sm font-semibold shadow-lg hover:bg-white/40 transition-all duration-200 text-sky-900 dark:text-white"
                   >
                     <EnvelopeIcon className="h-5 w-5" />
-                    Déclarer sous-traitance
+                    <UiText>Déclarer sous-traitance</UiText>
                   </button>
                   <button
                     onClick={() => router.push(`/chantiers/${params.chantierId}/edit`)}
@@ -293,7 +294,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                         <div className="flex items-start gap-3">
                           <UserIcon className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Nom</p>
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Nom</UiText></p>
                             <p className="text-gray-900 dark:text-gray-100">{chantier.maitreOuvrageNom}</p>
                           </div>
                         </div>
@@ -302,7 +303,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                         <div className="flex items-start gap-3">
                           <MapPinIcon className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Adresse</p>
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Adresse</UiText></p>
                             <p className="text-gray-900 dark:text-gray-100">{chantier.maitreOuvrageAdresse}</p>
                           </div>
                         </div>
@@ -331,7 +332,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                         <div className="flex items-start gap-3">
                           <BuildingOfficeIcon className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Nom</p>
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Nom</UiText></p>
                             <p className="text-gray-900 dark:text-gray-100">{chantier.bureauArchitectureNom}</p>
                           </div>
                         </div>
@@ -340,7 +341,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                         <div className="flex items-start gap-3">
                           <MapPinIcon className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Adresse</p>
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Adresse</UiText></p>
                             <p className="text-gray-900 dark:text-gray-100">{chantier.bureauArchitectureAdresse}</p>
                           </div>
                         </div>
@@ -388,7 +389,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                     {chantier.client.email && (
                       <div>
                         <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                          Email
+                          <UiText>Email</UiText>
                         </label>
                         <a 
                           href={`mailto:${chantier.client.email}`}
@@ -401,7 +402,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                     {chantier.client.adresse && (
                       <div>
                         <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                          Adresse
+                          <UiText>Adresse</UiText>
                         </label>
                         <p className="text-gray-900 dark:text-gray-100">
                           {chantier.client.adresse}
@@ -427,7 +428,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                 <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                   <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 flex items-center">
                     <UserIcon className="h-5 w-5 mr-2 text-green-500" />
-                    Contact principal
+                    <UiText>Contact principal</UiText>
                   </h2>
                 </div>
                 <div className="p-6">
@@ -440,7 +441,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                     {chantier.contact.email && (
                       <div>
                         <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                          Email
+                          <UiText>Email</UiText>
                         </label>
                         <a 
                           href={`mailto:${chantier.contact.email}`}
@@ -453,7 +454,7 @@ export default function ChantierConsultationPage(props: { params: Promise<{ chan
                     {chantier.contact.telephone && (
                       <div>
                         <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                          Téléphone
+                          <UiText>Téléphone</UiText>
                         </label>
                         <a 
                           href={`tel:${chantier.contact.telephone}`}

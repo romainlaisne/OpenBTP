@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
@@ -643,7 +644,7 @@ export default function DevisDetailPage() {
                 className="inline-flex items-center gap-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
               >
                 <PencilIcon className="h-4 w-4" />
-                <span className="hidden sm:inline">Modifier</span>
+                <span className="hidden sm:inline"><UiText>Modifier</UiText></span>
               </button>
             )}
 
@@ -699,7 +700,7 @@ export default function DevisDetailPage() {
             </h2>
             {devis.chantier.adresse && (
               <div className="flex justify-between items-start">
-                <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">Adresse</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400 font-medium"><UiText>Adresse</UiText></span>
                 <span className="text-sm text-gray-900 dark:text-white text-right max-w-xs">{devis.chantier.adresse}</span>
               </div>
             )}
@@ -716,22 +717,22 @@ export default function DevisDetailPage() {
             </h2>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-start">
-                <span className="text-gray-500 dark:text-gray-400 font-medium">Nom</span>
+                <span className="text-gray-500 dark:text-gray-400 font-medium"><UiText>Nom</UiText></span>
                 <span className="text-gray-900 dark:text-white font-semibold text-right">{devis.client.nom}</span>
               </div>
               <div className="flex justify-between items-start">
-                <span className="text-gray-500 dark:text-gray-400 font-medium">Email</span>
+                <span className="text-gray-500 dark:text-gray-400 font-medium"><UiText>Email</UiText></span>
                 <span className="text-gray-900 dark:text-white text-right">{devis.client.email}</span>
               </div>
               {devis.client.telephone && (
                 <div className="flex justify-between items-start">
-                  <span className="text-gray-500 dark:text-gray-400 font-medium">Téléphone</span>
+                  <span className="text-gray-500 dark:text-gray-400 font-medium"><UiText>Téléphone</UiText></span>
                   <span className="text-gray-900 dark:text-white text-right">{devis.client.telephone}</span>
                 </div>
               )}
               {devis.client.adresse && (
                 <div className="flex justify-between items-start">
-                  <span className="text-gray-500 dark:text-gray-400 font-medium">Adresse</span>
+                  <span className="text-gray-500 dark:text-gray-400 font-medium"><UiText>Adresse</UiText></span>
                   <span className="text-gray-900 dark:text-white text-right max-w-xs">{devis.client.adresse}</span>
                 </div>
               )}
@@ -742,11 +743,11 @@ export default function DevisDetailPage() {
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 hover:shadow-2xl transition-shadow duration-300">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-gradient-to-br from-orange-500 to-red-600"></div>
-              Détails du devis
+              <UiText>Détails du devis</UiText>
             </h2>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-gray-500 dark:text-gray-400 font-medium">Statut</span>
+                <span className="text-gray-500 dark:text-gray-400 font-medium"><UiText>Statut</UiText></span>
                 <StatusBadge statut={devis.statut} />
               </div>
               <div className="flex justify-between items-center">
@@ -828,7 +829,7 @@ export default function DevisDetailPage() {
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 mb-6">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-gradient-to-br from-orange-500 to-red-600"></div>
-              Observations
+              <UiText>Observations</UiText>
             </h2>
             <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
               {devis.observations}
@@ -848,9 +849,9 @@ export default function DevisDetailPage() {
                 <thead>
                   <tr className="border-b-2 border-gray-200 dark:border-gray-700">
                     <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">#</th>
-                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Article</th>
-                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Unité</th>
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"><UiText>Article</UiText></th>
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"><UiText>Description</UiText></th>
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"><UiText>Unité</UiText></th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Qté</th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Prix U.</th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Remise</th>
@@ -983,7 +984,7 @@ export default function DevisDetailPage() {
                         onChange={() => setChangeNatureType('DEVIS')}
                         className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                       />
-                      <span className="font-medium text-gray-900 dark:text-white">Devis</span>
+                      <span className="font-medium text-gray-900 dark:text-white"><UiText>Devis</UiText></span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
@@ -1020,7 +1021,7 @@ export default function DevisDetailPage() {
                     disabled={changingNature}
                     className="px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50"
                   >
-                    Annuler
+                    <UiText>Annuler</UiText>
                   </button>
                   <button
                     onClick={handleChangeNature}
@@ -1056,7 +1057,7 @@ export default function DevisDetailPage() {
                         onChange={() => setDuplicateAsType('DEVIS')}
                         className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                       />
-                      <span className="font-medium text-gray-900 dark:text-white">Devis</span>
+                      <span className="font-medium text-gray-900 dark:text-white"><UiText>Devis</UiText></span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
@@ -1093,7 +1094,7 @@ export default function DevisDetailPage() {
                     disabled={duplicating}
                     className="px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50"
                   >
-                    Annuler
+                    <UiText>Annuler</UiText>
                   </button>
                   <button
                     onClick={handleDuplicateConfirm}
@@ -1167,7 +1168,7 @@ export default function DevisDetailPage() {
                     disabled={converting}
                     className="px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 transition-all"
                   >
-                    Annuler
+                    <UiText>Annuler</UiText>
                   </button>
                   <button
                     onClick={handleConvert}

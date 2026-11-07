@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -448,7 +449,7 @@ export default function ConfigurationPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-lg border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400">
-            <h2 className="text-lg font-semibold mb-2">Accès non autorisé</h2>
+            <h2 className="text-lg font-semibold mb-2"><UiText>Accès non autorisé</UiText></h2>
             <p>Vous n'avez pas les permissions nécessaires pour accéder à cette page.</p>
           </div>
         </div>
@@ -486,7 +487,7 @@ export default function ConfigurationPage() {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Nom de l'entreprise
+              <UiText>Nom de l'entreprise</UiText>
             </label>
             <input
               type="text"
@@ -569,7 +570,7 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Adresse
+              <UiText>Adresse</UiText>
             </label>
             <input
               type="text"
@@ -582,7 +583,7 @@ export default function ConfigurationPage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Code postal
+                <UiText>Code postal</UiText>
               </label>
               <input
                 type="text"
@@ -593,7 +594,7 @@ export default function ConfigurationPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Ville
+                <UiText>Ville</UiText>
               </label>
               <input
                 type="text"
@@ -606,7 +607,7 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Téléphone
+              <UiText>Téléphone</UiText>
             </label>
             <input
               type="tel"
@@ -618,7 +619,7 @@ export default function ConfigurationPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Email
+              <UiText>Email</UiText>
             </label>
             <input
               type="email"
@@ -682,7 +683,7 @@ export default function ConfigurationPage() {
       </div>
 
       <h2 className="text-xl font-bold mt-12 mb-6 flex items-center gap-2 dark:text-white">
-        Configuration des emails
+        <UiText>Configuration des emails</UiText>
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
@@ -909,7 +910,7 @@ export default function ConfigurationPage() {
             {monthlyReportLoading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" />
-                Envoi en cours...
+                <UiText>Envoi en cours...</UiText>
               </>
             ) : (
               <>
@@ -983,7 +984,7 @@ export default function ConfigurationPage() {
             {uploadingDesktopIcon && (
               <div className="mt-2 flex items-center text-sm text-gray-600 dark:text-gray-400">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                Traitement en cours...
+                <UiText>Traitement en cours...</UiText>
               </div>
             )}
             {desktopIconUrl && (
@@ -1027,7 +1028,7 @@ export default function ConfigurationPage() {
             {uploadingMobileIcon && (
               <div className="mt-2 flex items-center text-sm text-gray-600 dark:text-gray-400">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                Traitement en cours...
+                <UiText>Traitement en cours...</UiText>
               </div>
             )}
             {mobileIconUrl && (
@@ -1054,14 +1055,14 @@ export default function ConfigurationPage() {
       </div>
 
       <h2 className="text-xl font-bold mt-12 mb-6 flex items-center gap-2 dark:text-white">
-        Gestion des fiches techniques
+        <UiText>Gestion des fiches techniques</UiText>
       </h2>
       
       <DocumentManager />
 
       <h2 className="text-xl font-bold mt-12 mb-6 flex items-center gap-2 dark:text-white">
         <ClipboardDocumentListIcon className="h-5 w-5 text-blue-600" />
-        Tâches administratives
+        <UiText>Tâches administratives</UiText>
       </h2>
       
       <AdminTaskTypesManager />
@@ -1071,7 +1072,7 @@ export default function ConfigurationPage() {
         <>
           <h2 className="text-xl font-bold mt-12 mb-6 flex items-center gap-2 dark:text-white">
             <ShieldCheckIcon className="h-5 w-5 text-amber-500" />
-            Administration RAG
+            <UiText>Administration RAG</UiText>
           </h2>
           
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
@@ -1089,7 +1090,7 @@ export default function ConfigurationPage() {
                 </div>
                 <div className="text-left">
                   <h3 className="font-medium text-gray-900 dark:text-white">
-                    Administration RAG
+                    <UiText>Administration RAG</UiText>
                   </h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Gérer l'indexation des données et les conversations IA
@@ -1125,7 +1126,7 @@ export default function ConfigurationPage() {
                 </div>
                 <div className="text-left">
                   <h3 className="font-medium text-gray-900 dark:text-white">
-                    Gestion des Templates
+                    <UiText>Gestion des Templates</UiText>
                   </h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Créer et modifier les modèles de contrats
@@ -1159,7 +1160,7 @@ export default function ConfigurationPage() {
             </div>
             <div className="text-left">
               <h3 className="font-medium text-gray-900 dark:text-white">
-                Configurer les notifications
+                <UiText>Configurer les notifications</UiText>
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Gérer les types de notifications et les préférences utilisateurs

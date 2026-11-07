@@ -1,3 +1,4 @@
+import { UiText } from '@/contexts/LocaleContext'
 import UserNotepad from '@/components/dashboard/UserNotepad'
 import { headers } from 'next/headers'
 import Link from 'next/link'
@@ -68,9 +69,9 @@ const DashboardTestPage = async () => {
             <p className="text-muted-foreground">Vue synthétique et actions rapides</p>
           </div>
           <div className="flex gap-2">
-            <Link href="/chantiers/nouveau" className="px-3 py-2 rounded bg-blue-600 text-white">Nouveau chantier</Link>
+            <Link href="/chantiers/nouveau" className="px-3 py-2 rounded bg-blue-600 text-white"><UiText>Nouveau chantier</UiText></Link>
             <Link href="/chantiers/reception/nouveau" className="px-3 py-2 rounded bg-emerald-600 text-white">Nouvelle réception</Link>
-            <Link href="/sav/nouveau" className="px-3 py-2 rounded bg-orange-600 text-white">Nouveau ticket SAV</Link>
+            <Link href="/sav/nouveau" className="px-3 py-2 rounded bg-orange-600 text-white"><UiText>Nouveau ticket SAV</UiText></Link>
           </div>
         </header>
 
@@ -112,7 +113,7 @@ const DashboardTestPage = async () => {
         {/* Graphique synthétique */}
         {chartLabels.length > 0 && (
           <section className="rounded-lg border p-4 bg-white dark:bg-gray-800">
-            <h2 className="font-semibold mb-4">Répartition des chantiers</h2>
+            <h2 className="font-semibold mb-4"><UiText>Répartition des chantiers</UiText></h2>
             <BarChart data={chartData} options={chartOptions as unknown} />
           </section>
         )}
@@ -121,7 +122,7 @@ const DashboardTestPage = async () => {
         <section className="grid gap-6 lg:grid-cols-1">
           <div className="rounded-lg border overflow-hidden bg-white dark:bg-gray-800">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="font-semibold">À surveiller</h2>
+              <h2 className="font-semibold"><UiText>À surveiller</UiText></h2>
             </div>
             <div className="p-4">
               {Array.isArray(alertes) && alertes.length > 0 ? (

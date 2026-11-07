@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -437,10 +438,10 @@ export default function ChantierEtatsPage(props: PageProps) {
             <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">N°</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Date</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Date</UiText></th>
                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Montant de l'état</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Statut</th>
-                <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Actions</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Statut</UiText></th>
+                <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Actions</UiText></th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
@@ -540,7 +541,7 @@ export default function ChantierEtatsPage(props: PageProps) {
 
   if (!chantier) return (
     <div className="bg-yellow-50 dark:bg-yellow-900/10 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400">
-      Chantier non trouvé
+      <UiText>Chantier non trouvé</UiText>
     </div>
   )
 
@@ -576,7 +577,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                   <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30">
                     <ChartBarIcon className="w-6 h-6 mr-3 text-indigo-900 dark:text-white" />
                     <h1 className="text-xl font-bold text-indigo-900 dark:text-white">
-                      États d'avancement
+                      <UiText>États d'avancement</UiText>
                     </h1>
                   </div>
                 </div>
@@ -625,7 +626,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                     </svg>
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    Aucun état d'avancement
+                    <UiText>Aucun état d'avancement</UiText>
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
                     Créez votre premier état d'avancement client pour commencer le suivi de votre chantier.
@@ -649,7 +650,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                       {_isCreating ? (
                         <>
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                          Création...
+                          <UiText>Création...</UiText>
                         </>
                       ) : (
                         <>
@@ -703,7 +704,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <span className="inline-flex items-center px-3 py-1 bg-amber-500 text-white text-sm font-semibold rounded-full shadow-sm">
-                          Commande {st.commande.reference || `#${st.commande.id}`}
+                          <UiText>Commande</UiText> {st.commande.reference || `#${st.commande.id}`}
                         </span>
                         <span className="text-sm text-gray-600 dark:text-gray-400">
                           {new Date(st.commande.dateCommande).toLocaleDateString('fr-FR')}
@@ -772,7 +773,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                         </svg>
                       </div>
                       <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                        Aucun état d'avancement
+                        <UiText>Aucun état d'avancement</UiText>
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
                         Aucun état d'avancement n'a encore été créé pour ce sous-traitant.
@@ -867,7 +868,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                <span className="font-bold text-lg">Résumé Financier</span>
+                <span className="font-bold text-lg"><UiText>Résumé Financier</UiText></span>
               </div>
             </div>
             <div className="p-6">

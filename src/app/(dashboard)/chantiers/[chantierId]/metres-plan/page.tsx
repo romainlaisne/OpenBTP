@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { PageHeader } from '@/components/PageHeader'
@@ -98,7 +99,7 @@ export default function ChantierMetresPlanPage() {
       className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-sm font-semibold"
     >
       <PlusIcon className="h-4 w-4" />
-      Nouveau métré
+      <UiText>Nouveau métré</UiText>
     </button>
   )
 
@@ -142,7 +143,7 @@ export default function ChantierMetresPlanPage() {
               onClick={loadProjets}
               className="mt-4 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
             >
-              Réessayer
+              <UiText>Réessayer</UiText>
             </button>
           </div>
         ) : projets.length === 0 ? (
@@ -206,7 +207,7 @@ export default function ChantierMetresPlanPage() {
       {dialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Nouveau métré sur plan</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1"><UiText>Nouveau métré sur plan</UiText></h2>
             {chantier && (
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 Chantier : <span className="font-medium text-gray-700 dark:text-gray-300">{chantier.nomChantier}</span>
@@ -231,7 +232,7 @@ export default function ChantierMetresPlanPage() {
                 onClick={() => { setDialogOpen(false); setNomProjet('') }}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={handleCreate}

@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
@@ -174,7 +175,7 @@ export default function MetresPage() {
             {loading ? (
               <div className="p-12 text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">Chargement des métrés...</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-4"><UiText>Chargement des métrés...</UiText></p>
               </div>
             ) : error ? (
               <div className="p-12 text-center">
@@ -235,7 +236,7 @@ export default function MetresPage() {
                         className="inline-flex flex-1 sm:flex-initial items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-sm font-semibold"
                       >
                         <EyeIcon className="h-4 w-4 mr-2" />
-                        Consulter
+                        <UiText>Consulter</UiText>
                       </Link>
                       <Link
                         href={`/chantiers/${metre.chantier.chantierId}`}

@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { evaluateFormula } from '@/lib/formula'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -370,7 +371,7 @@ export default function NouveauDevisPage() {
               onClick={() => router.back()}
               className="inline-flex items-center gap-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
             >
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button
               onClick={handleSave}
@@ -380,14 +381,14 @@ export default function NouveauDevisPage() {
               {saving ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span className="hidden sm:inline">Enregistrement...</span>
+                  <span className="hidden sm:inline"><UiText>Enregistrement...</UiText></span>
                 </>
               ) : (
                 <>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                   </svg>
-                  <span className="hidden sm:inline">Enregistrer</span>
+                  <span className="hidden sm:inline"><UiText>Enregistrer</UiText></span>
                   <span className="sm:hidden">Sauver</span>
                 </>
               )}
@@ -406,7 +407,7 @@ export default function NouveauDevisPage() {
         >
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-gradient-to-br from-orange-500 to-red-600"></div>
-            Informations générales
+            <UiText>Informations générales</UiText>
           </h2>
           {infosGeneralesExpanded ? (
             <ChevronUpIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -461,7 +462,7 @@ export default function NouveauDevisPage() {
           {/* Référence */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-              Référence
+              <UiText>Référence</UiText>
             </label>
             <input
               type="text"
@@ -471,7 +472,7 @@ export default function NouveauDevisPage() {
               className="block w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Identification libre du devis/avenant
+              <UiText>Identification libre du devis/avenant</UiText>
             </p>
           </div>
 
@@ -508,7 +509,7 @@ export default function NouveauDevisPage() {
                 emptyMessage="Aucun chantier trouvé"
               />
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Le client sera automatiquement déduit du chantier
+                <UiText>Le client sera automatiquement déduit du chantier</UiText>
               </p>
             </div>
           )}
@@ -518,7 +519,7 @@ export default function NouveauDevisPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Taux de TVA
+              <UiText>Taux de TVA</UiText>
             </label>
             <select
               value={tauxTVA}
@@ -549,7 +550,7 @@ export default function NouveauDevisPage() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Observations
+            <UiText>Observations</UiText>
           </label>
           <textarea
             value={observations}
@@ -581,20 +582,20 @@ export default function NouveauDevisPage() {
                   onClick={() => addSectionLigne('TITRE')}
                   className="px-3 py-1.5 text-xs font-medium text-orange-700 dark:text-orange-300 bg-orange-100 dark:bg-orange-900/30 hover:bg-orange-200 dark:hover:bg-orange-900/50 rounded-md transition-colors"
                 >
-                  Ajouter un titre
+                  <UiText>Ajouter un titre</UiText>
                 </button>
                 <button
                   onClick={() => addSectionLigne('SOUS_TITRE')}
                   className="px-3 py-1.5 text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/50 rounded-md transition-colors"
                 >
-                  Ajouter un sous-titre
+                  <UiText>Ajouter un sous-titre</UiText>
                 </button>
                 <button
                   onClick={addLigne}
                   className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700"
                 >
                   <PlusIcon className="h-4 w-4 mr-1" />
-                  Ajouter une ligne
+                  <UiText>Ajouter une ligne</UiText>
                 </button>
               </div>
             </div>
@@ -606,14 +607,14 @@ export default function NouveauDevisPage() {
                 <thead className="bg-gray-50 dark:bg-gray-700/50">
                   <tr>
                     <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-8">#</th>
-                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Article</th>
-                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28">Unité</th>
-                    <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Quantité</th>
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Article</UiText></th>
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Description</UiText></th>
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28"><UiText>Unité</UiText></th>
+                    <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Quantité</UiText></th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Prix Unit.</th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-24">Remise %</th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28">Total</th>
-                    <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-16">Action</th>
+                    <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-16"><UiText>Action</UiText></th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -640,14 +641,14 @@ export default function NouveauDevisPage() {
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg text-orange-900 dark:text-white bg-white/70 dark:bg-white/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-md"
               >
                 <span className="text-lg leading-none">T</span>
-                Ajouter un titre
+                <UiText>Ajouter un titre</UiText>
               </button>
               <button
                 onClick={() => addSectionLigne('SOUS_TITRE')}
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg text-orange-900 dark:text-white bg-white/60 dark:bg-white/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-md"
               >
                 <span className="text-lg leading-none">t</span>
-                Ajouter un sous-titre
+                <UiText>Ajouter un sous-titre</UiText>
               </button>
               <button
                 onClick={addLigne}
@@ -656,7 +657,7 @@ export default function NouveauDevisPage() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                Ajouter une ligne
+                <UiText>Ajouter une ligne</UiText>
               </button>
             </div>
           </div>
@@ -674,7 +675,7 @@ export default function NouveauDevisPage() {
         <div className="flex justify-end">
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 p-6 w-full max-w-md">
             <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">Récapitulatif</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white"><UiText>Récapitulatif</UiText></h2>
             </div>
             
             <div className="space-y-3">

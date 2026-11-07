@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { Navbar } from '@/components/Navbar'
 import { useSession } from 'next-auth/react'
 import { useRouter, usePathname } from 'next/navigation'
@@ -46,7 +47,7 @@ export default function DashboardLayout({
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Accès non autorisé</h1>
+          <h1 className="text-2xl font-bold text-red-600 mb-4"><UiText>Accès non autorisé</UiText></h1>
           <p className="text-gray-600 dark:text-gray-400 mb-4">Vous devez être connecté pour accéder à cette page.</p>
           <button 
             onClick={() => router.push('/login')}

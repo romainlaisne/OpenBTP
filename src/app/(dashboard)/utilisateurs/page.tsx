@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { PlusIcon, PencilSquareIcon, TrashIcon, UserGroupIcon } from '@heroicons/react/24/outline'
@@ -43,7 +44,7 @@ function DeleteModal({ isOpen, onClose, onConfirm, isDeleting }: DeleteModalProp
             onClick={onClose}
             className="px-4 py-2 border rounded-md text-gray-700 dark:text-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </button>
           <button
             onClick={onConfirm}
@@ -166,7 +167,7 @@ export default function UsersPage() {
   }
 
   if (!session) {
-    return <div className="p-8 text-red-600">Accès non autorisé</div>
+    return <div className="p-8 text-red-600"><UiText>Accès non autorisé</UiText></div>
   }
 
   // Calculer les statistiques
@@ -219,7 +220,7 @@ export default function UsersPage() {
             <UserGroupIcon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Utilisateurs</div>
+            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase"><UiText>Utilisateurs</UiText></div>
             <div className="text-sm font-black text-gray-900 dark:text-white">{stats.users}</div>
           </div>
         </div>
@@ -227,7 +228,7 @@ export default function UsersPage() {
     </div>
   ) : undefined
 
-  if (loading) return <div className="p-8">Chargement...</div>
+  if (loading) return <div className="p-8"><UiText>Chargement...</UiText></div>
   if (error) return <div className="p-8 text-red-600">Erreur: {error}</div>
 
   return (
@@ -245,8 +246,8 @@ export default function UsersPage() {
             className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-md shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
           >
             <PlusIcon className="h-4 w-4 mr-1.5" />
-            <span className="hidden sm:inline">Ajouter un utilisateur</span>
-            <span className="sm:hidden">Ajouter</span>
+            <span className="hidden sm:inline"><UiText>Ajouter un utilisateur</UiText></span>
+            <span className="sm:hidden"><UiText>Ajouter</UiText></span>
           </button>
         }
       />
@@ -263,16 +264,16 @@ export default function UsersPage() {
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
-                      Nom
+                      <UiText>Nom</UiText>
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
-                      Email
+                      <UiText>Email</UiText>
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
                       Rôle
                     </th>
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                      <span className="sr-only">Actions</span>
+                      <span className="sr-only"><UiText>Actions</UiText></span>
                     </th>
                   </tr>
                 </thead>
@@ -305,7 +306,7 @@ export default function UsersPage() {
                           className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-4"
                         >
                           <PencilSquareIcon className="h-5 w-5" />
-                          <span className="sr-only">Modifier {user.name}</span>
+                          <span className="sr-only"><UiText>Modifier</UiText> {user.name}</span>
                         </button>
                         <button
                           onClick={() => {
@@ -316,7 +317,7 @@ export default function UsersPage() {
                           disabled={user.email === session?.user?.email}
                         >
                           <TrashIcon className="h-5 w-5" />
-                          <span className="sr-only">Supprimer {user.name}</span>
+                          <span className="sr-only"><UiText>Supprimer</UiText> {user.name}</span>
                         </button>
                       </td>
                     </tr>

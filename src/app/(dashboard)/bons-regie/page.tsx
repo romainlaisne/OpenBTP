@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
@@ -209,7 +210,7 @@ export default function BonsRegiePage() {
             onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
           >
-            Réessayer
+            <UiText>Réessayer</UiText>
           </button>
         </div>
       </div>
@@ -374,7 +375,7 @@ export default function BonsRegiePage() {
                               onClick={() => setEditingBonId(null)}
                               className="inline-flex items-center justify-center px-3 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600 w-1/3"
                             >
-                              Annuler
+                              <UiText>Annuler</UiText>
                             </button>
                           </div>
                           
@@ -414,7 +415,7 @@ export default function BonsRegiePage() {
                       title="Supprimer ce bon de régie"
                     >
                       <TrashIcon className="h-4 w-4 mr-1" />
-                      Supprimer
+                      <UiText>Supprimer</UiText>
                     </button>
                   )}
                 </div>
@@ -439,13 +440,13 @@ export default function BonsRegiePage() {
                 onClick={() => setBonToDelete(null)}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={() => handleDelete(bonToDelete)}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 dark:bg-red-700 border border-transparent rounded-md hover:bg-red-700 dark:hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
-                Supprimer
+                <UiText>Supprimer</UiText>
               </button>
             </div>
           </div>

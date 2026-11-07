@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -196,7 +197,7 @@ export default function EditOuvrierPage(
           />
 
           <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Accès Portail (PIN)</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2"><UiText>Accès Portail (PIN)</UiText></h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
               <FormInput
                 id="pin"
@@ -228,7 +229,7 @@ export default function EditOuvrierPage(
                   onClick={() => { try { navigator.clipboard.writeText(portalLink) } catch {} }}
                   className="px-2 py-1 border rounded text-xs"
                 >
-                  Copier
+                  <UiText>Copier</UiText>
                 </button>
               </div>
             </div>
@@ -241,7 +242,7 @@ export default function EditOuvrierPage(
             variant="outline"
             onClick={() => router.back()}
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </Button>
           <Button
             type="submit"

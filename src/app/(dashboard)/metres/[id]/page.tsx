@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -254,7 +255,7 @@ export default function MetreDetailPage() {
         {loading ? (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">Chargement du métré...</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-4"><UiText>Chargement du métré...</UiText></p>
           </div>
         ) : error ? (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center">
@@ -263,7 +264,7 @@ export default function MetreDetailPage() {
               href="/metres"
               className="mt-4 inline-block text-blue-600 dark:text-blue-400 hover:underline"
             >
-              Retour à la liste
+              <UiText>Retour à la liste</UiText>
             </Link>
           </div>
         ) : metre ? (
@@ -271,7 +272,7 @@ export default function MetreDetailPage() {
             {/* Informations générales */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-500/10 to-indigo-500/10">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Informations générales</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white"><UiText>Informations générales</UiText></h2>
               </div>
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -295,7 +296,7 @@ export default function MetreDetailPage() {
                     )}
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Statut</label>
+                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Statut</UiText></label>
                     <div className="mt-1">
                       <span className={`inline-flex px-3 py-1 rounded-lg text-sm font-semibold border ${getStatutBadgeClass(metre.statut)}`}>
                         {getStatutLabel(metre.statut)}
@@ -332,7 +333,7 @@ export default function MetreDetailPage() {
 
                 {metre.commentaire && (
                   <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Commentaire</label>
+                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Commentaire</UiText></label>
                     <p className="mt-2 text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{metre.commentaire}</p>
                   </div>
                 )}
@@ -347,7 +348,7 @@ export default function MetreDetailPage() {
                     {generatingPDF ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                        Génération...
+                        <UiText>Génération...</UiText>
                       </>
                     ) : (
                       <>
@@ -362,7 +363,7 @@ export default function MetreDetailPage() {
                 {isAdminOrManager && (
                   <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                     <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-lg mb-4">
-                      <h3 className="text-sm font-bold text-gray-900 dark:text-white">Actions</h3>
+                      <h3 className="text-sm font-bold text-gray-900 dark:text-white"><UiText>Actions</UiText></h3>
                     </div>
                     
                     {/* Association chantier (si chantier libre) */}
@@ -421,7 +422,7 @@ export default function MetreDetailPage() {
                             {updating ? (
                               <>
                                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                                Validation...
+                                <UiText>Validation...</UiText>
                               </>
                             ) : (
                               <>
@@ -458,7 +459,7 @@ export default function MetreDetailPage() {
                           {updating ? (
                             <>
                               <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                              Mise à jour...
+                              <UiText>Mise à jour...</UiText>
                             </>
                           ) : (
                             'Remettre en attente'
@@ -493,7 +494,7 @@ export default function MetreDetailPage() {
                           {updating ? (
                             <>
                               <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                              Validation...
+                              <UiText>Validation...</UiText>
                             </>
                           ) : (
                             <>
@@ -520,12 +521,12 @@ export default function MetreDetailPage() {
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-900">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Article</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Unité</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Prix unitaire</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Quantité</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Article</UiText></th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Description</UiText></th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Type</UiText></th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Unité</UiText></th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Prix unitaire</UiText></th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Quantité</UiText></th>
                       <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Total</th>
                     </tr>
                   </thead>
