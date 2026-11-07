@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -7,11 +9,12 @@ export async function POST(
   request: Request,
   props: { params: Promise<{ chantierId: string; soustraitantId: string; commandeId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const chantier = await prisma.chantier.findUnique({
@@ -19,7 +22,7 @@ export async function POST(
       select: { id: true }
     })
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     const commande = await prisma.$queryRaw<Array<{ id: number; estVerrouillee: number | boolean; tauxTVA: number }>>`
@@ -29,10 +32,10 @@ export async function POST(
       AND soustraitantId = ${params.soustraitantId}
     `
     if (!commande || commande.length === 0) {
-      return NextResponse.json({ error: 'Commande sous-traitant non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Commande sous-traitant non trouvée' }, { status: 404 })
     }
     if (commande[0].estVerrouillee) {
-      return NextResponse.json({ error: 'La commande est verrouillée' }, { status: 400 })
+      return localizedJson({ error: 'La commande est verrouillée' }, { status: 400 })
     }
 
     const body = await request.json()
@@ -81,9 +84,9 @@ export async function POST(
       WHERE id = ${parseInt(params.commandeId)}
     `
 
-    return NextResponse.json(nouvelleLigne[0], { status: 201 })
+    return localizedJson(nouvelleLigne[0], { status: 201 })
   } catch (error) {
     console.error('Erreur création ligne commande ST:', error)
-    return NextResponse.json({ error: 'Erreur lors de la création de la ligne' }, { status: 500 })
+    return localizedJson({ error: 'Erreur lors de la création de la ligne' }, { status: 500 })
   }
 }

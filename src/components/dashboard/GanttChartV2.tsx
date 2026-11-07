@@ -1,3 +1,6 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
@@ -246,13 +249,13 @@ const GanttChartV2: React.FC<GanttChartV2Props> = ({ chantiers, loading = false 
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
         
-        toast.success('PDF exporté avec succès')
+        toast.success(tx("PDF exporté avec succès"))
       } else {
-        toast.error('Erreur lors de l\'export PDF')
+        toast.error(tx("Erreur lors de l'export PDF"))
       }
     } catch (error) {
       console.error('Erreur lors de l\'export PDF:', error)
-      toast.error('Erreur lors de l\'export PDF')
+      toast.error(tx("Erreur lors de l'export PDF"))
     }
   }
   
@@ -288,7 +291,7 @@ const GanttChartV2: React.FC<GanttChartV2Props> = ({ chantiers, loading = false 
   if (!chantiers.length) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-        <div className="text-gray-500">Aucun chantier à afficher</div>
+        <div className="text-gray-500"><UiText>Aucun chantier à afficher</UiText></div>
       </div>
     )
   }
@@ -358,7 +361,7 @@ const GanttChartV2: React.FC<GanttChartV2Props> = ({ chantiers, loading = false 
                 <button 
                   onClick={goToPrevious}
                   className="p-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
-                  aria-label="Période précédente"
+                  aria-label={tx("Période précédente")}
                 >
                   <ChevronLeftIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                 </button>
@@ -372,7 +375,7 @@ const GanttChartV2: React.FC<GanttChartV2Props> = ({ chantiers, loading = false 
                 <button 
                   onClick={goToNext} 
                   className="p-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  aria-label="Période suivante"
+                  aria-label={tx("Période suivante")}
                 >
                   <ChevronRightIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                 </button>
@@ -392,7 +395,7 @@ const GanttChartV2: React.FC<GanttChartV2Props> = ({ chantiers, loading = false 
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Rechercher..."
+                  placeholder={tx("Rechercher...")}
                   className="w-full pl-9 pr-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
                 />
               </div>
@@ -460,8 +463,8 @@ const GanttChartV2: React.FC<GanttChartV2Props> = ({ chantiers, loading = false 
             gridTemplateColumns: `320px repeat(${timeUnits.length}, ${columnWidth}px)` 
           }}>
             <div className="px-4 py-3 font-semibold text-xs text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border-r border-gray-300 dark:border-gray-600">
-              Chantier
-            </div>
+              <UiText>Chantier
+            </UiText></div>
             
             {timeUnits.map((unit, index) => {
               const isToday = dayjs().isSame(unit.start, scale === 'Jours' ? 'day' : scale === 'Semaines' ? 'week' : 'month')
@@ -490,8 +493,8 @@ const GanttChartV2: React.FC<GanttChartV2Props> = ({ chantiers, loading = false 
           {/* Lignes de chantiers */}
           {filteredChantiers.length === 0 ? (
             <div className="py-8 text-center text-gray-500 dark:text-gray-400">
-              Aucun chantier ne correspond aux filtres sélectionnés
-            </div>
+              <UiText>Aucun chantier ne correspond aux filtres sélectionnés
+            </UiText></div>
           ) : (
             filteredChantiers.map((chantier, index) => {
               const start = dayjs(chantier.start)
@@ -689,7 +692,7 @@ const GanttChartV2: React.FC<GanttChartV2Props> = ({ chantiers, loading = false 
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                   </svg>
                   <span className="font-semibold text-amber-600 dark:text-amber-400">
-                    {tooltip.chantier.montant.toLocaleString('fr-FR')} €
+                    {tooltip.chantier.montant.toLocaleString(intlLocale(getActiveLocale()))} €
                   </span>
                 </div>
               )}

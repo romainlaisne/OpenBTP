@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
@@ -34,11 +35,11 @@ function DeleteModal({ isOpen, onClose, onConfirm, isDeleting }: DeleteModalProp
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-          Confirmer la suppression
-        </h3>
+          <UiText>Confirmer la suppression
+        </UiText></h3>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.
-        </p>
+          <UiText>Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.
+        </UiText></p>
         <div className="flex justify-end space-x-3">
           <button
             onClick={onClose}
@@ -229,13 +230,13 @@ export default function UsersPage() {
   ) : undefined
 
   if (loading) return <div className="p-8"><UiText>Chargement...</UiText></div>
-  if (error) return <div className="p-8 text-red-600">Erreur: {error}</div>
+  if (error) return <div className="p-8 text-red-600"><UiText>Erreur: </UiText>{error}</div>
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Utilisateurs"
-        subtitle="Liste des utilisateurs et leurs droits d'accès"
+        title={tx("Utilisateurs")}
+        subtitle={tx("Liste des utilisateurs et leurs droits d'accès")}
         icon={UserGroupIcon}
         badgeColor="from-blue-600 via-indigo-600 to-purple-700"
         gradientColor="from-blue-600/10 via-indigo-600/10 to-purple-700/10"
@@ -270,8 +271,8 @@ export default function UsersPage() {
                       <UiText>Email</UiText>
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
-                      Rôle
-                    </th>
+                      <UiText>Rôle
+                    </UiText></th>
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                       <span className="sr-only"><UiText>Actions</UiText></span>
                     </th>
@@ -341,7 +342,7 @@ export default function UsersPage() {
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onSubmit={(data: UserFormData) => handleAddUser(data)}
-        title="Ajouter un utilisateur"
+        title={tx("Ajouter un utilisateur")}
         buttonText="Créer"
       />
 
@@ -354,7 +355,7 @@ export default function UsersPage() {
           email: selectedUser.email,
           role: selectedUser.role
         } : undefined}
-        title="Modifier l'utilisateur"
+        title={tx("Modifier l'utilisateur")}
         buttonText="Enregistrer"
         isEdit
       />

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,10 +7,11 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/dashboard/chantiers - Récupère les chantiers en cours pour la carte du dashboard
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json([], { status: 401 })
+      return localizedJson([], { status: 401 })
     }
 
     console.log('Récupération des chantiers pour le dashboard...')
@@ -32,7 +35,7 @@ export async function GET() {
 
       if (!chantiers || !Array.isArray(chantiers)) {
         console.error('Les données reçues ne sont pas un tableau:', chantiers)
-        return NextResponse.json([])
+        return localizedJson([])
       }
 
       console.log(`Chantiers récupérés: ${chantiers.length}`)
@@ -71,15 +74,15 @@ export async function GET() {
 
       console.log(`Données formatées pour ${chantiersFormatted.length} chantiers`);
       
-      return NextResponse.json(chantiersFormatted)
+      return localizedJson(chantiersFormatted)
     } catch (dbError) {
       console.error('Erreur lors de l\'accès à la base de données:', dbError)
       // Retourner un tableau vide en cas d'erreur de base de données
-      return NextResponse.json([])
+      return localizedJson([])
     }
   } catch (error) {
     console.error('Erreur:', error)
     // Retourner un tableau vide en cas d'erreur générale
-    return NextResponse.json([])
+    return localizedJson([])
   }
 } 

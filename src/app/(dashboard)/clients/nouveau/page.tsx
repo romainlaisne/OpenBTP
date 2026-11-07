@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -78,8 +79,8 @@ export default function NouveauClientPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Nouveau Client"
-        subtitle="Créez un nouveau client dans votre annuaire"
+        title={tx("Nouveau Client")}
+        subtitle={tx("Créez un nouveau client dans votre annuaire")}
         icon={UserPlusIcon}
         badgeColor="from-indigo-600 via-purple-600 to-pink-700"
         gradientColor="from-indigo-600/10 via-purple-600/10 to-pink-700/10"
@@ -122,11 +123,11 @@ export default function NouveauClientPage() {
                 <FormInput
                   id="nom"
                   name="nom"
-                  label="Nom du client"
+                  label={tx("Nom du client")}
                   value={formData.nom}
                   onChange={handleChange}
                   required
-                  placeholder="Entrez le nom du client"
+                  placeholder={tx("Entrez le nom du client")}
                 />
               </div>
 
@@ -135,17 +136,17 @@ export default function NouveauClientPage() {
                   id="email"
                   name="email"
                   type="email"
-                  label="Email"
+                  label={tx("Email")}
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Entrez l'email du client"
+                  placeholder={tx("Entrez l'email du client")}
                 />
 
                 <FormInput
                   id="telephone"
                   name="telephone"
                   type="tel"
-                  label="Téléphone"
+                  label={tx("Téléphone")}
                   value={formData.telephone}
                   onChange={handleChange}
                   placeholder="+33 1 23 45 67 89"
@@ -156,11 +157,11 @@ export default function NouveauClientPage() {
                 <FormTextarea
                   id="adresse"
                   name="adresse"
-                  label="Adresse complète"
+                  label={tx("Adresse complète")}
                   value={formData.adresse}
                   onChange={handleChange}
                   rows={3}
-                  placeholder="123 rue de la République, 75001 Paris"
+                  placeholder={tx("123 rue de la République, 75001 Paris")}
                 />
               </div>
 
@@ -169,7 +170,7 @@ export default function NouveauClientPage() {
                   id="numeroTva"
                   name="numeroTva"
                   type="text"
-                  label="Numéro de TVA"
+                  label={tx("Numéro de TVA")}
                   value={formData.numeroTva}
                   onChange={handleChange}
                   placeholder="BE 1234.567.890"

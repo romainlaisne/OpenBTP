@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -195,7 +197,7 @@ export default function LogistiquePage() {
         alert(err.error || 'Erreur')
       }
     } catch (e) {
-      alert('Erreur')
+      alert(tx("Erreur"))
     } finally {
       setSavingMagasinier(false)
     }
@@ -204,7 +206,7 @@ export default function LogistiquePage() {
   const handleAddTache = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newTacheTitre.trim() || !newTacheMagasinierId) {
-      alert('Titre et magasinier requis')
+      alert(tx("Titre et magasinier requis"))
       return
     }
     setSavingTache(true)
@@ -248,7 +250,7 @@ export default function LogistiquePage() {
         alert(err.error || 'Erreur')
       }
     } catch (e) {
-      alert('Erreur réseau')
+      alert(tx("Erreur réseau"))
     } finally {
       setSavingTache(false)
     }
@@ -308,7 +310,7 @@ export default function LogistiquePage() {
         setPinState(prev => ({...prev, [magId]: {...prev[magId], saving:false}}))
       }
     } catch {
-      alert('Erreur réseau')
+      alert(tx("Erreur réseau"))
       setPinState(prev => ({...prev, [magId]: {...prev[magId], saving:false}}))
     }
   }
@@ -326,10 +328,10 @@ export default function LogistiquePage() {
         setMagasiniers(prev => prev.map(m => m.id === magId ? {...m, nom: editMagNom.trim()} : m))
         setEditMagId(null)
       } else {
-        alert('Erreur lors de la mise à jour')
+        alert(tx("Erreur lors de la mise à jour"))
       }
     } catch {
-      alert('Erreur réseau')
+      alert(tx("Erreur réseau"))
     } finally {
       setSavingMagNom(false)
     }
@@ -384,24 +386,24 @@ export default function LogistiquePage() {
       setEditPhotoURLs([])
       loadData()
     } catch {
-      alert('Erreur réseau')
+      alert(tx("Erreur réseau"))
     } finally {
       setSavingEdit(false)
     }
   }
 
   const handleDeleteTache = async (id: string) => {
-    if (!confirm('Supprimer cette tâche ?')) return
+    if (!confirm(tx("Supprimer cette tâche ?"))) return
     setDeletingId(id)
     try {
       const res = await fetch(`/api/logistique/taches/${id}`, { method: 'DELETE' })
       if (res.ok) {
         setTaches((prev) => prev.filter((t) => t.id !== id))
       } else {
-        alert('Erreur lors de la suppression')
+        alert(tx("Erreur lors de la suppression"))
       }
     } catch {
-      alert('Erreur réseau')
+      alert(tx("Erreur réseau"))
     } finally {
       setDeletingId(null)
     }
@@ -419,11 +421,11 @@ export default function LogistiquePage() {
       setTaches(prev => prev.map(t => t.id === id ? { ...t, ...updated } : t))
       setViewTache(prev => prev && prev.id === id ? { ...prev, ...updated } : prev)
     } catch {
-      alert('Erreur lors de la remise en À faire')
+      alert(tx("Erreur lors de la remise en À faire"))
     }
   }
 
-  const formatDate = (s: string) => new Date(s).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+  const formatDate = (s: string) => new Date(s).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: 'short', year: 'numeric' })
 
   const handleCreateBonPrep = async () => {
     const lignesValides = bonPrepLignes.filter(l => l.description.trim())
@@ -462,10 +464,10 @@ export default function LogistiquePage() {
               a.click()
             }
           } else {
-            alert('Bon créé, mais erreur lors de la génération du PDF')
+            alert(tx("Bon créé, mais erreur lors de la génération du PDF"))
           }
         } catch {
-          alert('Bon créé, mais erreur réseau lors de la génération du PDF')
+          alert(tx("Bon créé, mais erreur réseau lors de la génération du PDF"))
         }
       } else {
         const err = await res.json()
@@ -473,19 +475,19 @@ export default function LogistiquePage() {
       }
     } catch (e) {
       console.error(e)
-      alert('Erreur réseau')
+      alert(tx("Erreur réseau"))
     } finally {
       setSavingBonPrep(false)
     }
   }
 
   const handleDeleteBonPrep = async (bonId: string) => {
-    if (!confirm('Supprimer ce bon de préparation ?')) return
+    if (!confirm(tx("Supprimer ce bon de préparation ?"))) return
     setDeletingBonId(bonId)
     try {
       const res = await fetch(`/api/logistique/bons-preparation/${bonId}`, { method: 'DELETE' })
       if (res.ok) loadData()
-      else alert('Erreur lors de la suppression')
+      else alert(tx("Erreur lors de la suppression"))
     } catch (e) {
       console.error(e)
     } finally {
@@ -537,7 +539,7 @@ export default function LogistiquePage() {
         alert(err.error || 'Erreur lors de la modification')
       }
     } catch {
-      alert('Erreur réseau')
+      alert(tx("Erreur réseau"))
     } finally {
       setSavingEditBon(false)
     }
@@ -560,7 +562,7 @@ export default function LogistiquePage() {
         <div className="flex items-center gap-2">
           <ClockIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">À faire</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>À faire</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{taches.filter(t => t.statut === 'A_FAIRE').length}</div>
           </div>
         </div>
@@ -569,7 +571,7 @@ export default function LogistiquePage() {
         <div className="flex items-center gap-2">
           <CheckCircleIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Validées</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Validées</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{taches.filter(t => t.statut === 'VALIDEE').length}</div>
           </div>
         </div>
@@ -580,8 +582,8 @@ export default function LogistiquePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-amber-50/20 to-orange-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Logistique"
-        subtitle="Tâches magasiniers"
+        title={tx("Logistique")}
+        subtitle={tx("Tâches magasiniers")}
         icon={ArchiveBoxIcon}
         badgeColor="from-amber-600 via-orange-600 to-red-600"
         gradientColor="from-amber-600/10 via-orange-600/10 to-red-600/10"
@@ -629,8 +631,8 @@ export default function LogistiquePage() {
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium whitespace-nowrap transition-all text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-amber-300 dark:hover:border-amber-600"
           >
             <ClipboardDocumentListIcon className="h-4 w-4" />
-            Préparation commande
-          </button>
+            <UiText>Préparation commande
+          </UiText></button>
         </div>
 
         {/* ===== TAB CONSULTATION ===== */}
@@ -644,7 +646,7 @@ export default function LogistiquePage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Magasinier</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Magasinier</UiText></label>
                   <select
                     value={filterMagasinier}
                     onChange={(e) => setFilterMagasinier(e.target.value)}
@@ -664,8 +666,8 @@ export default function LogistiquePage() {
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
                   >
                     <option value="">Tous les statuts</option>
-                    <option value="A_FAIRE">À faire</option>
-                    <option value="VALIDEE">Validée</option>
+                    <option value="A_FAIRE"><UiText>À faire</UiText></option>
+                    <option value="VALIDEE"><UiText>Validée</UiText></option>
                   </select>
                 </div>
               </div>
@@ -680,9 +682,9 @@ export default function LogistiquePage() {
             ) : taches.length === 0 ? (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-10 text-center">
                 <ArchiveBoxIcon className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-                <p className="font-semibold text-gray-900 dark:text-white">Aucune tâche</p>
+                <p className="font-semibold text-gray-900 dark:text-white"><UiText>Aucune tâche</UiText></p>
                 {filterStatut === 'A_FAIRE' && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Toutes les tâches sont validées !</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1"><UiText>Toutes les tâches sont validées !</UiText></p>
                 )}
               </div>
             ) : (
@@ -691,9 +693,9 @@ export default function LogistiquePage() {
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead className="bg-gray-50 dark:bg-gray-900">
                       <tr>
-                        <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tâche</th>
+                        <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Tâche</UiText></th>
                         <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Statut</UiText></th>
-                        <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Magasinier</th>
+                        <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Magasinier</UiText></th>
                         <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Date</UiText></th>
                         <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Photos</th>
                         <th className="px-5 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"><UiText>Actions</UiText></th>
@@ -709,8 +711,8 @@ export default function LogistiquePage() {
                               <div className="font-semibold text-gray-900 dark:text-white text-sm">{t.titre}</div>
                               {t.creeParMagasinier && (
                                 <span className="inline-block mt-0.5 text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
-                                  Ajoutée par le magasinier
-                                </span>
+                                  <UiText>Ajoutée par le magasinier
+                                </UiText></span>
                               )}
                               {t.description && (
                                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate max-w-xs">{t.description}</div>
@@ -754,14 +756,14 @@ export default function LogistiquePage() {
                                 <button
                                   onClick={() => setViewTache(t)}
                                   className="rounded-lg border border-gray-200 dark:border-gray-700 p-2 text-gray-500 hover:border-amber-400 hover:text-amber-600 dark:hover:border-amber-500 dark:hover:text-amber-400 transition-colors"
-                                  title="Voir le retour magasinier"
+                                  title={tx("Voir le retour magasinier")}
                                 >
                                   <EyeIcon className="h-4 w-4" />
                                 </button>
                                 <button
                                   onClick={() => handleOpenEdit(t)}
                                   className="rounded-lg border border-gray-200 dark:border-gray-700 p-2 text-gray-500 hover:border-blue-400 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400 transition-colors"
-                                  title="Modifier"
+                                  title={tx("Modifier")}
                                 >
                                   <PencilSquareIcon className="h-4 w-4" />
                                 </button>
@@ -769,7 +771,7 @@ export default function LogistiquePage() {
                                   onClick={() => handleDeleteTache(t.id)}
                                   disabled={deletingId === t.id}
                                   className="rounded-lg border border-gray-200 dark:border-gray-700 p-2 text-red-400 hover:border-red-400 hover:text-red-600 disabled:opacity-50 transition-colors"
-                                  title="Supprimer"
+                                  title={tx("Supprimer")}
                                 >
                                   {deletingId === t.id
                                     ? <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-red-600" />
@@ -791,7 +793,7 @@ export default function LogistiquePage() {
             <div className="mt-6">
               <div className="flex items-center gap-3 mb-3">
                 <ClipboardDocumentListIcon className="h-5 w-5 text-blue-500" />
-                <h3 className="text-base font-semibold text-gray-900 dark:text-white">Bons de préparation en cours ({bonsPreparation.length})</h3>
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white"><UiText>Bons de préparation en cours (</UiText>{bonsPreparation.length})</h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {bonsPreparation.map(bon => (
@@ -810,7 +812,7 @@ export default function LogistiquePage() {
                         <button
                           onClick={() => openEditBon(bon)}
                           className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                          title="Modifier"
+                          title={tx("Modifier")}
                         >
                           <PencilSquareIcon className="h-4 w-4" />
                         </button>
@@ -819,7 +821,7 @@ export default function LogistiquePage() {
                             try {
                               const res = await fetch(`/api/logistique/bons-preparation/${bon.id}/pdf`)
                               if (!res.ok) {
-                                alert('Erreur lors de la génération du PDF')
+                                alert(tx("Erreur lors de la génération du PDF"))
                                 return
                               }
                               const blob = await res.blob()
@@ -834,11 +836,11 @@ export default function LogistiquePage() {
                                 a.click()
                               }
                             } catch {
-                              alert('Erreur réseau lors de la génération du PDF')
+                              alert(tx("Erreur réseau lors de la génération du PDF"))
                             }
                           }}
                           className="p-1.5 rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                          title="Imprimer"
+                          title={tx("Imprimer")}
                         >
                           <PrinterIcon className="h-4 w-4" />
                         </button>
@@ -846,7 +848,7 @@ export default function LogistiquePage() {
                           onClick={() => handleDeleteBonPrep(bon.id)}
                           disabled={deletingBonId === bon.id}
                           className="p-1.5 rounded-lg text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
-                          title="Supprimer"
+                          title={tx("Supprimer")}
                         >
                           {deletingBonId === bon.id
                             ? <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-red-500" />
@@ -876,7 +878,7 @@ export default function LogistiquePage() {
                 className="flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-3"
               >
                 <CheckCircleIcon className="h-4 w-4 text-green-500" />
-                Bons terminés ({bonsTermines.length})
+                <UiText>Bons terminés (</UiText>{bonsTermines.length})
                 <ChevronDownIcon className={`h-4 w-4 transition-transform ${showTermines ? 'rotate-180' : ''}`} />
               </button>
               {showTermines && (
@@ -900,7 +902,7 @@ export default function LogistiquePage() {
                           <button
                             onClick={() => openEditBon(bon)}
                             className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                            title="Modifier / Rouvrir"
+                            title={tx("Modifier / Rouvrir")}
                           >
                             <PencilSquareIcon className="h-4 w-4" />
                           </button>
@@ -908,15 +910,15 @@ export default function LogistiquePage() {
                             onClick={async () => {
                               try {
                                 const res = await fetch(`/api/logistique/bons-preparation/${bon.id}/pdf`)
-                                if (!res.ok) { alert('Erreur PDF'); return }
+                                if (!res.ok) { alert(tx("Erreur PDF")); return }
                                 const blob = await res.blob()
                                 const url = URL.createObjectURL(blob)
                                 const win = window.open(url, '_blank')
                                 if (!win) { const a = document.createElement('a'); a.href = url; a.download = `bon-preparation-${bon.id.slice(0,8)}.pdf`; a.click() }
-                              } catch { alert('Erreur réseau PDF') }
+                              } catch { alert(tx("Erreur réseau PDF")) }
                             }}
                             className="p-1.5 rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                            title="Imprimer"
+                            title={tx("Imprimer")}
                           >
                             <PrinterIcon className="h-4 w-4" />
                           </button>
@@ -924,7 +926,7 @@ export default function LogistiquePage() {
                             onClick={() => handleDeleteBonPrep(bon.id)}
                             disabled={deletingBonId === bon.id}
                             className="p-1.5 rounded-lg text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
-                            title="Supprimer"
+                            title={tx("Supprimer")}
                           >
                             {deletingBonId === bon.id
                               ? <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-red-500" />
@@ -961,7 +963,7 @@ export default function LogistiquePage() {
                   type="text"
                   value={newTacheTitre}
                   onChange={(e) => setNewTacheTitre(e.target.value)}
-                  placeholder="Ex: Rangement étagère A3"
+                  placeholder={tx("Ex: Rangement étagère A3")}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
@@ -970,14 +972,14 @@ export default function LogistiquePage() {
                 <textarea
                   value={newTacheDesc}
                   onChange={(e) => setNewTacheDesc(e.target.value)}
-                  placeholder="Détails..."
+                  placeholder={tx("Détails...")}
                   rows={2}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date d&apos;exécution</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Date d&apos;exécution</UiText></label>
                   <input
                     type="date"
                     value={newTacheDate}
@@ -986,7 +988,7 @@ export default function LogistiquePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Magasinier *</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Magasinier *</UiText></label>
                   <select
                     value={newTacheMagasinierId}
                     onChange={(e) => setNewTacheMagasinierId(e.target.value)}
@@ -1000,7 +1002,7 @@ export default function LogistiquePage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Photo de référence (optionnel)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Photo de référence (optionnel)</UiText></label>
                 <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handlePhotoCapture} className="hidden" />
                 <button
                   type="button"
@@ -1008,8 +1010,8 @@ export default function LogistiquePage() {
                   className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border-2 border-dashed border-amber-400 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors text-sm"
                 >
                   <CameraIcon className="h-5 w-5" />
-                  Ajouter une photo
-                </button>
+                  <UiText>Ajouter une photo
+                </UiText></button>
                 {newTachePhotos.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-3">
                     {newTachePhotos.map((f, i) => (
@@ -1051,7 +1053,7 @@ export default function LogistiquePage() {
         {activeTab === 'magasiniers' && (
           <div className="space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-6">
-              <h2 className="text-lg font-bold mb-5 text-gray-900 dark:text-white">Ajouter un magasinier</h2>
+              <h2 className="text-lg font-bold mb-5 text-gray-900 dark:text-white"><UiText>Ajouter un magasinier</UiText></h2>
               <form onSubmit={handleAddMagasinier}>
                 <div className="grid gap-4 sm:grid-cols-2 mb-4">
                   <div>
@@ -1060,7 +1062,7 @@ export default function LogistiquePage() {
                       type="text"
                       value={newMagasinierNom}
                       onChange={(e) => setNewMagasinierNom(e.target.value)}
-                      placeholder="Nom du magasinier"
+                      placeholder={tx("Nom du magasinier")}
                       className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
@@ -1114,7 +1116,7 @@ export default function LogistiquePage() {
                             <>
                               <span className="font-medium text-gray-900 dark:text-white">{m.nom}</span>
                               {m._count != null && (
-                                <span className="text-sm text-gray-500 dark:text-gray-400">{m._count.taches} tâche(s)</span>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">{m._count.taches} <UiText>tâche(s)</UiText></span>
                               )}
                             </>
                           )}
@@ -1179,7 +1181,7 @@ export default function LogistiquePage() {
                   )
                 })}
                 {magasiniers.length === 0 && (
-                  <p className="text-gray-500 dark:text-gray-400 py-4 text-sm">Aucun magasinier</p>
+                  <p className="text-gray-500 dark:text-gray-400 py-4 text-sm"><UiText>Aucun magasinier</UiText></p>
                 )}
               </div>
             </div>
@@ -1200,7 +1202,7 @@ export default function LogistiquePage() {
             <div className="p-5 space-y-4">
               {/* Statut */}
               <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 dark:border-gray-700">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Statut :</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Statut :</UiText></span>
                 <button
                   onClick={() => setEditBonStatut(s => s === 'A_FAIRE' ? 'TERMINE' : 'A_FAIRE')}
                   className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
@@ -1221,7 +1223,7 @@ export default function LogistiquePage() {
                   value={editBonClient}
                   onChange={e => setEditBonClient(e.target.value)}
                   className="w-full rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-700 dark:text-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Nom du client"
+                  placeholder={tx("Nom du client")}
                 />
               </div>
               {/* Localisation */}
@@ -1232,12 +1234,12 @@ export default function LogistiquePage() {
                   value={editBonLocalisation}
                   onChange={e => setEditBonLocalisation(e.target.value)}
                   className="w-full rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-700 dark:text-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Adresse ou localisation (optionnel)"
+                  placeholder={tx("Adresse ou localisation (optionnel)")}
                 />
               </div>
               {/* Magasinier */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Magasinier *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Magasinier *</UiText></label>
                 <select
                   value={editBonMagasinierId}
                   onChange={e => setEditBonMagasinierId(e.target.value)}
@@ -1260,7 +1262,7 @@ export default function LogistiquePage() {
                           type="text"
                           value={ligne.description}
                           onChange={e => { const l = [...editBonLignes]; l[i] = { ...l[i], description: e.target.value }; setEditBonLignes(l) }}
-                          placeholder="Description de l'article"
+                          placeholder={tx("Description de l'article")}
                           className="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         {editBonLignes.length > 1 && (
@@ -1340,24 +1342,24 @@ export default function LogistiquePage() {
             <div className="p-5 space-y-4 overflow-y-auto flex-1">
               {/* Magasinier */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Magasinier *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Magasinier *</UiText></label>
                 <select
                   value={bonPrepMagasinierId}
                   onChange={e => setBonPrepMagasinierId(e.target.value)}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">Sélectionner un magasinier</option>
+                  <option value=""><UiText>Sélectionner un magasinier</UiText></option>
                   {magasiniers.map(m => <option key={m.id} value={m.id}>{m.nom}</option>)}
                 </select>
               </div>
               {/* Client */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom du client / chantier *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Nom du client / chantier *</UiText></label>
                 <input
                   type="text"
                   value={bonPrepClient}
                   onChange={e => setBonPrepClient(e.target.value)}
-                  placeholder="Ex: Résidence Les Pins - Dupont"
+                  placeholder={tx("Ex: Résidence Les Pins - Dupont")}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -1368,7 +1370,7 @@ export default function LogistiquePage() {
                   type="text"
                   value={bonPrepLocalisation}
                   onChange={e => setBonPrepLocalisation(e.target.value)}
-                  placeholder="Ex: Allée B, rack 3 — Quai 2"
+                  placeholder={tx("Ex: Allée B, rack 3 — Quai 2")}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -1386,7 +1388,7 @@ export default function LogistiquePage() {
                           onChange={e => {
                             const l = [...bonPrepLignes]; l[i].description = e.target.value; setBonPrepLignes(l)
                           }}
-                          placeholder="Description de l'article"
+                          placeholder={tx("Description de l'article")}
                           className="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         {bonPrepLignes.length > 1 && (
@@ -1451,7 +1453,7 @@ export default function LogistiquePage() {
                 {savingBonPrep ? (
                   <><div className="h-4 w-4 animate-spin rounded-full border-b-2 border-white" /> <UiText>Création...</UiText></>
                 ) : (
-                  <><ClipboardDocumentListIcon className="h-4 w-4" /> Créer le bon</>  
+                  <><ClipboardDocumentListIcon className="h-4 w-4" /> <UiText>Créer le bon</UiText></>  
                 )}
               </button>
             </div>
@@ -1466,7 +1468,7 @@ export default function LogistiquePage() {
             <XMarkIcon className="h-6 w-6" />
           </button>
           <div className="relative max-w-3xl max-h-[90vh] w-full h-full" onClick={e => e.stopPropagation()}>
-            <Image src={lightboxUrl} alt="Photo agrandie" fill className="object-contain cursor-default" sizes="(max-width: 768px) 100vw, 768px" />
+            <Image src={lightboxUrl} alt={tx("Photo agrandie")} fill className="object-contain cursor-default" sizes="(max-width: 768px) 100vw, 768px" />
           </div>
         </div>
       )}
@@ -1504,8 +1506,8 @@ export default function LogistiquePage() {
               {viewTache.photos?.filter(p => p.type === 'A_FAIRE').length > 0 && (
                 <div>
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <PhotoIcon className="h-4 w-4" /> Photos de référence
-                  </p>
+                    <PhotoIcon className="h-4 w-4" /> <UiText>Photos de référence
+                  </UiText></p>
                   <div className="flex gap-2 flex-wrap">
                     {viewTache.photos.filter(p => p.type === 'A_FAIRE').map(p => (
                       <button key={p.id} onClick={() => setLightboxUrl(p.url)} className="relative w-16 h-16 rounded-xl overflow-hidden bg-gray-100 hover:opacity-80 transition-opacity">
@@ -1520,15 +1522,15 @@ export default function LogistiquePage() {
               {viewTache.statut === 'VALIDEE' ? (
                 <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-800/40">
                   <p className="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                    <CheckCircleIcon className="h-4 w-4" /> Retour du magasinier
-                  </p>
+                    <CheckCircleIcon className="h-4 w-4" /> <UiText>Retour du magasinier
+                  </UiText></p>
                   {viewTache.commentaire ? (
                     <div className="flex items-start gap-2 mb-3">
                       <ChatBubbleLeftEllipsisIcon className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-gray-700 dark:text-gray-300 italic">{viewTache.commentaire}</p>
                     </div>
                   ) : (
-                    <p className="text-sm text-gray-400 dark:text-gray-500 italic mb-3">Aucun commentaire</p>
+                    <p className="text-sm text-gray-400 dark:text-gray-500 italic mb-3"><UiText>Aucun commentaire</UiText></p>
                   )}
                   {viewTache.photos?.filter(p => p.type === 'PREUVE').length > 0 ? (
                     <div>
@@ -1544,15 +1546,15 @@ export default function LogistiquePage() {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-gray-400 dark:text-gray-500 italic">Aucune photo de preuve</p>
+                    <p className="text-sm text-gray-400 dark:text-gray-500 italic"><UiText>Aucune photo de preuve</UiText></p>
                   )}
                 </div>
               ) : (
                 <div className="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800/40">
                   <p className="text-sm text-amber-700 dark:text-amber-400 flex items-center gap-2">
                     <ClockIcon className="h-4 w-4 flex-shrink-0" />
-                    Cette tâche n&apos;a pas encore été traitée par le magasinier.
-                  </p>
+                    <UiText>Cette tâche n&apos;a pas encore été traitée par le magasinier.
+                  </UiText></p>
                 </div>
               )}
             </div>
@@ -1563,8 +1565,8 @@ export default function LogistiquePage() {
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-sm font-medium hover:bg-amber-200 dark:hover:bg-amber-800/40 transition-colors"
                 >
                   <ArrowPathIcon className="h-4 w-4" />
-                  Repasser en À faire
-                </button>
+                  <UiText>Repasser en À faire
+                </UiText></button>
               )}
               <button onClick={() => setViewTache(null)} className="ml-auto px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm">
                 <UiText>Fermer</UiText>
@@ -1602,7 +1604,7 @@ export default function LogistiquePage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date d&apos;exécution</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Date d&apos;exécution</UiText></label>
                   <input
                     type="date"
                     value={editDate}
@@ -1611,7 +1613,7 @@ export default function LogistiquePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Magasinier</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Magasinier</UiText></label>
                   <select
                     value={editMagasinierId}
                     onChange={(e) => setEditMagasinierId(e.target.value)}
@@ -1640,7 +1642,7 @@ export default function LogistiquePage() {
 
               {/* Ajout de photos */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ajouter des photos</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><UiText>Ajouter des photos</UiText></label>
                 <input ref={editFileInputRef} type="file" accept="image/*" multiple onChange={handleEditPhotoCapture} className="hidden" />
                 <button
                   type="button"
@@ -1648,8 +1650,8 @@ export default function LogistiquePage() {
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-dashed border-amber-400 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors text-sm"
                 >
                   <CameraIcon className="h-5 w-5" />
-                  Sélectionner des photos
-                </button>
+                  <UiText>Sélectionner des photos
+                </UiText></button>
                 {editPhotos.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {editPhotos.map((f, i) => (

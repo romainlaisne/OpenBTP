@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { signerContrat } from '@/lib/contrat-generator'
 import { prisma } from '@/lib/prisma/client'
@@ -25,6 +27,7 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ token: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { token } = await params
     const body = await request.json()
@@ -34,11 +37,11 @@ export async function POST(
     console.log(`Taille de la signature base64: ${signature ? signature.length : 'non fournie'} caractères`)
     
     if (!signature) {
-      return NextResponse.json({ error: "Signature manquante" }, { status: 400 })
+      return localizedJson({ error: "Signature manquante" }, { status: 400 })
     }
 
     if (!identityConfirmed || !consentGiven) {
-      return NextResponse.json({ error: "Consentement et confirmation d'identité requis" }, { status: 400 })
+      return localizedJson({ error: "Consentement et confirmation d'identité requis" }, { status: 400 })
     }
     
     // Récupérer les informations d'audit
@@ -52,7 +55,7 @@ export async function POST(
     })
 
     if (!contrat) {
-      return NextResponse.json({ error: "Contrat non trouvé" }, { status: 404 })
+      return localizedJson({ error: "Contrat non trouvé" }, { status: 404 })
     }
 
     // Horodatage certifié (timestamp de la signature)
@@ -130,10 +133,10 @@ export async function POST(
       },
     })
     
-    return NextResponse.json({ url: contratUrl })
+    return localizedJson({ url: contratUrl })
   } catch (error) {
     console.error("Erreur lors de la signature du contrat:", error)
-    return NextResponse.json(
+    return localizedJson(
       { error: error instanceof Error ? error.message : "Une erreur est survenue" },
       { status: 500 }
     )

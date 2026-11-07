@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -8,6 +10,7 @@ export async function GET(
   request: NextRequest,
   context: { params: Promise<{ userId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -16,13 +19,13 @@ export async function GET(
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Vérifier que l'utilisateur demande ses propres notes
     // ou qu'il a les droits d'administration
     if (session.user.id !== userId && session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
     
     // Récupérer les notes de l'utilisateur avec Prisma (sécurisé)
@@ -39,7 +42,7 @@ export async function GET(
     
     // Si aucun résultat, renvoyer un contenu vide
     if (!userNotes) {
-      return NextResponse.json({ 
+      return localizedJson({ 
         content: '', 
         stickyNotes: [], 
         todos: [], 
@@ -66,7 +69,7 @@ export async function GET(
       todos = []
     }
 
-    return NextResponse.json({
+    return localizedJson({
       content: userNotes.content,
       stickyNotes,
       todos,
@@ -75,7 +78,7 @@ export async function GET(
     })
   } catch (error) {
     console.error('Erreur lors de la récupération des notes:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des notes' },
       { status: 500 }
     )
@@ -87,6 +90,7 @@ export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ userId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -95,20 +99,20 @@ export async function PUT(
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Vérifier que l'utilisateur modifie ses propres notes
     // ou qu'il a les droits d'administration
     if (session.user.id !== userId && session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     // Récupérer les données depuis la requête
     const { content, stickyNotes, todos, mode } = await request.json()
     
     if (typeof content !== 'string') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Format de contenu invalide' },
         { status: 400 }
       )
@@ -138,7 +142,7 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       content: updatedNotes.content,
       stickyNotes: JSON.parse(updatedNotes.stickyNotes || '[]'),
       todos: JSON.parse(updatedNotes.todos || '[]'),
@@ -147,7 +151,7 @@ export async function PUT(
     })
   } catch (error) {
     console.error('Erreur lors de la mise à jour des notes:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour des notes' },
       { status: 500 }
     )

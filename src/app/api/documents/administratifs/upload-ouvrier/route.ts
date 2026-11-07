@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { writeFile, mkdir } from 'fs/promises'
@@ -6,6 +8,7 @@ import { existsSync } from 'fs'
 import { readPortalSessionFromCookie } from '@/app/public/portail/auth'
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     // Vérifier la session portail (code PIN)
     const cookieHeader = request.headers.get('cookie')
@@ -15,7 +18,7 @@ export async function POST(request: Request) {
 
     if (!portalSession || portalSession.t !== 'OUVRIER_INTERNE') {
       console.error('❌ Accès non autorisé - Session:', portalSession)
-      return NextResponse.json({ 
+      return localizedJson({ 
         error: 'Accès non autorisé. Seuls les ouvriers internes connectés via code PIN peuvent uploader des documents.' 
       }, { status: 401 })
     }
@@ -28,7 +31,7 @@ export async function POST(request: Request) {
     })
 
     if (!ouvrierInterne || !ouvrierInterne.actif) {
-      return NextResponse.json({ 
+      return localizedJson({ 
         error: 'Ouvrier interne non trouvé ou inactif.' 
       }, { status: 403 })
     }
@@ -43,7 +46,7 @@ export async function POST(request: Request) {
     })
 
     if (!access) {
-      return NextResponse.json({ 
+      return localizedJson({ 
         error: 'Session invalide. Veuillez vous reconnecter.' 
       }, { status: 401 })
     }
@@ -57,7 +60,7 @@ export async function POST(request: Request) {
 
     if (!file) {
       console.error('❌ Aucun fichier fourni dans le FormData')
-      return NextResponse.json({ error: 'Aucun fichier fourni' }, { status: 400 })
+      return localizedJson({ error: 'Aucun fichier fourni' }, { status: 400 })
     }
 
     const documentsBaseDir = path.join(process.cwd(), 'public', 'uploads', 'documents')
@@ -133,7 +136,7 @@ export async function POST(request: Request) {
 
       if (!systemUser) {
         console.error('❌ Aucun User ADMIN ou MANAGER trouvé pour associer le document')
-        return NextResponse.json({ 
+        return localizedJson({ 
           error: 'Erreur de configuration système. Veuillez contacter un administrateur.' 
         }, { status: 500 })
       }
@@ -173,7 +176,7 @@ export async function POST(request: Request) {
 
     const tagNamesFromDoc = newDocument.tags.map(tag => tag.nom)
 
-    return NextResponse.json({ 
+    return localizedJson({ 
       message: 'Document uploadé avec succès',
       document: {
         id: newDocument.id.toString(),
@@ -192,7 +195,7 @@ export async function POST(request: Request) {
       console.error('❌ Message d\'erreur:', error.message)
       console.error('❌ Stack trace:', error.stack)
     }
-    return NextResponse.json({ 
+    return localizedJson({ 
       error: error instanceof Error ? `Erreur serveur: ${error.message}` : 'Erreur serveur lors de l\'upload du document' 
     }, { status: 500 })
   }

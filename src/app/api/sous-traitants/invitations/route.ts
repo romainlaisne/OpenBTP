@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -55,16 +57,17 @@ function buildInvitationEmailHtml(params: {
 // Body: { soustraitantIds: string[] }
 // Envoie un rappel (lien du portail, SANS code PIN) aux sous-traitants sélectionnés.
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json().catch(() => ({})) as { soustraitantIds?: string[] }
     const ids = Array.isArray(body.soustraitantIds) ? body.soustraitantIds.filter(Boolean) : []
     if (ids.length === 0) {
-      return NextResponse.json({ error: 'Aucun sous-traitant sélectionné' }, { status: 400 })
+      return localizedJson({ error: 'Aucun sous-traitant sélectionné' }, { status: 400 })
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
@@ -120,10 +123,10 @@ export async function POST(request: Request) {
       })
     )
 
-    return NextResponse.json({ results })
+    return localizedJson({ results })
   } catch (error) {
     console.error('Erreur lors de l\'envoi des invitations:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'envoi des invitations' },
       { status: 500 }
     )

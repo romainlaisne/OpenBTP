@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -16,15 +18,16 @@ interface GroupedEntry {
 
 // GET - Récupérer le journal pour les managers
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Vérifier que l'utilisateur est manager ou admin
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -90,10 +93,10 @@ export async function GET(request: Request) {
       return acc
     }, {})
 
-    return NextResponse.json(Object.values(groupedEntries))
+    return localizedJson(Object.values(groupedEntries))
   } catch (error) {
     console.error('Erreur lors de la récupération du journal manager:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du journal' },
       { status: 500 }
     )

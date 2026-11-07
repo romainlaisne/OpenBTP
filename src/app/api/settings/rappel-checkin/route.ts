@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Réglages du rappel Checkinatwork quotidien + état du jour.
 //
 // GET : réglages, destinataires prévus (et ceux qui seront ignorés, avec la
@@ -21,7 +23,8 @@ async function autorise() {
 }
 
 export async function GET() {
-  if (!(await autorise())) return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+  await bindRequestLocale()
+  if (!(await autorise())) return localizedJson({ error: 'Non autorisé' }, { status: 403 })
 
   const s = await prisma.companysettings.findFirst({
     select: {
@@ -72,7 +75,7 @@ export async function GET() {
     orderBy: { createdAt: 'desc' },
   })
 
-  return NextResponse.json({
+  return localizedJson({
     mode: s?.rappelCheckinMode ?? 'DESACTIVE',
     emailTest: s?.rappelCheckinEmailTest ?? '',
     heure: s?.rappelCheckinHeure ?? '06:30',
@@ -88,31 +91,32 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  if (!(await autorise())) return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+  await bindRequestLocale()
+  if (!(await autorise())) return localizedJson({ error: 'Non autorisé' }, { status: 403 })
 
   const s = await prisma.companysettings.findFirst({ select: { id: true } })
-  if (!s) return NextResponse.json({ error: 'Paramètres société absents.' }, { status: 400 })
+  if (!s) return localizedJson({ error: 'Paramètres société absents.' }, { status: 400 })
 
   const body = await request.json().catch(() => ({}))
   const mode = String(body.mode ?? '') as ModeRappel
-  if (!MODES_RAPPEL.includes(mode)) return NextResponse.json({ error: 'Mode invalide.' }, { status: 400 })
+  if (!MODES_RAPPEL.includes(mode)) return localizedJson({ error: 'Mode invalide.' }, { status: 400 })
 
   const emailTest = String(body.emailTest ?? '').trim().toLowerCase()
   if (emailTest && !emailFormatValide(emailTest)) {
-    return NextResponse.json({ error: `Adresse de test invalide : « ${emailTest} ».` }, { status: 400 })
+    return localizedJson({ error: `Adresse de test invalide : « ${emailTest} ».` }, { status: 400 })
   }
   if (mode === 'TEST' && !emailTest) {
-    return NextResponse.json({ error: 'Le mode test exige une adresse de test.' }, { status: 400 })
+    return localizedJson({ error: 'Le mode test exige une adresse de test.' }, { status: 400 })
   }
 
   const emailAlerte = String(body.emailAlerte ?? '').trim().toLowerCase()
   if (emailAlerte && !emailFormatValide(emailAlerte)) {
-    return NextResponse.json({ error: `Adresse d'alerte invalide : « ${emailAlerte} ».` }, { status: 400 })
+    return localizedJson({ error: `Adresse d'alerte invalide : « ${emailAlerte} ».` }, { status: 400 })
   }
 
   const heure = String(body.heure ?? '06:30').trim()
   if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(heure) || heure < '05:00' || heure >= '11:00') {
-    return NextResponse.json({ error: 'Heure d\'envoi entre 05:00 et 10:59.' }, { status: 400 })
+    return localizedJson({ error: 'Heure d\'envoi entre 05:00 et 10:59.' }, { status: 400 })
   }
 
   const joursFeries = String(body.joursFeries ?? '')
@@ -121,7 +125,7 @@ export async function PUT(request: Request) {
     .map((l) => l.split('#')[0].trim())
     .filter((l) => l && lireJoursSansRappel(l).length === 0)
   if (lignesIllisibles.length) {
-    return NextResponse.json(
+    return localizedJson(
       { error: `Lignes non reconnues : ${lignesIllisibles.join(' ; ')}. Format : AAAA-MM-JJ ou AAAA-MM-JJ:AAAA-MM-JJ.` },
       { status: 400 }
     )
@@ -137,5 +141,5 @@ export async function PUT(request: Request) {
       rappelCheckinEmailAlerte: emailAlerte || null,
     },
   })
-  return NextResponse.json({ ok: true })
+  return localizedJson({ ok: true })
 }

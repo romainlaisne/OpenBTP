@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import Link from 'next/link'
 import {
   DocumentTextIcon,
@@ -76,8 +77,8 @@ export default function AdministratifPage() {
                     Administratif
                   </h1>
                   <p className="mt-2 text-blue-100">
-                    Outils et documents pour la gestion administrative
-                  </p>
+                    <UiText>Outils et documents pour la gestion administrative
+                  </UiText></p>
                 </div>
               </div>
             </div>
@@ -122,8 +123,8 @@ export default function AdministratifPage() {
                   {/* Liste des fonctionnalités */}
                   <div className="space-y-2">
                     <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-                      Fonctionnalités clés :
-                    </h4>
+                      <UiText>Fonctionnalités clés :
+                    </UiText></h4>
                     <ul className="space-y-1">
                       {module.features.map((feature, index) => (
                         <li key={index} className="flex items-center text-sm text-gray-600 dark:text-gray-400">
@@ -138,8 +139,8 @@ export default function AdministratifPage() {
                   <div className="mt-6">
                     <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${module.bgLight} ${module.textColor}`}>
                       <IconComponent className="h-3 w-3 mr-1" />
-                      Accéder au module
-                    </div>
+                      <UiText>Accéder au module
+                    </UiText></div>
                   </div>
                 </div>
               </Link>

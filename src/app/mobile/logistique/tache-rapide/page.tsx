@@ -1,5 +1,8 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -202,31 +205,31 @@ export default function TacheRapidePage() {
         alert(err.error || 'Erreur')
       }
     } catch {
-      alert('Erreur réseau')
+      alert(tx("Erreur réseau"))
     } finally {
       setSavingEdit(false)
     }
   }
 
   const handleDeleteTache = async (id: string) => {
-    if (!confirm('Supprimer cette tâche ?')) return
+    if (!confirm(tx("Supprimer cette tâche ?"))) return
     setDeletingId(id)
     try {
       const res = await fetch(`/api/logistique/taches/${id}`, { method: 'DELETE' })
       if (res.ok) {
         setTaches(prev => prev.filter(t => t.id !== id))
       } else {
-        alert('Erreur lors de la suppression')
+        alert(tx("Erreur lors de la suppression"))
       }
     } catch {
-      alert('Erreur réseau')
+      alert(tx("Erreur réseau"))
     } finally {
       setDeletingId(null)
     }
   }
 
   const formatDate = (s: string) =>
-    new Date(s).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+    new Date(s).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: 'short', year: 'numeric' })
 
   if (status === 'loading' || loadingMag) {
     return (
@@ -246,23 +249,23 @@ export default function TacheRapidePage() {
               <CheckCircleIcon className="h-10 w-10 text-green-600" />
             </div>
           </div>
-          <h2 className="text-xl font-bold text-gray-900">Tâche créée !</h2>
+          <h2 className="text-xl font-bold text-gray-900"><UiText>Tâche créée !</UiText></h2>
           <p className="text-sm text-gray-600">
-            La tâche a été assignée avec succès au magasinier.
-          </p>
+            <UiText>La tâche a été assignée avec succès au magasinier.
+          </UiText></p>
           <div className="space-y-3 pt-2">
             <button
               onClick={() => setSuccess(false)}
               className="w-full py-3 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 transition-colors"
             >
-              Créer une autre tâche
-            </button>
+              <UiText>Créer une autre tâche
+            </UiText></button>
             <button
               onClick={() => router.push('/mobile')}
               className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
             >
-              Retour à l&apos;accueil
-            </button>
+              <UiText>Retour à l&apos;accueil
+            </UiText></button>
           </div>
         </div>
       </div>
@@ -283,8 +286,8 @@ export default function TacheRapidePage() {
           <div className="flex items-center gap-2 flex-1">
             <ArchiveBoxIcon className="h-6 w-6" />
             <div>
-              <h1 className="font-bold text-lg leading-tight">Logistique</h1>
-              <p className="text-xs text-amber-100">Tâches magasinier</p>
+              <h1 className="font-bold text-lg leading-tight"><UiText>Logistique</UiText></h1>
+              <p className="text-xs text-amber-100"><UiText>Tâches magasinier</UiText></p>
             </div>
           </div>
         </div>
@@ -297,8 +300,8 @@ export default function TacheRapidePage() {
             }`}
           >
             <PlusIcon className="h-4 w-4" />
-            Nouvelle tâche
-          </button>
+            <UiText>Nouvelle tâche
+          </UiText></button>
           <button
             onClick={() => setTab('liste')}
             className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
@@ -306,8 +309,8 @@ export default function TacheRapidePage() {
             }`}
           >
             <ListBulletIcon className="h-4 w-4" />
-            Liste des tâches
-          </button>
+            <UiText>Liste des tâches
+          </UiText></button>
         </div>
       </div>
 
@@ -320,10 +323,10 @@ export default function TacheRapidePage() {
             {/* Magasinier */}
             <div className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
               <label className="block text-sm font-semibold text-gray-700">
-                Magasinier <span className="text-red-500">*</span>
+                <UiText>Magasinier </UiText><span className="text-red-500">*</span>
               </label>
               {magasiniers.length === 0 ? (
-                <p className="text-sm text-gray-500 py-2">Aucun magasinier actif trouvé</p>
+                <p className="text-sm text-gray-500 py-2"><UiText>Aucun magasinier actif trouvé</UiText></p>
               ) : (
                 <div className="grid grid-cols-2 gap-2">
                   {magasiniers.map(m => (
@@ -347,13 +350,13 @@ export default function TacheRapidePage() {
             {/* Titre */}
             <div className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
               <label className="block text-sm font-semibold text-gray-700">
-                Titre de la tâche <span className="text-red-500">*</span>
+                <UiText>Titre de la tâche </UiText><span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={titre}
                 onChange={e => setTitre(e.target.value)}
-                placeholder="Ex : Rangement étagère A3, Inventaire stock..."
+                placeholder={tx("Ex : Rangement étagère A3, Inventaire stock...")}
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-400 text-base"
               />
             </div>
@@ -361,12 +364,12 @@ export default function TacheRapidePage() {
             {/* Description */}
             <div className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
               <label className="block text-sm font-semibold text-gray-700">
-                Description <span className="text-gray-400 font-normal text-xs">(optionnel)</span>
+                <UiText>Description </UiText><span className="text-gray-400 font-normal text-xs">(optionnel)</span>
               </label>
               <textarea
                 value={description}
                 onChange={e => setDescription(e.target.value)}
-                placeholder="Détails supplémentaires..."
+                placeholder={tx("Détails supplémentaires...")}
                 rows={3}
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-400 text-base resize-none"
               />
@@ -375,8 +378,8 @@ export default function TacheRapidePage() {
             {/* Date d'exécution */}
             <div className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
               <label className="block text-sm font-semibold text-gray-700">
-                Date d&apos;exécution
-              </label>
+                <UiText>Date d&apos;exécution
+              </UiText></label>
               <input
                 type="date"
                 value={dateExecution}
@@ -404,7 +407,7 @@ export default function TacheRapidePage() {
                 className="w-full flex items-center justify-center gap-3 py-4 rounded-xl border-2 border-dashed border-amber-300 text-amber-700 hover:bg-amber-50 transition-colors"
               >
                 <CameraIcon className="h-6 w-6" />
-                <span className="font-medium">Prendre / Ajouter une photo</span>
+                <span className="font-medium"><UiText>Prendre / Ajouter une photo</UiText></span>
               </button>
 
               {photoPreviewUrls.length > 0 && (
@@ -447,13 +450,13 @@ export default function TacheRapidePage() {
               {saving ? (
                 <>
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                  Création...
-                </>
+                  <UiText>Création...
+                </UiText></>
               ) : (
                 <>
                   <PlusIcon className="h-6 w-6" />
-                  Créer la tâche
-                </>
+                  <UiText>Créer la tâche
+                </UiText></>
               )}
             </button>
 
@@ -470,7 +473,7 @@ export default function TacheRapidePage() {
             ) : taches.length === 0 ? (
               <div className="text-center py-16 text-gray-500 bg-white rounded-2xl shadow-sm">
                 <ArchiveBoxIcon className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-                <p>Aucune tâche trouvée</p>
+                <p><UiText>Aucune tâche trouvée</UiText></p>
               </div>
             ) : (
               taches.map((t) => (
@@ -495,8 +498,8 @@ export default function TacheRapidePage() {
                         }`}
                       >
                         {t.statut === 'VALIDEE'
-                          ? <><CheckCircleIcon className="h-3 w-3" /> Validée</>
-                          : <><ClockIcon className="h-3 w-3" /> À faire</>
+                          ? <><CheckCircleIcon className="h-3 w-3" /> <UiText>Validée</UiText></>
+                          : <><ClockIcon className="h-3 w-3" /> <UiText>À faire</UiText></>
                         }
                       </span>
                     </div>
@@ -514,7 +517,7 @@ export default function TacheRapidePage() {
                         <button
                           onClick={() => handleOpenEdit(t)}
                           className="p-2 text-gray-400 hover:text-amber-600 rounded-lg transition-colors"
-                          title="Modifier"
+                          title={tx("Modifier")}
                         >
                           <PencilSquareIcon className="h-5 w-5" />
                         </button>
@@ -522,7 +525,7 @@ export default function TacheRapidePage() {
                           onClick={() => handleDeleteTache(t.id)}
                           disabled={deletingId === t.id}
                           className="p-2 text-gray-400 hover:text-red-600 rounded-lg transition-colors disabled:opacity-50"
-                          title="Supprimer"
+                          title={tx("Supprimer")}
                         >
                           {deletingId === t.id
                             ? <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-red-600" />
@@ -544,14 +547,14 @@ export default function TacheRapidePage() {
         <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50">
           <div className="bg-white rounded-t-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="font-bold text-lg text-gray-900">Modifier la tâche</h3>
+              <h3 className="font-bold text-lg text-gray-900"><UiText>Modifier la tâche</UiText></h3>
               <button onClick={() => setEditTache(null)} className="p-2 text-gray-400 hover:text-gray-600">
                 <XMarkIcon className="h-5 w-5" />
               </button>
             </div>
             <div className="p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1"><UiText>Titre *</UiText></label>
                 <input
                   type="text"
                   value={editTitre}
@@ -560,7 +563,7 @@ export default function TacheRapidePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1"><UiText>Description</UiText></label>
                 <textarea
                   value={editDesc}
                   onChange={e => setEditDesc(e.target.value)}
@@ -569,7 +572,7 @@ export default function TacheRapidePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Date d&apos;exécution</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1"><UiText>Date d&apos;exécution</UiText></label>
                 <input
                   type="date"
                   value={editDate}
@@ -578,7 +581,7 @@ export default function TacheRapidePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Magasinier</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1"><UiText>Magasinier</UiText></label>
                 <div className="grid grid-cols-2 gap-2">
                   {magasiniers.map(m => (
                     <button
@@ -602,8 +605,8 @@ export default function TacheRapidePage() {
                 onClick={() => setEditTache(null)}
                 className="flex-1 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 onClick={handleSaveEdit}
                 disabled={savingEdit || !editTitre.trim()}

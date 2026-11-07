@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -14,7 +15,7 @@ import {
   CheckCircleIcon
 } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import toast, { Toaster } from 'react-hot-toast'
 
 interface ChoixClient {
@@ -76,7 +77,7 @@ export default function ChoixClientsPage() {
       }
     } catch (error) {
       console.error('Erreur lors du chargement des choix clients:', error)
-      toast.error('Erreur lors du chargement des choix clients')
+      toast.error(tx("Erreur lors du chargement des choix clients"))
     } finally {
       setLoading(false)
     }
@@ -89,14 +90,14 @@ export default function ChoixClientsPage() {
       })
       
       if (response.ok) {
-        toast.success('Choix client supprimé avec succès')
+        toast.success(tx("Choix client supprimé avec succès"))
         fetchChoixClients()
       } else {
-        toast.error('Erreur lors de la suppression')
+        toast.error(tx("Erreur lors de la suppression"))
       }
     } catch (error) {
       console.error('Erreur lors de la suppression:', error)
-      toast.error('Erreur lors de la suppression')
+      toast.error(tx("Erreur lors de la suppression"))
     } finally {
       setDeleteConfirm({ show: false, id: '', nom: '' })
     }
@@ -145,7 +146,7 @@ export default function ChoixClientsPage() {
         <div className="flex items-center gap-2">
           <EyeIcon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Pré-choix</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Pré-choix</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{choixPreChoix}</div>
           </div>
         </div>
@@ -154,7 +155,7 @@ export default function ChoixClientsPage() {
         <div className="flex items-center gap-2">
           <CheckCircleIcon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Définitifs</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Définitifs</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{choixDefinitifs}</div>
           </div>
         </div>
@@ -167,8 +168,8 @@ export default function ChoixClientsPage() {
       <Toaster position="top-right" />
       
       <PageHeader
-        title="Choix Clients"
-        subtitle="Gestion des choix de carrelage en showroom"
+        title={tx("Choix Clients")}
+        subtitle={tx("Gestion des choix de carrelage en showroom")}
         icon={DocumentTextIcon}
         badgeColor="from-purple-600 via-pink-600 to-rose-700"
         gradientColor="from-purple-600/10 via-pink-600/10 to-rose-700/10"
@@ -197,7 +198,7 @@ export default function ChoixClientsPage() {
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Rechercher par nom client ou chantier..."
+                placeholder={tx("Rechercher par nom client ou chantier...")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -210,9 +211,9 @@ export default function ChoixClientsPage() {
               className="w-full sm:w-56 px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">Tous les statuts</option>
-              <option value="BROUILLON">Brouillon</option>
-              <option value="PRE_CHOIX">Pré-choix</option>
-              <option value="CHOIX_DEFINITIF">Choix définitif</option>
+              <option value="BROUILLON"><UiText>Brouillon</UiText></option>
+              <option value="PRE_CHOIX"><UiText>Pré-choix</UiText></option>
+              <option value="CHOIX_DEFINITIF"><UiText>Choix définitif</UiText></option>
             </select>
           </div>
         </div>
@@ -238,8 +239,8 @@ export default function ChoixClientsPage() {
               className="inline-flex items-center mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
             >
               <PlusIcon className="h-5 w-5 mr-2" />
-              Créer le premier choix
-            </Link>
+              <UiText>Créer le premier choix
+            </UiText></Link>
           )}
         </div>
       ) : (
@@ -252,8 +253,8 @@ export default function ChoixClientsPage() {
                     Client
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Chantier
-                  </th>
+                    <UiText>Chantier
+                  </UiText></th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Date visite
                   </th>
@@ -293,12 +294,12 @@ export default function ChoixClientsPage() {
                         </Link>
                       ) : (
                         <span className="text-sm text-gray-400 dark:text-gray-500 italic">
-                          Non associé
-                        </span>
+                          <UiText>Non associé
+                        </UiText></span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      {format(new Date(choix.dateVisite), 'dd/MM/yyyy', { locale: fr })}
+                      {format(new Date(choix.dateVisite), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex gap-1">
@@ -334,14 +335,14 @@ export default function ChoixClientsPage() {
                         <Link
                           href={`/choix-clients/${choix.id}/edit`}
                           className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
-                          title="Modifier"
+                          title={tx("Modifier")}
                         >
                           <PencilIcon className="h-5 w-5" />
                         </Link>
                         <button
                           onClick={() => setDeleteConfirm({ show: true, id: choix.id, nom: choix.nomClient })}
                           className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                          title="Supprimer"
+                          title={tx("Supprimer")}
                         >
                           <TrashIcon className="h-5 w-5" />
                         </button>
@@ -360,12 +361,12 @@ export default function ChoixClientsPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              Confirmer la suppression
-            </h3>
+              <UiText>Confirmer la suppression
+            </UiText></h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-              Êtes-vous sûr de vouloir supprimer le choix de <strong>{deleteConfirm.nom}</strong> ? 
+              <UiText>Êtes-vous sûr de vouloir supprimer le choix de </UiText><strong>{deleteConfirm.nom}</strong> <UiText>? 
               Cette action est irréversible.
-            </p>
+            </UiText></p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeleteConfirm({ show: false, id: '', nom: '' })}

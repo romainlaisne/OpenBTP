@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
@@ -38,6 +40,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
+  await bindRequestLocale()
   try {
     // Attendre que params soit résolu
     const resolvedParams = await params;
@@ -57,20 +60,20 @@ export async function GET(
     const normalizedPath = path.normalize(fullPath);
     if (!normalizedPath.startsWith(path.join(process.cwd(), 'public', 'uploads'))) {
       console.error('Tentative d\'accès à un fichier en dehors du dossier uploads');
-      return NextResponse.json({ error: 'Chemin non autorisé' }, { status: 403 });
+      return localizedJson({ error: 'Chemin non autorisé' }, { status: 403 });
     }
     
     // Vérifier que le fichier existe
     if (!fs.existsSync(fullPath)) {
       console.error('Fichier non trouvé:', fullPath);
-      return NextResponse.json({ error: 'Fichier non trouvé' }, { status: 404 });
+      return localizedJson({ error: 'Fichier non trouvé' }, { status: 404 });
     }
     
     // Vérifier que c'est bien un fichier
     const stats = fs.statSync(fullPath);
     if (!stats.isFile()) {
       console.error('L\'élément n\'est pas un fichier:', fullPath);
-      return NextResponse.json({ error: 'L\'élément n\'est pas un fichier' }, { status: 400 });
+      return localizedJson({ error: 'L\'élément n\'est pas un fichier' }, { status: 400 });
     }
     
     // Déterminer le type MIME
@@ -138,7 +141,7 @@ export async function GET(
     return response;
   } catch (error) {
     console.error('Erreur lors de la lecture du fichier:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la lecture du fichier' },
       { status: 500 }
     );

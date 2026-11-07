@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { UserPlusIcon, TrashIcon, UserIcon } from '@heroicons/react/24/outline'
@@ -84,7 +86,7 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
 
   const handleAddGestionnaire = async () => {
     if (!selectedUserId) {
-      toast.error('Veuillez sélectionner un utilisateur')
+      toast.error(tx("Veuillez sélectionner un utilisateur"))
       return
     }
 
@@ -99,7 +101,7 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
       })
 
       if (response.ok) {
-        toast.success('Gestionnaire ajouté avec succès')
+        toast.success(tx("Gestionnaire ajouté avec succès"))
         setShowAddForm(false)
         setSelectedUserId('')
         loadGestionnaires()
@@ -109,14 +111,14 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
       }
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de l\'ajout du gestionnaire')
+      toast.error(tx("Erreur lors de l'ajout du gestionnaire"))
     } finally {
       setIsSubmitting(false)
     }
   }
 
   const handleRemoveGestionnaire = async (userId: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir retirer ce gestionnaire ?')) {
+    if (!confirm(tx("Êtes-vous sûr de vouloir retirer ce gestionnaire ?"))) {
       return
     }
 
@@ -129,7 +131,7 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
       )
 
       if (response.ok) {
-        toast.success('Gestionnaire retiré avec succès')
+        toast.success(tx("Gestionnaire retiré avec succès"))
         loadGestionnaires()
       } else {
         const error = await response.json()
@@ -137,7 +139,7 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
       }
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la suppression du gestionnaire')
+      toast.error(tx("Erreur lors de la suppression du gestionnaire"))
     }
   }
 
@@ -151,8 +153,8 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
         <div className="flex items-center gap-3 mb-4">
           <UserIcon className="h-6 w-6 text-sky-600 dark:text-sky-400" />
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-            Gestionnaires du chantier
-          </h2>
+            <UiText>Gestionnaires du chantier
+          </UiText></h2>
         </div>
         <div className="animate-pulse space-y-3">
           <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
@@ -168,8 +170,8 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
         <div className="flex items-center gap-3">
           <UserIcon className="h-6 w-6 text-sky-600 dark:text-sky-400" />
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-            Gestionnaires du chantier
-          </h2>
+            <UiText>Gestionnaires du chantier
+          </UiText></h2>
         </div>
         {canManage && !showAddForm && (
           <button
@@ -177,20 +179,20 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
             className="inline-flex items-center gap-2 px-3 py-2 bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium rounded-lg transition-colors"
           >
             <UserPlusIcon className="h-4 w-4" />
-            Ajouter
-          </button>
+            <UiText>Ajouter
+          </UiText></button>
         )}
       </div>
 
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        Les gestionnaires seront mentionnés comme contacts dans les emails envoyés aux clients.
-      </p>
+        <UiText>Les gestionnaires seront mentionnés comme contacts dans les emails envoyés aux clients.
+      </UiText></p>
 
       {showAddForm && (
         <div className="mb-4 p-4 bg-sky-50 dark:bg-sky-900/20 rounded-lg border border-sky-200 dark:border-sky-800">
           <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3">
-            Ajouter un gestionnaire
-          </h3>
+            <UiText>Ajouter un gestionnaire
+          </UiText></h3>
           <div className="flex gap-2">
             <select
               value={selectedUserId}
@@ -198,7 +200,7 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
               className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-sky-500"
               disabled={isSubmitting}
             >
-              <option value="">Sélectionner un utilisateur</option>
+              <option value=""><UiText>Sélectionner un utilisateur</UiText></option>
               {availableUsers.map((user) => (
                 <option key={user.id} value={user.id}>
                   {user.name || user.email} ({user.role})
@@ -220,8 +222,8 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
               disabled={isSubmitting}
               className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium rounded-lg transition-colors"
             >
-              Annuler
-            </button>
+              <UiText>Annuler
+            </UiText></button>
           </div>
         </div>
       )}
@@ -230,12 +232,12 @@ export default function ChantierGestionnaires({ chantierId }: ChantierGestionnai
         <div className="text-center py-8">
           <UserIcon className="h-12 w-12 text-gray-400 mx-auto mb-3" />
           <p className="text-gray-500 dark:text-gray-400">
-            Aucun gestionnaire assigné à ce chantier
-          </p>
+            <UiText>Aucun gestionnaire assigné à ce chantier
+          </UiText></p>
           {canManage && (
             <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
-              Ajoutez un gestionnaire pour qu'il apparaisse comme contact dans les emails
-            </p>
+              <UiText>Ajoutez un gestionnaire pour qu'il apparaisse comme contact dans les emails
+            </UiText></p>
           )}
         </div>
       ) : (

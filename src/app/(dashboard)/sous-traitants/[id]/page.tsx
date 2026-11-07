@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation'
@@ -261,8 +263,8 @@ export default function SousTraitantConsultationPage(
             Dupliquer une liste de prix
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            Choisissez un sous-traitant dont vous souhaitez copier la liste de prix (et les conditions contractuelles) vers <strong>{sousTraitant?.nom}</strong>. Les lignes existantes seront remplacées.
-          </p>
+            <UiText>Choisissez un sous-traitant dont vous souhaitez copier la liste de prix (et les conditions contractuelles) vers </UiText><strong>{sousTraitant?.nom}</strong><UiText>. Les lignes existantes seront remplacées.
+          </UiText></p>
 
           {/* Champ de recherche */}
           <div className="relative mb-4">
@@ -271,7 +273,7 @@ export default function SousTraitantConsultationPage(
               type="text"
               value={sourceSearch}
               onChange={(e) => setSourceSearch(e.target.value)}
-              placeholder="Rechercher un sous-traitant…"
+              placeholder={tx("Rechercher un sous-traitant…")}
               className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 dark:focus:border-blue-400 dark:focus:ring-blue-800 transition-colors"
             />
           </div>
@@ -348,7 +350,7 @@ export default function SousTraitantConsultationPage(
                     <span className="hidden sm:inline"><UiText>Sous-traitants</UiText></span>
                   </Link>
                   <div className="min-w-0">
-                    <p className="text-xs font-medium uppercase tracking-wide text-blue-100">Fiche sous-traitant</p>
+                    <p className="text-xs font-medium uppercase tracking-wide text-blue-100"><UiText>Fiche sous-traitant</UiText></p>
                     <h1 className="text-xl sm:text-2xl font-bold text-white truncate">{sousTraitant.nom}</h1>
                   </div>
                 </div>
@@ -358,8 +360,8 @@ export default function SousTraitantConsultationPage(
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-blue-700 hover:bg-blue-50 text-sm font-semibold shadow-sm transition-colors"
                   >
                     <PencilSquareIcon className="h-5 w-5" />
-                    Éditer
-                  </button>
+                    <UiText>Éditer
+                  </UiText></button>
                 </div>
               </div>
             </div>
@@ -377,7 +379,7 @@ export default function SousTraitantConsultationPage(
                   <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                     <InformationCircleIcon className="w-5 h-5" />
                   </div>
-                  <span className="font-semibold text-lg text-gray-900 dark:text-white">Informations du sous-traitant</span>
+                  <span className="font-semibold text-lg text-gray-900 dark:text-white"><UiText>Informations du sous-traitant</UiText></span>
                 </div>
               </div>
               <div className="p-6 space-y-6">
@@ -537,7 +539,7 @@ export default function SousTraitantConsultationPage(
                     <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                       <UserGroupIcon className="w-5 h-5" />
                     </div>
-                    <span className="font-semibold text-lg text-gray-900 dark:text-white">Ouvriers ({sousTraitant.ouvriers.length})</span>
+                    <span className="font-semibold text-lg text-gray-900 dark:text-white"><UiText>Ouvriers (</UiText>{sousTraitant.ouvriers.length})</span>
                   </div>
                 </div>
                 <div className="p-6">
@@ -545,8 +547,8 @@ export default function SousTraitantConsultationPage(
                     href={`/sous-traitants/${params.id}/ouvriers`}
                     className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                   >
-                    Voir tous les ouvriers →
-                  </Link>
+                    <UiText>Voir tous les ouvriers →
+                  </UiText></Link>
                 </div>
               </div>
             )}
@@ -613,7 +615,7 @@ export default function SousTraitantConsultationPage(
                 ) : lignesTarif.length === 0 ? (
                   <div className="p-10 text-center text-gray-400 dark:text-gray-500">
                     <CurrencyEuroIcon className="h-10 w-10 mx-auto mb-3 opacity-40" />
-                    <p className="text-sm">Aucune ligne de prix. Cliquez sur &quot;+ Ligne&quot; pour commencer.</p>
+                    <p className="text-sm"><UiText>Aucune ligne de prix. Cliquez sur &quot;+ Ligne&quot; pour commencer.</UiText></p>
                   </div>
                 ) : (
                   <DndProvider backend={HTML5Backend}>
@@ -661,36 +663,36 @@ export default function SousTraitantConsultationPage(
                 {/* Conditions générales */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Conditions générales
-                    <span className="ml-2 text-xs font-normal text-gray-400">(s&apos;appliquent à tous les sous-traitants)</span>
+                    <UiText>Conditions générales
+                    </UiText><span className="ml-2 text-xs font-normal text-gray-400"><UiText>(s&apos;appliquent à tous les sous-traitants)</UiText></span>
                   </label>
                   <textarea
                     rows={6}
                     value={condGen}
                     onChange={(e) => setCondGen(e.target.value)}
                     onBlur={() => saveConditions('conditionsGenerales', condGen)}
-                    placeholder="Ex : Paiement à 30 jours fin de mois. Retenue de garantie de 5% pendant 1 an. Respect des normes en vigueur…"
+                    placeholder={tx("Ex : Paiement à 30 jours fin de mois. Retenue de garantie de 5% pendant 1 an. Respect des normes en vigueur…")}
                     className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 dark:focus:border-blue-400 dark:focus:ring-blue-800 transition-colors resize-y"
                   />
                 </div>
                 {/* Conditions particulières */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Conditions particulières
-                    <span className="ml-2 text-xs font-normal text-gray-400">(spécifiques à ce sous-traitant)</span>
+                    <UiText>Conditions particulières
+                    </UiText><span className="ml-2 text-xs font-normal text-gray-400"><UiText>(spécifiques à ce sous-traitant)</UiText></span>
                   </label>
                   <textarea
                     rows={5}
                     value={condPart}
                     onChange={(e) => setCondPart(e.target.value)}
                     onBlur={() => saveConditions('conditionsParticulieres', condPart)}
-                    placeholder="Ex : Tarifs valables jusqu&apos;au 31/12/2026. Déplacement inclus dans un rayon de 50 km…"
+                    placeholder={tx("Ex : Tarifs valables jusqu&apos;au 31/12/2026. Déplacement inclus dans un rayon de 50 km…")}
                     className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 dark:focus:border-blue-400 dark:focus:ring-blue-800 transition-colors resize-y"
                   />
                 </div>
                 <p className="text-xs text-gray-400 dark:text-gray-500">
-                  💾 Sauvegarde automatique à la sortie du champ — ces conditions apparaîtront dans le PDF.
-                </p>
+                  <UiText>💾 Sauvegarde automatique à la sortie du champ — ces conditions apparaîtront dans le PDF.
+                </UiText></p>
               </div>
             </div>
           </div>
@@ -704,7 +706,7 @@ export default function SousTraitantConsultationPage(
                   <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                     <KeyIcon className="w-5 h-5" />
                   </div>
-                  <span className="font-semibold text-lg text-gray-900 dark:text-white">Accès Portail</span>
+                  <span className="font-semibold text-lg text-gray-900 dark:text-white"><UiText>Accès Portail</UiText></span>
                 </div>
               </div>
               <div className="p-6 space-y-4">
@@ -717,14 +719,14 @@ export default function SousTraitantConsultationPage(
                     {pin ? (
                       <span className="font-mono text-lg">{pin}</span>
                     ) : (
-                      <span className="text-gray-400 italic">Non défini</span>
+                      <span className="text-gray-400 italic"><UiText>Non défini</UiText></span>
                     )}
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                    Lien d'accès public
-                  </label>
+                    <UiText>Lien d'accès public
+                  </UiText></label>
                   <div className="flex items-center gap-2">
                     <GlobeAltIcon className="h-5 w-5 text-gray-400 flex-shrink-0" />
                     <a 
@@ -748,8 +750,8 @@ export default function SousTraitantConsultationPage(
                     }}
                     className="mt-2 px-3 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
-                    Copier le lien
-                  </button>
+                    <UiText>Copier le lien
+                  </UiText></button>
                 </div>
               </div>
             </div>
@@ -757,13 +759,13 @@ export default function SousTraitantConsultationPage(
             {/* Informations système */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Informations système</span>
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300"><UiText>Informations système</UiText></span>
               </div>
               <div className="p-6 space-y-3 text-sm">
                 <div>
-                  <span className="text-gray-500 dark:text-gray-400">Créé le :</span>
+                  <span className="text-gray-500 dark:text-gray-400"><UiText>Créé le :</UiText></span>
                   <span className="ml-2 text-gray-900 dark:text-gray-100">
-                    {new Date(sousTraitant.createdAt).toLocaleDateString('fr-FR', {
+                    {new Date(sousTraitant.createdAt).toLocaleDateString(intlLocale(getActiveLocale()), {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
@@ -773,9 +775,9 @@ export default function SousTraitantConsultationPage(
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 dark:text-gray-400">Modifié le :</span>
+                  <span className="text-gray-500 dark:text-gray-400"><UiText>Modifié le :</UiText></span>
                   <span className="ml-2 text-gray-900 dark:text-gray-100">
-                    {new Date(sousTraitant.updatedAt).toLocaleDateString('fr-FR', {
+                    {new Date(sousTraitant.updatedAt).toLocaleDateString(intlLocale(getActiveLocale()), {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',

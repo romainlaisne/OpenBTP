@@ -1,7 +1,10 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function GET() {
+  await bindRequestLocale()
   try {
     const receptionsEnCours = await prisma.receptionChantier.findMany({
       where: {
@@ -36,11 +39,11 @@ export async function GET() {
       dateReceptionPrevue: reception.dateLimite.toISOString(),
     }))
 
-    return NextResponse.json(formattedReceptions)
+    return localizedJson(formattedReceptions)
 
   } catch (error) {
     console.error("Erreur lors de la récupération des réceptions en cours:", error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Impossible de récupérer les réceptions en cours" },
       { status: 500 }
     )

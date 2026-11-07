@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -16,28 +18,29 @@ interface UpdateTagsRequestBody {
 // type PrismaPromise<T> = T extends PromiseLike<infer U> ? U : T; // Non utilisé pour l'instant
 
 export async function PUT(request: Request, { params }: { params: Promise<{ documentId: string }> }) {
+  await bindRequestLocale()
   try {
     const { documentId } = await params;
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
     // const userId = session.user.id; // userId de la session, utile pour 'assignedBy' si on gérait la table de jointure manuellement
 
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Accès non autorisé' }, { status: 403 });
+      return localizedJson({ error: 'Accès non autorisé' }, { status: 403 });
     }
 
     const documentIdNum = parseInt(documentId, 10);
     if (isNaN(documentIdNum)) {
-      return NextResponse.json({ error: 'ID de document invalide' }, { status: 400 });
+      return localizedJson({ error: 'ID de document invalide' }, { status: 400 });
     }
 
     const body: UpdateTagsRequestBody = await request.json();
     const { tags: tagNames } = body;
 
     if (!Array.isArray(tagNames) || !tagNames.every(t => typeof t === 'string')) {
-      return NextResponse.json({ error: 'Format des tags invalide. Attendu: string[]' }, { status: 400 });
+      return localizedJson({ error: 'Format des tags invalide. Attendu: string[]' }, { status: 400 });
     }
 
     // Vérifier si le document existe et est un document administratif
@@ -47,10 +50,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ docu
     });
 
     if (!documentExists) {
-      return NextResponse.json({ error: 'Document non trouvé' }, { status: 404 });
+      return localizedJson({ error: 'Document non trouvé' }, { status: 404 });
     }
     if (documentExists.chantierId !== null) {
-        return NextResponse.json({ error: 'Ce document est lié à un chantier et ne peut être modifié ici.' }, { status: 400 });
+        return localizedJson({ error: 'Ce document est lié à un chantier et ne peut être modifié ici.' }, { status: 400 });
     }
 
     const tagsToConnect: Array<{ id: string | number } | { nom: string }> = [];
@@ -122,7 +125,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ docu
         uploadedBy: updatedDocument.User ? (updatedDocument.User.name || updatedDocument.User.email) : undefined,
     };
 
-    return NextResponse.json(finalResponse);
+    return localizedJson(finalResponse);
 
   } catch (error) {
     console.error('Erreur PUT /api/documents/administratifs/[documentId]/tags:', error);
@@ -135,6 +138,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ docu
              console.error('Meta Prisma:', prismaError.meta);
         }
     }
-    return NextResponse.json({ error: 'Erreur serveur lors de la mise à jour des tags.' }, { status: 500 });
+    return localizedJson({ error: 'Erreur serveur lors de la mise à jour des tags.' }, { status: 500 });
   }
 } 

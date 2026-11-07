@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 // États d'avancement et avenants.
 //
 // AVERTISSEMENTS issus de l'audit du code existant — ils dictent la conception :
@@ -401,7 +402,7 @@ async function preparerAvenant(args: Record<string, unknown>): Promise<Preparati
 }
 
 const eur = (n: number) =>
-  n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+  n.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
 
 export const ajouterAvenantEtat: ToolDefinition = {
   name: 'ajouter_avenant_etat',

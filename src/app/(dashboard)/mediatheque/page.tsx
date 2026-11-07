@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useSession } from 'next-auth/react'
@@ -194,7 +195,7 @@ export default function MediathequePage() {
 
   const openUploadDialog = (files: File[]) => {
     const valid = files.filter(isAccepted)
-    if (!valid.length) { toast.error('Formats acceptés : images et vidéos uniquement'); return }
+    if (!valid.length) { toast.error(tx("Formats acceptés : images et vidéos uniquement")); return }
     const rejected = files.length - valid.length
     if (rejected > 0) toast(`${rejected} fichier(s) ignoré(s) — format non accepté`, { icon: '⚠️' })
     setPendingFiles(valid)
@@ -251,13 +252,13 @@ export default function MediathequePage() {
   // ── Suppression ────────────────────────────────────────────────────────────
 
   const deleteItem = async (id: number) => {
-    if (!confirm('Supprimer ce fichier ?')) return
+    if (!confirm(tx("Supprimer ce fichier ?"))) return
     const res = await fetch(`/api/mediatheque/${id}`, { method: 'DELETE' })
     if (res.ok) {
-      toast.success('Supprimé')
+      toast.success(tx("Supprimé"))
       setItems(prev => prev.filter(p => p.id !== id))
       if (lightboxIdx !== null) setLightboxIdx(null)
-    } else { toast.error('Erreur lors de la suppression') }
+    } else { toast.error(tx("Erreur lors de la suppression")) }
   }
 
   const deleteSelected = async () => {
@@ -296,12 +297,12 @@ export default function MediathequePage() {
         body: JSON.stringify({ tags: editTags, description: editDescription })
       })
       if (res.ok) {
-        toast.success('Mis à jour')
+        toast.success(tx("Mis à jour"))
         setItems(prev => prev.map(p =>
           p.id === editingItem.id ? { ...p, tags: editTags, description: editDescription } : p
         ))
         setEditingItem(null); await fetchTags()
-      } else { toast.error('Erreur lors de la sauvegarde') }
+      } else { toast.error(tx("Erreur lors de la sauvegarde")) }
     } finally { setSaving(false) }
   }
 
@@ -369,15 +370,15 @@ export default function MediathequePage() {
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-violet-600/20 backdrop-blur-sm pointer-events-none">
           <div className="bg-white/90 dark:bg-gray-900/90 rounded-3xl p-10 shadow-2xl border-2 border-dashed border-violet-400 text-center">
             <ArrowUpTrayIcon className="h-14 w-14 mx-auto mb-3 text-violet-500" />
-            <p className="text-xl font-semibold text-violet-700 dark:text-violet-300">Déposez ici</p>
-            <p className="text-sm text-gray-500 mt-1">photos & vidéos acceptées</p>
+            <p className="text-xl font-semibold text-violet-700 dark:text-violet-300"><UiText>Déposez ici</UiText></p>
+            <p className="text-sm text-gray-500 mt-1"><UiText>photos & vidéos acceptées</UiText></p>
           </div>
         </div>
       )}
 
       <PageHeader
-        title="Photothèque"
-        subtitle="Bibliothèque de référence — photos & vidéos par tags"
+        title={tx("Photothèque")}
+        subtitle={tx("Bibliothèque de référence — photos & vidéos par tags")}
         icon={PhotoIcon}
         badgeColor="from-violet-500 via-purple-500 to-fuchsia-600"
         gradientColor="from-violet-500/10 via-purple-500/10 to-fuchsia-600/10"
@@ -387,7 +388,7 @@ export default function MediathequePage() {
             {selectMode && selected.size > 0 && (
               <button onClick={deleteSelected} className="inline-flex items-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold shadow-lg transition">
                 <TrashIcon className="h-4 w-4" />
-                <span className="hidden sm:inline">Supprimer ({selected.size})</span>
+                <span className="hidden sm:inline"><UiText>Supprimer (</UiText>{selected.size})</span>
                 <span className="sm:hidden">({selected.size})</span>
               </button>
             )}
@@ -419,7 +420,7 @@ export default function MediathequePage() {
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             <input
               type="text"
-              placeholder="Recherche instantanée — nom, tag, description…"
+              placeholder={tx("Recherche instantanée — nom, tag, description…")}
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-violet-400 focus:border-transparent outline-none shadow-sm"
@@ -460,7 +461,7 @@ export default function MediathequePage() {
         {/* Résultat de recherche */}
         {(search || activeTags.length > 0) && (
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            {filtered.length} résultat{filtered.length !== 1 ? 's' : ''} sur {items.length}
+            {filtered.length} <UiText>résultat</UiText>{filtered.length !== 1 ? 's' : ''} sur {items.length}
           </p>
         )}
 
@@ -535,14 +536,14 @@ export default function MediathequePage() {
                 download={currentItem.nom}
                 onClick={e => e.stopPropagation()}
                 className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
-                title="Télécharger"
+                title={tx("Télécharger")}
               >
                 <ArrowDownTrayIcon className="h-5 w-5" />
               </a>
               <button
                 onClick={e => openEdit(currentItem, e)}
                 className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
-                title="Modifier les tags"
+                title={tx("Modifier les tags")}
               >
                 <PencilSquareIcon className="h-5 w-5" />
               </button>
@@ -550,7 +551,7 @@ export default function MediathequePage() {
                 <button
                   onClick={e => { e.stopPropagation(); deleteItem(currentItem.id) }}
                   className="p-2 rounded-full bg-red-500/40 hover:bg-red-500/70 text-white transition"
-                  title="Supprimer"
+                  title={tx("Supprimer")}
                 >
                   <TrashIcon className="h-5 w-5" />
                 </button>
@@ -630,10 +631,10 @@ export default function MediathequePage() {
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 z-10">
               <div>
                 <h2 className="text-base font-semibold text-gray-900 dark:text-white">
-                  Ajouter des fichiers
-                </h2>
+                  <UiText>Ajouter des fichiers
+                </UiText></h2>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {pendingFiles.length} fichier{pendingFiles.length > 1 ? 's' : ''} — {pendingFiles.filter(f => f.type.startsWith('video/')).length} vidéo{pendingFiles.filter(f => f.type.startsWith('video/')).length > 1 ? 's' : ''}
+                  {pendingFiles.length} <UiText>fichier</UiText>{pendingFiles.length > 1 ? 's' : ''} — {pendingFiles.filter(f => f.type.startsWith('video/')).length} <UiText>vidéo</UiText>{pendingFiles.filter(f => f.type.startsWith('video/')).length > 1 ? 's' : ''}
                 </p>
               </div>
               <button onClick={() => setUploadDialog(false)} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
@@ -695,7 +696,7 @@ export default function MediathequePage() {
                     value={tagInput}
                     onChange={e => setTagInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addUploadTag(tagInput) } }}
-                    placeholder="Tapez un tag et appuyez sur Entrée…"
+                    placeholder={tx("Tapez un tag et appuyez sur Entrée…")}
                     className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-violet-400 focus:border-transparent outline-none pr-10"
                   />
                   {tagInput && (
@@ -719,7 +720,7 @@ export default function MediathequePage() {
               {uploading && (
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs text-gray-500">
-                    <span>Envoi en cours…</span><span>{uploadProgress}%</span>
+                    <span><UiText>Envoi en cours…</UiText></span><span>{uploadProgress}%</span>
                   </div>
                   <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div
@@ -778,7 +779,7 @@ export default function MediathequePage() {
                 <div className="relative">
                   <input type="text" value={editTagInput} onChange={e => setEditTagInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addEditTag(editTagInput) } }}
-                    placeholder="Ajouter un tag…"
+                    placeholder={tx("Ajouter un tag…")}
                     className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-violet-400 focus:border-transparent outline-none pr-10" />
                   {editTagInput && (
                     <button onClick={() => addEditTag(editTagInput)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg bg-violet-100 dark:bg-violet-900/30 text-violet-600 hover:bg-violet-200 transition">
@@ -848,7 +849,7 @@ function MediaCard({ item, selectMode, selected, isOwner, onOpen, onToggleSelect
           {/* Badge vidéo */}
           <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/60 text-white rounded-full px-2 py-0.5">
             <PlayIcon className="h-3 w-3" />
-            <span className="text-[10px] font-medium">Vidéo</span>
+            <span className="text-[10px] font-medium"><UiText>Vidéo</UiText></span>
           </div>
         </div>
       ) : (
@@ -863,7 +864,7 @@ function MediaCard({ item, selectMode, selected, isOwner, onOpen, onToggleSelect
           <button
             onClick={e => { e.stopPropagation(); onOpen() }}
             className="p-3 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white transition-all hover:scale-110"
-            title="Voir en grand"
+            title={tx("Voir en grand")}
           >
             <EyeIcon className="h-6 w-6" />
           </button>
@@ -877,18 +878,18 @@ function MediaCard({ item, selectMode, selected, isOwner, onOpen, onToggleSelect
               download={item.nom}
               onClick={e => e.stopPropagation()}
               className="p-1.5 rounded-lg bg-white/20 hover:bg-white/40 text-white transition"
-              title="Télécharger"
+              title={tx("Télécharger")}
             >
               <ArrowDownTrayIcon className="h-4 w-4" />
             </a>
-            <button onClick={onEdit} className="p-1.5 rounded-lg bg-white/20 hover:bg-white/40 text-white transition" title="Modifier">
+            <button onClick={onEdit} className="p-1.5 rounded-lg bg-white/20 hover:bg-white/40 text-white transition" title={tx("Modifier")}>
               <PencilSquareIcon className="h-4 w-4" />
             </button>
             {isOwner && (
               <button
                 onClick={e => { e.stopPropagation(); onDelete() }}
                 className="p-1.5 rounded-lg bg-red-500/50 hover:bg-red-500/80 text-white transition"
-                title="Supprimer"
+                title={tx("Supprimer")}
               >
                 <TrashIcon className="h-4 w-4" />
               </button>

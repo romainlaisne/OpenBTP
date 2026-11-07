@@ -1,5 +1,7 @@
 'use client';
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -69,7 +71,7 @@ export default function SelectionPostesPage() {
 
   useEffect(() => {
     if (!soustraitantId) {
-      toast.error('ID du sous-traitant manquant');
+      toast.error(tx("ID du sous-traitant manquant"));
       router.push(`/chantiers/${chantierId}/etats/soustraitants`);
       return;
     }
@@ -79,14 +81,14 @@ export default function SelectionPostesPage() {
         setLoading(true);
         const res = await fetch(`/api/chantiers/${chantierId}/commande`);
         if (!res.ok) {
-          if (res.status === 404) toast.error('Aucune commande validée trouvée pour ce chantier');
-          else toast.error('Erreur lors de la récupération de la commande client');
+          if (res.status === 404) toast.error(tx("Aucune commande validée trouvée pour ce chantier"));
+          else toast.error(tx("Erreur lors de la récupération de la commande client"));
           return;
         }
         const data = await res.json();
         setCommande(data);
       } catch {
-        toast.error('Erreur lors du chargement des données');
+        toast.error(tx("Erreur lors du chargement des données"));
       } finally {
         setLoading(false);
       }
@@ -182,7 +184,7 @@ export default function SelectionPostesPage() {
 
   const handleSubmit = async () => {
     if (selectedLignes.size === 0) {
-      toast.error('Veuillez sélectionner au moins un poste');
+      toast.error(tx("Veuillez sélectionner au moins un poste"));
       return;
     }
 
@@ -216,10 +218,10 @@ export default function SelectionPostesPage() {
 
       if (!response.ok) throw new Error();
       const result = await response.json();
-      toast.success('Commande sous-traitant créée avec succès');
+      toast.success(tx("Commande sous-traitant créée avec succès"));
       router.push(`/chantiers/${chantierId}/etats/soustraitants/${soustraitantId}/commande/${result.id}`);
     } catch {
-      toast.error('Erreur lors de la création de la commande sous-traitant');
+      toast.error(tx("Erreur lors de la création de la commande sous-traitant"));
     } finally {
       setSubmitting(false);
     }
@@ -275,7 +277,7 @@ export default function SelectionPostesPage() {
                 <div className="flex items-center space-x-4 text-sm">
                   <div className="flex items-center text-blue-600 dark:text-blue-400">
                     <CheckCircleIcon className="h-5 w-5 mr-1" />
-                    <span className="font-semibold">{selectedLignes.size} poste{selectedLignes.size > 1 ? 's' : ''} sélectionné{selectedLignes.size > 1 ? 's' : ''}</span>
+                    <span className="font-semibold">{selectedLignes.size} poste{selectedLignes.size > 1 ? 's' : ''} <UiText>sélectionné</UiText>{selectedLignes.size > 1 ? 's' : ''}</span>
                   </div>
                   <div className="flex items-center text-green-600 dark:text-green-400">
                     <CurrencyEuroIcon className="h-5 w-5 mr-1" />
@@ -307,10 +309,10 @@ export default function SelectionPostesPage() {
                 <DocumentTextIcon className="h-6 w-6" />
               </div>
               <div>
-                <CardTitle className="text-xl font-bold">Postes disponibles — Commande client</CardTitle>
+                <CardTitle className="text-xl font-bold"><UiText>Postes disponibles — Commande client</UiText></CardTitle>
                 <p className="text-blue-100 text-sm mt-1">
-                  Consultez le bordereau du sous-traitant avec le bouton <span className="font-semibold">Tarifs ST</span> en haut à droite
-                </p>
+                  <UiText>Consultez le bordereau du sous-traitant avec le bouton </UiText><span className="font-semibold">Tarifs ST</span> <UiText>en haut à droite
+                </UiText></p>
               </div>
             </div>
           </CardHeader>
@@ -321,8 +323,8 @@ export default function SelectionPostesPage() {
                 <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <DocumentTextIcon className="h-8 w-8 text-red-500" />
                 </div>
-                <p className="text-red-600 dark:text-red-400 font-medium text-lg">Aucune commande client validée trouvée pour ce chantier</p>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">Veuillez d&apos;abord valider une commande client pour ce chantier</p>
+                <p className="text-red-600 dark:text-red-400 font-medium text-lg"><UiText>Aucune commande client validée trouvée pour ce chantier</UiText></p>
+                <p className="text-gray-500 dark:text-gray-400 mt-2"><UiText>Veuillez d&apos;abord valider une commande client pour ce chantier</UiText></p>
               </div>
             ) : (
               <>
@@ -467,12 +469,12 @@ export default function SelectionPostesPage() {
                     <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center">
                         <ShoppingCartIcon className="h-5 w-5 mr-2 text-blue-600" />
-                        Résumé de la sélection
-                      </h3>
+                        <UiText>Résumé de la sélection
+                      </UiText></h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                           <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{selectedLignes.size}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-300">Poste{selectedLignes.size > 1 ? 's' : ''} sélectionné{selectedLignes.size > 1 ? 's' : ''}</div>
+                          <div className="text-sm text-gray-600 dark:text-gray-300"><UiText>Poste</UiText>{selectedLignes.size > 1 ? 's' : ''} <UiText>sélectionné</UiText>{selectedLignes.size > 1 ? 's' : ''}</div>
                         </div>
                         <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                           <div className="text-2xl font-bold text-green-600 dark:text-green-400">{calculateTotal().toFixed(2)} €</div>
@@ -499,7 +501,7 @@ export default function SelectionPostesPage() {
                       {submitting ? (
                         <><div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" /><UiText>Création en cours...</UiText></>
                       ) : (
-                        <><CheckCircleIcon className="h-4 w-4 mr-2" />Valider et créer la commande</>
+                        <><CheckCircleIcon className="h-4 w-4 mr-2" /><UiText>Valider et créer la commande</UiText></>
                       )}
                     </Button>
                   </div>
@@ -526,7 +528,7 @@ export default function SelectionPostesPage() {
           <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <input
               type="text"
-              placeholder="Rechercher..."
+              placeholder={tx("Rechercher...")}
               value={tarifsSearch}
               onChange={e => setTarifsSearch(e.target.value)}
               className="w-full text-sm px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -564,7 +566,7 @@ export default function SelectionPostesPage() {
                         <div className="text-right shrink-0">
                           {tarif.prixUnitaire != null && (
                             <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 whitespace-nowrap">
-                              {tarif.prixUnitaire.toLocaleString('fr-FR')} €
+                              {tarif.prixUnitaire.toLocaleString(intlLocale(getActiveLocale()))} €
                             </p>
                           )}
                           {tarif.unite && <p className="text-xs text-gray-400">{tarif.unite}</p>}

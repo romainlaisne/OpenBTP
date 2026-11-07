@@ -1,21 +1,24 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prismaWithExtensions } from '@/lib/prisma/types'
 
 export async function DELETE(request: Request, props: { params: Promise<{ materiauId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const materiauId = params.materiauId
     
     if (!materiauId) {
-      return NextResponse.json({ error: 'ID de matériau requis' }, { status: 400 })
+      return localizedJson({ error: 'ID de matériau requis' }, { status: 400 })
     }
     
     // Trouver d'abord le matériau pour avoir accès à son emplacementId
@@ -24,7 +27,7 @@ export async function DELETE(request: Request, props: { params: Promise<{ materi
       include: { emplacement: true }
     })
     if (!materiau) {
-      return NextResponse.json({ error: 'Matériau non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Matériau non trouvé' }, { status: 404 })
     }
     
     const emplacementId = materiau.emplacementId
@@ -50,9 +53,9 @@ export async function DELETE(request: Request, props: { params: Promise<{ materi
       }
     }
     
-    return NextResponse.json({ message: 'Matériau supprimé avec succès' })
+    return localizedJson({ message: 'Matériau supprimé avec succès' })
   } catch (error) {
     console.error('Erreur lors de la suppression du matériau:', error)
-    return NextResponse.json({ error: 'Erreur lors de la suppression du matériau' }, { status: 500 })
+    return localizedJson({ error: 'Erreur lors de la suppression du matériau' }, { status: 500 })
   }
 } 

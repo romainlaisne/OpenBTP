@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
@@ -5,10 +7,11 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
     const { searchParams } = new URL(request.url)
     const activeOnly = ['1','true','yes'].includes((searchParams.get('activeOnly')||'').toLowerCase())
@@ -33,10 +36,10 @@ export async function GET(request: NextRequest) {
     }))
 
     const filtered = activeOnly ? result.filter(st => st.actif) : result
-    return NextResponse.json(filtered)
+    return localizedJson(filtered)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des sous-traitants' },
       { status: 500 }
     )

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
@@ -27,6 +29,7 @@ function validateAndGetFullPath(relativePath: string): string | null {
 }
 
 export async function DELETE(request: NextRequest) {
+  await bindRequestLocale()
   try {
     // Récupérer les paramètres de la requête
     const url = new URL(request.url)
@@ -34,7 +37,7 @@ export async function DELETE(request: NextRequest) {
     const isFolder = url.searchParams.get('isFolder') === 'true'
     
     if (!itemPath) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chemin de l\'élément à supprimer manquant' },
         { status: 400 }
       )
@@ -42,7 +45,7 @@ export async function DELETE(request: NextRequest) {
     
     const fullPath = validateAndGetFullPath(itemPath)
     if (!fullPath) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chemin invalide' },
         { status: 400 }
       )
@@ -50,7 +53,7 @@ export async function DELETE(request: NextRequest) {
     
     // Vérifier que l'élément existe
     if (!fs.existsSync(fullPath)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Élément non trouvé' },
         { status: 404 }
       )
@@ -59,14 +62,14 @@ export async function DELETE(request: NextRequest) {
     // Vérifier que c'est bien un dossier ou un fichier selon le paramètre isFolder
     const stats = fs.statSync(fullPath)
     if (isFolder && !stats.isDirectory()) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'L\'élément n\'est pas un dossier' },
         { status: 400 }
       )
     }
     
     if (!isFolder && !stats.isFile()) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'L\'élément n\'est pas un fichier' },
         { status: 400 }
       )
@@ -81,10 +84,10 @@ export async function DELETE(request: NextRequest) {
       await rm(fullPath)
     }
     
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la suppression:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression' },
       { status: 500 }
     )

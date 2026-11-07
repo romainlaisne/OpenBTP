@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
@@ -89,6 +91,7 @@ async function scanDirectory(dirPath: string, relativePath: string): Promise<Fol
 }
 
 export async function GET() {
+  await bindRequestLocale()
   try {
     // Vérifier que le dossier racine existe
     if (!fs.existsSync(DOCUMENTS_ROOT)) {
@@ -97,10 +100,10 @@ export async function GET() {
     
     const structure = await scanDirectory(DOCUMENTS_ROOT, '/')
     
-    return NextResponse.json(structure)
+    return localizedJson(structure)
   } catch (error) {
     console.error('Erreur lors de la récupération de la structure des dossiers:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de la structure des dossiers' },
       { status: 500 }
     )

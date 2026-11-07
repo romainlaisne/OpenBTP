@@ -1,12 +1,15 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
   if (!session) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   }
 
   const { id } = await params
@@ -14,11 +17,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const { sourceId } = body
 
   if (!sourceId) {
-    return NextResponse.json({ error: 'sourceId requis' }, { status: 400 })
+    return localizedJson({ error: 'sourceId requis' }, { status: 400 })
   }
 
   if (sourceId === id) {
-    return NextResponse.json({ error: 'Le sous-traitant source et cible doivent être différents' }, { status: 400 })
+    return localizedJson({ error: 'Le sous-traitant source et cible doivent être différents' }, { status: 400 })
   }
 
   const result = await prisma.$transaction(async (tx) => {
@@ -73,5 +76,5 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     }
   })
 
-  return NextResponse.json(result)
+  return localizedJson(result)
 }

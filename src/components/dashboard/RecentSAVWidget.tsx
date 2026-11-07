@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { 
@@ -151,13 +152,13 @@ export default function RecentSAVWidget() {
             <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <WrenchScrewdriverIcon className="h-10 w-10 text-red-500 dark:text-red-400" />
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-4 font-medium">Aucun ticket SAV enregistré</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4 font-medium"><UiText>Aucun ticket SAV enregistré</UiText></p>
             <Link 
               href="/sav/nouveau" 
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl shadow-lg text-sm font-bold text-white bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 hover:scale-105 transition-all duration-200"
             >
-              Créer un ticket SAV
-            </Link>
+              <UiText>Créer un ticket SAV
+            </UiText></Link>
           </div>
         ) : (
           <div className="space-y-3">
@@ -184,8 +185,8 @@ export default function RecentSAVWidget() {
                   </h3>
                   <div className="mt-2 flex items-center gap-2">
                     <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                      Chantier:
-                    </span>
+                      <UiText>Chantier:
+                    </UiText></span>
                     <span className="text-sm font-bold text-blue-600 dark:text-blue-400 truncate">
                       {ticket.chantier ? (
                         <>

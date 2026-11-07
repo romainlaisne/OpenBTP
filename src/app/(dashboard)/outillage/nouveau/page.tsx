@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -48,7 +49,7 @@ export default function NouvelleMachinePage() {
         throw new Error(errorData.error || `Erreur lors de la création de la machine (${response.status})`)
       }
 
-      toast.success('Machine ajoutée avec succès')
+      toast.success(tx("Machine ajoutée avec succès"))
       router.push('/outillage')
       router.refresh()
     } catch (error: unknown) {
@@ -71,8 +72,8 @@ export default function NouvelleMachinePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Nouvelle machine"
-        subtitle="Ajoutez un nouvel équipement à votre parc outillage"
+        title={tx("Nouvelle machine")}
+        subtitle={tx("Ajoutez un nouvel équipement à votre parc outillage")}
         icon={WrenchScrewdriverIcon}
         badgeColor="from-blue-600 via-indigo-600 to-purple-700"
         gradientColor="from-blue-600/10 via-indigo-600/10 to-purple-700/10"
@@ -100,12 +101,12 @@ export default function NouvelleMachinePage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Informations principales</h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Renseignez les détails nécessaires pour référencer correctement la machine.</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400"><UiText>Renseignez les détails nécessaires pour référencer correctement la machine.</UiText></p>
               </div>
               <div className="inline-flex items.center gap-2 px-3 py-1 rounded-full bg-white/60 dark:bg-gray-900/50 text-sm font-medium text-blue-700 dark:text-blue-200 shadow-sm">
                 <CheckCircleIcon className="h-4 w-4" />
-                Champs obligatoires indiqués par *
-              </div>
+                <UiText>Champs obligatoires indiqués par *
+              </UiText></div>
             </div>
           </div>
 
@@ -129,7 +130,7 @@ export default function NouvelleMachinePage() {
 
               <div className="space-y-2">
                 <label htmlFor="modele" className="block text-sm font-semibold text-gray-800 dark:text-gray-200">
-                  Modèle <span className="text-red-500">*</span>
+                  <UiText>Modèle </UiText><span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -139,14 +140,14 @@ export default function NouvelleMachinePage() {
                   value={formData.modele}
                   onChange={handleChange}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white/90 dark:bg-gray-900/60 px-4 py-3 text-gray-900 dark:text-white shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition"
-                  placeholder="Référence du fabricant"
+                  placeholder={tx("Référence du fabricant")}
                 />
               </div>
 
               <div className="space-y-2">
                 <label htmlFor="numeroSerie" className="block text-sm font-semibold text-gray-800 dark:text-gray-200">
-                  Numéro de série
-                </label>
+                  <UiText>Numéro de série
+                </UiText></label>
                 <input
                   type="text"
                   name="numeroSerie"
@@ -154,7 +155,7 @@ export default function NouvelleMachinePage() {
                   value={formData.numeroSerie}
                   onChange={handleChange}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white/90 dark:bg-gray-900/60 px-4 py-3 text-gray-900 dark:text-white shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition"
-                  placeholder="Identifiant unique de la machine"
+                  placeholder={tx("Identifiant unique de la machine")}
                 />
               </div>
 
@@ -176,8 +177,8 @@ export default function NouvelleMachinePage() {
 
               <div className="space-y-2">
                 <label htmlFor="dateAchat" className="block text-sm font-semibold text-gray-800 dark:text-gray-200">
-                  Date d'achat
-                </label>
+                  <UiText>Date d'achat
+                </UiText></label>
                 <input
                   type="date"
                   name="dateAchat"
@@ -199,15 +200,15 @@ export default function NouvelleMachinePage() {
                   value={formData.commentaire}
                   onChange={handleChange}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white/90 dark:bg-gray-900/60 px-4 py-3 text-gray-900 dark:text-white shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition resize-none"
-                  placeholder="Ajoutez des précisions utiles (état, accessoires, etc.)"
+                  placeholder={tx("Ajoutez des précisions utiles (état, accessoires, etc.)")}
                 />
               </div>
             </div>
 
             <div className="border-t border-gray-200/60 dark:border-gray-700/60 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Toutes les informations peuvent être modifiées ultérieurement depuis la fiche de la machine.
-              </p>
+                <UiText>Toutes les informations peuvent être modifiées ultérieurement depuis la fiche de la machine.
+              </UiText></p>
               <div className="flex items-center gap-3">
                 <button
                   type="button"

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Coût matière estimé d'un chantier, pour l'écran « Résumé financier ».
 //
 // CardFinancialSummary est un composant client : il ne peut pas importer
@@ -37,16 +39,17 @@ export async function GET(
   _request: Request,
   props: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   const { chantierId } = await props.params
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const chantier = await resoudreChantier(chantierId)
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     const resultat = await calculerCoutMatiereChantier(chantier.id)
@@ -54,16 +57,16 @@ export async function GET(
     // Le détail de saisie n'accompagne la réponse que pour qui peut le voir.
     const peutSaisir = ROLES_PRIX_ACHAT.includes(session.user.role)
     if (!peutSaisir) {
-      return NextResponse.json({ ...resultat, peutSaisir: false })
+      return localizedJson({ ...resultat, peutSaisir: false })
     }
 
     const saisie = await listerLignesSaisieCoutMatiere(chantier.id)
-    return NextResponse.json({ ...resultat, peutSaisir: true, saisie })
+    return localizedJson({ ...resultat, peutSaisir: true, saisie })
   } catch (error) {
     console.error('Erreur calcul du coût matière:', error)
     // On renvoie un coût nul plutôt qu'une erreur : l'écran financier ne doit
     // jamais devenir inutilisable à cause de cette estimation additionnelle.
-    return NextResponse.json({
+    return localizedJson({
       coutMatiereTotal: 0,
       detailParCategorie: {},
       lignes: [],
@@ -91,14 +94,15 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   const { chantierId } = await props.params
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
     if (!ROLES_PRIX_ACHAT.includes(session.user.role)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Seuls les administrateurs et gestionnaires peuvent saisir les prix d’achat.' },
         { status: 403 }
       )
@@ -106,7 +110,7 @@ export async function PUT(
 
     const chantier = await resoudreChantier(chantierId)
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     const body = await request.json().catch(() => null)
@@ -128,9 +132,9 @@ export async function PUT(
       if (typeof body?.poseUniquement === 'boolean') {
         const resultat = await calculerCoutMatiereChantier(chantier.id)
         const saisie = await listerLignesSaisieCoutMatiere(chantier.id)
-        return NextResponse.json({ lignesEnregistrees: 0, ...resultat, saisie })
+        return localizedJson({ lignesEnregistrees: 0, ...resultat, saisie })
       }
-      return NextResponse.json({ error: 'Aucune ligne à enregistrer.' }, { status: 400 })
+      return localizedJson({ error: 'Aucune ligne à enregistrer.' }, { status: 400 })
     }
 
     // Les identifiants viennent du client : on ne met à jour que des lignes
@@ -150,7 +154,7 @@ export async function PUT(
       let categorieMateriau: string | null = null
       if (typeof cat === 'string' && cat !== '') {
         if (!estCategorieMateriau(cat) && cat !== CATEGORIE_AUCUNE) {
-          return NextResponse.json(
+          return localizedJson(
             { error: `Catégorie inconnue : « ${cat} ».` },
             { status: 400 }
           )
@@ -172,7 +176,7 @@ export async function PUT(
     }
 
     if (maj.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Aucune ligne valide de ce chantier dans la requête.' },
         { status: 400 }
       )
@@ -191,9 +195,9 @@ export async function PUT(
     // avoir à redemander la route.
     const resultat = await calculerCoutMatiereChantier(chantier.id)
     const saisie = await listerLignesSaisieCoutMatiere(chantier.id)
-    return NextResponse.json({ lignesEnregistrees: maj.length, ...resultat, saisie })
+    return localizedJson({ lignesEnregistrees: maj.length, ...resultat, saisie })
   } catch (error) {
     console.error('Erreur enregistrement du coût matière:', error)
-    return NextResponse.json({ error: 'Erreur lors de l’enregistrement.' }, { status: 500 })
+    return localizedJson({ error: 'Erreur lors de l’enregistrement.' }, { status: 500 })
   }
 }

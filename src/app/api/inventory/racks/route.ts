@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 // import { prisma } from '@/lib/prisma/client'
 import { prismaWithExtensions } from '@/lib/prisma/types'
@@ -6,11 +8,12 @@ import { authOptions } from '@/lib/auth'
 
 // Obtenir tous les racks
 export async function GET() {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer les racks avec leurs emplacements
@@ -27,10 +30,10 @@ export async function GET() {
       }
     })
 
-    return NextResponse.json(racks)
+    return localizedJson(racks)
   } catch (error) {
     console.error('Erreur lors de la récupération des racks:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des racks' },
       { status: 500 }
     )
@@ -39,16 +42,17 @@ export async function GET() {
 
 // Créer un nouveau rack
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Vérifier les droits d'administration
     if (session.user.role !== 'ADMIN') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Autorisation insuffisante' },
         { status: 403 }
       )
@@ -59,7 +63,7 @@ export async function POST(request: NextRequest) {
     const { nom, position, lignes, colonnes } = data
 
     if (!nom || !position || !lignes || !colonnes) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Informations incomplètes' },
         { status: 400 }
       )
@@ -104,10 +108,10 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(rackWithEmplacements)
+    return localizedJson(rackWithEmplacements)
   } catch (error) {
     console.error('Erreur lors de la création du rack:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du rack' },
       { status: 500 }
     )

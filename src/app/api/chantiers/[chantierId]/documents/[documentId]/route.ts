@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -34,6 +36,7 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ chantierId: string; documentId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
@@ -101,19 +104,19 @@ export async function GET(
           metadata.photos = photosWithRealPaths;
         }
         
-        return NextResponse.json({
+        return localizedJson({
           ...document,
           metadata
         });
       } catch (error) {
         console.error('Erreur lors de la récupération des métadonnées du rapport:', error);
         // En cas d'erreur, retourner simplement le document sans métadonnées
-        return NextResponse.json(document);
+        return localizedJson(document);
       }
     }
 
     // Pour les autres types de documents, retourner tel quel
-    return NextResponse.json(document);
+    return localizedJson(document);
   } catch (error) {
     console.error('Erreur:', error)
     return new NextResponse(
@@ -128,6 +131,7 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ chantierId: string; documentId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
@@ -231,7 +235,7 @@ export async function PUT(
       include: { User: { select: { name: true, email: true } }, tags: true }
     });
 
-    return NextResponse.json(updatedDocument);
+    return localizedJson(updatedDocument);
   } catch (error) {
     console.error('Erreur lors de la mise à jour du document:', error) // Message d'erreur plus générique
     return new NextResponse(
@@ -245,6 +249,7 @@ export async function DELETE(
   request: Request,
   props: { params: Promise<{ chantierId: string; documentId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)

@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 export interface ReceptionData {
   reception: {
     id: number
@@ -289,7 +290,7 @@ export function generateReceptionHTML(data: ReceptionData): string {
             <div class="info-section">
                 <h3>INFORMATIONS RÉCEPTION</h3>
                 <div class="info-row">
-                    <span class="info-label">Date:</span> ${new Date(reception.dateReception).toLocaleDateString('fr-FR', { 
+                    <span class="info-label">Date:</span> ${new Date(reception.dateReception).toLocaleDateString(intlLocale(getActiveLocale()), { 
                         weekday: 'long', 
                         year: 'numeric', 
                         month: 'long', 
@@ -349,7 +350,7 @@ export function generateReceptionHTML(data: ReceptionData): string {
                                 ${remarque.statut}
                             </td>
                             <td style="text-align: center;">
-                                ${remarque.dateResolution ? new Date(remarque.dateResolution).toLocaleDateString('fr-FR') : '-'}
+                                ${remarque.dateResolution ? new Date(remarque.dateResolution).toLocaleDateString(intlLocale(getActiveLocale())) : '-'}
                             </td>
                         </tr>
                     `).join('')}
@@ -370,7 +371,7 @@ export function generateReceptionHTML(data: ReceptionData): string {
         ` : ''}
         
         <div class="footer">
-            <p>Réception générée le ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</p>
+            <p>Réception générée le ${new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString(intlLocale(getActiveLocale()), { hour: '2-digit', minute: '2-digit' })}</p>
             <p>© ${companySettings.name} - Document généré automatiquement</p>
         </div>
     </div>

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Marges de plusieurs chantiers, pour le badge de la liste.
 //
 // Endpoint SÉPARÉ volontairement : le calcul demande plusieurs requêtes par
@@ -16,10 +18,11 @@ export const dynamic = 'force-dynamic'
 const MAX_CHANTIERS = 30
 
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const url = new URL(request.url)
@@ -29,7 +32,7 @@ export async function GET(request: Request) {
       .filter(Boolean)
       .slice(0, MAX_CHANTIERS)
 
-    if (slugs.length === 0) return NextResponse.json({ marges: {} })
+    if (slugs.length === 0) return localizedJson({ marges: {} })
 
     const chantiers = await prisma.chantier.findMany({
       where: { chantierId: { in: slugs } },
@@ -60,10 +63,10 @@ export async function GET(request: Request) {
       }
     }
 
-    return NextResponse.json({ marges })
+    return localizedJson({ marges })
   } catch (error) {
     console.error('Erreur calcul des marges:', error)
     // Jamais d'erreur bloquante : la liste doit rester utilisable sans badge.
-    return NextResponse.json({ marges: {} })
+    return localizedJson({ marges: {} })
   }
 }

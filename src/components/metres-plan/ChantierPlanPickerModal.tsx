@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useEffect, useState } from 'react'
 import {
   XMarkIcon,
@@ -109,8 +111,8 @@ const ChantierPlanPickerModal: React.FC<Props> = ({
           <div className="flex items-center gap-2">
             <FolderOpenIcon className="w-5 h-5 text-indigo-500" />
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-              Charger depuis le chantier
-            </h2>
+              <UiText>Charger depuis le chantier
+            </UiText></h2>
           </div>
           <button
             type="button"
@@ -132,8 +134,8 @@ const ChantierPlanPickerModal: React.FC<Props> = ({
             )}
           </TabButton>
           <TabButton active={activeTab === 'mprojets'} onClick={() => setActiveTab('mprojets')}>
-            Projets métré
-            {projects.length > 0 && (
+            <UiText>Projets métré
+            </UiText>{projects.length > 0 && (
               <span className="ml-1.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-xs font-medium">
                 {projects.length}
               </span>
@@ -146,7 +148,7 @@ const ChantierPlanPickerModal: React.FC<Props> = ({
           {loading && (
             <div className="flex flex-col items-center justify-center py-12 gap-3">
               <ArrowPathIcon className="w-7 h-7 text-indigo-400 animate-spin" />
-              <p className="text-sm text-gray-500 dark:text-gray-400">Chargement…</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Chargement…</UiText></p>
             </div>
           )}
 
@@ -209,8 +211,8 @@ const ChantierPlanPickerModal: React.FC<Props> = ({
                             {proj.nom}
                           </p>
                           <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                            Modifié le{' '}
-                            {new Date(proj.updatedAt).toLocaleDateString('fr-FR', {
+                            <UiText>Modifié le</UiText>{' '}
+                            {new Date(proj.updatedAt).toLocaleDateString(intlLocale(getActiveLocale()), {
                               day: '2-digit',
                               month: 'short',
                               year: 'numeric',
@@ -234,8 +236,8 @@ const ChantierPlanPickerModal: React.FC<Props> = ({
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
-            Annuler
-          </button>
+            <UiText>Annuler
+          </UiText></button>
         </div>
       </div>
     </div>

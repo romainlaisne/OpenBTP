@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,6 +9,7 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ chantierId: string; taskType: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     console.log(`Mise à jour de la tâche ${params.taskType} pour le chantier ${params.chantierId}`)
@@ -14,7 +17,7 @@ export async function PUT(
     const session = await getServerSession(authOptions)
     if (!session?.user) {
       console.log('Erreur: Utilisateur non authentifié')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -36,7 +39,7 @@ export async function PUT(
 
     if (!chantier) {
       console.log(`Erreur: Chantier ${params.chantierId} non trouvé`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -64,7 +67,7 @@ export async function PUT(
     if (!adminTaskTypeDetails) {
       console.log(`Erreur: Type de tâche administrative ${params.taskType} non trouvé dans les réglages.`);
       // Optionnel: retourner une erreur si le type de tâche n'existe pas
-      // return NextResponse.json(
+      // return localizedJson(
       //   { error: `Type de tâche '${params.taskType}' non configuré.` },
       //   { status: 400 }
       // );
@@ -112,10 +115,10 @@ export async function PUT(
       })
       
       console.log('Tâche mise à jour avec succès:', task)
-      return NextResponse.json(task)
+      return localizedJson(task)
     } catch (prismaError: unknown) {
       console.error('Erreur Prisma:', prismaError)
-      return NextResponse.json(
+      return localizedJson(
         { 
           error: 'Erreur lors de la mise à jour de la tâche dans la base de données',
           details: (prismaError as Error).message 
@@ -125,7 +128,7 @@ export async function PUT(
     }
   } catch (error: unknown) {
     console.error('Erreur générale:', error)
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la mise à jour de la tâche',
         details: (error as Error).message 

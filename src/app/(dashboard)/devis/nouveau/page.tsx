@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { evaluateFormula } from '@/lib/formula'
 import { useState, useEffect, useRef } from 'react'
@@ -360,8 +361,8 @@ export default function NouveauDevisPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <PageHeader
-        title="Nouveau devis"
-        subtitle="Créez un nouveau devis ou avenant"
+        title={tx("Nouveau devis")}
+        subtitle={tx("Créez un nouveau devis ou avenant")}
         icon={DocumentTextIcon}
         badgeColor="from-orange-600 via-orange-700 to-red-700"
         gradientColor="from-orange-600/10 via-orange-700/10 to-red-700/10"
@@ -434,8 +435,8 @@ export default function NouveauDevisPage() {
                 className="w-5 h-5 text-orange-600 border-gray-300 focus:ring-orange-500 focus:ring-2"
               />
               <span className="ml-2 text-sm font-semibold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
-                📄 Devis (nouveau chantier)
-              </span>
+                <UiText>📄 Devis (nouveau chantier)
+              </UiText></span>
             </label>
             <label className="flex items-center cursor-pointer group">
               <input
@@ -447,8 +448,8 @@ export default function NouveauDevisPage() {
                 className="w-5 h-5 text-orange-600 border-gray-300 focus:ring-orange-500 focus:ring-2"
               />
               <span className="ml-2 text-sm font-semibold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
-                📋 Avenant (chantier existant)
-              </span>
+                <UiText>📋 Avenant (chantier existant)
+              </UiText></span>
             </label>
           </div>
           <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
@@ -468,7 +469,7 @@ export default function NouveauDevisPage() {
               type="text"
               value={reference}
               onChange={(e) => setReference(e.target.value)}
-              placeholder="Ex: Carrelage premium app 3"
+              placeholder={tx("Ex: Carrelage premium app 3")}
               className="block w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -489,15 +490,15 @@ export default function NouveauDevisPage() {
                 }))}
                 value={selectedClientId}
                 onChange={setSelectedClientId}
-                placeholder="Sélectionner un client"
-                emptyMessage="Aucun client trouvé"
+                placeholder={tx("Sélectionner un client")}
+                emptyMessage={tx("Aucun client trouvé")}
               />
             </div>
           ) : (
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                Chantier *
-              </label>
+                <UiText>Chantier *
+              </UiText></label>
               <SearchableSelect
                 options={chantiers.map(chantier => ({
                   value: chantier.chantierId,
@@ -505,8 +506,8 @@ export default function NouveauDevisPage() {
                 }))}
                 value={selectedChantierId}
                 onChange={handleChantierChange}
-                placeholder="Sélectionner un chantier"
-                emptyMessage="Aucun chantier trouvé"
+                placeholder={tx("Sélectionner un chantier")}
+                emptyMessage={tx("Aucun chantier trouvé")}
               />
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 <UiText>Le client sera automatiquement déduit du chantier</UiText>
@@ -526,9 +527,9 @@ export default function NouveauDevisPage() {
               onChange={(e) => setTauxTVA(parseFloat(e.target.value))}
               className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
             >
-              <option value="0">0% - Exonération</option>
-              <option value="6">6% - Taux réduit</option>
-              <option value="21">21% - Taux normal</option>
+              <option value="0"><UiText>0% - Exonération</UiText></option>
+              <option value="6"><UiText>6% - Taux réduit</UiText></option>
+              <option value="21"><UiText>21% - Taux normal</UiText></option>
             </select>
           </div>
 
@@ -557,14 +558,14 @@ export default function NouveauDevisPage() {
             onChange={(e) => setObservations(e.target.value)}
             rows={3}
             className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-            placeholder="Observations ou notes..."
+            placeholder={tx("Observations ou notes...")}
           />
         </div>
 
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            <span className="font-medium">Note :</span> Les conditions générales de vente seront automatiquement ajoutées depuis le template configuré dans les paramètres de l'entreprise.
-          </p>
+            <span className="font-medium">Note :</span> <UiText>Les conditions générales de vente seront automatiquement ajoutées depuis le template configuré dans les paramètres de l'entreprise.
+          </UiText></p>
         </div>
           </div>
         )}
@@ -575,7 +576,7 @@ export default function NouveauDevisPage() {
           <div className="relative px-6 py-4 bg-gradient-to-br from-orange-600/10 via-orange-700/10 to-red-800/10 dark:from-orange-600/5 dark:via-orange-700/5 dark:to-red-800/5 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <h2 className="text-lg font-bold text-orange-900 dark:text-white">Lignes du devis</h2>
+                <h2 className="text-lg font-bold text-orange-900 dark:text-white"><UiText>Lignes du devis</UiText></h2>
               </div>
               <div className="flex items-center space-x-2">
                 <button
@@ -664,8 +665,8 @@ export default function NouveauDevisPage() {
 
         {lignes.length === 0 && (
           <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-            <p>Aucune ligne ajoutée</p>
-            <p className="text-sm mt-1">Cliquez sur "Ajouter une ligne" pour commencer</p>
+            <p><UiText>Aucune ligne ajoutée</UiText></p>
+            <p className="text-sm mt-1"><UiText>Cliquez sur "Ajouter une ligne" pour commencer</UiText></p>
           </div>
         )}
       </div>
@@ -690,7 +691,7 @@ export default function NouveauDevisPage() {
                 </div>
               )}
               <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Total HT après remise:</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Total HT après remise:</UiText></span>
                 <span className="font-semibold text-gray-900 dark:text-white">{totaux.totalHTApresRemise.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
@@ -852,7 +853,7 @@ function LigneDevisRow({
           value={ligne.article}
           onChange={(e) => onUpdate(ligne.id, 'article', e.target.value)}
           className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-1 focus:ring-orange-500"
-          placeholder="Réf."
+          placeholder={tx("Réf.")}
         />
       </td>
       <td className="px-3 py-2">
@@ -861,7 +862,7 @@ function LigneDevisRow({
           value={ligne.description}
           onChange={(e) => onUpdate(ligne.id, 'description', e.target.value)}
           className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-1 focus:ring-orange-500"
-          placeholder="Description"
+          placeholder={tx("Description")}
         />
       </td>
       <td className="px-3 py-2">
@@ -874,7 +875,7 @@ function LigneDevisRow({
           <option value="M2">M²</option>
           <option value="M3">M³</option>
           <option value="Heures">Heures</option>
-          <option value="Pièces">Pièces</option>
+          <option value="Pièces"><UiText>Pièces</UiText></option>
           <option value="Fft">Forfait</option>
         </select>
       </td>

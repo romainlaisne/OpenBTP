@@ -1,4 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { 
   FolderIcon, 
@@ -63,7 +66,7 @@ export default function DocumentManager() {
         setRootFolder(data)
       } catch (error) {
         console.error('Erreur lors du chargement des dossiers:', error)
-        toast.error('Erreur lors du chargement des dossiers')
+        toast.error(tx("Erreur lors du chargement des dossiers"))
       } finally {
         setLoading(false)
       }
@@ -106,7 +109,7 @@ export default function DocumentManager() {
 
   const handleCreateFolder = async () => {
     if (!newFolderName.trim()) {
-      toast.error('Veuillez entrer un nom de dossier')
+      toast.error(tx("Veuillez entrer un nom de dossier"))
       return
     }
     
@@ -368,11 +371,11 @@ export default function DocumentManager() {
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700">
         <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-          Gestion des fiches techniques
-        </h3>
+          <UiText>Gestion des fiches techniques
+        </UiText></h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-          Organisez et gérez les documents liés aux fiches techniques des projets
-        </p>
+          <UiText>Organisez et gérez les documents liés aux fiches techniques des projets
+        </UiText></p>
       </div>
       
       <div className="flex flex-col md:flex-row h-[600px]">
@@ -384,8 +387,8 @@ export default function DocumentManager() {
               className="flex items-center text-sm bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-200 px-3 py-1 rounded-md hover:bg-blue-200 dark:hover:bg-blue-700"
             >
               <FolderPlusIcon className="h-4 w-4 mr-1" />
-              Nouveau dossier
-            </button>
+              <UiText>Nouveau dossier
+            </UiText></button>
             
             <label className="flex items-center text-sm bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200 px-3 py-1 rounded-md hover:bg-green-200 dark:hover:bg-green-700 cursor-pointer">
               <ArrowUpOnSquareIcon className="h-4 w-4 mr-1" />
@@ -405,7 +408,7 @@ export default function DocumentManager() {
                 type="text"
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
-                placeholder="Nom du dossier"
+                placeholder={tx("Nom du dossier")}
                 className="flex-1 px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-l-md text-sm dark:bg-gray-700 dark:text-white"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleCreateFolder()
@@ -460,16 +463,16 @@ export default function DocumentManager() {
                       className="flex items-center text-sm bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-200 px-3 py-1 rounded-md hover:bg-blue-200 dark:hover:bg-blue-700"
                     >
                       <ArrowUpOnSquareIcon className="h-4 w-4 mr-1 transform rotate-180" />
-                      Télécharger
-                    </a>
+                      <UiText>Télécharger
+                    </UiText></a>
                   ) : null}
                   <button 
                     onClick={handleDeleteItem}
                     className="flex items-center text-sm bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 px-3 py-1 rounded-md hover:bg-red-200 dark:hover:bg-red-700"
                   >
                     <TrashIcon className="h-4 w-4 mr-1" />
-                    Supprimer
-                  </button>
+                    <UiText>Supprimer
+                  </UiText></button>
                 </div>
               </div>
               
@@ -491,8 +494,8 @@ export default function DocumentManager() {
                         {formatFileSize(selectedItem.size)}
                       </div>
                       <div>
-                        <span className="text-gray-600 dark:text-gray-400">Dernière modification:</span>{' '}
-                        {new Date(selectedItem.updatedAt).toLocaleDateString('fr-FR')}
+                        <span className="text-gray-600 dark:text-gray-400"><UiText>Dernière modification:</UiText></span>{' '}
+                        {new Date(selectedItem.updatedAt).toLocaleDateString(intlLocale(getActiveLocale()))}
                       </div>
                     </>
                   )}
@@ -502,7 +505,7 @@ export default function DocumentManager() {
               {/* Aperçu du fichier si c'est un fichier et prévisualisable */}
               {'type' in selectedItem && previewUrl && (
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-                  <h4 className="text-md font-medium text-gray-900 dark:text-white mb-2">Aperçu</h4>
+                  <h4 className="text-md font-medium text-gray-900 dark:text-white mb-2"><UiText>Aperçu</UiText></h4>
                   <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden bg-white dark:bg-gray-800">
                     {selectedItem.type.startsWith('image/') ? (
                       <img 
@@ -521,8 +524,8 @@ export default function DocumentManager() {
                     ) : (
                       <div className="p-4 text-center text-gray-600 dark:text-gray-400">
                         <DocumentIcon className="h-16 w-16 mx-auto text-gray-400 mb-2" />
-                        Aperçu non disponible pour ce type de fichier
-                      </div>
+                        <UiText>Aperçu non disponible pour ce type de fichier
+                      </UiText></div>
                     )}
                   </div>
                 </div>
@@ -531,7 +534,7 @@ export default function DocumentManager() {
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
               <DocumentIcon className="h-16 w-16 mb-4" />
-              <p>Sélectionnez un dossier ou un fichier pour afficher les détails</p>
+              <p><UiText>Sélectionnez un dossier ou un fichier pour afficher les détails</UiText></p>
             </div>
           )}
         </div>

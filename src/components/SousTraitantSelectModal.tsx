@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useMemo } from 'react'
 import { Dialog } from '@headlessui/react'
 import { XMarkIcon, MagnifyingGlassIcon, CheckIcon } from '@heroicons/react/24/outline'
@@ -109,27 +111,27 @@ export default function SousTraitantSelectModal({
           </div>
 
           <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-            Sélectionner un sous-traitant
-          </Dialog.Title>
+            <UiText>Sélectionner un sous-traitant
+          </UiText></Dialog.Title>
 
           {loading ? (
             <div className="py-4 text-center text-gray-500 dark:text-gray-400">
-              Chargement des sous-traitants…
-            </div>
+              <UiText>Chargement des sous-traitants…
+            </UiText></div>
           ) : error ? (
             <div className="py-4 text-center text-red-500">{error}</div>
           ) : sousTraitants.length === 0 ? (
             <div className="py-4 text-center">
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                Aucun sous-traitant n&apos;est disponible.
-              </p>
+                <UiText>Aucun sous-traitant n&apos;est disponible.
+              </UiText></p>
               <Button
                 type="button"
                 variant="primary"
                 onClick={() => window.open('/sous-traitants', '_blank')}
               >
-                Créer un sous-traitant
-              </Button>
+                <UiText>Créer un sous-traitant
+              </UiText></Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-3">
@@ -141,7 +143,7 @@ export default function SousTraitantSelectModal({
                   type="text"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  placeholder="Rechercher un sous-traitant…"
+                  placeholder={tx("Rechercher un sous-traitant…")}
                   className="w-full pl-9 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors"
                 />
               </div>
@@ -150,7 +152,7 @@ export default function SousTraitantSelectModal({
               <div className="max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg divide-y divide-gray-100 dark:divide-gray-700">
                 {filteredST.length === 0 ? (
                   <p className="px-4 py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-                    Aucun résultat pour &quot;{search}&quot;
+                    <UiText>Aucun résultat pour &quot;</UiText>{search}&quot;
                   </p>
                 ) : (
                   filteredST.map(st => (
@@ -189,14 +191,14 @@ export default function SousTraitantSelectModal({
               {/* Compteur */}
               {search && (
                 <p className="text-xs text-gray-400 dark:text-gray-500 text-right">
-                  {filteredST.length} résultat{filteredST.length !== 1 ? 's' : ''}
+                  {filteredST.length} <UiText>résultat</UiText>{filteredST.length !== 1 ? 's' : ''}
                 </p>
               )}
 
               <div className="pt-2 flex justify-end space-x-3">
                 <Button type="button" variant="outline" onClick={onClose}>
-                  Annuler
-                </Button>
+                  <UiText>Annuler
+                </UiText></Button>
                 <Button
                   type="submit"
                   variant="primary"

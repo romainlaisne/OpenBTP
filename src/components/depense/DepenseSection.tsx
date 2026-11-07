@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { PlusIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline'
 import DepenseForm from './DepenseForm'
@@ -56,8 +57,8 @@ export default function DepenseSection({ chantierId }: DepenseSectionProps) {
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 flex items-center"
           >
             <PlusIcon className="h-5 w-5 mr-2" />
-            Ajouter une dépense
-          </button>
+            <UiText>Ajouter une dépense
+          </UiText></button>
         </div>
       )}
       
@@ -77,8 +78,8 @@ export default function DepenseSection({ chantierId }: DepenseSectionProps) {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-              Liste des dépenses
-            </h3>
+              <UiText>Liste des dépenses
+            </UiText></h3>
           </div>
           <div className="p-6">
             <DepenseList

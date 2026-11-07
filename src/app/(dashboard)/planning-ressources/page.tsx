@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -330,7 +331,7 @@ export default function PlanningRessourcesPage() {
         <div className="flex items-center gap-2">
           <UserIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Ouvriers</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Ouvriers</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{ouvriersInternes.length}</div>
           </div>
         </div>
@@ -376,8 +377,8 @@ export default function PlanningRessourcesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50/20 to-rose-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Planning des Ressources"
-        subtitle="Planification et affectation des ressources humaines avec drag & drop"
+        title={tx("Planning des Ressources")}
+        subtitle={tx("Planification et affectation des ressources humaines avec drag & drop")}
         icon={CalendarIcon}
         badgeColor="from-orange-600 via-rose-600 to-pink-700"
         gradientColor="from-orange-600/10 via-rose-600/10 to-pink-700/10"
@@ -400,7 +401,7 @@ export default function PlanningRessourcesPage() {
                   onClick={() => setExportMenuOpen(o => !o)}
                   disabled={isExporting}
                   className="inline-flex items-center px-2 py-2 bg-gradient-to-r from-rose-700 to-rose-800 hover:from-rose-800 hover:to-rose-900 disabled:opacity-60 text-white border-l border-white/20 transition-all duration-200"
-                  title="Choisir une ressource"
+                  title={tx("Choisir une ressource")}
                 >
                   <ChevronDownIcon className={`h-4 w-4 transition-transform duration-200 ${exportMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -420,8 +421,8 @@ export default function PlanningRessourcesPage() {
                     {ouvriersInternes.length > 0 && (
                       <>
                         <div className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-gray-700 mt-1">
-                          Ouvriers internes
-                        </div>
+                          <UiText>Ouvriers internes
+                        </UiText></div>
                         {ouvriersInternes.map(o => (
                           <button
                             key={o.id}

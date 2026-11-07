@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import {
   ChevronLeftIcon,
@@ -163,11 +164,11 @@ export default function MiniCalendarWidget() {
       {/* Information sur l&apos;intégration */}
       <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/20">
         <div className="text-sm text-gray-600 dark:text-gray-400">
-          <p className="font-medium mb-1">Intégration calendrier</p>
+          <p className="font-medium mb-1"><UiText>Intégration calendrier</UiText></p>
           <p className="text-xs">
-            L&apos;intégration directe avec iCloud n&apos;est pas disponible pour des raisons de sécurité. 
+            <UiText>L&apos;intégration directe avec iCloud n&apos;est pas disponible pour des raisons de sécurité. 
             Vous pouvez consulter votre calendrier Apple séparément.
-          </p>
+          </UiText></p>
         </div>
       </div>
     </div>

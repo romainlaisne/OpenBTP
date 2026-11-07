@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import type { CompanySettings } from '@/lib/pdf/pdf-generator'
 
 export interface BonRegieData {
@@ -33,10 +34,10 @@ export function generateBonRegieHTML(data: BonRegieData, companySettings: Compan
   const totalHeures = tempsChantier * nombreOuvriers
 
   const dateSignatureFormatee = data.dateSignature
-    ? new Date(data.dateSignature).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    ? new Date(data.dateSignature).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' })
     : ''
 
-  const dateGeneration = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  const dateGeneration = new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' })
 
   return `<!DOCTYPE html>
 <html lang="fr">

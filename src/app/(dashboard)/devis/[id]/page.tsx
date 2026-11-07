@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
@@ -526,7 +528,7 @@ export default function DevisDetailPage() {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+    return new Date(dateString).toLocaleDateString(intlLocale(getActiveLocale()), {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
@@ -534,7 +536,7 @@ export default function DevisDetailPage() {
   }
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat(intlLocale(getActiveLocale()), {
       style: 'currency',
       currency: 'EUR'
     }).format(amount)
@@ -572,7 +574,7 @@ export default function DevisDetailPage() {
           <button
             onClick={() => router.push('/devis')}
             className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-            title="Retour à la liste des devis"
+            title={tx("Retour à la liste des devis")}
           >
             <ArrowLeftIcon className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
@@ -590,8 +592,8 @@ export default function DevisDetailPage() {
               </span>
               {isExpired() && (
                 <span className="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold bg-red-500/90 text-white">
-                  Expiré
-                </span>
+                  <UiText>Expiré
+                </UiText></span>
               )}
             </div>
             
@@ -631,7 +633,7 @@ export default function DevisDetailPage() {
               <button
                 onClick={openChangeNatureModal}
                 className="inline-flex items-center gap-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
-                title="Changer en devis ou avenant"
+                title={tx("Changer en devis ou avenant")}
               >
                 <ArrowPathIcon className="h-4 w-4" />
                 <span className="hidden sm:inline">Changer la nature</span>
@@ -684,17 +686,17 @@ export default function DevisDetailPage() {
                 <span className="text-2xl">🏗️</span>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span>Chantier associé</span>
+                    <span><UiText>Chantier associé</UiText></span>
                     <span className="text-base font-bold text-orange-900 dark:text-orange-300">- {devis.chantier.nomChantier}</span>
                     <a
                       href={`/chantiers/${devis.chantier.chantierId}`}
                       className="inline-flex items-center justify-center p-1 text-orange-700 dark:text-orange-300 hover:text-orange-900 dark:hover:text-orange-100 hover:bg-orange-100 dark:hover:bg-orange-900/30 rounded-lg transition-colors"
-                      title="Voir le chantier"
+                      title={tx("Voir le chantier")}
                     >
                       <EyeIcon className="h-4 w-4" />
                     </a>
                   </div>
-                  <div className="text-xs font-normal text-gray-600 dark:text-gray-400">Cet avenant sera ajouté à l'état d'avancement de ce chantier</div>
+                  <div className="text-xs font-normal text-gray-600 dark:text-gray-400"><UiText>Cet avenant sera ajouté à l'état d'avancement de ce chantier</UiText></div>
                 </div>
               </div>
             </h2>
@@ -751,7 +753,7 @@ export default function DevisDetailPage() {
                 <StatusBadge statut={devis.statut} />
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-500 dark:text-gray-400 font-medium">Validité</span>
+                <span className="text-gray-500 dark:text-gray-400 font-medium"><UiText>Validité</UiText></span>
                 <span className={`font-semibold ${isExpired() ? 'text-red-600' : 'text-gray-900 dark:text-white'}`}>
                   {formatDate(devis.dateValidite)}
                 </span>
@@ -794,8 +796,8 @@ export default function DevisDetailPage() {
                   }`}
                 >
                   <CheckCircleIcon className="h-5 w-5" />
-                  Marquer comme accepté
-                </button>
+                  <UiText>Marquer comme accepté
+                </UiText></button>
 
                 <button
                   onClick={() => handleChangeStatus('REFUSE')}
@@ -807,8 +809,8 @@ export default function DevisDetailPage() {
                   }`}
                 >
                   <XCircleIcon className="h-5 w-5" />
-                  Marquer comme refusé
-                </button>
+                  <UiText>Marquer comme refusé
+                </UiText></button>
 
                 {devis.statut === 'REFUSE' && (
                   <button
@@ -816,8 +818,8 @@ export default function DevisDetailPage() {
                     className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold text-amber-700 dark:text-amber-300 bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/30 dark:to-amber-800/30 hover:from-amber-100 hover:to-amber-200 dark:hover:from-amber-900/50 dark:hover:to-amber-800/50 shadow hover:shadow-lg ring-2 ring-amber-300/50 dark:ring-amber-500/50 transition-all duration-300 transform hover:scale-[1.02]"
                   >
                     <ArrowUturnLeftIcon className="h-5 w-5" />
-                    Repasser en brouillon
-                  </button>
+                    <UiText>Repasser en brouillon
+                  </UiText></button>
                 )}
               </div>
             )}
@@ -841,8 +843,8 @@ export default function DevisDetailPage() {
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-gradient-to-br from-orange-500 to-red-600"></div>
-            Lignes du devis
-          </h2>
+            <UiText>Lignes du devis
+          </UiText></h2>
           <div className="overflow-x-auto -mx-6">
             <div className="inline-block min-w-full align-middle px-6">
               <table className="min-w-full">
@@ -852,7 +854,7 @@ export default function DevisDetailPage() {
                     <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"><UiText>Article</UiText></th>
                     <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"><UiText>Description</UiText></th>
                     <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"><UiText>Unité</UiText></th>
-                    <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Qté</th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"><UiText>Qté</UiText></th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Prix U.</th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Remise</th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Total</th>
@@ -909,7 +911,7 @@ export default function DevisDetailPage() {
               <div className="max-w-md w-full bg-gradient-to-br from-gray-50 to-white dark:from-gray-700/50 dark:to-gray-800/50 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50">
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-sm pb-3 border-b border-gray-200/50 dark:border-gray-600/50">
-                    <span className="text-gray-600 dark:text-gray-300 font-medium">Montant HT</span>
+                    <span className="text-gray-600 dark:text-gray-300 font-medium"><UiText>Montant HT</UiText></span>
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {formatCurrency(Number(devis.montantHT))}
                     </span>
@@ -943,19 +945,19 @@ export default function DevisDetailPage() {
                 className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-blue-800 dark:text-blue-300">
-                <span className="font-medium">Inclure les conditions générales de vente dans le PDF</span>
+                <span className="font-medium"><UiText>Inclure les conditions générales de vente dans le PDF</UiText></span>
                 <br />
                 <span className="text-blue-600/80 dark:text-blue-400/80">
-                  Template actif : « {cgvStatus.nom} ». Décochez si vous ne souhaitez pas les joindre à ce devis.
-                </span>
+                  Template actif : « {cgvStatus.nom} <UiText>». Décochez si vous ne souhaitez pas les joindre à ce devis.
+                </UiText></span>
               </span>
             </label>
           </div>
         ) : cgvStatus ? (
           <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-900/20 dark:to-amber-800/10 border border-amber-200/50 dark:border-amber-700/50 rounded-2xl p-5 backdrop-blur-sm shadow-xl">
             <p className="text-sm text-amber-800 dark:text-amber-300">
-              <span className="font-medium">Conditions générales :</span> aucun template CGV actif — le PDF sera généré sans conditions générales.
-              Pour en ajouter, créez et activez un template de catégorie « CGV » dans{' '}
+              <span className="font-medium"><UiText>Conditions générales :</UiText></span> <UiText>aucun template CGV actif — le PDF sera généré sans conditions générales.
+              Pour en ajouter, créez et activez un template de catégorie « CGV » dans</UiText>{' '}
               <Link href="/admin/templates-contrats" className="underline font-medium hover:text-amber-900 dark:hover:text-amber-200">
                 Administration → Templates de contrats
               </Link>.
@@ -972,8 +974,8 @@ export default function DevisDetailPage() {
               </div>
               <div className="p-6">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  Ce document sera considéré comme un devis ou un avenant. En brouillon uniquement.
-                </p>
+                  <UiText>Ce document sera considéré comme un devis ou un avenant. En brouillon uniquement.
+                </UiText></p>
                 <div className="space-y-4 mb-6">
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
@@ -994,18 +996,18 @@ export default function DevisDetailPage() {
                         onChange={() => setChangeNatureType('AVENANT')}
                         className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                       />
-                      <span className="font-medium text-gray-900 dark:text-white">Avenant</span>
+                      <span className="font-medium text-gray-900 dark:text-white"><UiText>Avenant</UiText></span>
                     </label>
                   </div>
                   {changeNatureType === 'AVENANT' && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Chantier associé</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Chantier associé</UiText></label>
                       <select
                         value={changeNatureChantierId}
                         onChange={(e) => setChangeNatureChantierId(e.target.value)}
                         className="block w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
-                        <option value="">Choisir un chantier...</option>
+                        <option value=""><UiText>Choisir un chantier...</UiText></option>
                         {chantiers.map((chantier) => (
                           <option key={chantier.id} value={chantier.chantierId ?? chantier.id}>
                             {chantier.nomChantier} {chantier.adresse ? `- ${chantier.adresse}` : ''}
@@ -1045,8 +1047,8 @@ export default function DevisDetailPage() {
               </div>
               <div className="p-6">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  Choisissez la nature du nouveau document (devis ou avenant). Le contenu et les lignes seront copiés.
-                </p>
+                  <UiText>Choisissez la nature du nouveau document (devis ou avenant). Le contenu et les lignes seront copiés.
+                </UiText></p>
                 <div className="space-y-4 mb-6">
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
@@ -1067,18 +1069,18 @@ export default function DevisDetailPage() {
                         onChange={() => setDuplicateAsType('AVENANT')}
                         className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                       />
-                      <span className="font-medium text-gray-900 dark:text-white">Avenant</span>
+                      <span className="font-medium text-gray-900 dark:text-white"><UiText>Avenant</UiText></span>
                     </label>
                   </div>
                   {duplicateAsType === 'AVENANT' && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Chantier associé</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Chantier associé</UiText></label>
                       <select
                         value={duplicateChantierId}
                         onChange={(e) => setDuplicateChantierId(e.target.value)}
                         className="block w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
-                        <option value="">Choisir un chantier...</option>
+                        <option value=""><UiText>Choisir un chantier...</UiText></option>
                         {chantiers.map((chantier) => (
                           <option key={chantier.id} value={chantier.chantierId ?? chantier.id}>
                             {chantier.nomChantier} {chantier.adresse ? `- ${chantier.adresse}` : ''}
@@ -1124,14 +1126,14 @@ export default function DevisDetailPage() {
                 {devis.typeDevis === 'DEVIS' ? (
                   <>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      Sélectionnez le chantier auquel associer cette commande :
-                    </p>
+                      <UiText>Sélectionnez le chantier auquel associer cette commande :
+                    </UiText></p>
                     <select
                       value={selectedChantierId}
                       onChange={(e) => setSelectedChantierId(e.target.value)}
                       className="block w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-6 transition-all"
                     >
-                      <option value="">Choisir un chantier...</option>
+                      <option value=""><UiText>Choisir un chantier...</UiText></option>
                       {chantiers.map((chantier) => (
                         <option key={chantier.id} value={chantier.id}>
                           {chantier.nomChantier} {chantier.adresse && `- ${chantier.adresse}`}
@@ -1142,8 +1144,8 @@ export default function DevisDetailPage() {
                 ) : (
                   <>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      Cet avenant sera ajouté comme ligne dans l'état d'avancement du chantier :
-                    </p>
+                      <UiText>Cet avenant sera ajouté comme ligne dans l'état d'avancement du chantier :
+                    </UiText></p>
                     <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 mb-6 border border-orange-200 dark:border-orange-700">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-2xl">🏗️</span>
@@ -1158,8 +1160,8 @@ export default function DevisDetailPage() {
                       )}
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
-                      Une ligne avenant sera créée dans l'état d'avancement "Brouillon" avec la description "{devis.numeroDevis}{devis.reference ? ` - ${devis.reference}` : ''}" et le montant HT. Le PDF sera sauvegardé dans les documents du chantier.
-                    </p>
+                      <UiText>Une ligne avenant sera créée dans l'état d'avancement "Brouillon" avec la description "</UiText>{devis.numeroDevis}{devis.reference ? ` - ${devis.reference}` : ''}<UiText>" et le montant HT. Le PDF sera sauvegardé dans les documents du chantier.
+                    </UiText></p>
                   </>
                 )}
                 <div className="flex justify-end gap-3">

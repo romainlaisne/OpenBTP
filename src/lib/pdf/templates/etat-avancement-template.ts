@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { CompanySettings } from '../pdf-generator'
 
 export interface EtatAvancementData {
@@ -82,10 +83,10 @@ function safeNum(n: number): number {
   return typeof n === 'number' && !Number.isNaN(n) ? n : 0
 }
 function fmtEuro(n: number): string {
-  return safeNum(n).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+  return safeNum(n).toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
 }
 function fmtQty(n: number): string {
-  return safeNum(n).toLocaleString('fr-FR')
+  return safeNum(n).toLocaleString(intlLocale(getActiveLocale()))
 }
 
 export function generateEtatAvancementHTML(
@@ -589,7 +590,7 @@ export function generateEtatAvancementHTML(
             </div>
             
             <div class="project-info">
-                <div><span class="label">Date:</span> ${data.date instanceof Date && !Number.isNaN(data.date.getTime()) ? data.date.toLocaleDateString('fr-FR') : '-'}</div>
+                <div><span class="label">Date:</span> ${data.date instanceof Date && !Number.isNaN(data.date.getTime()) ? data.date.toLocaleDateString(intlLocale(getActiveLocale())) : '-'}</div>
                 ${data.mois ? `<div><span class="label">Période:</span> ${data.mois}</div>` : ''}
                 <div><span class="label">Chantier:</span> ${data.chantier.chantierId}</div>
                 <div><span class="label">Statut:</span> <span class="status-badge ${data.estFinalise ? 'status-finalise' : 'status-brouillon'}">${data.estFinalise ? '✓ Finalisé' : '⚠ Brouillon'}</span></div>
@@ -753,7 +754,7 @@ export function generateEtatAvancementHTML(
         <!-- Pied de page -->
         <div class="footer">
             <div class="footer-left">
-                Document généré le ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                Document généré le ${new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString(intlLocale(getActiveLocale()), { hour: '2-digit', minute: '2-digit' })}
             </div>
             <div class="footer-right">
                 ${companySettings?.nomEntreprise || 'Nom Entreprise'}

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -31,11 +33,12 @@ interface CreateDevisPayload {
 
 // GET /api/devis - Liste tous les devis avec pagination
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -104,7 +107,7 @@ export async function GET(request: NextRequest) {
 
     const totalPages = Math.ceil(total / pageSize)
 
-    return NextResponse.json({
+    return localizedJson({
       devis,
       pagination: {
         page,
@@ -115,7 +118,7 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error('Erreur lors de la récupération des devis:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des devis' },
       { status: 500 }
     )
@@ -124,11 +127,12 @@ export async function GET(request: NextRequest) {
 
 // POST /api/devis - Créer un nouveau devis
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = (await request.json()) as CreateDevisPayload
@@ -147,7 +151,7 @@ export async function POST(request: NextRequest) {
     } = body
 
     if (!clientId) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le client est obligatoire' },
         { status: 400 }
       )
@@ -155,7 +159,7 @@ export async function POST(request: NextRequest) {
 
     // Validation selon le type
     if (typeDevis === 'AVENANT' && !chantierId) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le chantier est obligatoire pour un avenant' },
         { status: 400 }
       )
@@ -233,7 +237,7 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(devis, { status: 201 })
+    return localizedJson(devis, { status: 201 })
   } catch (error) {
     const errorId = crypto.randomUUID()
     const prismaCode =
@@ -257,7 +261,7 @@ export async function POST(request: NextRequest) {
       : 'Une erreur inattendue empêche la création du devis. Réessayez ou contactez le support.'
 
     console.error(`[devis:create:${errorId}] Erreur lors de la création du devis:`, error)
-    return NextResponse.json(
+    return localizedJson(
       {
         error: message,
         reference: errorId,

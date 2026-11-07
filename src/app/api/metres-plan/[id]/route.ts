@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -12,11 +14,12 @@ export async function GET(
   _request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const metrePlan = await prisma.metrePlan.findUnique({
@@ -32,13 +35,13 @@ export async function GET(
     })
 
     if (!metrePlan) {
-      return NextResponse.json({ error: 'Métré sur plan non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Métré sur plan non trouvé' }, { status: 404 })
     }
 
-    return NextResponse.json(metrePlan)
+    return localizedJson(metrePlan)
   } catch (error) {
     console.error('Erreur GET /api/metres-plan/[id]:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du métré sur plan' },
       { status: 500 }
     )
@@ -50,11 +53,12 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
@@ -76,10 +80,10 @@ export async function PUT(
       },
     })
 
-    return NextResponse.json(metrePlan)
+    return localizedJson(metrePlan)
   } catch (error) {
     console.error('Erreur PUT /api/metres-plan/[id]:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour du métré sur plan' },
       { status: 500 }
     )
@@ -91,11 +95,12 @@ export async function DELETE(
   _request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     await prisma.metrePlan.delete({ where: { id } })
@@ -109,15 +114,15 @@ export async function DELETE(
       // On continue même si la suppression du dossier échoue
     }
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur DELETE /api/metres-plan/[id]:', error)
 
     if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
-      return NextResponse.json({ error: 'Métré sur plan non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Métré sur plan non trouvé' }, { status: 404 })
     }
 
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du métré sur plan' },
       { status: 500 }
     )

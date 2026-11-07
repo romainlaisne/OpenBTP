@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import type { ComponentType, SVGProps } from 'react'
@@ -196,7 +198,7 @@ export default function DevisPage() {
   }, [keywordFilter, clientFilter, statutFilter, currentPage])
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+    return new Date(dateString).toLocaleDateString(intlLocale(getActiveLocale()), {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
@@ -204,7 +206,7 @@ export default function DevisPage() {
   }
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat(intlLocale(getActiveLocale()), {
       style: 'currency',
       currency: 'EUR'
     }).format(amount)
@@ -245,8 +247,8 @@ export default function DevisPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <PageHeader
-        title="Devis"
-        subtitle="Gérez vos devis clients"
+        title={tx("Devis")}
+        subtitle={tx("Gérez vos devis clients")}
         icon={DocumentTextIcon}
         badgeColor="from-orange-600 via-orange-700 to-red-700"
         gradientColor="from-orange-600/10 via-orange-700/10 to-red-700/10"
@@ -276,7 +278,7 @@ export default function DevisPage() {
               type="text"
               value={keywordInput}
               onChange={e => setKeywordInput(e.target.value)}
-              placeholder="Rechercher (numéro, référence, client, chantier...)"
+              placeholder={tx("Rechercher (numéro, référence, client, chantier...)")}
               className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 pl-9 pr-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
             />
           </div>
@@ -286,9 +288,9 @@ export default function DevisPage() {
             options={clientOptions}
             value={clientFilter}
             onChange={setClientFilter}
-            placeholder="Sélectionner un client"
-            searchPlaceholder="Rechercher un client..."
-            emptyMessage="Aucun client trouvé"
+            placeholder={tx("Sélectionner un client")}
+            searchPlaceholder={tx("Rechercher un client...")}
+            emptyMessage={tx("Aucun client trouvé")}
             showAllOption={true}
             allOptionLabel="Tous les clients"
             colorScheme="orange"
@@ -299,9 +301,9 @@ export default function DevisPage() {
             options={statutOptions}
             value={statutFilter}
             onChange={setStatutFilter}
-            placeholder="Sélectionner un statut"
-            searchPlaceholder="Rechercher un statut..."
-            emptyMessage="Aucun statut trouvé"
+            placeholder={tx("Sélectionner un statut")}
+            searchPlaceholder={tx("Rechercher un statut...")}
+            emptyMessage={tx("Aucun statut trouvé")}
             showAllOption={true}
             allOptionLabel="Tous les statuts"
             colorScheme="orange"
@@ -319,26 +321,26 @@ export default function DevisPage() {
                   <UiText>Type</UiText>
                 </th>
                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Numéro
-                </th>
+                  <UiText>Numéro
+                </UiText></th>
                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Client / Chantier
-                </th>
+                  <UiText>Client / Chantier
+                </UiText></th>
                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Date création
-                </th>
+                  <UiText>Date création
+                </UiText></th>
                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Validité
-                </th>
+                  <UiText>Validité
+                </UiText></th>
                 <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   <UiText>Statut</UiText>
                 </th>
                 <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Montant HT
-                </th>
+                  <UiText>Montant HT
+                </UiText></th>
                 <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Montant TTC
-                </th>
+                  <UiText>Montant TTC
+                </UiText></th>
                 <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   <UiText>Actions</UiText>
                 </th>
@@ -358,8 +360,8 @@ export default function DevisPage() {
               <tr>
                 <td colSpan={9} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
                   <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                  <p className="text-lg font-medium">Aucun devis trouvé</p>
-                  <p className="mt-1">Créez votre premier devis pour commencer</p>
+                  <p className="text-lg font-medium"><UiText>Aucun devis trouvé</UiText></p>
+                  <p className="mt-1"><UiText>Créez votre premier devis pour commencer</UiText></p>
                 </td>
               </tr>
             ) : (
@@ -420,8 +422,8 @@ export default function DevisPage() {
                       </div>
                       {expired && (
                         <div className="text-xs font-bold text-red-600 dark:text-red-400">
-                          Expiré
-                        </div>
+                          <UiText>Expiré
+                        </UiText></div>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -441,7 +443,7 @@ export default function DevisPage() {
                         <Link
                           href={`/devis/${devis.id}`}
                           className="inline-flex items-center justify-center p-2 rounded-lg text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/20 transition-all duration-200"
-                          title="Voir le devis"
+                          title={tx("Voir le devis")}
                         >
                           <EyeIcon className="h-5 w-5" />
                         </Link>
@@ -450,7 +452,7 @@ export default function DevisPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center p-2 rounded-lg text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/20 transition-all duration-200"
-                          title="Télécharger PDF"
+                          title={tx("Télécharger PDF")}
                         >
                           <FileDown className="h-5 w-5" />
                         </a>
@@ -459,7 +461,7 @@ export default function DevisPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center p-2 rounded-lg text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
-                          title="Télécharger PDF sans prix"
+                          title={tx("Télécharger PDF sans prix")}
                         >
                           <FileX className="h-5 w-5" />
                         </a>
@@ -488,8 +490,8 @@ export default function DevisPage() {
             <p className="text-sm text-gray-700 dark:text-gray-300">
               Affichage de <span className="font-medium">{(currentPage - 1) * pageSize + 1}</span> à{' '}
               <span className="font-medium">{Math.min(currentPage * pageSize, total)}</span> sur{' '}
-              <span className="font-medium">{total}</span> devis
-            </p>
+              <span className="font-medium">{total}</span> <UiText>devis
+            </UiText></p>
           </div>
         )}
       </div>

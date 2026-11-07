@@ -37,8 +37,8 @@ export default function EditRapportPage(props: { params: Promise<{ chantierId: s
         </div>
         
         <p className="text-center text-gray-500 dark:text-gray-400 mt-4">
-          Redirection vers l'éditeur de rapport en cours...
-        </p>
+          <UiText>Redirection vers l'éditeur de rapport en cours...
+        </UiText></p>
       </div>
     </div>
   );

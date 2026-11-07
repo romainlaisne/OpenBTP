@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,14 +9,15 @@ import { ensureDirectoryExists } from '@/lib/fileUploadUtils'
 import fs from 'fs'
 
 export async function POST(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     const { id } = await props.params
 
     const formData = await request.formData()
     const file = formData.get('file') as File | null
-    if (!file) return NextResponse.json({ error: 'Fichier requis' }, { status: 400 })
+    if (!file) return localizedJson({ error: 'Fichier requis' }, { status: 400 })
 
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'tasks')
     await ensureDirectoryExists(uploadsDir)
@@ -34,9 +37,9 @@ export async function POST(request: NextRequest, props: { params: Promise<{ id: 
       }
     })
 
-    return NextResponse.json(created, { status: 201 })
+    return localizedJson(created, { status: 201 })
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 

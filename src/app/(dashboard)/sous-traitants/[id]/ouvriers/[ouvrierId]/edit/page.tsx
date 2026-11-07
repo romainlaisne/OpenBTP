@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
@@ -144,7 +145,7 @@ export default function EditOuvrierPage(
             id="nom"
             name="nom"
             type="text"
-            label="Nom"
+            label={tx("Nom")}
             required
             value={formData.nom}
             onChange={handleChange}
@@ -154,7 +155,7 @@ export default function EditOuvrierPage(
             id="prenom"
             name="prenom"
             type="text"
-            label="Prénom"
+            label={tx("Prénom")}
             required
             value={formData.prenom}
             onChange={handleChange}
@@ -164,7 +165,7 @@ export default function EditOuvrierPage(
             id="email"
             name="email"
             type="email"
-            label="Email"
+            label={tx("Email")}
             value={formData.email}
             onChange={handleChange}
           />
@@ -173,7 +174,7 @@ export default function EditOuvrierPage(
             id="telephone"
             name="telephone"
             type="tel"
-            label="Téléphone"
+            label={tx("Téléphone")}
             value={formData.telephone}
             onChange={handleChange}
           />
@@ -182,7 +183,7 @@ export default function EditOuvrierPage(
             id="dateEntree"
             name="dateEntree"
             type="date"
-            label="Date d'entrée"
+            label={tx("Date d'entrée")}
             value={formData.dateEntree}
             onChange={handleChange}
           />
@@ -191,7 +192,7 @@ export default function EditOuvrierPage(
             id="poste"
             name="poste"
             type="text"
-            label="Poste"
+            label={tx("Poste")}
             value={formData.poste}
             onChange={handleChange}
           />
@@ -219,8 +220,8 @@ export default function EditOuvrierPage(
               </div>
             </div>
             <div className="mt-3 text-sm text-gray-700 dark:text-gray-300">
-              Lien d'accès public:
-              <div className="flex items-center gap-3 mt-1">
+              <UiText>Lien d'accès public:
+              </UiText><div className="flex items-center gap-3 mt-1">
                 <a href={portalLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                   {portalLink}
                 </a>

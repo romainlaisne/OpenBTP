@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -97,7 +99,7 @@ export default function MetresPage() {
             <ChartBarIcon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Validés</div>
+            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase"><UiText>Validés</UiText></div>
             <div className="text-sm font-black text-gray-900 dark:text-white">{stats.valides}</div>
           </div>
         </div>
@@ -130,8 +132,8 @@ export default function MetresPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Métrés soumis"
-        subtitle="Gestion et validation des métrés soumis par les sous-traitants"
+        title={tx("Métrés soumis")}
+        subtitle={tx("Gestion et validation des métrés soumis par les sous-traitants")}
         icon={ChartBarIcon}
         badgeColor="from-purple-600 via-indigo-600 to-blue-700"
         gradientColor="from-purple-600/10 via-indigo-600/10 to-blue-700/10"
@@ -146,18 +148,18 @@ export default function MetresPage() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
               <div className="flex items-center gap-2 sm:gap-4">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300 shrink-0">
-                  Filtrer par statut :
-                </label>
+                  <UiText>Filtrer par statut :
+                </UiText></label>
                 <select
                   value={filterStatut}
                   onChange={(e) => setFilterStatut(e.target.value)}
                   className="flex-1 sm:flex-initial px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="TOUS">Tous</option>
+                  <option value="TOUS"><UiText>Tous</UiText></option>
                   <option value="SOUMIS">Soumis</option>
-                  <option value="PARTIELLEMENT_VALIDE">Partiellement validés</option>
-                  <option value="VALIDE">Validés</option>
-                  <option value="REJETE">Rejetés</option>
+                  <option value="PARTIELLEMENT_VALIDE"><UiText>Partiellement validés</UiText></option>
+                  <option value="VALIDE"><UiText>Validés</UiText></option>
+                  <option value="REJETE"><UiText>Rejetés</UiText></option>
                   <option value="BROUILLON">Brouillons</option>
                 </select>
               </div>
@@ -185,8 +187,8 @@ export default function MetresPage() {
               <div className="p-12 text-center">
                 <ChartBarIcon className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  Aucun métré trouvé
-                </h3>
+                  <UiText>Aucun métré trouvé
+                </UiText></h3>
                 <p className="text-gray-600 dark:text-gray-400">
                   {filterStatut === 'TOUS' 
                     ? 'Aucun métré n\'a encore été soumis.'
@@ -211,11 +213,11 @@ export default function MetresPage() {
                       </div>
                       <div className="mt-1 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4 text-sm text-gray-500 dark:text-gray-400">
                         <span>
-                          <span className="font-medium">Sous-traitant :</span> {metre.soustraitant.nom}
+                          <span className="font-medium"><UiText>Sous-traitant :</UiText></span> {metre.soustraitant.nom}
                         </span>
                         <span>
                           <span className="font-medium">Date :</span>{' '}
-                          {new Date(metre.createdAt).toLocaleDateString('fr-FR', {
+                          {new Date(metre.createdAt).toLocaleDateString(intlLocale(getActiveLocale()), {
                             day: 'numeric',
                             month: 'long',
                             year: 'numeric',
@@ -242,8 +244,8 @@ export default function MetresPage() {
                         href={`/chantiers/${metre.chantier.chantierId}`}
                         className="inline-flex flex-1 sm:flex-initial items-center justify-center px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm text-sm font-medium"
                       >
-                        Chantier
-                      </Link>
+                        <UiText>Chantier
+                      </UiText></Link>
                     </div>
                   </div>
                 </div>

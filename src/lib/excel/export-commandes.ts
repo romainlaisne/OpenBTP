@@ -1,3 +1,5 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import ExcelJS from 'exceljs';
 import { 
   createWorkbook, 
@@ -124,7 +126,7 @@ async function createInfoSheet(
     const commandeData = [
       ['Référence', commandeInfo.reference || 'Non spécifiée'],
       ['ID Commande', commandeInfo.id.toString()],
-      ['Date de commande', new Date(commandeInfo.dateCommande).toLocaleDateString('fr-FR')],
+      ['Date de commande', new Date(commandeInfo.dateCommande).toLocaleDateString(intlLocale(getActiveLocale()))],
       ['Statut', commandeInfo.statut],
       ['Sous-traitant', commandeInfo.soustraitantNom || 'Non spécifié'],
       ['Description', commandeInfo.description || 'Non spécifiée'],
@@ -166,7 +168,7 @@ async function createLignesSheet(
     console.log('📋 createLignesSheet - Début')
     
     // En-têtes
-    const headers = ['Article', 'Description', 'Quantité', 'Unité', 'Prix Unitaire', 'Total'];
+    const headers = [tx('Article'), tx('Description'), tx('Quantité'), tx('Unité'), tx('Prix Unitaire'), tx('Total')];
     
     console.log('📝 Ajout des en-têtes...')
     headers.forEach((header, index) => {

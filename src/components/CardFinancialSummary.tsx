@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   Card,
@@ -74,7 +76,7 @@ export default function CardFinancialSummary({
 
   // Fonction pour formater les montants en euros
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat(intlLocale(getActiveLocale()), {
       style: 'currency',
       currency: 'EUR'
     }).format(amount);
@@ -322,7 +324,7 @@ export default function CardFinancialSummary({
         </CardHeader>
         <CardContent>
           <div className="flex justify-center items-center h-40">
-            <p className="text-gray-500">Chargement des données financières...</p>
+            <p className="text-gray-500"><UiText>Chargement des données financières...</UiText></p>
           </div>
         </CardContent>
       </Card>
@@ -448,13 +450,13 @@ export default function CardFinancialSummary({
                 <BanknotesIcon className="h-6 w-6 text-blue-700" />
               </div>
             </div>
-            <p className="text-xs text-blue-600 mt-2">Total des &eacute;tats d&apos;avancement</p>
+            <p className="text-xs text-blue-600 mt-2"><UiText>Total des &eacute;tats d&apos;avancement</UiText></p>
           </div>
           
           <div className="border rounded-lg p-4 bg-red-50">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="text-sm font-medium text-red-700 mb-2">Dépenses</h3>
+                <h3 className="text-sm font-medium text-red-700 mb-2"><UiText>Dépenses</UiText></h3>
                 <p className="text-2xl font-bold text-red-900">{formatCurrency(financialData.totalExpenses)}</p>
               </div>
               <div className="bg-red-100 p-2 rounded-full">
@@ -462,16 +464,16 @@ export default function CardFinancialSummary({
               </div>
             </div>
             <p className="text-xs text-red-600 mt-2">
-              Dépenses manuelles: {formatCurrency(financialData.manualExpenses)} <br/>
-              États sous-traitants: {formatCurrency(financialData.soustraitantExpenses)} <br/>
-              Coût matière estimé: {formatCurrency(financialData.coutMatiere)}
+              <UiText>Dépenses manuelles: </UiText>{formatCurrency(financialData.manualExpenses)} <br/>
+              <UiText>États sous-traitants: </UiText>{formatCurrency(financialData.soustraitantExpenses)} <br/>
+              <UiText>Coût matière estimé: </UiText>{formatCurrency(financialData.coutMatiere)}
             </p>
           </div>
           
           <div className="border rounded-lg p-4 bg-green-50">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="text-sm font-medium text-green-700 mb-2">Résultat Net</h3>
+                <h3 className="text-sm font-medium text-green-700 mb-2"><UiText>Résultat Net</UiText></h3>
                 <p className={`text-2xl font-bold ${financialData.netResult >= 0 ? 'text-green-900' : 'text-red-900'}`}>
                   {formatCurrency(financialData.netResult)}
                 </p>
@@ -480,7 +482,7 @@ export default function CardFinancialSummary({
                 <ArrowTrendingUpIcon className="h-6 w-6 text-green-700" />
               </div>
             </div>
-            <p className="text-xs text-green-600 mt-2">Recettes - Dépenses</p>
+            <p className="text-xs text-green-600 mt-2"><UiText>Recettes - Dépenses</UiText></p>
           </div>
           
           <div className="border rounded-lg p-4 bg-purple-50">
@@ -495,17 +497,17 @@ export default function CardFinancialSummary({
                 <ReceiptPercentIcon className="h-6 w-6 text-purple-700" />
               </div>
             </div>
-            <p className="text-xs text-purple-600 mt-2">Pourcentage du résultat net sur les recettes</p>
+            <p className="text-xs text-purple-600 mt-2"><UiText>Pourcentage du résultat net sur les recettes</UiText></p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           {/* Répartition commande de base / avenants */}
           <div className="border rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-4">Répartition Commande / Avenants</h3>
+            <h3 className="text-lg font-semibold mb-4"><UiText>Répartition Commande / Avenants</UiText></h3>
             <div className="flex flex-col space-y-4">
               <div className="flex justify-between items-center">
-                <span className="font-medium">Commande de base:</span>
+                <span className="font-medium"><UiText>Commande de base:</UiText></span>
                 <span className="font-bold">{formatCurrency(financialData.totalCommandeBase)}</span>
               </div>
               <div className="flex justify-between items-center">
@@ -525,20 +527,20 @@ export default function CardFinancialSummary({
 
           {/* Répartition des dépenses par type */}
           <div className="border rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-4">Répartition des dépenses</h3>
+            <h3 className="text-lg font-semibold mb-4"><UiText>Répartition des dépenses</UiText></h3>
             {financialData.totalExpenses > 0 ? (
               <div className="flex flex-col space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium">Dépenses manuelles:</span>
+                  <span className="font-medium"><UiText>Dépenses manuelles:</UiText></span>
                   <span className="font-bold">{formatCurrency(financialData.manualExpenses)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="font-medium">États sous-traitants:</span>
+                  <span className="font-medium"><UiText>États sous-traitants:</UiText></span>
                   <span className="font-bold">{formatCurrency(financialData.soustraitantExpenses)}</span>
                 </div>
                 <div className="flex justify-between items-center gap-2">
                   <span className="font-medium">
-                    Coût matière{' '}
+                    <UiText>Coût matière</UiText>{' '}
                     <span className="text-xs text-gray-500">
                       {poseUniquement ? '(pose seule — marchandise fournie)' : '(estimé)'}
                     </span>
@@ -547,8 +549,8 @@ export default function CardFinancialSummary({
                   <span className="flex items-center gap-2">
                     {lignesATraiter > 0 ? (
                       <span className="text-sm font-medium text-amber-700 dark:text-amber-400">
-                        non renseigné — {lignesATraiter} ligne(s) à catégoriser
-                      </span>
+                        <UiText>non renseigné — </UiText>{lignesATraiter} <UiText>ligne(s) à catégoriser
+                      </UiText></span>
                     ) : (
                       <span className="font-bold">{formatCurrency(financialData.coutMatiere)}</span>
                     )}
@@ -581,22 +583,22 @@ export default function CardFinancialSummary({
               </div>
             ) : (
               <div className="flex flex-col justify-center items-center gap-3 h-60">
-                <p className="text-gray-500">Aucune dépense enregistrée</p>
+                <p className="text-gray-500"><UiText>Aucune dépense enregistrée</UiText></p>
                 {/* Sans cette porte de sortie, un chantier sans aucune dépense
                     n'offrirait jamais d'accès à la saisie du coût matière. */}
                 {peutSaisirMatiere && lignesATraiter > 0 && (
                   <>
                     <p className="text-xs text-amber-700 dark:text-amber-400 text-center px-4">
-                      {lignesATraiter} ligne(s) facturée(s) n’ont pas de coût matière renseigné :
+                      {lignesATraiter} <UiText>ligne(s) facturée(s) n’ont pas de coût matière renseigné :
                       la marge affichée est donc surévaluée.
-                    </p>
+                    </UiText></p>
                     <button
                       type="button"
                       onClick={() => setModaleMatiereOuverte(true)}
                       className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
                     >
-                      Renseigner le coût matière
-                    </button>
+                      <UiText>Renseigner le coût matière
+                    </UiText></button>
                   </>
                 )}
               </div>
@@ -605,7 +607,7 @@ export default function CardFinancialSummary({
 
           {/* Répartition des dépenses par catégorie */}
           <div className="border rounded-lg p-4 md:col-span-2">
-            <h3 className="text-lg font-semibold mb-4">Répartition des dépenses par catégorie</h3>
+            <h3 className="text-lg font-semibold mb-4"><UiText>Répartition des dépenses par catégorie</UiText></h3>
             {depensesByCategory.length > 0 ? (
               <div className="flex flex-col h-full">
                 <div className="h-60">
@@ -630,12 +632,12 @@ export default function CardFinancialSummary({
                   />
                 </div>
                 <div className="mt-4 text-center text-sm text-gray-500">
-                  {depensesByCategory.length} catégorie(s) de dépenses
-                </div>
+                  {depensesByCategory.length} <UiText>catégorie(s) de dépenses
+                </UiText></div>
               </div>
             ) : (
               <div className="flex justify-center items-center h-60">
-                <p className="text-gray-500">Aucune dépense enregistrée</p>
+                <p className="text-gray-500"><UiText>Aucune dépense enregistrée</UiText></p>
               </div>
             )}
           </div>
@@ -644,14 +646,14 @@ export default function CardFinancialSummary({
       <CardFooter className="flex justify-between border-t pt-4">
         <div className="flex flex-col space-y-1">
           <p className="text-sm text-muted-foreground">
-            Donn&eacute;es calcul&eacute;es &agrave; partir de {etatsAvancement.length} &eacute;tat(s) d&apos;avancement, {etatsAvancementSoustraitant.length} &eacute;tat(s) sous-traitant et {depenses.length} d&eacute;pense(s)
+            Donn&eacute;es calcul&eacute;es &agrave; partir de {etatsAvancement.length} <UiText>&eacute;tat(s) d&apos;avancement, </UiText>{etatsAvancementSoustraitant.length} <UiText>&eacute;tat(s) sous-traitant et </UiText>{depenses.length} d&eacute;pense(s)
           </p>
           <p className="text-xs text-muted-foreground">
-            Dernière mise à jour: {new Date(lastUpdate).toLocaleTimeString('fr-FR')}
+            <UiText>Dernière mise à jour: </UiText>{new Date(lastUpdate).toLocaleTimeString(intlLocale(getActiveLocale()))}
           </p>
         </div>
         <p className="text-sm text-muted-foreground">
-          Chantier: {chantierInfo.nomChantier}
+          <UiText>Chantier: </UiText>{chantierInfo.nomChantier}
         </p>
       </CardFooter>
     </Card>

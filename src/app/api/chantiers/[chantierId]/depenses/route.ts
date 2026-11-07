@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -14,6 +16,7 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -21,7 +24,7 @@ export async function GET(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -33,10 +36,10 @@ export async function GET(
       ORDER BY date DESC
     `
 
-    return NextResponse.json(depenses)
+    return localizedJson(depenses)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des dépenses' },
       { status: 500 }
     )
@@ -48,6 +51,7 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -55,7 +59,7 @@ export async function POST(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -73,7 +77,7 @@ export async function POST(
     
     // Vérifier les champs obligatoires
     if (!date || isNaN(montant) || !description || !categorie) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Tous les champs obligatoires doivent être remplis' },
         { status: 400 }
       )
@@ -120,7 +124,7 @@ export async function POST(
         justificatifUrl = document.url
       } catch (error) {
         console.error('Erreur lors du traitement du justificatif:', error)
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Erreur lors du traitement du justificatif' },
           { status: 500 }
         )
@@ -170,10 +174,10 @@ export async function POST(
     
     const depense = newDepenses[0]
 
-    return NextResponse.json(depense, { status: 201 })
+    return localizedJson(depense, { status: 201 })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de la dépense' },
       { status: 500 }
     )

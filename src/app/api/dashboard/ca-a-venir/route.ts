@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
@@ -5,10 +7,11 @@ import { prisma } from '@/lib/prisma/client'
 
 // GET /api/dashboard/ca-a-venir - Détail du chiffre d'affaires à venir par chantier
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer les chantiers actifs avec leurs commandes et états d'avancement
@@ -86,10 +89,10 @@ export async function GET() {
       { totalCommandes: 0, montantFacture: 0, caAvenir: 0 }
     )
 
-    return NextResponse.json({ lignes, totaux })
+    return localizedJson({ lignes, totaux })
 
   } catch (error) {
     console.error('Erreur CA à venir:', error)
-    return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur interne du serveur' }, { status: 500 })
   }
 }

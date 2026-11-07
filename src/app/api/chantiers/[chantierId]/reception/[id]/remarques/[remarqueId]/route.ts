@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { getServerSession } from 'next-auth';
@@ -43,6 +45,7 @@ export async function PATCH(
     params: Promise<{ chantierId: string; id: string; remarqueId: string }> 
   }
 ) {
+  await bindRequestLocale()
   try {
     // Attendre la Promise params
     const resolvedParams = await params;
@@ -54,7 +57,7 @@ export async function PATCH(
     
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       );
@@ -66,7 +69,7 @@ export async function PATCH(
     });
 
     if (!remarque) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Remarque non trouvée' },
         { status: 404 }
       );
@@ -86,7 +89,7 @@ export async function PATCH(
       console.log(`Remarque ${remarqueId} validée`);
     } else if (action === 'rejeter') {
       if (!raisonRejet) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'La raison du rejet est requise' },
           { status: 400 }
         );
@@ -98,7 +101,7 @@ export async function PATCH(
       });
       console.log(`Remarque ${remarqueId} rejetée avec raison: ${raisonRejet}`);
     } else {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Action non valide' },
         { status: 400 }
       );
@@ -110,10 +113,10 @@ export async function PATCH(
       include: { photos: true, tags: true }
     });
 
-    return NextResponse.json(formatBigIntValues(remarqueUpdated));
+    return localizedJson(formatBigIntValues(remarqueUpdated));
   } catch (error) {
     console.error('Erreur de mise à jour de remarque (PATCH):', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la remarque', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
@@ -128,12 +131,13 @@ export async function PUT(
     params: Promise<{ chantierId: string; id: string; remarqueId: string }> 
   }
 ) {
+  await bindRequestLocale()
   try {
     const { chantierId, id: receptionId, remarqueId } = await paramsPromise;
 
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
     const userId = session.user.id;
 
@@ -143,7 +147,7 @@ export async function PUT(
     });
 
     if (!existingRemarque) {
-      return NextResponse.json({ error: 'Remarque non trouvée ou non accessible' }, { status: 404 });
+      return localizedJson({ error: 'Remarque non trouvée ou non accessible' }, { status: 404 });
     }
 
     const formData = await request.formData();
@@ -170,7 +174,7 @@ export async function PUT(
         try {
             updateData.coordonneesPlan = JSON.parse(coordonneesPlanStr);
         } catch {
-            return NextResponse.json({ error: 'Format JSON invalide pour coordonneesPlan' }, { status: 400 });
+            return localizedJson({ error: 'Format JSON invalide pour coordonneesPlan' }, { status: 400 });
         }
     } else if (updateData.planId === null) {
         updateData.coordonneesPlan = null;
@@ -240,14 +244,14 @@ export async function PUT(
       });
     });
 
-    return NextResponse.json(formatBigIntValues(updatedRemarque));
+    return localizedJson(formatBigIntValues(updatedRemarque));
 
   } catch (error) {
     console.error('Erreur de mise à jour de remarque (PUT):', error);
     if (error instanceof SyntaxError && error.message.includes("JSON")) {
-        return NextResponse.json({ error: 'Données JSON invalides dans la requête' }, { status: 400 });
+        return localizedJson({ error: 'Données JSON invalides dans la requête' }, { status: 400 });
     }
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la remarque', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
@@ -262,13 +266,14 @@ export async function DELETE(
     params: Promise<{ chantierId: string; id: string; remarqueId: string }> 
   }
 ) {
+  await bindRequestLocale()
   try {
     const { chantierId, id: receptionId, remarqueId } = await paramsPromise;
     
     const session = await getServerSession(authOptions);
     // Vérifier si l'utilisateur est admin ou manager
     if (!session?.user?.role || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé ou droits insuffisants' },
         { status: 403 }
       );
@@ -287,7 +292,7 @@ export async function DELETE(
     });
 
     if (!remarqueToDelete) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Remarque non trouvée ou non accessible' },
         { status: 404 }
       );
@@ -316,11 +321,11 @@ export async function DELETE(
       where: { id: remarqueId },
     });
 
-    return NextResponse.json({ message: 'Remarque supprimée avec succès' });
+    return localizedJson({ message: 'Remarque supprimée avec succès' });
 
   } catch (error) {
     console.error('Erreur de suppression de remarque (DELETE):', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de la remarque', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );

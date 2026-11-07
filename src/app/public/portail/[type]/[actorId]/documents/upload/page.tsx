@@ -27,7 +27,7 @@ interface UploadResponse {
 function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; actorId: string } }) {
   const { type, actorId } = props.params
   const router = useRouter()
-  const _portalI18n = usePortalI18n()
+  const { t } = usePortalI18n()
   const [error, setError] = useState<string | null>(null)
   
   // Données de session
@@ -195,7 +195,7 @@ function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; a
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -205,7 +205,7 @@ function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; a
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center px-4">
         <div className="text-center">
-          <p className="text-gray-600">Cette fonctionnalité est réservée aux ouvriers internes.</p>
+          <p className="text-gray-600">{t('internal_workers_only')}</p>
           <button
             onClick={() => router.push(`/public/portail/${type}/${actorId}`)}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
@@ -228,7 +228,7 @@ function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; a
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Envoyer un document</h1>
-              <p className="text-gray-600">Facture ou document comptable</p>
+              <p className="text-gray-600">{t('invoice_or_accounting_doc')}</p>
             </div>
           </div>
           <button
@@ -243,8 +243,7 @@ function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; a
         {/* Instructions */}
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
           <p className="text-sm text-blue-800">
-            📄 Prenez une photo ou sélectionnez un document depuis votre galerie. 
-            Le document sera automatiquement tagué "Comptabilité" et visible par les managers.
+            {t('upload_accounting_help')}
           </p>
         </div>
 
@@ -307,7 +306,7 @@ function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; a
 
             {/* Info fichier */}
             <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-sm text-gray-600 mb-1">Fichier sélectionné :</p>
+              <p className="text-sm text-gray-600 mb-1">{t('selected_file')}</p>
               <p className="font-semibold text-gray-900">{selectedFile.name}</p>
               <p className="text-xs text-gray-500 mt-1">
                 {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
@@ -328,7 +327,7 @@ function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; a
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               <p className="text-xs text-gray-500 mt-1">
-                Si non renseigné, un nom automatique sera généré
+                {t('auto_name_hint')}
               </p>
             </div>
 
@@ -345,7 +344,7 @@ function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; a
                 onClick={handleRemoveFile}
                 className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
               >
-                Annuler
+                {t('cancel')}
               </button>
               <button
                 onClick={handleUpload}
@@ -373,10 +372,10 @@ function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; a
           <div className="bg-white rounded-xl shadow-lg p-6 text-center">
             <CheckCircleIcon className="h-16 w-16 text-green-500 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Document envoyé avec succès !
+              {t('document_sent')}
             </h3>
             <p className="text-sm text-gray-600 mb-4">
-              Le document a été tagué "Comptabilité" et est maintenant visible par les managers.
+              {t('document_tagged')}
             </p>
             <p className="text-xs text-gray-500">Redirection en cours...</p>
           </div>
@@ -390,7 +389,7 @@ function InnerDocumentsPage(props: { params: { type: 'ouvrier'|'soustraitant'; a
               Documents comptables
             </h3>
             <p className="text-sm text-gray-600">
-              Envoyez vos factures et documents comptables. Ils seront automatiquement organisés et accessibles aux managers.
+              {t('send_accounting_docs')}
             </p>
           </div>
         )}

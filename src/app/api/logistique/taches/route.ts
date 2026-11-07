@@ -1,13 +1,16 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma/client'
 
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -40,18 +43,19 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(taches)
+    return localizedJson(taches)
   } catch (error) {
     console.error('Erreur GET logistique/taches:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     let titre: string = ''
@@ -77,10 +81,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (!titre?.trim()) {
-      return NextResponse.json({ error: 'Titre requis' }, { status: 400 })
+      return localizedJson({ error: 'Titre requis' }, { status: 400 })
     }
     if (!magasinierId?.trim()) {
-      return NextResponse.json({ error: 'Magasinier requis' }, { status: 400 })
+      return localizedJson({ error: 'Magasinier requis' }, { status: 400 })
     }
 
     const magasinier = await prisma.magasinier.findUnique({
@@ -88,7 +92,7 @@ export async function POST(request: NextRequest) {
       select: { id: true }
     })
     if (!magasinier) {
-      return NextResponse.json({ error: 'Magasinier introuvable' }, { status: 404 })
+      return localizedJson({ error: 'Magasinier introuvable' }, { status: 404 })
     }
 
     const dateExec = dateExecution?.trim()
@@ -154,15 +158,15 @@ export async function POST(request: NextRequest) {
         where: { id: tache.id },
         include: { magasinier: { select: { id: true, nom: true } }, photos: true }
       })
-      return NextResponse.json(
+      return localizedJson(
         { ...withPhotos, ...(rejected > 0 && { warning: `${rejected} photo(s) ignorée(s) : format non supporté (JPEG, PNG, WebP, HEIC, AVIF acceptés).` }) },
         { status: 201 }
       )
     }
 
-    return NextResponse.json(tache, { status: 201 })
+    return localizedJson(tache, { status: 201 })
   } catch (error) {
     console.error('Erreur POST logistique/taches:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

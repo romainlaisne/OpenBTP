@@ -110,8 +110,8 @@ export default function ReceptionPage({
             </Button>
             <Link href={`/chantiers/${chantierId}`}>
               <Button variant="primary">
-                Retour au chantier
-              </Button>
+                <UiText>Retour au chantier
+              </UiText></Button>
             </Link>
           </div>
         </div>

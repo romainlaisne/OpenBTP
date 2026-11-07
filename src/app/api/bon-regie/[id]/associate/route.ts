@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -21,7 +24,8 @@ async function generateBonRegiePDF(bonRegieData: BonRegieData): Promise<Buffer> 
 
     // 2. Générer le HTML
     console.log('🎨 Génération du HTML...')
-    const html = generateBonRegieHTML(bonRegieData, companySettings)
+    const __locale = await bindRequestLocale()
+    const html = localizeGeneratedHtml(__locale, generateBonRegieHTML(bonRegieData, companySettings), collectStrings(bonRegieData))
 
     // 3. Générer le PDF avec Puppeteer
     console.log('📄 Génération du PDF avec Puppeteer...')
@@ -49,6 +53,7 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const resolvedParams = await params
     const bonRegieId = resolvedParams.id
@@ -59,7 +64,7 @@ export async function PATCH(
     const session = await getServerSession(authOptions)
     if (!session) {
       console.error('❌ Session non autorisée')
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer les données de la requête
@@ -67,7 +72,7 @@ export async function PATCH(
     
     if (!data.chantierId) {
       console.error('❌ chantierId manquant')
-      return NextResponse.json({ error: 'chantierId requis' }, { status: 400 })
+      return localizedJson({ error: 'chantierId requis' }, { status: 400 })
     }
 
     console.log(`✅ Chantier cible: ${data.chantierId}`)
@@ -79,7 +84,7 @@ export async function PATCH(
 
     if (!Array.isArray(bonRegieResult) || bonRegieResult.length === 0) {
       console.error(`❌ Bon de régie ${bonRegieId} non trouvé`)
-      return NextResponse.json({ error: 'Bon de régie non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Bon de régie non trouvé' }, { status: 404 })
     }
 
     const bonRegie = bonRegieResult[0] as {
@@ -185,7 +190,7 @@ export async function PATCH(
       ? result[0] 
       : { id: bonRegieId, chantierId: data.chantierId };
     
-    return NextResponse.json({
+    return localizedJson({
       ...updatedBonRegie,
       pdfGenerated,
       message: pdfGenerated 
@@ -195,7 +200,7 @@ export async function PATCH(
 
   } catch (error) {
     console.error('❌ Erreur lors de l\'association du bon de régie:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'association du bon de régie' },
       { status: 500 }
     )

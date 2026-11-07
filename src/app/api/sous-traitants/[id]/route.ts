@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -10,10 +12,11 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -27,7 +30,7 @@ export async function DELETE(
     })
 
     if (!sousTraitant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé' },
         { status: 404 }
       )
@@ -38,10 +41,10 @@ export async function DELETE(
       where: { id }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du sous-traitant' },
       { status: 500 }
     )
@@ -52,10 +55,11 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -97,7 +101,7 @@ export async function GET(
 
     if (!sousTraitant) {
       console.log('Sous-traitant non trouvé avec ID:', id);
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé' },
         { status: 404 }
       )
@@ -122,10 +126,10 @@ export async function GET(
     };
 
     console.log('Données du sous-traitant récupérées:', JSON.stringify(result, null, 2));
-    return NextResponse.json(result)
+    return localizedJson(result)
   } catch (error) {
     console.error('Erreur lors de la récupération du sous-traitant:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du sous-traitant' },
       { status: 500 }
     )
@@ -136,10 +140,11 @@ export async function PUT(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -151,7 +156,7 @@ export async function PUT(
 
     // Validation souple: si on ne met à jour que "actif", on accepte sans nom/email
     if ((body.nom !== undefined || body.email !== undefined) && (!body.nom || !body.email)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le nom et l\'email sont requis pour la mise à jour des informations principales' },
         { status: 400 }
       )
@@ -162,14 +167,14 @@ export async function PUT(
 
     const representant = await normaliserRepresentant(body)
     if (representant.erreur) {
-      return NextResponse.json({ error: representant.erreur }, { status: 400 })
+      return localizedJson({ error: representant.erreur }, { status: 400 })
     }
 
     const updateData: Record<string, unknown> = { updatedAt: new Date(), ...representant.data }
     if (body.parentId !== undefined) {
       const parentId = typeof body.parentId === 'string' && body.parentId ? body.parentId : null
       const erreur = await verifierRattachement(id, parentId)
-      if (erreur) return NextResponse.json({ error: erreur }, { status: 400 })
+      if (erreur) return localizedJson({ error: erreur }, { status: 400 })
       updateData.parentId = parentId
     }
     if (body.nom !== undefined) updateData.nom = body.nom
@@ -189,10 +194,10 @@ export async function PUT(
       data: updateData
     })
 
-    return NextResponse.json(sousTraitant)
+    return localizedJson(sousTraitant)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour du sous-traitant' },
       { status: 500 }
     )
@@ -203,10 +208,11 @@ export async function PATCH(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -217,7 +223,7 @@ export async function PATCH(
 
     const exists = await prisma.soustraitant.findUnique({ where: { id } })
     if (!exists) {
-      return NextResponse.json({ error: 'Sous-traitant non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Sous-traitant non trouvé' }, { status: 404 })
     }
 
     let sousTraitant
@@ -245,10 +251,10 @@ export async function PATCH(
       }
     }
 
-    return NextResponse.json(sousTraitant)
+    return localizedJson(sousTraitant)
   } catch (error: unknown) {
     console.error('Erreur PATCH sous-traitant:', error)
     const message = error instanceof Error ? error.message : 'Erreur lors de la mise à jour partielle du sous-traitant'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return localizedJson({ error: message }, { status: 500 })
   }
 }

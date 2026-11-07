@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -6,10 +8,11 @@ import path from 'path'
 import { validateImageFile } from '@/lib/utils/image-validation'
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -20,16 +23,16 @@ export async function POST(request: Request) {
     const soustraitantId = formData.get('soustraitantId') as string
 
     if (!file) {
-      return NextResponse.json({ error: 'Aucun fichier fourni' }, { status: 400 })
+      return localizedJson({ error: 'Aucun fichier fourni' }, { status: 400 })
     }
 
     if (!soustraitantId) {
-      return NextResponse.json({ error: 'ID sous-traitant requis' }, { status: 400 })
+      return localizedJson({ error: 'ID sous-traitant requis' }, { status: 400 })
     }
 
     const validation = await validateImageFile(file)
     if (!validation.isValid) {
-      return NextResponse.json({ error: 'Fichier invalide : seules les images sont acceptées.' }, { status: 400 })
+      return localizedJson({ error: 'Fichier invalide : seules les images sont acceptées.' }, { status: 400 })
     }
 
     const bytes = await file.arrayBuffer()
@@ -45,10 +48,10 @@ export async function POST(request: Request) {
 
     // Retourner l'URL relative du logo
     const logoUrl = `/uploads/soustraitants/${soustraitantId}/logo.png`
-    return NextResponse.json({ url: logoUrl })
+    return localizedJson({ url: logoUrl })
   } catch (error) {
     console.error('Erreur lors de l\'upload du logo sous-traitant:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'upload du logo' },
       { status: 500 }
     )

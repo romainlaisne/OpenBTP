@@ -1,9 +1,12 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { readPortalSessionFromCookie, unauthorized } from '@/app/public/portail/auth'
 
 // GET /api/public/sav?subjectType=OUVRIER_INTERNE|SOUSTRAITANT&subjectId=...
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   const portalSession = readPortalSessionFromCookie(request.headers.get('cookie'))
   if (!portalSession) return unauthorized()
 
@@ -12,7 +15,7 @@ export async function GET(request: NextRequest) {
     const subjectType = searchParams.get('subjectType') as 'OUVRIER_INTERNE' | 'SOUSTRAITANT' | null
     const subjectId = searchParams.get('subjectId')
     if (!subjectType || !subjectId) {
-      return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 })
+      return localizedJson({ error: 'Paramètres manquants' }, { status: 400 })
     }
 
     // Vérifier que l'utilisateur accède uniquement à ses propres données
@@ -35,8 +38,8 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    return NextResponse.json({ data: tickets })
+    return localizedJson({ data: tickets })
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,17 +11,18 @@ import { prisma } from '@/lib/prisma/client'
  * Récupère les préférences de fiches techniques pour un chantier
  */
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
     const chantierId = searchParams.get('chantierId')
 
     if (!chantierId) {
-      return NextResponse.json({ error: 'chantierId requis' }, { status: 400 })
+      return localizedJson({ error: 'chantierId requis' }, { status: 400 })
     }
 
     // Récupérer le dernier dossier technique (ou créer un dossier brouillon si aucun n'existe)
@@ -42,7 +46,7 @@ export async function GET(request: Request) {
 
     // Si aucun dossier n'existe, retourner des données vides
     if (!dossier) {
-      return NextResponse.json({
+      return localizedJson({
         ficheReferences: {},
         fichesSoustraitants: {},
         fichesRemarques: {}
@@ -67,14 +71,14 @@ export async function GET(request: Request) {
       }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       ficheReferences,
       fichesSoustraitants,
       fichesRemarques
     })
   } catch (error) {
     console.error('Erreur lors de la récupération des préférences:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des préférences' },
       { status: 500 }
     )
@@ -87,17 +91,18 @@ export async function GET(request: Request) {
  * Body: { chantierId, ficheId, ficheReference?, soustraitantId?, remarques? }
  */
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const body = await request.json()
     const { chantierId, ficheId, ficheReference, soustraitantId, remarques } = body
 
     if (!chantierId || !ficheId) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'chantierId et ficheId requis' },
         { status: 400 }
       )
@@ -124,7 +129,7 @@ export async function POST(request: Request) {
       dossier = await prisma.dossierTechnique.create({
         data: {
           chantierId,
-          nom: `Brouillon - ${new Date().toLocaleDateString('fr-FR')}`,
+          nom: `Brouillon - ${new Date().toLocaleDateString(intlLocale(getActiveLocale()))}`,
           version: 1,
           statut: 'BROUILLON',
           url: '', // Pas de PDF pour un brouillon
@@ -174,10 +179,10 @@ export async function POST(request: Request) {
       })
     }
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la sauvegarde des préférences:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la sauvegarde des préférences' },
       { status: 500 }
     )
@@ -190,17 +195,18 @@ export async function POST(request: Request) {
  * Body: { chantierId, preferences: { ficheId: { ficheReference?, soustraitantId?, remarques? } } }
  */
 export async function PUT(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const body = await request.json()
     const { chantierId, preferences } = body
 
     if (!chantierId || !preferences) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'chantierId et preferences requis' },
         { status: 400 }
       )
@@ -219,7 +225,7 @@ export async function PUT(request: Request) {
       dossier = await prisma.dossierTechnique.create({
         data: {
           chantierId,
-          nom: `Brouillon - ${new Date().toLocaleDateString('fr-FR')}`,
+          nom: `Brouillon - ${new Date().toLocaleDateString(intlLocale(getActiveLocale()))}`,
           version: 1,
           statut: 'BROUILLON',
           url: '',
@@ -277,10 +283,10 @@ export async function PUT(request: Request) {
 
     await Promise.all(updates)
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la mise à jour des préférences:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour des préférences' },
       { status: 500 }
     )

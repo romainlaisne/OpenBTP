@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -5,10 +7,11 @@ import { prisma } from '@/lib/prisma/client';
 
 // GET - Récupérer les chantiers en cours pour le planning
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
 
     // Récupérer tous les chantiers actifs (non terminés)
@@ -124,11 +127,11 @@ export async function GET() {
     // Combiner chantiers et SAV
     const resultat = [...chantiersFormates, ...savFormates]
 
-    return NextResponse.json(resultat);
+    return localizedJson(resultat);
 
   } catch (error) {
     console.error('Erreur lors de la récupération des chantiers:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des chantiers' },
       { status: 500 }
     );

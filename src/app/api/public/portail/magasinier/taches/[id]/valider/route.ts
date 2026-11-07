@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { writeFile, mkdir } from 'fs/promises'
@@ -11,10 +13,11 @@ export async function POST(
   request: NextRequest,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const magasinierId = getMagasinierIdFromCookie(request.headers.get('cookie'))
     if (!magasinierId) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const { id: tacheId } = await props.params
@@ -24,11 +27,11 @@ export async function POST(
     })
 
     if (!tache || tache.magasinierId !== magasinierId) {
-      return NextResponse.json({ error: 'Tâche introuvable' }, { status: 404 })
+      return localizedJson({ error: 'Tâche introuvable' }, { status: 404 })
     }
 
     if (tache.statut === 'VALIDEE') {
-      return NextResponse.json({ error: 'Déjà validée' }, { status: 400 })
+      return localizedJson({ error: 'Déjà validée' }, { status: 400 })
     }
 
     let photoFiles: File[] = []
@@ -76,9 +79,9 @@ export async function POST(
       }
     }
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur valider tache:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

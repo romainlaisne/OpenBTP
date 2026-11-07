@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
@@ -70,12 +71,12 @@ export default function ModifierTemplatePage({ params }: { params: Promise<{ id:
         setHtmlContent(data.htmlContent)
         setCategory(data.category)
       } else {
-        toast.error('Template non trouvé')
+        toast.error(tx("Template non trouvé"))
         router.push('/admin/templates-contrats')
       }
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors du chargement du template')
+      toast.error(tx("Erreur lors du chargement du template"))
     } finally {
       setLoading(false)
     }
@@ -105,7 +106,7 @@ export default function ModifierTemplatePage({ params }: { params: Promise<{ id:
       })
 
       if (response.ok) {
-        toast.success('Template modifié avec succès')
+        toast.success(tx("Template modifié avec succès"))
         router.push('/admin/templates-contrats')
       } else {
         const error = await response.json()
@@ -113,7 +114,7 @@ export default function ModifierTemplatePage({ params }: { params: Promise<{ id:
       }
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la modification du template')
+      toast.error(tx("Erreur lors de la modification du template"))
     } finally {
       setSaving(false)
     }
@@ -136,19 +137,19 @@ export default function ModifierTemplatePage({ params }: { params: Promise<{ id:
           onClick={() => router.push('/admin/templates-contrats')}
           className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
         >
-          ← Retour à la liste
-        </button>
+          <UiText>← Retour à la liste
+        </UiText></button>
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <h1 className="text-2xl font-bold mb-6 dark:text-white">
-          Modifier le Template: {template.name}
+          <UiText>Modifier le Template: </UiText>{template.name}
         </h1>
 
         {template.isActive && (
           <div className="mb-6 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
-            ⚠️ Ce template est actuellement actif. Les modifications affecteront les nouveaux contrats générés.
-          </div>
+            <UiText>⚠️ Ce template est actuellement actif. Les modifications affecteront les nouveaux contrats générés.
+          </UiText></div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -176,8 +177,8 @@ export default function ModifierTemplatePage({ params }: { params: Promise<{ id:
                       </span>
                       {isActiveCategory && (
                         <span className="text-[11px] font-medium text-amber-700 dark:text-amber-100">
-                          Sélectionné
-                        </span>
+                          <UiText>Sélectionné
+                        </UiText></span>
                       )}
                     </div>
                     <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -226,8 +227,8 @@ export default function ModifierTemplatePage({ params }: { params: Promise<{ id:
             )}
             {category === 'CGV' && (
               <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">
-                Ce contenu sera inséré automatiquement à la fin des devis et commandes PDF. Utilisez du HTML simple (titres, paragraphes, listes).
-              </p>
+                <UiText>Ce contenu sera inséré automatiquement à la fin des devis et commandes PDF. Utilisez du HTML simple (titres, paragraphes, listes).
+              </UiText></p>
             )}
 
             <textarea

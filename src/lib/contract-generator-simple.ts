@@ -1,7 +1,7 @@
 import { PDFGenerator } from '@/lib/pdf/pdf-generator'
 import { prisma } from '@/lib/prisma/client'
 import { format, addYears } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import crypto from 'crypto'
 import { writeFile, mkdir, stat } from 'fs/promises'
 import { join } from 'path'
@@ -85,9 +85,9 @@ export async function generateContratSoustraitance(soustraitantId: string, _user
       representantSousTraitant: soustraitant.contact || 'Représentant',
 
       // Dates
-      dateGeneration: format(new Date(), 'dd/MM/yyyy', { locale: fr }),
-      dateDebut: format(new Date(), 'dd/MM/yyyy', { locale: fr }),
-      dateFin: format(addYears(new Date(), 1), 'dd/MM/yyyy', { locale: fr }),
+      dateGeneration: format(new Date(), 'dd/MM/yyyy', { locale: dateFnsLocale() }),
+      dateDebut: format(new Date(), 'dd/MM/yyyy', { locale: dateFnsLocale() }),
+      dateFin: format(addYears(new Date(), 1), 'dd/MM/yyyy', { locale: dateFnsLocale() }),
       
       // Métadonnées
       referenceContrat: `CT-${Date.now()}`,
@@ -225,9 +225,9 @@ export async function signerContrat(
       representantSousTraitant: contrat.soustraitant.contact || 'Représentant',
       
       // Dates
-      dateGeneration: format(contrat.dateGeneration, 'dd/MM/yyyy', { locale: fr }),
-      dateDebut: format(new Date(), 'dd/MM/yyyy', { locale: fr }),
-      dateFin: format(addYears(new Date(), 1), 'dd/MM/yyyy', { locale: fr }),
+      dateGeneration: format(contrat.dateGeneration, 'dd/MM/yyyy', { locale: dateFnsLocale() }),
+      dateDebut: format(new Date(), 'dd/MM/yyyy', { locale: dateFnsLocale() }),
+      dateFin: format(addYears(new Date(), 1), 'dd/MM/yyyy', { locale: dateFnsLocale() }),
       
       // Métadonnées
       referenceContrat: `CT-${contrat.dateGeneration.getTime()}`,
@@ -254,7 +254,7 @@ export async function signerContrat(
         <img src="data:image/png;base64,${signatureBase64}" class="signature-image" alt="Signature Sous-traitant" />
         <div class="signature-line"></div>
         <div style="font-size: 10px; color: #6b7280; margin-top: 5px;">
-          Signé électroniquement le ${format(auditInfo?.horodatageCertifie || new Date(), 'dd/MM/yyyy à HH:mm', { locale: fr })}
+          Signé électroniquement le ${format(auditInfo?.horodatageCertifie || new Date(), 'dd/MM/yyyy à HH:mm', { locale: dateFnsLocale() })}
         </div>
         ${auditInfo ? `
         <div style="font-size: 9px; color: #9ca3af; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
@@ -262,7 +262,7 @@ export async function signerContrat(
           <div style="margin-bottom: 2px;">• Identité confirmée : Oui</div>
           <div style="margin-bottom: 2px;">• Consentement donné : Oui</div>
           ${auditInfo.ipAddress ? `<div style="margin-bottom: 2px;">• Adresse IP : ${auditInfo.ipAddress}</div>` : ''}
-          <div style="margin-bottom: 2px;">• Horodatage certifié : ${format(auditInfo.horodatageCertifie || new Date(), 'dd/MM/yyyy à HH:mm:ss', { locale: fr })}</div>
+          <div style="margin-bottom: 2px;">• Horodatage certifié : ${format(auditInfo.horodatageCertifie || new Date(), 'dd/MM/yyyy à HH:mm:ss', { locale: dateFnsLocale() })}</div>
           <div style="margin-top: 6px; font-size: 8px; color: #6b7280;">
             Signature électronique conforme au Règlement eIDAS (UE) 910/2014 et à la législation belge en vigueur.
           </div>

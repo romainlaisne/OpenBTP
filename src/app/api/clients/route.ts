@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,10 +7,11 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/clients - Récupère tous les clients
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Vous devez être connecté pour accéder à cette ressource' },
         { status: 401 }
       )
@@ -61,11 +64,11 @@ export async function GET() {
       }
     })
 
-    return NextResponse.json(clients)
+    return localizedJson(clients)
   } catch (error: unknown) {
     console.error('Erreur lors de la récupération des clients:', error)
 
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la récupération des clients',
         details: (error as Error | undefined)?.message || 'Erreur inconnue'
@@ -77,10 +80,11 @@ export async function GET() {
 
 // POST /api/clients - Crée un nouveau client
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Vous devez être connecté pour créer un client' },
         { status: 401 }
       )
@@ -91,7 +95,7 @@ export async function POST(request: Request) {
 
     // Validation des données du client
     if (!body.nom) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le nom du client est requis' },
         { status: 400 }
       )
@@ -115,11 +119,11 @@ export async function POST(request: Request) {
     })
 
     console.log('Client créé avec succès:', client)
-    return NextResponse.json(client)
+    return localizedJson(client)
   } catch (e: unknown) {
     console.error('Erreur lors de la création du client:', e)
     
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du client' },
       { status: 500 }
     )

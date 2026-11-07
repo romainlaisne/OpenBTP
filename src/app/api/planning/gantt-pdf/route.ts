@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,13 +7,14 @@ import { PDFGenerator } from '@/lib/pdf/pdf-generator'
 import { generateGanttHTML } from '@/lib/pdf/templates/gantt-template'
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     console.log('🎯 Génération PDF - Planning des chantiers')
 
     // 1. Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // 2. Récupérer les données du planning depuis le body de la requête
@@ -61,7 +64,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ Erreur lors de la génération du PDF:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la génération du PDF' },
       { status: 500 }
     )

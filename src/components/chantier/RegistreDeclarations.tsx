@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 // Registre des déclarations de sous-traitance envoyées : sur la fiche d'un
 // chantier (chantierId) ou pour tous les chantiers (page Sous-traitants →
 // Déclarations). Chaque envoi est conservé avec le mail exact et les pièces.
@@ -57,21 +58,21 @@ export default function RegistreDeclarations(props: {
   const global = !chantierId
 
   const contenu = chargement ? (
-    <div className="p-6 text-sm text-gray-500 dark:text-gray-400">Chargement…</div>
+    <div className="p-6 text-sm text-gray-500 dark:text-gray-400"><UiText>Chargement…</UiText></div>
   ) : entrees.length === 0 ? (
-    <div className="p-6 text-sm text-gray-500 dark:text-gray-400">Aucune déclaration envoyée{global ? '' : ' pour ce chantier'}.</div>
+    <div className="p-6 text-sm text-gray-500 dark:text-gray-400"><UiText>Aucune déclaration envoyée</UiText>{global ? '' : ' pour ce chantier'}.</div>
   ) : (
     <div className="overflow-x-auto">
       <table className="min-w-full text-sm">
         <thead className="bg-gray-50 dark:bg-gray-700/50 text-left text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
           <tr>
             <th className="px-4 py-2 w-6" />
-            <th className="px-4 py-2">Date</th>
-            {global && <th className="px-4 py-2">Chantier</th>}
-            <th className="px-4 py-2">Sous-traitants</th>
+            <th className="px-4 py-2"><UiText>Date</UiText></th>
+            {global && <th className="px-4 py-2"><UiText>Chantier</UiText></th>}
+            <th className="px-4 py-2"><UiText>Sous-traitants</UiText></th>
             <th className="px-4 py-2">Destinataire</th>
-            <th className="px-4 py-2">Type</th>
-            <th className="px-4 py-2">Statut</th>
+            <th className="px-4 py-2"><UiText>Type</UiText></th>
+            <th className="px-4 py-2"><UiText>Statut</UiText></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -111,11 +112,11 @@ export default function RegistreDeclarations(props: {
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
                   {e.statut === 'ENVOYE' ? (
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">Envoyée</span>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"><UiText>Envoyée</UiText></span>
                   ) : (
                     <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300" title={e.erreur || ''}>
-                      Échec
-                    </span>
+                      <UiText>Échec
+                    </UiText></span>
                   )}
                 </td>
               </tr>
@@ -123,10 +124,10 @@ export default function RegistreDeclarations(props: {
                 <tr className="bg-gray-50/60 dark:bg-gray-900/30">
                   <td />
                   <td colSpan={global ? 6 : 5} className="px-4 py-3 space-y-3">
-                    {e.erreur && <p className="text-xs text-red-600">Erreur : {e.erreur}</p>}
+                    {e.erreur && <p className="text-xs text-red-600"><UiText>Erreur : </UiText>{e.erreur}</p>}
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div>
-                        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Personnes déclarées</p>
+                        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1"><UiText>Personnes déclarées</UiText></p>
                         {e.soustraitants.map((s) => (
                           <p key={s.id} className="text-xs text-gray-700 dark:text-gray-300">
                             <strong>{s.nom}</strong> ({s.tva || 'TVA ?'}){s.personnes.length ? ` — ${s.personnes.join(', ')}` : ''}
@@ -135,7 +136,7 @@ export default function RegistreDeclarations(props: {
                       </div>
                       {e.pieces.length > 0 && (
                         <div>
-                          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Pièces jointes</p>
+                          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1"><UiText>Pièces jointes</UiText></p>
                           <ul className="space-y-0.5">
                             {e.pieces.map((p, i) => (
                               <li key={i} className="text-xs">
@@ -149,15 +150,15 @@ export default function RegistreDeclarations(props: {
                       )}
                     </div>
                     <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
-                      {e.envoyeParNom && <span>Envoyée par {e.envoyeParNom}</span>}
+                      {e.envoyeParNom && <span><UiText>Envoyée par </UiText>{e.envoyeParNom}</span>}
                       <a
                         href={`/api/declarations-sous-traitance/${e.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-sky-700 dark:text-sky-400 hover:underline"
                       >
-                        <EnvelopeIcon className="h-4 w-4" /> Voir le mail envoyé
-                      </a>
+                        <EnvelopeIcon className="h-4 w-4" /> <UiText>Voir le mail envoyé
+                      </UiText></a>
                     </div>
                   </td>
                 </tr>
@@ -175,8 +176,8 @@ export default function RegistreDeclarations(props: {
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 flex items-center justify-between">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 flex items-center">
           <ClipboardDocumentListIcon className="h-5 w-5 mr-2 text-sky-500" />
-          Déclarations de sous-traitance
-        </h2>
+          <UiText>Déclarations de sous-traitance
+        </UiText></h2>
         {entrees.length > 0 && <span className="text-sm text-gray-500 dark:text-gray-400">{entrees.length}</span>}
       </div>
       {contenu}

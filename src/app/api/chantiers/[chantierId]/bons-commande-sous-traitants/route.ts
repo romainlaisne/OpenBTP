@@ -1,20 +1,23 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(request: Request, props: { params: Promise<{ chantierId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { soustraitantId, lignes }: { soustraitantId: string; lignes: Array<{ ligneCommandeId: number; prixUnitaire: number }> } = await request.json()
 
     if (!soustraitantId || !lignes || !Array.isArray(lignes)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Données invalides' },
         { status: 400 }
       )
@@ -26,7 +29,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
     })
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -38,7 +41,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
     })
 
     if (!soustraitant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé' },
         { status: 404 }
       )
@@ -54,7 +57,7 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
     })
 
     if (lignesCommande.length !== lignesCommandeIds.length) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Une ou plusieurs lignes de commande n\'existent pas' },
         { status: 400 }
       )
@@ -120,10 +123,10 @@ export async function POST(request: Request, props: { params: Promise<{ chantier
       soustraitant: soustraitantInfo
     };
 
-    return NextResponse.json(result)
+    return localizedJson(result)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du bon de commande' },
       { status: 500 }
     )

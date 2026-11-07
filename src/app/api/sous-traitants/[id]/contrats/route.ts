@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Historique complet des contrats d'un sous-traitant.
 //
 // Route séparée de GET /api/sous-traitants (qui ne renvoie qu'un seul contrat
@@ -16,10 +18,11 @@ export async function GET(
   _request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await context.params
@@ -29,7 +32,7 @@ export async function GET(
       select: { id: true, nom: true },
     })
     if (!soustraitant) {
-      return NextResponse.json({ error: 'Sous-traitant non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Sous-traitant non trouvé' }, { status: 404 })
     }
 
     const contrats = await prisma.contrat.findMany({
@@ -45,13 +48,13 @@ export async function GET(
       orderBy: { dateGeneration: 'desc' },
     })
 
-    return NextResponse.json({
+    return localizedJson({
       soustraitant,
       contrats: contrats.map((c) => ({ ...c, statutEcheance: statutEcheance(c.dateFin) })),
     })
   } catch (error) {
     console.error('Erreur lors de la récupération de l’historique des contrats:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de l’historique des contrats' },
       { status: 500 }
     )

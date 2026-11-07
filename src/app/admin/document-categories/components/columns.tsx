@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { ColumnDef, Column, Row } from '@tanstack/react-table'
 import { ArrowsUpDownIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import Button from '@/components/ui/Button'
@@ -33,7 +35,7 @@ const CellActions: React.FC<CellActionsProps> = ({ data, onEdit, onDelete }) => 
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          aria-label="Ouvrir le menu"
+          aria-label={tx("Ouvrir le menu")}
           variant="outline"
           size="sm"
         >
@@ -41,14 +43,14 @@ const CellActions: React.FC<CellActionsProps> = ({ data, onEdit, onDelete }) => 
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuLabel><UiText>Actions</UiText></DropdownMenuLabel>
         <DropdownMenuItem onClick={() => onEdit(data)}>
-          <PencilIcon className="mr-2 h-4 w-4" /> Modifier
-        </DropdownMenuItem>
+          <PencilIcon className="mr-2 h-4 w-4" /> <UiText>Modifier
+        </UiText></DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => onDelete(data)} className="text-red-600 hover:text-red-700 focus:text-red-700 focus:bg-red-50 dark:focus:bg-red-900/50">
-          <TrashIcon className="mr-2 h-4 w-4" /> Supprimer
-        </DropdownMenuItem>
+          <TrashIcon className="mr-2 h-4 w-4" /> <UiText>Supprimer
+        </UiText></DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -66,8 +68,8 @@ export const columns = (
           variant="outline"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Nom
-          <ArrowsUpDownIcon className="ml-2 h-4 w-4" />
+          <UiText>Nom
+          </UiText><ArrowsUpDownIcon className="ml-2 h-4 w-4" />
         </Button>
       )
     },

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // API pour les requêtes RAG
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
@@ -10,17 +12,18 @@ export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const body = await request.json();
     const { question, context } = body;
 
     if (!question || typeof question !== 'string') {
-      return NextResponse.json({ error: 'Question requise' }, { status: 400 });
+      return localizedJson({ error: 'Question requise' }, { status: 400 });
     }
 
     const ragQuery: RAGQuery = {
@@ -44,11 +47,11 @@ export async function POST(request: Request) {
       processingTime: response.processingTime
     });
 
-    return NextResponse.json(response);
+    return localizedJson(response);
 
   } catch (error) {
     console.error('❌ Erreur API RAG query:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors du traitement de la question' },
       { status: 500 }
     );

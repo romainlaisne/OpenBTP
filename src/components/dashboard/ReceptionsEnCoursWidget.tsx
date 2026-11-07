@@ -1,8 +1,9 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { CalendarIcon } from '@heroicons/react/24/outline'
 
 interface ReceptionEnCours {
@@ -68,8 +69,8 @@ export default function ReceptionsEnCoursWidget() {
           </div>
           <div>
             <h2 className="text-lg font-black text-gray-900 dark:text-white">
-              Réceptions en cours
-            </h2>
+              <UiText>Réceptions en cours
+            </UiText></h2>
             <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Planification des livraisons</p>
           </div>
         </div>
@@ -91,8 +92,8 @@ export default function ReceptionsEnCoursWidget() {
         </div>
         <div>
           <h2 className="text-lg font-black text-gray-900 dark:text-white">
-            Réceptions en cours
-          </h2>
+            <UiText>Réceptions en cours
+          </UiText></h2>
           <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Planification des livraisons</p>
         </div>
       </div>
@@ -104,8 +105,8 @@ export default function ReceptionsEnCoursWidget() {
           <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <CalendarIcon className="h-10 w-10 text-green-500 dark:text-green-400" />
           </div>
-          <p className="text-gray-600 dark:text-gray-400 font-semibold">Aucune réception en cours</p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Aucune réception planifiée pour le moment</p>
+          <p className="text-gray-600 dark:text-gray-400 font-semibold"><UiText>Aucune réception en cours</UiText></p>
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1"><UiText>Aucune réception planifiée pour le moment</UiText></p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -124,7 +125,7 @@ export default function ReceptionsEnCoursWidget() {
                 <div className="mt-3 flex items-center gap-2">
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-700 dark:text-green-400 text-xs font-bold">
                     <CalendarIcon className="h-3.5 w-3.5" />
-                    {format(new Date(reception.dateReceptionPrevue), 'dd/MM/yyyy', { locale: fr })}
+                    {format(new Date(reception.dateReceptionPrevue), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                   </span>
                 </div>
               </Link>

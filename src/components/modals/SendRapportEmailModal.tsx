@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { XMarkIcon, EnvelopeIcon, UserGroupIcon, TagIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
@@ -67,7 +69,7 @@ export function SendRapportEmailModal({
       setContacts(contactsList)
     } catch (error) {
       console.error('Erreur lors du chargement des contacts:', error)
-      toast.error('Erreur lors du chargement des contacts')
+      toast.error(tx("Erreur lors du chargement des contacts"))
     }
   }
 
@@ -103,18 +105,18 @@ export function SendRapportEmailModal({
       setSelectedContacts(prev => [...prev, customId])
       setCustomEmail('')
     } else {
-      toast.error('Veuillez entrer une adresse email valide')
+      toast.error(tx("Veuillez entrer une adresse email valide"))
     }
   }
 
   const handleSend = async () => {
     if (selectedContacts.length === 0) {
-      toast.error('Veuillez sélectionner au moins un destinataire')
+      toast.error(tx("Veuillez sélectionner au moins un destinataire"))
       return
     }
 
     setLoading(true)
-    const loadingToast = toast.loading('Génération et envoi du rapport...')
+    const loadingToast = toast.loading(tx("Génération et envoi du rapport..."))
 
     try {
       // Récupérer les emails sélectionnés
@@ -208,8 +210,8 @@ export function SendRapportEmailModal({
             <div>
               <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                 <TagIcon className="h-5 w-5 mr-2 text-indigo-600" />
-                Type de rapport à générer
-              </label>
+                <UiText>Type de rapport à générer
+              </UiText></label>
               <select
                 value={selectedTag}
                 onChange={(e) => setSelectedTag(e.target.value)}
@@ -222,8 +224,8 @@ export function SendRapportEmailModal({
                 ))}
               </select>
               <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                Sélectionnez "Tous" pour un rapport complet ou choisissez un tag spécifique pour un rapport filtré
-              </p>
+                <UiText>Sélectionnez "Tous" pour un rapport complet ou choisissez un tag spécifique pour un rapport filtré
+              </UiText></p>
             </div>
 
             {/* Sélection des destinataires */}
@@ -236,8 +238,8 @@ export function SendRapportEmailModal({
               {contacts.length === 0 ? (
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                   <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                    Aucun contact disponible. Ajoutez une adresse email ci-dessous.
-                  </p>
+                    <UiText>Aucun contact disponible. Ajoutez une adresse email ci-dessous.
+                  </UiText></p>
                 </div>
               ) : (
                 <div className="space-y-2 mb-4">
@@ -275,8 +277,8 @@ export function SendRapportEmailModal({
               {/* Ajouter un email personnalisé */}
               <div className="mt-4">
                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Ajouter un autre destinataire
-                </label>
+                  <UiText>Ajouter un autre destinataire
+                </UiText></label>
                 <div className="flex gap-2">
                   <input
                     type="email"
@@ -291,8 +293,8 @@ export function SendRapportEmailModal({
                     disabled={!customEmail}
                     className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
                   >
-                    Ajouter
-                  </button>
+                    <UiText>Ajouter
+                  </UiText></button>
                 </div>
               </div>
             </div>
@@ -304,12 +306,12 @@ export function SendRapportEmailModal({
               {selectedContacts.length > 0 ? (
                 <span className="flex items-center">
                   <UserGroupIcon className="h-4 w-4 mr-1" />
-                  {selectedContacts.length} destinataire(s) sélectionné(s)
-                </span>
+                  {selectedContacts.length} <UiText>destinataire(s) sélectionné(s)
+                </UiText></span>
               ) : (
                 <span className="text-yellow-600 dark:text-yellow-400">
-                  Aucun destinataire sélectionné
-                </span>
+                  <UiText>Aucun destinataire sélectionné
+                </UiText></span>
               )}
             </div>
             <div className="flex space-x-3">
@@ -319,8 +321,8 @@ export function SendRapportEmailModal({
                 disabled={loading}
                 className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 type="button"
                 onClick={handleSend}
@@ -330,8 +332,8 @@ export function SendRapportEmailModal({
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Envoi en cours...
-                  </>
+                    <UiText>Envoi en cours...
+                  </UiText></>
                 ) : (
                   <>
                     <PaperAirplaneIcon className="h-4 w-4 mr-2" />

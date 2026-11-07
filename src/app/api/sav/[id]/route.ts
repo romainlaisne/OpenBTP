@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,48 +7,51 @@ import { prisma } from '@/lib/prisma/client'
 import { StatutSAV } from '@/types/sav'
 
 export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const { id } = await props.params
     await prisma.ticketSAV.delete({ where: { id } })
-    return NextResponse.json({ ok: true })
+    return localizedJson({ ok: true })
   } catch (error) {
     console.error('Erreur suppression ticket SAV:', error)
-    return NextResponse.json({ error: 'Suppression impossible' }, { status: 500 })
+    return localizedJson({ error: 'Suppression impossible' }, { status: 500 })
   }
 }
 
 export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const { id } = await props.params
     const body = await request.json().catch(() => ({}))
     const { statut } = body as { statut?: StatutSAV }
     if (!statut || !Object.values(StatutSAV).includes(statut)) {
-      return NextResponse.json({ error: 'Statut invalide' }, { status: 400 })
+      return localizedJson({ error: 'Statut invalide' }, { status: 400 })
     }
 
     const updated = await prisma.ticketSAV.update({ where: { id }, data: { statut } })
-    return NextResponse.json(updated)
+    return localizedJson(updated)
   } catch (error) {
     console.error('Erreur mise à jour statut ticket SAV:', error)
-    return NextResponse.json({ error: 'Mise à jour impossible' }, { status: 500 })
+    return localizedJson({ error: 'Mise à jour impossible' }, { status: 500 })
   }
 }
 
 // GET /api/sav/[id] - détail d'un ticket
 export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     const { id } = await props.params
 
     const ticket = await prisma.ticketSAV.findUnique({
@@ -63,18 +68,19 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
         commentaires: { include: { auteur: { select: { id: true, name: true, email: true } } }, orderBy: { createdAt: 'desc' } },
       }
     })
-    if (!ticket) return NextResponse.json({ error: 'Ticket introuvable' }, { status: 404 })
-    return NextResponse.json(ticket)
+    if (!ticket) return localizedJson({ error: 'Ticket introuvable' }, { status: 404 })
+    return localizedJson(ticket)
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 // PATCH /api/sav/[id] - mise à jour des champs principaux / assignations
 export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     const { id } = await props.params
     const body = await request.json()
 
@@ -99,9 +105,9 @@ export async function PATCH(request: NextRequest, props: { params: Promise<{ id:
         soustraitantAssign: { select: { id: true, nom: true, email: true } },
       }
     })
-    return NextResponse.json(updated)
+    return localizedJson(updated)
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 

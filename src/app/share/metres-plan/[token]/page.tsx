@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { exportExcel } from '@/lib/metres-plan/exportExcel'
@@ -84,7 +86,7 @@ export default function MetrePlanSharePage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500 mx-auto mb-4" />
-          <p className="text-gray-500 text-sm">Chargement du métré partagé...</p>
+          <p className="text-gray-500 text-sm"><UiText>Chargement du métré partagé...</UiText></p>
         </div>
       </div>
     )
@@ -99,7 +101,7 @@ export default function MetrePlanSharePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-xl font-semibold text-gray-900 mb-2">Lien invalide ou expiré</h1>
+          <h1 className="text-xl font-semibold text-gray-900 mb-2"><UiText>Lien invalide ou expiré</UiText></h1>
           <p className="text-gray-500 text-sm">{error ?? 'Ce lien de partage n\'est plus valide.'}</p>
         </div>
       </div>
@@ -117,8 +119,8 @@ export default function MetrePlanSharePage() {
             </svg>
           </div>
           <div>
-            <p className="text-xs font-medium text-indigo-600 uppercase tracking-wide">MétréPlan · OpenBTP</p>
-            <p className="text-xs text-gray-400">Document partagé en lecture seule</p>
+            <p className="text-xs font-medium text-indigo-600 uppercase tracking-wide"><UiText>MétréPlan · OpenBTP</UiText></p>
+            <p className="text-xs text-gray-400"><UiText>Document partagé en lecture seule</UiText></p>
           </div>
         </div>
       </header>
@@ -131,11 +133,11 @@ export default function MetrePlanSharePage() {
             <h1 className="text-2xl font-bold text-gray-900">{data.nom}</h1>
             {data.chantier && (
               <p className="text-sm text-gray-500 mt-1">
-                Chantier : <span className="font-medium text-gray-700">{data.chantier.nomChantier}</span>
+                <UiText>Chantier : </UiText><span className="font-medium text-gray-700">{data.chantier.nomChantier}</span>
               </p>
             )}
             <p className="text-xs text-gray-400 mt-2">
-              Créé le {new Date(data.createdAt).toLocaleDateString('fr-FR', {
+              <UiText>Créé le </UiText>{new Date(data.createdAt).toLocaleDateString(intlLocale(getActiveLocale()), {
                 day: 'numeric', month: 'long', year: 'numeric',
               })}
             </p>
@@ -147,13 +149,13 @@ export default function MetrePlanSharePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <p className="text-xs text-amber-700">
-              Ce document est partagé en lecture seule. Vous pouvez télécharger les données au format Excel.
-            </p>
+              <UiText>Ce document est partagé en lecture seule. Vous pouvez télécharger les données au format Excel.
+            </UiText></p>
           </div>
 
           {/* Actions */}
           <div className="p-6 space-y-3">
-            <h2 className="text-sm font-semibold text-gray-700 mb-4">Téléchargements disponibles</h2>
+            <h2 className="text-sm font-semibold text-gray-700 mb-4"><UiText>Téléchargements disponibles</UiText></h2>
 
             <button
               onClick={handleDownloadExcel}
@@ -169,7 +171,7 @@ export default function MetrePlanSharePage() {
                 <p className="text-sm font-semibold text-emerald-800">
                   {exporting ? 'Génération en cours...' : 'Télécharger Excel'}
                 </p>
-                <p className="text-xs text-emerald-600">Bordereau, résumé et détail des mesures</p>
+                <p className="text-xs text-emerald-600"><UiText>Bordereau, résumé et détail des mesures</UiText></p>
               </div>
               {!exporting && (
                 <svg className="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -182,7 +184,7 @@ export default function MetrePlanSharePage() {
 
         {/* Footer */}
         <p className="text-center text-xs text-gray-400 mt-8">
-          Partagé via <span className="font-medium text-gray-500">OpenBTP · MétréPlan</span>
+          <UiText>Partagé via </UiText><span className="font-medium text-gray-500"><UiText>OpenBTP · MétréPlan</UiText></span>
         </p>
       </main>
     </div>

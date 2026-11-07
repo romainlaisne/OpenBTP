@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 export interface MetreData {
   metre: {
     id: string
@@ -54,7 +55,7 @@ export function generateMetreHTML(data: MetreData): string {
   }
 
   // Formater la date
-  const dateFormatee = new Date(metre.date).toLocaleDateString('fr-FR', {
+  const dateFormatee = new Date(metre.date).toLocaleDateString(intlLocale(getActiveLocale()), {
     day: '2-digit',
     month: 'long',
     year: 'numeric'
@@ -461,7 +462,7 @@ export function generateMetreHTML(data: MetreData): string {
 
         <!-- Informations de création -->
         <div class="creation-info">
-            Créé le ${new Date(metre.createdAt).toLocaleDateString('fr-FR', {
+            Créé le ${new Date(metre.createdAt).toLocaleDateString(intlLocale(getActiveLocale()), {
               day: '2-digit',
               month: 'long',
               year: 'numeric',
@@ -472,11 +473,11 @@ export function generateMetreHTML(data: MetreData): string {
 
         <!-- Pied de page -->
         <div class="footer">
-            <p>Document généré le ${new Date().toLocaleDateString('fr-FR', {
+            <p>Document généré le ${new Date().toLocaleDateString(intlLocale(getActiveLocale()), {
               day: '2-digit',
               month: '2-digit',
               year: 'numeric'
-            })} à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</p>
+            })} à ${new Date().toLocaleTimeString(intlLocale(getActiveLocale()), { hour: '2-digit', minute: '2-digit' })}</p>
             <p>${companySettings.nom}${companySettings.siret ? ` - SIRET: ${companySettings.siret}` : ''}</p>
         </div>
     </div>

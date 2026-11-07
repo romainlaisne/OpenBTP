@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -11,10 +13,11 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ dossierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { dossierId } = await params
@@ -41,13 +44,13 @@ export async function GET(
     })
 
     if (!dossier) {
-      return NextResponse.json({ error: 'Dossier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Dossier non trouvé' }, { status: 404 })
     }
 
-    return NextResponse.json(dossier)
+    return localizedJson(dossier)
   } catch (error) {
     console.error('Erreur lors de la récupération du dossier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du dossier' },
       { status: 500 }
     )
@@ -59,10 +62,11 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ dossierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { dossierId } = await params
@@ -75,10 +79,10 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json(dossier)
+    return localizedJson(dossier)
   } catch (error) {
     console.error('Erreur lors de la mise à jour du dossier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour du dossier' },
       { status: 500 }
     )
@@ -90,16 +94,17 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ dossierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Vérifier que l'utilisateur est admin
     const roleCheck = await checkRole('ADMIN')
     if (roleCheck) {
-      return NextResponse.json({ error: roleCheck.error }, { status: roleCheck.status })
+      return localizedJson({ error: roleCheck.error }, { status: roleCheck.status })
     }
 
     const { dossierId } = await params
@@ -113,7 +118,7 @@ export async function DELETE(
     })
 
     if (!dossier) {
-      return NextResponse.json({ error: 'Dossier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Dossier non trouvé' }, { status: 404 })
     }
 
     // Supprimer le fichier PDF s'il existe (enlever le / initial pour path.join correct)
@@ -158,10 +163,10 @@ export async function DELETE(
       where: { id: dossierId }
     })
 
-    return NextResponse.json({ success: true, message: 'Dossier supprimé avec succès' })
+    return localizedJson({ success: true, message: 'Dossier supprimé avec succès' })
   } catch (error) {
     console.error('Erreur lors de la suppression du dossier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du dossier' },
       { status: 500 }
     )

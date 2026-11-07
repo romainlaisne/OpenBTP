@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -9,10 +11,11 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; etatId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, soustraitantId, etatId } = await context.params
@@ -20,7 +23,7 @@ export async function POST(
 
     // Valider que etatId n'est pas 0 (nouvel état)
     if (etatId === '0') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Cannot add avenant to state with ID 0. Create state first.' },
         { status: 400 }
       )
@@ -28,7 +31,7 @@ export async function POST(
 
     const etatIdNum = parseInt(etatId)
     if (isNaN(etatIdNum)) {
-      return NextResponse.json({ error: 'ID d\'état invalide' }, { status: 400 })
+      return localizedJson({ error: 'ID d\'état invalide' }, { status: 400 })
     }
 
     // Récupérer l'ID interne du chantier
@@ -38,7 +41,7 @@ export async function POST(
     })
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Vérifier que l'état existe et appartient au bon sous-traitant
@@ -50,7 +53,7 @@ export async function POST(
     })
 
     if (!etat) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
@@ -58,7 +61,7 @@ export async function POST(
 
     // Vérifier que l'état n'est pas finalisé
     if (etat.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible d\'ajouter un avenant à un état finalisé' },
         { status: 400 }
       )
@@ -85,10 +88,10 @@ export async function POST(
       }
     })
 
-    return NextResponse.json(nouvelAvenant)
+    return localizedJson(nouvelAvenant)
   } catch (error) {
     console.error('Erreur lors de l\'ajout de l\'avenant:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'ajout de l\'avenant' },
       { status: 500 }
     )

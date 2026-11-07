@@ -1,8 +1,11 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { readPortalSessionFromCookie } from '@/app/public/portail/auth'
 
 export async function GET(request: Request, props: { params: Promise<{ type: 'ouvrier'|'soustraitant'; actorId: string }> }) {
+  await bindRequestLocale()
   const { type, actorId } = await props.params
 
   try {
@@ -11,7 +14,7 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
     const session = readPortalSessionFromCookie(cookieHeader)
     
     if (!session || session.t !== (type === 'ouvrier' ? 'OUVRIER_INTERNE' : 'SOUSTRAITANT') || session.id !== actorId) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     let chantiers = []
@@ -67,7 +70,7 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
       })
     }
 
-    return NextResponse.json({ 
+    return localizedJson({ 
       success: true,
       chantiers: chantiers.map(ch => ({
         chantierId: ch.chantierId,
@@ -82,7 +85,7 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
     })
   } catch (error) {
     console.error('Erreur lors de la récupération des chantiers:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { notifier } from '@/lib/services/notificationService'
@@ -16,9 +18,10 @@ interface MetreLineInput {
 
 // GET: liste des métrés soumis par le sous-traitant connecté (uniquement les siens)
 export async function GET(request: Request, props: { params: Promise<{ type: 'ouvrier'|'soustraitant'; actorId: string }> }) {
+  await bindRequestLocale()
   const { type, actorId } = await props.params
   if (type !== 'soustraitant') {
-    return NextResponse.json({ error: 'Type non supporté' }, { status: 400 })
+    return localizedJson({ error: 'Type non supporté' }, { status: 400 })
   }
 
   const session = readPortalSessionFromCookie(request.headers.get('cookie'))
@@ -37,19 +40,20 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
         chantier: { select: { chantierId: true, nomChantier: true } },
       },
     })
-    return NextResponse.json(metres)
+    return localizedJson(metres)
   } catch (error) {
     console.error('Erreur récupération métrés portail:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 // POST: créer/soumettre un métré
 // Body: { chantierId?, freeChantierNom?, commandeId?, statut?, commentaire?, piecesJointes?: string[], lignes: [...] }
 export async function POST(request: Request, props: { params: Promise<{ type: 'ouvrier'|'soustraitant'; actorId: string }> }) {
+  await bindRequestLocale()
   const { type, actorId } = await props.params
   if (type !== 'soustraitant') {
-    return NextResponse.json({ error: 'Type non supporté' }, { status: 400 })
+    return localizedJson({ error: 'Type non supporté' }, { status: 400 })
   }
 
   const session = readPortalSessionFromCookie(request.headers.get('cookie'))
@@ -69,7 +73,7 @@ export async function POST(request: Request, props: { params: Promise<{ type: 'o
     let { chantierId, commandeId } = body as { chantierId?: string; commandeId?: number | null }
 
     if (!Array.isArray(lignes) || lignes.length === 0) {
-      return NextResponse.json({ error: 'lignes requis' }, { status: 400 })
+      return localizedJson({ error: 'lignes requis' }, { status: 400 })
     }
 
     // Cas chantier libre: créer un chantier minimal si pas de chantierId fourni
@@ -86,7 +90,7 @@ export async function POST(request: Request, props: { params: Promise<{ type: 'o
     }
 
     if (!chantierId) {
-      return NextResponse.json({ error: 'chantierId manquant' }, { status: 400 })
+      return localizedJson({ error: 'chantierId manquant' }, { status: 400 })
     }
 
     // Vérifier commande éligible si fournie, sinon vérifier au moins une commande existante sauf chantier libre
@@ -96,7 +100,7 @@ export async function POST(request: Request, props: { params: Promise<{ type: 'o
         where: { soustraitantId: actorId, id: Number(commandeId) },
         select: { id: true }
       })
-      if (!existeCommande) return NextResponse.json({ error: 'Commande non autorisée' }, { status: 403 })
+      if (!existeCommande) return localizedJson({ error: 'Commande non autorisée' }, { status: 403 })
     } else {
       existeCommande = await prisma.commandeSousTraitant.findFirst({
         where: { soustraitantId: actorId, chantierId },
@@ -147,9 +151,9 @@ export async function POST(request: Request, props: { params: Promise<{ type: 'o
       })
     }
 
-    return NextResponse.json(metre, { status: 201 })
+    return localizedJson(metre, { status: 201 })
   } catch {
     console.error('Erreur création métré')
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

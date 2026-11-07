@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -26,16 +28,17 @@ interface DocumentWithIncludedRelations {
 }
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
     const userId = session.user.id;
 
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Accès non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Accès non autorisé' }, { status: 403 })
     }
 
     const formData = await request.formData()
@@ -47,15 +50,15 @@ export async function POST(request: Request) {
       try {
         tagNames = JSON.parse(tagsString)
         if (!Array.isArray(tagNames) || !tagNames.every(t => typeof t === 'string')) {
-          return NextResponse.json({ error: 'Format des tags invalide. Attendu: string[]' }, { status: 400 })
+          return localizedJson({ error: 'Format des tags invalide. Attendu: string[]' }, { status: 400 })
         }
       } catch {
-        return NextResponse.json({ error: 'Format des tags invalide (JSON malformé)' }, { status: 400 })
+        return localizedJson({ error: 'Format des tags invalide (JSON malformé)' }, { status: 400 })
       }
     }
 
     if (!file) {
-      return NextResponse.json({ error: 'Aucun fichier fourni' }, { status: 400 })
+      return localizedJson({ error: 'Aucun fichier fourni' }, { status: 400 })
     }
 
     const documentsBaseDir = path.join(process.cwd(), 'public', 'uploads', 'documents')
@@ -125,7 +128,7 @@ export async function POST(request: Request) {
     // newDocument.tags est maintenant Tag[]
     const tagNamesFromDoc = newDocument.tags.map(tag => tag.nom);
 
-    return NextResponse.json({ 
+    return localizedJson({ 
       message: 'Document uploadé et enregistré avec succès',
       document: {
         id: newDocument.id.toString(),
@@ -140,6 +143,6 @@ export async function POST(request: Request) {
     })
   } catch (error: unknown) {
     console.error('Erreur lors de l\'upload du document administratif:', error)
-    return NextResponse.json({ error: 'Erreur serveur lors de l\'upload du document' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur lors de l\'upload du document' }, { status: 500 })
   }
 } 

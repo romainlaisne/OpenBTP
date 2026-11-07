@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,15 +9,16 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ chantierId: string; bonCommandeId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     if (!params.chantierId || !params.bonCommandeId) {
-      return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 })
+      return localizedJson({ error: 'Paramètres manquants' }, { status: 400 })
     }
 
     // Vérifier si le chantier existe
@@ -26,7 +29,7 @@ export async function GET(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
     // Récupérer le bon de commande sous-traitant
     const bonCommande = await prisma.$queryRaw`
@@ -35,7 +38,7 @@ export async function GET(
     `
 
     if (!bonCommande || !Array.isArray(bonCommande) || bonCommande.length === 0) {
-      return NextResponse.json({ error: 'Bon de commande non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Bon de commande non trouvé' }, { status: 404 })
     }
 
     // Récupérer les lignes du bon de commande
@@ -59,10 +62,10 @@ export async function GET(
       soustraitant: soustraitant
     }
 
-    return NextResponse.json(result)
+    return localizedJson(result)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du bon de commande' },
       { status: 500 }
     )

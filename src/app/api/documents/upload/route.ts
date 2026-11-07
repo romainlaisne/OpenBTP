@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
@@ -52,9 +54,10 @@ function getMimeType(filename: string): string {
 }
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
   if (!session?.user?.email) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   }
   try {
     const formData = await request.formData()
@@ -62,21 +65,21 @@ export async function POST(request: NextRequest) {
     const uploadPath = formData.get('path') as string | null
     
     if (!file) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Fichier manquant' },
         { status: 400 }
       )
     }
     
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Fichier trop volumineux (max 10MB)' },
         { status: 400 }
       )
     }
     
     if (!uploadPath) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chemin de destination manquant' },
         { status: 400 }
       )
@@ -84,7 +87,7 @@ export async function POST(request: NextRequest) {
     
     const targetDir = validateAndGetFullPath(uploadPath)
     if (!targetDir) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chemin de destination invalide' },
         { status: 400 }
       )
@@ -102,7 +105,7 @@ export async function POST(request: NextRequest) {
     // Vérifier si un fichier existe déjà avec ce nom
     if (fs.existsSync(filePath)) {
       // Option 1: Retourner une erreur
-      // return NextResponse.json(
+      // return localizedJson(
       //   { error: 'Un fichier avec ce nom existe déjà' },
       //   { status: 409 }
       // )
@@ -132,10 +135,10 @@ export async function POST(request: NextRequest) {
       updatedAt: fileStats.mtime.toISOString()
     }
     
-    return NextResponse.json(uploadedFile, { status: 201 })
+    return localizedJson(uploadedFile, { status: 201 })
   } catch (error) {
     console.error('Erreur lors de l\'upload du fichier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'upload du fichier' },
       { status: 500 }
     )

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -15,6 +17,7 @@ interface ErrorLogData {
 }
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification (optionnel pour le logging d'erreurs)
     let userId: string | undefined
@@ -29,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     // Validation des données d'erreur
     if (!errorData.message || !errorData.timestamp || !errorData.url) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Données d\'erreur invalides' },
         { status: 400 }
       )
@@ -88,7 +91,7 @@ export async function POST(request: NextRequest) {
     //   }
     // })
 
-    return NextResponse.json({ 
+    return localizedJson({ 
       success: true, 
       errorId: enrichedErrorData.errorId,
       severity: enrichedErrorData.severity
@@ -98,7 +101,7 @@ export async function POST(request: NextRequest) {
     console.error('Erreur lors du logging de l\'erreur:', error)
     
     // Retourner une réponse d'erreur mais ne pas faire échouer le processus
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors du logging' },
       { status: 500 }
     )

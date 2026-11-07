@@ -1,12 +1,15 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getMagasinierIdFromCookie } from '@/app/public/portail/auth'
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const magasinierId = getMagasinierIdFromCookie(request.headers.get('cookie'))
     if (!magasinierId) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 })
     }
 
     const { id } = await params
@@ -17,7 +20,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     })
 
     if (!bon) {
-      return NextResponse.json({ error: 'Bon non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Bon non trouvé' }, { status: 404 })
     }
 
     await prisma.bonPreparation.update({
@@ -25,9 +28,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       data: { statut: 'TERMINE' },
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur POST terminer bon-preparation:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

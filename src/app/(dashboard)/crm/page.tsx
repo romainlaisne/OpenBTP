@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
@@ -138,7 +139,7 @@ function EntrepriseForm({
           value={form.nom}
           onChange={(e) => onChange('nom', e.target.value)}
           className={inputCls}
-          placeholder="Nom de l'entreprise"
+          placeholder={tx("Nom de l'entreprise")}
         />
       </div>
 
@@ -150,7 +151,7 @@ function EntrepriseForm({
           onChange={(e) => onChange('type', e.target.value)}
           className={inputCls}
         >
-          <option value="ENTREPRISE_GENERALE">Entreprise Générale</option>
+          <option value="ENTREPRISE_GENERALE"><UiText>Entreprise Générale</UiText></option>
           <option value="ARCHITECTE">Architecte</option>
           <option value="CLIENT_DIRECT">Client Direct</option>
           <option value="AUTRE">Autre</option>
@@ -165,7 +166,7 @@ function EntrepriseForm({
           value={form.adresse}
           onChange={(e) => onChange('adresse', e.target.value)}
           className={inputCls}
-          placeholder="Rue et numéro"
+          placeholder={tx("Rue et numéro")}
         />
       </div>
 
@@ -225,7 +226,7 @@ function EntrepriseForm({
           value={form.email}
           onChange={(e) => onChange('email', e.target.value)}
           className={inputCls}
-          placeholder="contact@entreprise.be"
+          placeholder={tx("contact@entreprise.be")}
         />
       </div>
 
@@ -332,8 +333,8 @@ function CreateEntrepriseModal({
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             <BuildingOffice2Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            Nouvelle entreprise
-          </h3>
+            <UiText>Nouvelle entreprise
+          </UiText></h3>
           <button
             onClick={handleClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
@@ -441,8 +442,8 @@ function EditEntrepriseModal({
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             <PencilSquareIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            Modifier l&apos;entreprise
-          </h3>
+            <UiText>Modifier l&apos;entreprise
+          </UiText></h3>
           <button
             onClick={handleClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
@@ -488,12 +489,12 @@ function DeleteModal({
     <div className="fixed inset-0 bg-gray-500/75 dark:bg-gray-900/80 flex items-center justify-center p-4 z-50">
       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full shadow-2xl">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Confirmer la suppression
-        </h3>
+          <UiText>Confirmer la suppression
+        </UiText></h3>
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
-          Êtes-vous sûr de vouloir supprimer l&apos;entreprise &ldquo;
-          {state.entreprise?.nom}&rdquo; ? Cette action est irréversible.
-        </p>
+          <UiText>Êtes-vous sûr de vouloir supprimer l&apos;entreprise &ldquo;
+          </UiText>{state.entreprise?.nom}<UiText>&rdquo; ? Cette action est irréversible.
+        </UiText></p>
         <div className="mt-5 flex justify-end gap-3">
           <button
             type="button"
@@ -839,8 +840,8 @@ export default function CrmPage() {
 
       {/* Page header */}
       <PageHeader
-        title="CRM Prospects"
-        subtitle="Gestion des prospects commerciaux"
+        title={tx("CRM Prospects")}
+        subtitle={tx("Gestion des prospects commerciaux")}
         icon={BuildingOffice2Icon}
         badgeColor="from-blue-600 via-indigo-600 to-purple-700"
         gradientColor="from-blue-600/10 via-indigo-600/10 to-purple-700/10"
@@ -852,7 +853,7 @@ export default function CrmPage() {
               className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
             >
               <PlusIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Nouvelle entreprise</span>
+              <span className="hidden sm:inline"><UiText>Nouvelle entreprise</UiText></span>
               <span className="sm:hidden">Nouveau</span>
             </button>
             <button
@@ -885,8 +886,8 @@ export default function CrmPage() {
           <div className="mb-6 flex items-center gap-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-xl px-4 py-3 text-yellow-800 dark:text-yellow-300">
             <ExclamationTriangleIcon className="h-5 w-5 flex-shrink-0" />
             <span className="text-sm font-medium">
-              {totalRappelsEnAttente} rappel{totalRappelsEnAttente !== 1 ? 's' : ''} en attente
-            </span>
+              {totalRappelsEnAttente} rappel{totalRappelsEnAttente !== 1 ? 's' : ''} <UiText>en attente
+            </UiText></span>
           </div>
         )}
 
@@ -896,7 +897,7 @@ export default function CrmPage() {
           <div className="flex-1 max-w-md">
             <SearchInput
               id="search-crm"
-              placeholder="Rechercher (nom, ville, email)..."
+              placeholder={tx("Rechercher (nom, ville, email)...")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full"
@@ -927,8 +928,8 @@ export default function CrmPage() {
             <div className="text-center py-16">
               <BuildingOffice2Icon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
               <h3 className="mt-3 text-sm font-medium text-gray-900 dark:text-gray-100">
-                Aucun prospect
-              </h3>
+                <UiText>Aucun prospect
+              </UiText></h3>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 {search || typeFilter !== 'TOUS'
                   ? 'Aucun résultat pour ces critères de recherche.'
@@ -941,8 +942,8 @@ export default function CrmPage() {
                     className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     <PlusIcon className="h-4 w-4 mr-2" />
-                    Nouvelle entreprise
-                  </button>
+                    <UiText>Nouvelle entreprise
+                  </UiText></button>
                 </div>
               )}
             </div>
@@ -1062,7 +1063,7 @@ export default function CrmPage() {
                           <Link
                             href={`/crm/${entreprise.id}`}
                             className="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
-                            title="Voir le détail"
+                            title={tx("Voir le détail")}
                           >
                             <EyeIcon className="h-4 w-4" />
                           </Link>
@@ -1071,7 +1072,7 @@ export default function CrmPage() {
                           <button
                             onClick={() => openEdit(entreprise)}
                             className="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
-                            title="Modifier"
+                            title={tx("Modifier")}
                           >
                             <PencilSquareIcon className="h-4 w-4" />
                           </button>
@@ -1080,7 +1081,7 @@ export default function CrmPage() {
                           <button
                             onClick={() => openDelete(entreprise)}
                             className="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
-                            title="Supprimer"
+                            title={tx("Supprimer")}
                           >
                             <TrashIcon className="h-4 w-4" />
                           </button>

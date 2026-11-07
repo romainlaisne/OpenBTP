@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import sharp from 'sharp'
@@ -101,7 +103,8 @@ export async function generateRapportPdfBuffer(input: RapportPdfInput): Promise<
     logoBase64,
   }
 
-  const html = generateRapportHTML(rapportData)
+  const __locale = await bindRequestLocale()
+  const html = localizeGeneratedHtml(__locale, generateRapportHTML(rapportData), collectStrings(rapportData))
   const pdfBuffer = await PDFGenerator.generatePDF(html, {
     format: 'A4',
     orientation: 'portrait',

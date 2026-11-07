@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -8,17 +10,18 @@ export async function GET(
   _request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await props.params
 
     const entreprise = await prisma.prospectEntreprise.findUnique({ where: { id } })
     if (!entreprise) {
-      return NextResponse.json({ error: 'Entreprise non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Entreprise non trouvée' }, { status: 404 })
     }
 
     const contacts = await prisma.prospectContact.findMany({
@@ -26,10 +29,10 @@ export async function GET(
       orderBy: { nom: 'asc' },
     })
 
-    return NextResponse.json(contacts)
+    return localizedJson(contacts)
   } catch (error) {
     console.error('Erreur GET /api/crm/entreprises/[id]/contacts:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des contacts' },
       { status: 500 }
     )
@@ -41,17 +44,18 @@ export async function POST(
   request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await props.params
     const body = await request.json()
 
     if (!body.prenom || !body.nom) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le prénom et le nom du contact sont requis' },
         { status: 400 }
       )
@@ -59,7 +63,7 @@ export async function POST(
 
     const entreprise = await prisma.prospectEntreprise.findUnique({ where: { id } })
     if (!entreprise) {
-      return NextResponse.json({ error: 'Entreprise non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Entreprise non trouvée' }, { status: 404 })
     }
 
     const contact = await prisma.prospectContact.create({
@@ -75,10 +79,10 @@ export async function POST(
       },
     })
 
-    return NextResponse.json(contact, { status: 201 })
+    return localizedJson(contact, { status: 201 })
   } catch (error) {
     console.error('Erreur POST /api/crm/entreprises/[id]/contacts:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du contact' },
       { status: 500 }
     )

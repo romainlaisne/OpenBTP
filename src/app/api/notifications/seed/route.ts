@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -302,10 +304,11 @@ const notificationTypes = [
 
 // POST /api/notifications/seed - Seeder les types de notifications (ADMIN uniquement)
 export async function POST(_request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     // Créer ou mettre à jour tous les types
@@ -330,14 +333,14 @@ export async function POST(_request: NextRequest) {
       )
     )
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       count: results.length,
       message: `${results.length} types de notifications initialisés`,
     })
   } catch (error) {
     console.error('Erreur lors du seeding:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors du seeding des types de notifications' },
       { status: 500 }
     )

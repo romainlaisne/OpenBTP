@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { ChevronDownIcon, ChevronUpIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
@@ -66,14 +68,14 @@ export default function TemplateVariablesHelp() {
       {isOpen && (
         <div className="px-4 pb-4 space-y-4">
           <p className="text-sm text-blue-800 dark:text-blue-200">
-            Utilisez ces variables dans votre template HTML. Elles seront automatiquement remplacées par les données réelles lors de la génération du contrat.
-          </p>
+            <UiText>Utilisez ces variables dans votre template HTML. Elles seront automatiquement remplacées par les données réelles lors de la génération du contrat.
+          </UiText></p>
 
           {/* Informations de l'entreprise */}
           <div>
             <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
-              📋 Informations de l'entreprise
-            </h4>
+              <UiText>📋 Informations de l'entreprise
+            </UiText></h4>
             <div className="space-y-1">
               {VARIABLES.entreprise.map((v) => (
                 <div
@@ -92,7 +94,7 @@ export default function TemplateVariablesHelp() {
                     type="button"
                     onClick={() => copyToClipboard(v.var)}
                     className="opacity-0 group-hover:opacity-100 p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 rounded transition-opacity"
-                    title="Copier"
+                    title={tx("Copier")}
                   >
                     <ClipboardDocumentIcon className="h-4 w-4" />
                   </button>
@@ -104,8 +106,8 @@ export default function TemplateVariablesHelp() {
           {/* Informations du sous-traitant */}
           <div>
             <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
-              👷 Informations du sous-traitant
-            </h4>
+              <UiText>👷 Informations du sous-traitant
+            </UiText></h4>
             <div className="space-y-1">
               {VARIABLES.sousTraitant.map((v) => (
                 <div
@@ -124,7 +126,7 @@ export default function TemplateVariablesHelp() {
                     type="button"
                     onClick={() => copyToClipboard(v.var)}
                     className="opacity-0 group-hover:opacity-100 p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 rounded transition-opacity"
-                    title="Copier"
+                    title={tx("Copier")}
                   >
                     <ClipboardDocumentIcon className="h-4 w-4" />
                   </button>
@@ -156,7 +158,7 @@ export default function TemplateVariablesHelp() {
                     type="button"
                     onClick={() => copyToClipboard(v.var)}
                     className="opacity-0 group-hover:opacity-100 p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 rounded transition-opacity"
-                    title="Copier"
+                    title={tx("Copier")}
                   >
                     <ClipboardDocumentIcon className="h-4 w-4" />
                   </button>
@@ -168,8 +170,8 @@ export default function TemplateVariablesHelp() {
           {/* Exemple d'utilisation */}
           <div className="mt-4 pt-3 border-t border-blue-200 dark:border-blue-800">
             <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
-              💡 Exemple d'utilisation
-            </h4>
+              <UiText>💡 Exemple d'utilisation
+            </UiText></h4>
             <div className="bg-gray-800 text-gray-100 p-3 rounded text-xs font-mono overflow-x-auto">
               <pre>{`<div class="header">
   <img src="data:image/png;base64,{{logoBase64}}" alt="Logo">

@@ -3,12 +3,22 @@ import weekOfYear from 'dayjs/plugin/weekOfYear'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import 'dayjs/locale/fr'
+import 'dayjs/locale/en-gb'
+import updateLocale from 'dayjs/plugin/updateLocale'
+import { getActiveLocale } from '@/lib/i18n/locale'
 
-// Initialiser dayjs avec les plugins nécessaires et la locale française
+// Monday remains the first day of the week in both languages (business rule).
 dayjs.extend(weekOfYear)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
-dayjs.locale('fr') // Les semaines commencent le lundi en France
+dayjs.extend(updateLocale)
+dayjs.updateLocale('en-gb', { weekStart: 1 })
+dayjs.updateLocale('fr', { weekStart: 1 })
+dayjs.locale('fr')
+
+function applyScheduleLocale() {
+  dayjs.locale(getActiveLocale() === 'en' ? 'en-gb' : 'fr')
+}
 
 export interface GanttData {
   chantiers: Array<{
@@ -38,6 +48,7 @@ export interface GanttData {
 }
 
 export function generateGanttHTML(data: GanttData): string {
+  applyScheduleLocale()
   const { chantiers, period, scale, filters, companySettings } = data
   
   // Filtrer les chantiers selon les filtres

@@ -1,4 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import Image from 'next/image'
 import { ArrowUpTrayIcon, ArrowLeftIcon, ArrowRightIcon, XMarkIcon, TagIcon, DocumentIcon, EyeIcon, TrashIcon, ArrowDownTrayIcon, CameraIcon, DocumentTextIcon, ClipboardDocumentListIcon, SwatchIcon } from '@heroicons/react/24/outline'
@@ -219,7 +222,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
 
   // Supprimer un document
   const handleDeleteDocument = async (docId: number) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce document ?')) return
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer ce document ?"))) return
 
     try {
       const response = await fetch(`/api/chantiers/${chantierId}/documents/${docId}`, {
@@ -368,7 +371,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600">Chargement des documents...</span>
+        <span className="ml-2 text-gray-600"><UiText>Chargement des documents...</UiText></span>
       </div>
     )
   }
@@ -405,7 +408,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
             }`}
           >
             <DocumentIcon className={`h-5 w-5 transition-colors ${activeTab === 'documents' ? 'text-emerald-700 dark:text-emerald-400' : 'text-gray-400 dark:text-gray-500'}`} />
-            <span>Documents</span>
+            <span><UiText>Documents</UiText></span>
           </button>
           <button
             ref={(el) => { tabRefs.current[1] = el }}
@@ -441,7 +444,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
             }`}
           >
             <ClipboardDocumentListIcon className={`h-5 w-5 transition-colors ${activeTab === 'metres' ? 'text-emerald-700 dark:text-emerald-400' : 'text-gray-400 dark:text-gray-500'}`} />
-            <span>Métrés</span>
+            <span><UiText>Métrés</UiText></span>
           </button>
           <button
             ref={(el) => { tabRefs.current[4] = el }}
@@ -492,10 +495,10 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                     <button 
                       onClick={() => setIsTagUploadModalOpen(true)}
                       className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      title="Gérer les tags pour les prochains uploads"
+                      title={tx("Gérer les tags pour les prochains uploads")}
                     >
-                      <TagIcon className="h-4 w-4 inline-block mr-1" /> Gérer
-                    </button>
+                      <TagIcon className="h-4 w-4 inline-block mr-1" /> <UiText>Gérer
+                    </UiText></button>
                   </div>
                   {selectedTagsForUpload.length > 0 ? (
                     <div className="flex flex-wrap gap-1">
@@ -506,7 +509,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                       ))}
                     </div>
                   ) : (
-                     <p className="text-xs text-gray-500 dark:text-gray-400 italic">Aucun tag sélectionné pour l&apos;upload.</p>
+                     <p className="text-xs text-gray-500 dark:text-gray-400 italic"><UiText>Aucun tag sélectionné pour l&apos;upload.</UiText></p>
                   )}
                 </div>
 
@@ -521,8 +524,8 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                   htmlFor="file-upload"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-colors cursor-pointer"
                 >
-                  Sélectionner des fichiers
-                </label>
+                  <UiText>Sélectionner des fichiers
+                </UiText></label>
               </div>
             )}
             {uploading && (
@@ -531,8 +534,8 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Traitement en cours...
-              </div>
+                <UiText>Traitement en cours...
+              </UiText></div>
             )}
           </div>
         </div>
@@ -542,8 +545,8 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
       {activeTab === 'documents' && (
         <div className="mb-4 pt-4 border-t border-gray-200 dark:border-gray-700">
           <label htmlFor="tag-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Filtrer par tag:
-          </label>
+            <UiText>Filtrer par tag:
+          </UiText></label>
           <select
             id="tag-filter"
             name="tag-filter"
@@ -581,7 +584,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                     className="inline-flex items-center px-4 py-2 bg-white/30 backdrop-blur-sm rounded-lg text-sm font-semibold shadow-lg hover:bg-white/40 transition-all duration-200 text-emerald-900 dark:text-white"
                   >
                     <TagIcon className="h-5 w-5 mr-2" />
-                    Modifier les tags ({selectedDocumentIds.size})
+                    <UiText>Modifier les tags (</UiText>{selectedDocumentIds.size})
                   </button>
                 )}
                 <span className="inline-flex items-center px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium shadow-sm text-emerald-900 dark:text-white">
@@ -594,7 +597,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
           {filteredDocuments.length === 0 ? (
             <div className="text-center py-8">
               <DocumentIcon className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
-              <p className="text-gray-500 dark:text-gray-400">Aucun document pour ce chantier</p>
+              <p className="text-gray-500 dark:text-gray-400"><UiText>Aucun document pour ce chantier</UiText></p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -610,20 +613,20 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                       />
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Nom
-                    </th>
+                      <UiText>Nom
+                    </UiText></th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Type
-                    </th>
+                      <UiText>Type
+                    </UiText></th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Tags
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Date
-                    </th>
+                      <UiText>Date
+                    </UiText></th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Actions
-                    </th>
+                      <UiText>Actions
+                    </UiText></th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -661,18 +664,18 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                             <span key={tag.id} className="inline-flex px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                               {tag.nom}
                             </span>
-                          )) || <span className="text-gray-400 dark:text-gray-500 text-sm">Aucun tag</span>}
+                          )) || <span className="text-gray-400 dark:text-gray-500 text-sm"><UiText>Aucun tag</UiText></span>}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(document.createdAt).toLocaleDateString('fr-FR')}
+                        {new Date(document.createdAt).toLocaleDateString(intlLocale(getActiveLocale()))}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => setPreviewDocument(document)}
                             className="p-2 rounded-lg text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
-                            title="Voir le document"
+                            title={tx("Voir le document")}
                           >
                             <EyeIcon className="h-5 w-5" />
                           </button>
@@ -682,14 +685,14 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                               setTagsForModalEdit(document.tags?.map(t => t.nom) || [])
                             }}
                             className="p-2 rounded-lg text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-all duration-200"
-                            title="Modifier les tags"
+                            title={tx("Modifier les tags")}
                           >
                             <TagIcon className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => handleDeleteDocument(document.id)}
                             className="p-2 rounded-lg text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
-                            title="Supprimer"
+                            title={tx("Supprimer")}
                           >
                             <TrashIcon className="h-5 w-5" />
                           </button>
@@ -722,7 +725,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
             <button 
               onClick={closePreview} 
               className="absolute top-3 right-3 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white z-10"
-              aria-label="Fermer"
+              aria-label={tx("Fermer")}
             >
               <XMarkIcon className="h-8 w-8" />
             </button>
@@ -746,14 +749,14 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                 <button 
                   onClick={(e) => { e.stopPropagation(); goToPreviousPhoto(); }}
                   className="p-2 rounded-full bg-gray-800 bg-opacity-50 hover:bg-opacity-75 text-white transition-opacity"
-                  aria-label="Photo précédente"
+                  aria-label={tx("Photo précédente")}
                 >
                   <ArrowLeftIcon className="h-6 w-6" />
                 </button>
                 <button 
                   onClick={(e) => { e.stopPropagation(); goToNextPhoto(); }}
                   className="p-2 rounded-full bg-gray-800 bg-opacity-50 hover:bg-opacity-75 text-white transition-opacity"
-                  aria-label="Photo suivante"
+                  aria-label={tx("Photo suivante")}
                 >
                   <ArrowRightIcon className="h-6 w-6" />
                 </button>
@@ -770,7 +773,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
           onClick={() => setPreviewDocument(null)}
           role="button"
           tabIndex={-1}
-          aria-label="Fermer la prévisualisation (cliquez ou appuyez sur Échap)"
+          aria-label={tx("Fermer la prévisualisation (cliquez ou appuyez sur Échap)")}
         >
           <div
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 max-w-4xl w-full max-h-[90vh] overflow-hidden"
@@ -781,7 +784,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
               <button
                 onClick={() => setPreviewDocument(null)}
                 className="flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 touch-manipulation"
-                aria-label="Fermer"
+                aria-label={tx("Fermer")}
               >
                 <XMarkIcon className="h-6 w-6" />
               </button>
@@ -878,14 +881,14 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                 if (isText) {
                   return (
                     <div className="p-4">
-                      <p className="text-gray-500 text-center">Prévisualisation non disponible pour les fichiers texte</p>
+                      <p className="text-gray-500 text-center"><UiText>Prévisualisation non disponible pour les fichiers texte</UiText></p>
                     </div>
                   )
                 }
                 return (
                   <div className="p-4 text-center">
                     <DocumentIcon className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-                    <p className="text-gray-500">Prévisualisation non disponible pour ce type de fichier</p>
+                    <p className="text-gray-500"><UiText>Prévisualisation non disponible pour ce type de fichier</UiText></p>
                     <p className="text-sm text-gray-400 mt-2">Type: {previewDocument.mimeType || 'Inconnu'}</p>
                   </div>
                 )
@@ -911,8 +914,8 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                 className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
               >
                 <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
-                Télécharger
-              </a>
+                <UiText>Télécharger
+              </UiText></a>
             </div>
           </div>
         </div>
@@ -923,8 +926,8 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
           <div className="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white dark:bg-gray-800">
             <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">
-              Modifier les tags du document
-            </h3>
+              <UiText>Modifier les tags du document
+            </UiText></h3>
             <div className="space-y-2 mb-6">
               {DOCUMENT_TAGS.map(tag => (
                 <div key={tag} className="flex items-center">
@@ -951,14 +954,14 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                 }}
                 className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 onClick={handleSubmitTagUpdate}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-500"
               >
-                Enregistrer les tags
-              </button>
+                <UiText>Enregistrer les tags
+              </UiText></button>
             </div>
           </div>
         </div>
@@ -969,7 +972,7 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
           <div className="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white dark:bg-gray-800">
             <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">
-              Modifier les tags de {selectedDocumentIds.size} document{selectedDocumentIds.size > 1 ? 's' : ''}
+              <UiText>Modifier les tags de </UiText>{selectedDocumentIds.size} document{selectedDocumentIds.size > 1 ? 's' : ''}
             </h3>
             <div className="space-y-2 mb-6">
               {DOCUMENT_TAGS.map(tag => (
@@ -996,14 +999,14 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
                 }}
                 className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 onClick={handleSubmitTagUpdate}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-500"
               >
-                Enregistrer les tags
-              </button>
+                <UiText>Enregistrer les tags
+              </UiText></button>
             </div>
           </div>
         </div>
@@ -1014,8 +1017,8 @@ export default function DocumentsContent({ chantierId }: DocumentsContentProps) 
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
           <div className="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white dark:bg-gray-800">
             <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">
-              Sélectionner les tags pour les prochains uploads
-            </h3>
+              <UiText>Sélectionner les tags pour les prochains uploads
+            </UiText></h3>
             <div className="space-y-2 mb-6">
               {DOCUMENT_TAGS.map(tag => (
                 <div key={`upload-modal-${tag}`} className="flex items-center">

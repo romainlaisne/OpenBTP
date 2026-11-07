@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -7,6 +9,7 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -14,7 +17,7 @@ export async function GET(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -27,7 +30,7 @@ export async function GET(
     });
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
     }
     const chantierIdInterne = chantierData.id;
 
@@ -59,10 +62,10 @@ export async function GET(
       };
     });
 
-    return NextResponse.json(commandes)
+    return localizedJson(commandes)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des commandes sous-traitant' },
       { status: 500 }
     )

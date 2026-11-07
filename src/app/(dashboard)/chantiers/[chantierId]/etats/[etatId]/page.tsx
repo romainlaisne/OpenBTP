@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use, useMemo } from 'react';
 import { useSession } from 'next-auth/react'
@@ -122,7 +124,7 @@ export default function EtatAvancementPage(props: PageProps) {
   const handleDownloadPDF = async () => {
     try {
       // Afficher un message pour indiquer que la génération est en cours
-      toast.loading('Génération du PDF en cours...', { id: 'pdf-generation' });
+      toast.loading(tx("Génération du PDF en cours..."), { id: 'pdf-generation' });
       
       const response = await fetch(`/api/chantiers/${params.chantierId}/etats-avancement/${params.etatId}/pdf-modern`, {
         method: 'GET',
@@ -153,7 +155,7 @@ export default function EtatAvancementPage(props: PageProps) {
       // Vérifier que le blob n'est pas vide
       if (blob.size === 0) {
         toast.dismiss('pdf-generation');
-        toast.error('Le PDF généré est vide');
+        toast.error(tx("Le PDF généré est vide"));
         return;
       }
       
@@ -166,11 +168,11 @@ export default function EtatAvancementPage(props: PageProps) {
       window.URL.revokeObjectURL(url);
       
       toast.dismiss('pdf-generation');
-      toast.success('PDF téléchargé avec succès');
+      toast.success(tx("PDF téléchargé avec succès"));
     } catch (error) {
       console.error('Erreur lors de la génération du PDF:', error);
       toast.dismiss('pdf-generation');
-      toast.error('Erreur lors de la génération du PDF');
+      toast.error(tx("Erreur lors de la génération du PDF"));
       setError('Erreur lors de la génération du PDF');
     }
   };
@@ -205,7 +207,7 @@ export default function EtatAvancementPage(props: PageProps) {
       setEtatAvancement(updatedEtat);
       
       // Afficher un message de succès
-      toast.success('État d\'avancement validé avec succès !');
+      toast.success(tx("État d'avancement validé avec succès !"));
       
       // Rester sur la page d'édition après validation
     } catch (error) {
@@ -237,7 +239,7 @@ export default function EtatAvancementPage(props: PageProps) {
       setEtatAvancement(updatedEtat);
       
       // Afficher un message de succès
-      toast.success('État d\'avancement réouvert avec succès !');
+      toast.success(tx("État d'avancement réouvert avec succès !"));
     } catch (error) {
       console.error('Erreur:', error);
       setError('Erreur lors de la réouverture de l\'état d\'avancement');
@@ -248,7 +250,7 @@ export default function EtatAvancementPage(props: PageProps) {
 
   const handleExportExcel = async () => {
     try {
-      toast.loading('Génération du fichier Excel...', { id: 'excel-generation' });
+      toast.loading(tx("Génération du fichier Excel..."), { id: 'excel-generation' });
       
       const response = await fetch(`/api/chantiers/${params.chantierId}/etats-avancement/${params.etatId}/export-excel`);
       
@@ -266,11 +268,11 @@ export default function EtatAvancementPage(props: PageProps) {
       window.URL.revokeObjectURL(url);
       
       toast.dismiss('excel-generation');
-      toast.success('Fichier Excel téléchargé avec succès');
+      toast.success(tx("Fichier Excel téléchargé avec succès"));
     } catch (error) {
       console.error('Erreur lors de l\'export Excel:', error);
       toast.dismiss('excel-generation');
-      toast.error('Erreur lors de la génération du fichier Excel');
+      toast.error(tx("Erreur lors de la génération du fichier Excel"));
     }
   };
 
@@ -307,10 +309,10 @@ export default function EtatAvancementPage(props: PageProps) {
       const updatedEtat = await response.json();
       setEtatAvancement(updatedEtat);
       
-      toast.success('Période de travaux sauvegardée');
+      toast.success(tx("Période de travaux sauvegardée"));
     } catch (error) {
       console.error('Erreur:', error);
-      toast.error('Erreur lors de la sauvegarde de la période de travaux');
+      toast.error(tx("Erreur lors de la sauvegarde de la période de travaux"));
     }
   };
 
@@ -339,38 +341,38 @@ export default function EtatAvancementPage(props: PageProps) {
 
                   <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30 text-white">
                     <CheckCircleIcon className="h-5 w-5 mr-3" />
-                    <span className="text-base sm:text-lg font-bold">État d'avancement n°{etatAvancement.numero}</span>
+                    <span className="text-base sm:text-lg font-bold"><UiText>État d'avancement n°</UiText>{etatAvancement.numero}</span>
                   </div>
 
                   {etatAvancement.estFinalise && (
                     <span className="inline-flex items-center gap-2 px-3 py-1 bg-white/25 text-white border border-white/40 rounded-full text-xs font-semibold shadow-sm">
                       <CheckCircleIcon className="h-4 w-4" />
-                      Validé
-                    </span>
+                      <UiText>Validé
+                    </UiText></span>
                   )}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-white/90">
                   <span className="inline-flex items-center gap-2">
                     <span className="opacity-90"><UiText>Date</UiText></span>
-                    <span className="font-semibold">{new Date(etatAvancement.date).toLocaleDateString('fr-FR')}</span>
+                    <span className="font-semibold">{new Date(etatAvancement.date).toLocaleDateString(intlLocale(getActiveLocale()))}</span>
                   </span>
                   <span className="inline-flex items-center gap-2">
-                    <span className="opacity-90">Période</span>
+                    <span className="opacity-90"><UiText>Période</UiText></span>
                     <select
                       value={mois}
                       onChange={(e) => handleMoisChange(e.target.value)}
                       disabled={etatAvancement?.estFinalise}
                       className={`bg-white/20 border-0 text-white rounded-full px-3 py-1 focus:outline-none focus:ring-2 focus:ring-white/40 ${etatAvancement?.estFinalise ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
                     >
-                      <option value="" className="text-gray-900">Période de travaux</option>
+                      <option value="" className="text-gray-900"><UiText>Période de travaux</UiText></option>
                       {periodeOptions.map((opt) => (
                         <option key={opt} value={opt} className="text-gray-900">{opt}</option>
                       ))}
                     </select>
                   </span>
                   <span className="inline-flex items-center gap-2">
-                    <span className="opacity-90">Chantier</span>
+                    <span className="opacity-90"><UiText>Chantier</UiText></span>
                     <span className="font-semibold">{chantier.nomChantier}</span>
                   </span>
                 </div>
@@ -380,7 +382,7 @@ export default function EtatAvancementPage(props: PageProps) {
                 <button
                   onClick={handleDownloadPDF}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-white/25 backdrop-blur-sm rounded-lg text-sm font-semibold text-white shadow-lg hover:bg-white/35 transition"
-                  title="Télécharger PDF"
+                  title={tx("Télécharger PDF")}
                 >
                   <DocumentArrowDownIcon className="h-5 w-5" />
                   PDF
@@ -389,7 +391,7 @@ export default function EtatAvancementPage(props: PageProps) {
                 <button
                   onClick={handleExportExcel}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-white/25 backdrop-blur-sm rounded-lg text-sm font-semibold text-white shadow-lg hover:bg-white/35 transition"
-                  title="Télécharger Excel"
+                  title={tx("Télécharger Excel")}
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -411,8 +413,8 @@ export default function EtatAvancementPage(props: PageProps) {
                     ) : (
                       <>
                         <CheckCircleIcon className="h-5 w-5" />
-                        Valider l'état
-                      </>
+                        <UiText>Valider l'état
+                      </UiText></>
                     )}
                   </button>
                 ) : !hasNextEtat && (
@@ -424,13 +426,13 @@ export default function EtatAvancementPage(props: PageProps) {
                     {validating ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                        Réouverture...
-                      </>
+                        <UiText>Réouverture...
+                      </UiText></>
                     ) : (
                       <>
                         <PencilSquareIcon className="h-5 w-5" />
-                        Réouvrir l'état
-                      </>
+                        <UiText>Réouvrir l'état
+                      </UiText></>
                     )}
                   </button>
                 )}

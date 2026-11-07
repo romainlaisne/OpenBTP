@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -8,10 +10,11 @@ export async function PATCH(
   request: Request,
   props: { params: Promise<{ id: string; rappelId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id, rappelId } = await props.params
@@ -21,7 +24,7 @@ export async function PATCH(
       where: { id: rappelId, entrepriseId: id },
     })
     if (!rappel) {
-      return NextResponse.json({ error: 'Rappel non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Rappel non trouvé' }, { status: 404 })
     }
 
     const updateData: Record<string, unknown> = {}
@@ -36,10 +39,10 @@ export async function PATCH(
       data: updateData,
     })
 
-    return NextResponse.json(updated)
+    return localizedJson(updated)
   } catch (error) {
     console.error('Erreur PATCH /api/crm/entreprises/[id]/rappels/[rappelId]:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour du rappel' },
       { status: 500 }
     )
@@ -51,10 +54,11 @@ export async function DELETE(
   _request: Request,
   props: { params: Promise<{ id: string; rappelId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id, rappelId } = await props.params
@@ -63,15 +67,15 @@ export async function DELETE(
       where: { id: rappelId, entrepriseId: id },
     })
     if (!rappel) {
-      return NextResponse.json({ error: 'Rappel non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Rappel non trouvé' }, { status: 404 })
     }
 
     await prisma.prospectRappel.delete({ where: { id: rappelId } })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur DELETE /api/crm/entreprises/[id]/rappels/[rappelId]:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du rappel' },
       { status: 500 }
     )

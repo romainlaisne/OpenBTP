@@ -1,16 +1,20 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { PDFGenerator } from '@/lib/pdf/pdf-generator'
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     console.log('🎯 Capture d\'écran du planning des ressources')
 
     // 1. Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // 2. Récupérer les paramètres de capture
@@ -24,7 +28,8 @@ export async function POST(request: NextRequest) {
 
     // 4. Générer le HTML de la page avec le planning
     console.log('🎨 Génération du HTML de la page...')
-    const html = generatePlanningPageHTML(planningHTML, periodText, companySettings)
+    const __locale = await bindRequestLocale()
+    const html = localizeGeneratedHtml(__locale, generatePlanningPageHTML(planningHTML, periodText, companySettings), collectStrings(planningHTML))
 
     // 5. Capturer la page avec Puppeteer
     console.log('📸 Capture de la page avec Puppeteer...')
@@ -55,7 +60,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ Erreur lors de la capture du planning:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la capture du planning' },
       { status: 500 }
     )

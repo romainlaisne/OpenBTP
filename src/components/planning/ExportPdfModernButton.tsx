@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { useState } from 'react'
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline'
 import { toast } from 'react-hot-toast'
@@ -81,7 +82,7 @@ export default function ExportPdfModernButton({
       window.URL.revokeObjectURL(url)
 
       console.log('✅ PDF téléchargé avec succès')
-      toast.success('PDF téléchargé avec succès')
+      toast.success(tx("PDF téléchargé avec succès"))
 
     } catch (error) {
       console.error('❌ Erreur lors de l\'export PDF moderne:', error)

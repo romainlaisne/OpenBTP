@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title } from 'chart.js'
 import { Doughnut, Line } from 'react-chartjs-2'
@@ -134,8 +136,8 @@ export default function FinancialSummary({ chantierId }: FinancialSummaryProps) 
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-6">
         <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-          Résumé Financier
-        </h2>
+          <UiText>Résumé Financier
+        </UiText></h2>
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
@@ -147,8 +149,8 @@ export default function FinancialSummary({ chantierId }: FinancialSummaryProps) 
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-6">
         <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-          Résumé Financier
-        </h2>
+          <UiText>Résumé Financier
+        </UiText></h2>
         <div className="text-red-500 dark:text-red-400 p-4 text-center">
           {error}
         </div>
@@ -157,39 +159,39 @@ export default function FinancialSummary({ chantierId }: FinancialSummaryProps) 
   }
   
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount)
+    return new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR' }).format(amount)
   }
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-6">
       <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-        Résumé Financier
-      </h2>
+        <UiText>Résumé Financier
+      </UiText></h2>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Récapitulatif des montants */}
         <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
           <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-200">
-            Récapitulatif
-          </h3>
+            <UiText>Récapitulatif
+          </UiText></h3>
           
           <div className="space-y-4">
              <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-300">États d&apos;avancement:</span>
+              <span className="text-gray-600 dark:text-gray-300"><UiText>États d&apos;avancement:</UiText></span>
               <span className="font-medium text-gray-900 dark:text-white">
                 {formatCurrency(financialData.totalRevenue)}
               </span>
             </div>
             
              <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-300">États sous-traitants:</span>
+              <span className="text-gray-600 dark:text-gray-300"><UiText>États sous-traitants:</UiText></span>
               <span className="font-medium text-red-600 dark:text-red-400">
                 - {formatCurrency(financialData.totalSubcontractorCosts)}
               </span>
             </div>
             
             <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-300">Dépenses directes:</span>
+              <span className="text-gray-600 dark:text-gray-300"><UiText>Dépenses directes:</UiText></span>
               <span className="font-medium text-red-600 dark:text-red-400">
                 - {formatCurrency(financialData.totalExpenses)}
               </span>
@@ -197,7 +199,7 @@ export default function FinancialSummary({ chantierId }: FinancialSummaryProps) 
             
             <div className="border-t border-gray-200 dark:border-gray-600 pt-3 mt-3">
               <div className="flex justify-between items-center">
-                <span className="text-gray-800 dark:text-gray-200 font-semibold">RÉSULTAT NET:</span>
+                <span className="text-gray-800 dark:text-gray-200 font-semibold"><UiText>RÉSULTAT NET:</UiText></span>
                 <span className={`font-bold text-lg ${
                   financialData.netResult >= 0 
                     ? 'text-green-600 dark:text-green-400' 
@@ -228,8 +230,8 @@ export default function FinancialSummary({ chantierId }: FinancialSummaryProps) 
           {/* Donut chart */}
           <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
             <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-200">
-              Répartition des dépenses
-            </h3>
+              <UiText>Répartition des dépenses
+            </UiText></h3>
             <div className="h-64 flex justify-center items-center">
               {donutChartData && donutChartData.datasets[0].data.length > 0 ? (
                 <Doughnut 
@@ -249,8 +251,8 @@ export default function FinancialSummary({ chantierId }: FinancialSummaryProps) 
                 />
               ) : (
                 <div className="text-gray-500 dark:text-gray-400 text-center">
-                  Aucune dépense enregistrée
-                </div>
+                  <UiText>Aucune dépense enregistrée
+                </UiText></div>
               )}
             </div>
           </div>
@@ -258,8 +260,8 @@ export default function FinancialSummary({ chantierId }: FinancialSummaryProps) 
           {/* Line chart */}
           <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
             <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-200">
-              Évolution du résultat
-            </h3>
+              <UiText>Évolution du résultat
+            </UiText></h3>
             <div className="h-64 flex justify-center items-center">
               {lineChartData && lineChartData.labels.length > 0 ? (
                 <Line 
@@ -294,8 +296,8 @@ export default function FinancialSummary({ chantierId }: FinancialSummaryProps) 
                 />
               ) : (
              <div className="text-gray-500 dark:text-gray-400 text-center">
-               Données insuffisantes pour afficher l&apos;évolution
-                </div>
+               <UiText>Données insuffisantes pour afficher l&apos;évolution
+                </UiText></div>
               )}
             </div>
           </div>

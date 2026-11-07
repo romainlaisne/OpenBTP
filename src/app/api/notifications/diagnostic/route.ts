@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,10 +10,11 @@ import { prisma } from '@/lib/prisma/client'
  * Script de diagnostic du système de notifications
  */
 export async function GET(_request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     const diagnostics: Record<string, unknown> = {}
@@ -125,14 +128,14 @@ export async function GET(_request: NextRequest) {
       })),
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       diagnostics,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
     console.error('Erreur lors du diagnostic:', error)
-    return NextResponse.json(
+    return localizedJson(
       {
         error: 'Erreur lors du diagnostic',
         details: error instanceof Error ? error.message : 'Erreur inconnue',

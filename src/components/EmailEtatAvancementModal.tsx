@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, FormEvent, useMemo } from 'react';
 import { XMarkIcon, PaperAirplaneIcon, UserCircleIcon, EnvelopeIcon as EnvelopeSolidIcon, PaperClipIcon } from '@heroicons/react/24/solid';
 import { EtatAvancementEtendu } from '@/types/etat-avancement'; // Corrigé : Import depuis les types partagés
@@ -108,7 +110,7 @@ export default function EmailEtatAvancementModal({
 
         } catch (error) {
           console.error(error);
-          toast.error('Impossible de charger les contacts ou les paramètres de l\'entreprise.');
+          toast.error(tx("Impossible de charger les contacts ou les paramètres de l'entreprise."));
           setCompanyName('Votre Entreprise'); // Fallback en cas d'erreur
         }
       };
@@ -194,7 +196,7 @@ export default function EmailEtatAvancementModal({
     setIsLoading(true);
 
     if (selectedEmails.length === 0) {
-      toast.error('Veuillez sélectionner ou saisir au moins un destinataire.');
+      toast.error(tx("Veuillez sélectionner ou saisir au moins un destinataire."));
       setIsLoading(false);
       return;
     }
@@ -223,7 +225,7 @@ export default function EmailEtatAvancementModal({
         throw new Error(errorData.error || 'Erreur lors de l\'envoi de l\'e-mail');
       }
 
-      toast.success('E-mail envoyé avec succès!');
+      toast.success(tx("E-mail envoyé avec succès!"));
       onClose();
     } catch (error: unknown) {
       console.error(error);
@@ -241,12 +243,12 @@ export default function EmailEtatAvancementModal({
         <div className="flex justify-between items-center pb-3 border-b dark:border-gray-700">
           <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center">
             <EnvelopeSolidIcon className="h-6 w-6 mr-2 text-blue-500" />
-            Envoyer l&apos;état d&apos;avancement N° {etatAvancement.numero}
+            <UiText>Envoyer l&apos;état d&apos;avancement N° </UiText>{etatAvancement.numero}
           </h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-            aria-label="Fermer"
+            aria-label={tx("Fermer")}
           >
             <XMarkIcon className="h-6 w-6" />
           </button>
@@ -259,7 +261,7 @@ export default function EmailEtatAvancementModal({
             </label>
             <div className="mt-2 space-y-2 max-h-44 overflow-auto border border-gray-200 dark:border-gray-600 rounded-md p-3 bg-gray-50 dark:bg-gray-700/50">
               {contacts.length === 0 && (
-                <div className="text-sm text-gray-500 dark:text-gray-300">Aucun contact trouvé</div>
+                <div className="text-sm text-gray-500 dark:text-gray-300"><UiText>Aucun contact trouvé</UiText></div>
               )}
               {contacts.map((contact) => {
                 const isChecked = selectedContactIds.includes(contact.id);
@@ -299,7 +301,7 @@ export default function EmailEtatAvancementModal({
                 placeholder="email1@exemple.com; email2@exemple.com"
                 className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Séparez par virgule, point-virgule ou espace.</p>
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400"><UiText>Séparez par virgule, point-virgule ou espace.</UiText></p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -312,7 +314,7 @@ export default function EmailEtatAvancementModal({
                 placeholder="cc1@exemple.com; cc2@exemple.com"
                 className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Optionnel. Séparez par virgule, point-virgule ou espace.</p>
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400"><UiText>Optionnel. Séparez par virgule, point-virgule ou espace.</UiText></p>
             </div>
           </div>
 
@@ -351,7 +353,7 @@ export default function EmailEtatAvancementModal({
             <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-600">
               <div className="flex items-center text-sm text-gray-700 dark:text-gray-300">
                 <PaperClipIcon className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
-                <span>Pièce jointe :</span>
+                <span><UiText>Pièce jointe :</UiText></span>
                 <span className="ml-1 font-medium text-gray-800 dark:text-gray-200 truncate" title={pdfFileName}>{pdfFileName}</span>
               </div>
             </div>
@@ -383,7 +385,7 @@ export default function EmailEtatAvancementModal({
                 ))}
               </div>
               {taillePieces > 18 * 1048576 && (
-                <p className="mt-2 text-xs text-red-600">Pièces trop lourdes pour un mail : décochez-en quelques-unes.</p>
+                <p className="mt-2 text-xs text-red-600"><UiText>Pièces trop lourdes pour un mail : décochez-en quelques-unes.</UiText></p>
               )}
             </div>
           )}
@@ -395,8 +397,8 @@ export default function EmailEtatAvancementModal({
               disabled={isLoading}
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md shadow-sm transition-colors dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-200 disabled:opacity-50"
             >
-              Annuler
-            </button>
+              <UiText>Annuler
+            </UiText></button>
             <button
               type="submit"
               disabled={isLoading}

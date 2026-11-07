@@ -1,10 +1,13 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { readPortalSessionFromCookie, unauthorized } from '@/app/public/portail/auth'
 
 export async function GET(request: Request, props: { params: Promise<{ type: 'ouvrier'|'soustraitant'; actorId: string }> }) {
+  await bindRequestLocale()
   const { type, actorId } = await props.params
-  if (type !== 'soustraitant') return NextResponse.json({ error: 'Type non supporté' }, { status: 400 })
+  if (type !== 'soustraitant') return localizedJson({ error: 'Type non supporté' }, { status: 400 })
 
   const session = readPortalSessionFromCookie(request.headers.get('cookie'))
   if (!session || session.t !== 'SOUSTRAITANT' || session.id !== actorId) {
@@ -13,7 +16,7 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
 
   const { searchParams } = new URL(request.url)
   const chantierId = searchParams.get('chantierId')
-  if (!chantierId) return NextResponse.json({ error: 'chantierId requis' }, { status: 400 })
+  if (!chantierId) return localizedJson({ error: 'chantierId requis' }, { status: 400 })
 
   try {
     const commande = await prisma.commandeSousTraitant.findFirst({
@@ -27,7 +30,7 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
       orderBy: { createdAt: 'desc' }
     })
 
-    if (!commande) return NextResponse.json({ data: [], commandeId: null })
+    if (!commande) return localizedJson({ data: [], commandeId: null })
 
     const base = commande.lignes.map(l => ({
       ligneCommandeId: l.id,
@@ -40,8 +43,8 @@ export async function GET(request: Request, props: { params: Promise<{ type: 'ou
       estSupplement: false
     }))
 
-    return NextResponse.json({ data: base, commandeId: commande.id })
+    return localizedJson({ data: base, commandeId: commande.id })
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

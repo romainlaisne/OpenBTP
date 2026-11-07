@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
@@ -31,11 +33,12 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string; path: string[] }> }
 ) {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Attendre que params soit résolu
@@ -57,20 +60,20 @@ export async function GET(
     const allowedBasePath = path.join(process.cwd(), 'public', 'chantiers', chantierId, 'documents')
     if (!normalizedPath.startsWith(allowedBasePath)) {
       console.error('❌ [API] Tentative d\'accès à un fichier en dehors du dossier autorisé')
-      return NextResponse.json({ error: 'Chemin non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Chemin non autorisé' }, { status: 403 })
     }
     
     // Vérifier que le fichier existe
     if (!fs.existsSync(fullPath)) {
       console.error('❌ [API] Fichier non trouvé:', fullPath)
-      return NextResponse.json({ error: 'Fichier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Fichier non trouvé' }, { status: 404 })
     }
     
     // Vérifier que c'est bien un fichier
     const stats = fs.statSync(fullPath)
     if (!stats.isFile()) {
       console.error('❌ [API] L\'élément n\'est pas un fichier:', fullPath)
-      return NextResponse.json({ error: 'L\'élément n\'est pas un fichier' }, { status: 400 })
+      return localizedJson({ error: 'L\'élément n\'est pas un fichier' }, { status: 400 })
     }
     
     // Lire le fichier
@@ -102,7 +105,7 @@ export async function GET(
     return response
   } catch (error) {
     console.error('❌ [API] Erreur lors de la lecture du fichier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la lecture du fichier' },
       { status: 500 }
     )

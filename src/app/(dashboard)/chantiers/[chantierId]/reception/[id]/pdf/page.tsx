@@ -66,7 +66,7 @@ export default function PDFViewPage({
   }
 
   if (loading) return <div className="p-8"><UiText>Chargement du PDF...</UiText></div>
-  if (error) return <div className="p-8 text-red-500">Erreur: {error}</div>
+  if (error) return <div className="p-8 text-red-500"><UiText>Erreur: </UiText>{error}</div>
   if (!pdfData) return <div className="p-8"><UiText>Aucune donnée disponible</UiText></div>
 
   return (
@@ -86,8 +86,8 @@ export default function PDFViewPage({
             className="flex items-center"
           >
             <PrinterIcon className="h-5 w-5 mr-2" />
-            Imprimer
-          </Button>
+            <UiText>Imprimer
+          </UiText></Button>
         </div>
       </div>
 
@@ -96,7 +96,7 @@ export default function PDFViewPage({
         <div className="bg-red-600 text-white p-6">
           <h1 className="text-2xl font-bold"><UiText>Rapport de réception de chantier</UiText></h1>
           <p className="text-white/80 mt-1">
-            Généré le {pdfData.dateGeneration} par {pdfData.generePar}
+            <UiText>Généré le </UiText>{pdfData.dateGeneration} par {pdfData.generePar}
           </p>
         </div>
 
@@ -105,11 +105,11 @@ export default function PDFViewPage({
           <h2 className="text-xl font-semibold mb-4"><UiText>Informations générales</UiText></h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-gray-600">Chantier :</p>
+              <p className="text-gray-600"><UiText>Chantier :</UiText></p>
               <p className="font-medium">{pdfData.reception.chantier}</p>
             </div>
             <div>
-              <p className="text-gray-600">Date de création :</p>
+              <p className="text-gray-600"><UiText>Date de création :</UiText></p>
               <p className="font-medium">{pdfData.reception.dateCreation}</p>
             </div>
             <div>
@@ -117,7 +117,7 @@ export default function PDFViewPage({
               <p className="font-medium">{pdfData.reception.dateLimite}</p>
             </div>
             <div>
-              <p className="text-gray-600">Statut :</p>
+              <p className="text-gray-600"><UiText>Statut :</UiText></p>
               <p className="font-medium">{pdfData.reception.estFinalise ? 'Finalisée' : 'En cours'}</p>
             </div>
             {pdfData.reception.codePIN !== 'Aucun' && (
@@ -134,7 +134,7 @@ export default function PDFViewPage({
           <h2 className="text-xl font-semibold mb-4">Remarques ({pdfData.remarques.length})</h2>
           
           {pdfData.remarques.length === 0 ? (
-            <p className="text-gray-500 italic">Aucune remarque enregistrée.</p>
+            <p className="text-gray-500 italic"><UiText>Aucune remarque enregistrée.</UiText></p>
           ) : (
             <div className="space-y-6">
               {pdfData.remarques.map((remarque, index) => (
@@ -168,8 +168,8 @@ export default function PDFViewPage({
 
         {/* Pied de page */}
         <div className="p-6 bg-gray-50 text-center text-sm text-gray-600">
-          <p>Ce document est un rapport officiel généré par le système de gestion de réception de chantier.</p>
-          <p>Référence: {pdfData.reception.id}</p>
+          <p><UiText>Ce document est un rapport officiel généré par le système de gestion de réception de chantier.</UiText></p>
+          <p><UiText>Référence: </UiText>{pdfData.reception.id}</p>
         </div>
       </div>
     </div>

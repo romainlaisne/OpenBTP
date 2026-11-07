@@ -1,7 +1,7 @@
 import { PDFGenerator } from '@/lib/pdf/pdf-generator'
 import { prisma } from '@/lib/prisma/client'
 import { format, addYears } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import crypto from 'crypto'
 import { writeFile, mkdir, stat } from 'fs/promises'
 import { join } from 'path'
@@ -87,9 +87,9 @@ function construireDonneesTemplate(p: {
     gsmRepresentantSousTraitant: formaterGsm(st.representantGsm),
 
     // Dates — celles du contrat, jamais « aujourd'hui » au moment de signer
-    dateGeneration: format(p.dateGeneration, 'dd/MM/yyyy', { locale: fr }),
-    dateDebut: format(p.dateGeneration, 'dd/MM/yyyy', { locale: fr }),
-    dateFin: format(p.dateFin, 'dd/MM/yyyy', { locale: fr }),
+    dateGeneration: format(p.dateGeneration, 'dd/MM/yyyy', { locale: dateFnsLocale() }),
+    dateDebut: format(p.dateGeneration, 'dd/MM/yyyy', { locale: dateFnsLocale() }),
+    dateFin: format(p.dateFin, 'dd/MM/yyyy', { locale: dateFnsLocale() }),
 
     // Métadonnées
     referenceContrat: referenceContrat(p.dateGeneration),
@@ -132,14 +132,14 @@ export function insererSignatureSousTraitant(
   auditInfo?: AuditInfo
 ): string {
   const horodatage = auditInfo?.horodatageCertifie || new Date()
-  const mention = `Signé électroniquement le ${format(horodatage, 'dd/MM/yyyy à HH:mm', { locale: fr })}` +
+  const mention = `Signé électroniquement le ${format(horodatage, 'dd/MM/yyyy à HH:mm', { locale: dateFnsLocale() })}` +
     (auditInfo ? `
           <div style="font-size: 9px; color: #9ca3af; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
             <div style="margin-bottom: 4px;"><strong>Informations d'audit de signature :</strong></div>
             <div style="margin-bottom: 2px;">• Identité confirmée : Oui</div>
             <div style="margin-bottom: 2px;">• Consentement donné : Oui</div>
             ${auditInfo.ipAddress ? `<div style="margin-bottom: 2px;">• Adresse IP : ${auditInfo.ipAddress}</div>` : ''}
-            <div style="margin-bottom: 2px;">• Horodatage certifié : ${format(horodatage, 'dd/MM/yyyy à HH:mm:ss', { locale: fr })}</div>
+            <div style="margin-bottom: 2px;">• Horodatage certifié : ${format(horodatage, 'dd/MM/yyyy à HH:mm:ss', { locale: dateFnsLocale() })}</div>
             <div style="margin-top: 6px; font-size: 8px; color: #6b7280;">
               Signature électronique conforme au Règlement eIDAS (UE) 910/2014 et à la législation belge en vigueur.
             </div>

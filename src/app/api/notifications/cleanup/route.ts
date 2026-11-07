@@ -1,19 +1,22 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { NotificationService } from '@/lib/services/notificationService'
 
 // POST /api/notifications/cleanup - Nettoyer les notifications expirées
 // Cette route peut être appelée par un cron job externe (ex: cron-job.org) ou par un système interne
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     // Vérifier le token d'authentification du cron (optionnel mais recommandé)
     const authHeader = request.headers.get('authorization')
     const cronSecret = process.env.CRON_SECRET
     if (!cronSecret) {
-      return NextResponse.json({ error: 'CRON_SECRET non configuré' }, { status: 500 })
+      return localizedJson({ error: 'CRON_SECRET non configuré' }, { status: 500 })
     }
     
     if (authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -21,14 +24,14 @@ export async function POST(request: NextRequest) {
 
     const deletedCount = await NotificationService.cleanupExpiredNotifications()
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       deletedCount,
       message: `${deletedCount} notification(s) expirée(s) supprimée(s)`,
     })
   } catch (error) {
     console.error('Erreur lors du nettoyage:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors du nettoyage des notifications' },
       { status: 500 }
     )
@@ -37,6 +40,7 @@ export async function POST(request: NextRequest) {
 
 // GET /api/notifications/cleanup - Version GET pour les services cron qui ne supportent que GET
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   return POST(request)
 }
 

@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 // Modale « Déclaration de sous-traitance » de la fiche chantier : type d'envoi
 // (simple demande / avec documents), sous-traitants actifs à cocher,
 // destinataire. En mode « avec documents », les pièces sont choisies par le
@@ -61,7 +63,7 @@ export default function DeclarationSousTraitanceModal(props: {
     fetch('/api/soustraitants?activeOnly=1')
       .then((r) => r.json())
       .then((data) => setSoustraitants(Array.isArray(data) ? data.filter((s: { actif?: boolean }) => s.actif !== false) : []))
-      .catch(() => toast.error('Erreur lors du chargement des sous-traitants'))
+      .catch(() => toast.error(tx("Erreur lors du chargement des sous-traitants")))
       .finally(() => setChargement(false))
     if (clientId) {
       fetch(`/api/clients/${clientId}/contacts`)
@@ -95,7 +97,7 @@ export default function DeclarationSousTraitanceModal(props: {
           setApercu(data.societes || [])
           if (data.tailleMax) setTailleMax(data.tailleMax)
         })
-        .catch(() => !annule && toast.error("Erreur lors de l'aperçu des documents"))
+        .catch(() => !annule && toast.error(tx("Erreur lors de l'aperçu des documents")))
         .finally(() => !annule && setChargementApercu(false))
     }, 250)
     return () => {
@@ -127,7 +129,7 @@ export default function DeclarationSousTraitanceModal(props: {
     destinataireType === 'contact' ? contacts.find((c) => c.id === contactChoisi)?.email || '' : emailLibre.trim()
 
   const envoyer = async () => {
-    if (!selection.length) return toast.error('Cochez au moins un sous-traitant')
+    if (!selection.length) return toast.error(tx("Cochez au moins un sous-traitant"))
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(destinataire)) return toast.error('Choisissez un destinataire valide')
     setEnvoi(true)
     try {
@@ -177,7 +179,7 @@ export default function DeclarationSousTraitanceModal(props: {
         {/* En-tête */}
         <div className="flex items-start justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Déclaration de sous-traitance</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white"><UiText>Déclaration de sous-traitance</UiText></h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{nomChantier}</p>
           </div>
           <button onClick={onClose} disabled={envoi} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -201,7 +203,7 @@ export default function DeclarationSousTraitanceModal(props: {
               <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Sous-traitants actifs</h3>
               {selection.length > 0 && (
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300">
-                  {selection.length} sélectionné{selection.length > 1 ? 's' : ''}
+                  {selection.length} <UiText>sélectionné</UiText>{selection.length > 1 ? 's' : ''}
                 </span>
               )}
             </div>
@@ -210,15 +212,15 @@ export default function DeclarationSousTraitanceModal(props: {
               <input
                 value={recherche}
                 onChange={(e) => setRecherche(e.target.value)}
-                placeholder="Rechercher un sous-traitant…"
+                placeholder={tx("Rechercher un sous-traitant…")}
                 className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg max-h-64 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
               {chargement ? (
-                <div className="p-4 text-sm text-gray-500">Chargement…</div>
+                <div className="p-4 text-sm text-gray-500"><UiText>Chargement…</UiText></div>
               ) : filtres.length === 0 ? (
-                <div className="p-4 text-sm text-gray-500">Aucun sous-traitant</div>
+                <div className="p-4 text-sm text-gray-500"><UiText>Aucun sous-traitant</UiText></div>
               ) : (
                 filtres.map((s) => (
                   <label
@@ -249,7 +251,7 @@ export default function DeclarationSousTraitanceModal(props: {
                 <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Documents joints</h3>
                 {!chargementApercu && (
                   <span className={`text-xs font-medium ${tropLourd ? 'text-red-600' : 'text-gray-500 dark:text-gray-400'}`}>
-                    {nbPieces} fichier{nbPieces > 1 ? 's' : ''} · {mo(tailleTotale)} / {mo(tailleMax)} max
+                    {nbPieces} <UiText>fichier</UiText>{nbPieces > 1 ? 's' : ''} · {mo(tailleTotale)} / {mo(tailleMax)} max
                   </span>
                 )}
               </div>
@@ -262,16 +264,16 @@ export default function DeclarationSousTraitanceModal(props: {
                       <div className="flex items-center justify-between">
                         <span className="font-medium text-sm text-gray-900 dark:text-gray-100">{s.nom}</span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {s.personnes.length} personne{s.personnes.length > 1 ? 's' : ''} · {s.pieces.length} fichier{s.pieces.length > 1 ? 's' : ''}
+                          {s.personnes.length} personne{s.personnes.length > 1 ? 's' : ''} · {s.pieces.length} <UiText>fichier</UiText>{s.pieces.length > 1 ? 's' : ''}
                         </span>
                       </div>
                       {s.personnes.length === 0 && (
-                        <p className="mt-2 text-xs text-amber-700 dark:text-amber-400">Aucune personne active encodée pour ce sous-traitant.</p>
+                        <p className="mt-2 text-xs text-amber-700 dark:text-amber-400"><UiText>Aucune personne active encodée pour ce sous-traitant.</UiText></p>
                       )}
                       {s.manques.length === 0 && s.personnes.length > 0 ? (
                         <p className="mt-2 text-xs text-green-700 dark:text-green-400 flex items-center gap-1">
-                          <CheckCircleIcon className="h-4 w-4" /> Tous les documents exigés sont en ordre
-                        </p>
+                          <CheckCircleIcon className="h-4 w-4" /> <UiText>Tous les documents exigés sont en ordre
+                        </UiText></p>
                       ) : (
                         s.manques.length > 0 && (
                           <ul className="mt-2 space-y-0.5">
@@ -298,15 +300,15 @@ export default function DeclarationSousTraitanceModal(props: {
                         className="mt-0.5 rounded text-sky-600 focus:ring-sky-500"
                       />
                       <span>
-                        Regrouper les {nbPieces} documents dans <strong>un seul fichier ZIP</strong>
-                        <span className="block text-xs text-gray-500 dark:text-gray-400">Un dossier par société, puis par personne.</span>
+                        Regrouper les {nbPieces} documents dans <strong><UiText>un seul fichier ZIP</UiText></strong>
+                        <span className="block text-xs text-gray-500 dark:text-gray-400"><UiText>Un dossier par société, puis par personne.</UiText></span>
                       </span>
                     </label>
                   )}
                   {tropLourd && (
                     <p className="text-sm text-red-600">
-                      Trop de pièces jointes pour un seul mail : envoyez les sous-traitants en plusieurs fois.
-                    </p>
+                      <UiText>Trop de pièces jointes pour un seul mail : envoyez les sous-traitants en plusieurs fois.
+                    </UiText></p>
                   )}
                 </div>
               )}
@@ -334,8 +336,8 @@ export default function DeclarationSousTraitanceModal(props: {
                   onChange={() => setDestinataireType('libre')}
                   className="text-sky-600 focus:ring-sky-500"
                 />
-                Autre adresse
-              </label>
+                <UiText>Autre adresse
+              </UiText></label>
             </div>
             {destinataireType === 'contact' ? (
               <select
@@ -343,7 +345,7 @@ export default function DeclarationSousTraitanceModal(props: {
                 onChange={(e) => setContactChoisi(e.target.value)}
                 className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               >
-                <option value="">Sélectionner un contact…</option>
+                <option value=""><UiText>Sélectionner un contact…</UiText></option>
                 {contacts.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.prenom} {c.nom} ({c.email})
@@ -369,8 +371,8 @@ export default function DeclarationSousTraitanceModal(props: {
             disabled={envoi}
             className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
           >
-            Annuler
-          </button>
+            <UiText>Annuler
+          </UiText></button>
           <button
             onClick={envoyer}
             disabled={envoi || !selection.length || !destinataire || tropLourd || (mode === 'documents' && chargementApercu)}

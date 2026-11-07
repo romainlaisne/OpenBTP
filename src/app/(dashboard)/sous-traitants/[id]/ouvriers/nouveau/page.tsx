@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, use } from 'react';
 import { useRouter } from 'next/navigation'
@@ -81,8 +82,8 @@ export default function NouvelOuvrierPage(
       <div className="md:flex md:items-center md:justify-between">
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:truncate sm:text-3xl sm:tracking-tight">
-            Nouvel Ouvrier
-          </h2>
+            <UiText>Nouvel Ouvrier
+          </UiText></h2>
         </div>
       </div>
 
@@ -102,7 +103,7 @@ export default function NouvelOuvrierPage(
             id="nom"
             name="nom"
             type="text"
-            label="Nom"
+            label={tx("Nom")}
             required
             value={formData.nom}
             onChange={handleChange}
@@ -112,7 +113,7 @@ export default function NouvelOuvrierPage(
             id="prenom"
             name="prenom"
             type="text"
-            label="Prénom"
+            label={tx("Prénom")}
             required
             value={formData.prenom}
             onChange={handleChange}
@@ -122,7 +123,7 @@ export default function NouvelOuvrierPage(
             id="email"
             name="email"
             type="email"
-            label="Email"
+            label={tx("Email")}
             value={formData.email}
             onChange={handleChange}
           />
@@ -131,7 +132,7 @@ export default function NouvelOuvrierPage(
             id="telephone"
             name="telephone"
             type="tel"
-            label="Téléphone"
+            label={tx("Téléphone")}
             value={formData.telephone}
             onChange={handleChange}
           />
@@ -140,7 +141,7 @@ export default function NouvelOuvrierPage(
             id="dateEntree"
             name="dateEntree"
             type="date"
-            label="Date d'entrée"
+            label={tx("Date d'entrée")}
             required
             value={formData.dateEntree}
             onChange={handleChange}
@@ -150,7 +151,7 @@ export default function NouvelOuvrierPage(
             id="poste"
             name="poste"
             type="text"
-            label="Poste"
+            label={tx("Poste")}
             value={formData.poste}
             onChange={handleChange}
           />

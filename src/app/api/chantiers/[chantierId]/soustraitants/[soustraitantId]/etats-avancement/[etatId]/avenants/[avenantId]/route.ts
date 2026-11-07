@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -9,10 +11,11 @@ export async function PUT(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; etatId: string; avenantId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, soustraitantId, etatId, avenantId } = await context.params
@@ -22,7 +25,7 @@ export async function PUT(
     const avenantIdNum = parseInt(avenantId)
     
     if (isNaN(etatIdNum) || isNaN(avenantIdNum)) {
-      return NextResponse.json({ error: 'ID invalide' }, { status: 400 })
+      return localizedJson({ error: 'ID invalide' }, { status: 400 })
     }
 
     // Récupérer l'ID interne du chantier
@@ -32,7 +35,7 @@ export async function PUT(
     })
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Vérifier que l'état existe et appartient au bon sous-traitant
@@ -44,7 +47,7 @@ export async function PUT(
     })
 
     if (!etat) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
@@ -52,7 +55,7 @@ export async function PUT(
 
     // Vérifier que l'état n'est pas finalisé
     if (etat.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible de modifier un avenant d\'un état finalisé' },
         { status: 400 }
       )
@@ -67,7 +70,7 @@ export async function PUT(
     })
 
     if (!avenantExistant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Avenant non trouvé' },
         { status: 404 }
       )
@@ -95,10 +98,10 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json(avenantMisAJour)
+    return localizedJson(avenantMisAJour)
   } catch (error) {
     console.error('Erreur lors de la mise à jour de l\'avenant:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de l\'avenant' },
       { status: 500 }
     )
@@ -111,10 +114,11 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; etatId: string; avenantId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, soustraitantId, etatId, avenantId } = await context.params
@@ -123,7 +127,7 @@ export async function DELETE(
     const avenantIdNum = parseInt(avenantId)
     
     if (isNaN(etatIdNum) || isNaN(avenantIdNum)) {
-      return NextResponse.json({ error: 'ID invalide' }, { status: 400 })
+      return localizedJson({ error: 'ID invalide' }, { status: 400 })
     }
 
     // Récupérer l'ID interne du chantier
@@ -133,7 +137,7 @@ export async function DELETE(
     })
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Vérifier que l'état existe et appartient au bon sous-traitant
@@ -145,7 +149,7 @@ export async function DELETE(
     })
 
     if (!etat) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement non trouvé' },
         { status: 404 }
       )
@@ -153,7 +157,7 @@ export async function DELETE(
 
     // Vérifier que l'état n'est pas finalisé
     if (etat.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible de supprimer un avenant d\'un état finalisé' },
         { status: 400 }
       )
@@ -168,7 +172,7 @@ export async function DELETE(
     })
 
     if (!avenantExistant) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Avenant non trouvé' },
         { status: 404 }
       )
@@ -181,10 +185,10 @@ export async function DELETE(
       }
     })
 
-    return NextResponse.json({ success: true, message: 'Avenant supprimé avec succès' })
+    return localizedJson({ success: true, message: 'Avenant supprimé avec succès' })
   } catch (error) {
     console.error('Erreur lors de la suppression de l\'avenant:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de l\'avenant' },
       { status: 500 }
     )

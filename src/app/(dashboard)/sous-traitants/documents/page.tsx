@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 // Documents des sous-traitants : une ligne par personne, une colonne par type
 // de document — ✓ valide, ! expire sous 30 jours, ✗ expiré ou manquant
 // (exigé), — non exigé. Documents exigés réglables par société.
@@ -102,15 +103,15 @@ function SituationPersonne({ st, o, onChange }: { st: Societe; o: Ouvrier; onCha
   const champ = `rounded border px-1 py-0.5 text-xs ${o.situationIncomplete ? 'border-amber-400 bg-amber-50 dark:bg-amber-900/20' : 'border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-800'} text-gray-700 dark:text-gray-200`
   return (
     <div className="mt-1 flex flex-wrap items-center gap-1">
-      <select value={o.statut || ''} onChange={(e) => maj('statut', e.target.value)} className={champ} title="Statut">
-        <option value="">Statut ?</option>
+      <select value={o.statut || ''} onChange={(e) => maj('statut', e.target.value)} className={champ} title={tx("Statut")}>
+        <option value=""><UiText>Statut ?</UiText></option>
         {STATUTS_OUVRIER.map((s) => <option key={s.code} value={s.code}>{s.libelle}</option>)}
       </select>
-      <select value={o.nationalite || ''} onChange={(e) => maj('nationalite', e.target.value)} className={champ} title="Nationalité">
-        <option value="">Nationalité ?</option>
+      <select value={o.nationalite || ''} onChange={(e) => maj('nationalite', e.target.value)} className={champ} title={tx("Nationalité")}>
+        <option value=""><UiText>Nationalité ?</UiText></option>
         {NATIONALITES.map((n) => <option key={n.code} value={n.code}>{n.libelle}</option>)}
       </select>
-      {estSocieteEtrangere(st.tva) && <span className="text-xs text-gray-500">détaché</span>}
+      {estSocieteEtrangere(st.tva) && <span className="text-xs text-gray-500"><UiText>détaché</UiText></span>}
     </div>
   )
 }
@@ -134,10 +135,10 @@ function ReglageRequis({ st, onEnregistre }: { st: Societe; onEnregistre: () => 
   return (
     <div className="mt-3 grid grid-cols-1 gap-4 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm dark:border-gray-700 dark:bg-gray-900/40 md:grid-cols-2">
       <div>
-        <p className="mb-1 font-semibold text-gray-900 dark:text-white">Documents supplémentaires pour chaque personne</p>
+        <p className="mb-1 font-semibold text-gray-900 dark:text-white"><UiText>Documents supplémentaires pour chaque personne</UiText></p>
         <p className="mb-2 text-xs text-gray-500">
-          En plus des documents exigés selon la situation de chaque personne (pièce d&apos;identité et formation sécurité
-          pour tous ; {estSocieteEtrangere(st.tva) ? 'Limosa et A1 (société étrangère, personnes détachées)' : 'sécurité sociale, registre des parts pour un associé actif, permis de travail hors UE'}).
+          <UiText>En plus des documents exigés selon la situation de chaque personne (pièce d&apos;identité et formation sécurité
+          pour tous ; </UiText>{estSocieteEtrangere(st.tva) ? 'Limosa et A1 (société étrangère, personnes détachées)' : 'sécurité sociale, registre des parts pour un associé actif, permis de travail hors UE'}).
         </p>
         {TYPES_DOCUMENT_OUVRIER.map((t) => (
           <label key={t.code} className="flex items-center gap-2 py-0.5 text-gray-700 dark:text-gray-300">
@@ -148,7 +149,7 @@ function ReglageRequis({ st, onEnregistre }: { st: Societe; onEnregistre: () => 
 
       </div>
       <div>
-        <p className="mb-2 font-semibold text-gray-900 dark:text-white">Exigés pour la société</p>
+        <p className="mb-2 font-semibold text-gray-900 dark:text-white"><UiText>Exigés pour la société</UiText></p>
         {TYPES_DOCUMENT_SOCIETE.map((t) => (
           <label key={t.code} className="flex items-center gap-2 py-0.5 text-gray-700 dark:text-gray-300">
             <input type="checkbox" checked={societe.includes(t.code)} onChange={() => basculer(societe, setSociete, t.code)} />
@@ -160,8 +161,8 @@ function ReglageRequis({ st, onEnregistre }: { st: Societe; onEnregistre: () => 
             <UiText>Enregistrer</UiText>
           </button>
           <button type="button" disabled={enCours} onClick={() => enregistrer(true)} className="rounded-md border border-gray-300 px-3 py-1.5 text-gray-700 dark:border-gray-600 dark:text-gray-200">
-            Aucun supplément
-          </button>
+            <UiText>Aucun supplément
+          </UiText></button>
         </div>
       </div>
     </div>
@@ -232,8 +233,8 @@ export default function DocumentsSousTraitantsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Documents des sous-traitants"
-        subtitle="Pièces exigées par personne, selon sa situation"
+        title={tx("Documents des sous-traitants")}
+        subtitle={tx("Pièces exigées par personne, selon sa situation")}
         icon={ClipboardDocumentListIcon}
         badgeColor="from-blue-600 via-indigo-600 to-purple-700"
         gradientColor="from-blue-600/10 via-indigo-600/10 to-purple-700/10"
@@ -241,7 +242,7 @@ export default function DocumentsSousTraitantsPage() {
           <Link
             href="/sous-traitants"
             className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-            title="Retour aux sous-traitants"
+            title={tx("Retour aux sous-traitants")}
           >
             <ArrowLeftIcon className="h-5 w-5 sm:h-6 sm:w-6" />
           </Link>
@@ -258,16 +259,16 @@ export default function DocumentsSousTraitantsPage() {
           <Link
             href="/sous-traitants/declarations"
             className="inline-flex items-center px-3 py-2 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300 rounded-lg shadow-sm hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 text-sm font-semibold"
-            title="Registre des déclarations de sous-traitance envoyées"
+            title={tx("Registre des déclarations de sous-traitance envoyées")}
           >
             <EnvelopeIcon className="h-4 w-4 mr-1.5" />
-            <span className="hidden sm:inline">Déclarations</span>
+            <span className="hidden sm:inline"><UiText>Déclarations</UiText></span>
           </Link>
           <button
             type="button"
             onClick={synchroniserNas}
             className="inline-flex items-center px-3 py-2 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300 rounded-lg shadow-sm hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-200 text-sm font-semibold"
-            title="Recopier sur le NAS les documents qui n'y sont pas encore (administrateurs)"
+            title={tx("Recopier sur le NAS les documents qui n'y sont pas encore (administrateurs)")}
           >
             <ArrowPathIcon className="h-4 w-4 mr-1.5" />
             <span className="hidden sm:inline">Synchroniser le NAS</span>
@@ -290,14 +291,14 @@ export default function DocumentsSousTraitantsPage() {
               type="search"
               value={recherche}
               onChange={(e) => setRecherche(e.target.value)}
-              placeholder="Rechercher une personne ou une société…"
+              placeholder={tx("Rechercher une personne ou une société…")}
               className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-9 pr-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
             />
           </div>
           <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
             <input type="checkbox" checked={problemesSeuls} onChange={(e) => setProblemesSeuls(e.target.checked)} className="rounded text-blue-600" />
-            À corriger seulement
-          </label>
+            <UiText>À corriger seulement
+          </UiText></label>
           <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
             <input type="checkbox" checked={inactifs} onChange={(e) => setInactifs(e.target.checked)} className="rounded text-blue-600" />
             Sous-traitants inactifs
@@ -310,7 +311,7 @@ export default function DocumentsSousTraitantsPage() {
               {s === 'ok' ? 'valide' : s === 'bientot' ? 'expire sous 30 jours' : s === 'manquant' ? 'manquant ou expiré (exigé)' : 'non exigé'}
             </span>
           ))}
-          <span>· Cliquer sur une case ouvre le document, ou le dossier de la personne pour en ajouter un.</span>
+          <span><UiText>· Cliquer sur une case ouvre le document, ou le dossier de la personne pour en ajouter un.</UiText></span>
         </div>
       </div>
 
@@ -354,11 +355,11 @@ export default function DocumentsSousTraitantsPage() {
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <button type="button" onClick={() => setReglage(reglage === st.id ? null : st.id)} className="text-blue-600 hover:underline dark:text-blue-400">
-                        Documents supplémentaires
-                      </button>
+                        <UiText>Documents supplémentaires
+                      </UiText></button>
                       <Link href={`/sous-traitants/${st.id}/documents-societe`} className="text-blue-600 hover:underline dark:text-blue-400">
-                        Documents société
-                      </Link>
+                        <UiText>Documents société
+                      </UiText></Link>
                       <Link href={`/sous-traitants/${st.id}/ouvriers`} className="text-blue-600 hover:underline dark:text-blue-400">
                         Personnes
                       </Link>
@@ -376,7 +377,7 @@ export default function DocumentsSousTraitantsPage() {
                 </div>
 
                 {st.ouvriers.length === 0 ? (
-                  <p className="px-5 py-4 text-sm text-gray-500">Aucune personne enregistrée.</p>
+                  <p className="px-5 py-4 text-sm text-gray-500"><UiText>Aucune personne enregistrée.</UiText></p>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">

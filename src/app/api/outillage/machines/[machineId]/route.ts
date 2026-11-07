@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -11,6 +13,7 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ machineId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -18,7 +21,7 @@ export async function GET(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -31,16 +34,16 @@ export async function GET(
     })
 
     if (!machine) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Machine non trouvée' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(machine)
+    return localizedJson(machine)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de la machine' },
       { status: 500 }
     )
@@ -52,6 +55,7 @@ export async function PUT(
   request: Request,
   context: { params: Promise<{ machineId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -59,7 +63,7 @@ export async function PUT(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -73,7 +77,7 @@ export async function PUT(
     })
 
     if (!existingMachine) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Machine non trouvée' },
         { status: 404 }
       )
@@ -89,7 +93,7 @@ export async function PUT(
       })
 
       if (pretEnCours) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Impossible de changer le statut : la machine est actuellement prêtée' },
           { status: 400 }
         )
@@ -111,10 +115,10 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json(updatedMachine)
+    return localizedJson(updatedMachine)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de la machine' },
       { status: 500 }
     )
@@ -126,6 +130,7 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ machineId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -136,7 +141,7 @@ export async function DELETE(
     const session = await getServerSession(authOptions)
     if (!session) {
       console.log('Erreur: Session non trouvée')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -147,7 +152,7 @@ export async function DELETE(
     // Vérifier que l'utilisateur est un administrateur
     if (session.user.role !== 'ADMIN') {
       console.log(`Tentative de suppression par un utilisateur non-admin: ${session.user.email}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Seuls les administrateurs peuvent supprimer des machines' },
         { status: 403 }
       )
@@ -160,7 +165,7 @@ export async function DELETE(
 
     if (!machine) {
       console.log(`Erreur: Machine ${machineId} non trouvée`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Machine non trouvée' },
         { status: 404 }
       )
@@ -178,7 +183,7 @@ export async function DELETE(
 
     if (pretEnCours) {
       console.log(`Erreur: Machine ${machineId} actuellement prêtée, prêt ID: ${pretEnCours.id}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible de supprimer la machine : elle est actuellement prêtée' },
         { status: 400 }
       )
@@ -204,7 +209,7 @@ export async function DELETE(
         console.log(`${historiqueCount} prêts associés à la machine ${machineId} ont été supprimés`)
       } catch (pretDeleteError: unknown) {
         console.error('Erreur lors de la suppression des prêts associés:', pretDeleteError)
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Erreur lors de la suppression des prêts associés à la machine' },
           { status: 500 }
         )
@@ -237,7 +242,7 @@ export async function DELETE(
       
       // Vérifier si l'erreur est liée à des contraintes de clé étrangère
       if (typeof deleteError === 'object' && deleteError && 'code' in deleteError && (deleteError as { code?: string }).code === 'P2003') {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Impossible de supprimer cette machine car elle est référencée par d\'autres enregistrements' },
           { status: 400 }
         )
@@ -247,7 +252,7 @@ export async function DELETE(
     }
   } catch (error) {
     console.error('Erreur lors de la suppression de la machine:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de la machine' },
       { status: 500 }
     )

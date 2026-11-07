@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -23,7 +24,7 @@ export default function DebugPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Debug Chantiers</h1>
+      <h1 className="text-2xl font-bold mb-6"><UiText>Debug Chantiers</UiText></h1>
 
       {/* Table des chantiers existants */}
       <div className="mb-8">
@@ -31,7 +32,7 @@ export default function DebugPage() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID (numérique)</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><UiText>ID (numérique)</UiText></th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">UUID (chantierId)</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><UiText>Nom</UiText></th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><UiText>Actions</UiText></th>
@@ -48,8 +49,8 @@ export default function DebugPage() {
                     href={`/chantiers/${chantier.chantierId}/etats`}
                     className="text-blue-600 hover:underline"
                   >
-                    Accéder aux états
-                  </Link>
+                    <UiText>Accéder aux états
+                  </UiText></Link>
                 </td>
               </tr>
             ))}
@@ -66,7 +67,7 @@ export default function DebugPage() {
             value={currentId}
             onChange={(e) => setCurrentId(e.target.value)}
             className="flex-1 p-2 border rounded"
-            placeholder="Entrez un ID à tester..."
+            placeholder={tx("Entrez un ID à tester...")}
           />
           <Link
             href={`/chantiers/${currentId}/etats`}

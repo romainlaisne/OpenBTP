@@ -1,5 +1,7 @@
 'use client';
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react';
 import { XMarkIcon, CalendarIcon, UserIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 import { SearchableSelect } from '@/components/ui/SearchableSelect';
@@ -180,8 +182,8 @@ export default function TaskModal({
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               <BuildingOfficeIcon className="h-4 w-4 inline mr-1" />
-              Type de tâche *
-            </label>
+              <UiText>Type de tâche *
+            </UiText></label>
             {Array.isArray(chantiers) ? (
               <SearchableSelect
                 value={formData.chantierId}
@@ -238,22 +240,22 @@ export default function TaskModal({
                   
                   return options;
                 })()}
-                placeholder="Rechercher un chantier ou SAV..."
+                placeholder={tx("Rechercher un chantier ou SAV...")}
                 className="w-full"
               />
             ) : (
-              <p className="mt-1 text-sm text-red-600">Erreur lors du chargement des chantiers</p>
+              <p className="mt-1 text-sm text-red-600"><UiText>Erreur lors du chargement des chantiers</UiText></p>
             )}
           </div>
 
           {/* Titre */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Titre *
-              {formData.chantierId && (
+              <UiText>Titre *
+              </UiText>{formData.chantierId && (
                 <span className="text-xs text-blue-600 dark:text-blue-400 ml-2">
-                  (Auto-rempli avec le nom du chantier)
-                </span>
+                  <UiText>(Auto-rempli avec le nom du chantier)
+                </UiText></span>
               )}
             </label>
             <input
@@ -269,22 +271,22 @@ export default function TaskModal({
             {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
             {formData.chantierId && (
               <p className="mt-1 text-xs text-blue-600 dark:text-blue-400">
-                Le titre est automatiquement défini par le nom du chantier sélectionné
-              </p>
+                <UiText>Le titre est automatiquement défini par le nom du chantier sélectionné
+              </UiText></p>
             )}
           </div>
 
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Description
-            </label>
+              <UiText>Description
+            </UiText></label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              placeholder="Description de la tâche"
+              placeholder={tx("Description de la tâche")}
             />
           </div>
 
@@ -293,8 +295,8 @@ export default function TaskModal({
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <CalendarIcon className="h-4 w-4 inline mr-1" />
-                Date de début *
-              </label>
+                <UiText>Date de début *
+              </UiText></label>
               <input
                 type="date"
                 value={formData.start.split('T')[0]}
@@ -311,8 +313,8 @@ export default function TaskModal({
               />
               {errors.start && <p className="mt-1 text-sm text-red-600">{errors.start}</p>}
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Heure par défaut : 9h00
-              </p>
+                <UiText>Heure par défaut : 9h00
+              </UiText></p>
             </div>
 
             <div>
@@ -336,8 +338,8 @@ export default function TaskModal({
               />
               {errors.end && <p className="mt-1 text-sm text-red-600">{errors.end}</p>}
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Heure par défaut : 17h00
-              </p>
+                <UiText>Heure par défaut : 17h00
+              </UiText></p>
             </div>
           </div>
 
@@ -349,8 +351,8 @@ export default function TaskModal({
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <UserIcon className="h-4 w-4 inline mr-1" />
-                Ouvriers internes
-              </label>
+                <UiText>Ouvriers internes
+              </UiText></label>
               <div className="space-y-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3">
                 {ouvriersInternes.map(ouvrier => (
                   <label key={ouvrier.id} className="flex items-center space-x-2">
@@ -375,8 +377,8 @@ export default function TaskModal({
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <BuildingOfficeIcon className="h-4 w-4 inline mr-1" />
-                Sous-traitants
-              </label>
+                <UiText>Sous-traitants
+              </UiText></label>
               <div className="space-y-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3">
                 {soustraitants.map(soustraitant => (
                   <label key={soustraitant.id} className="flex items-center space-x-2">
@@ -406,8 +408,8 @@ export default function TaskModal({
               onClick={onClose}
               className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
-              Annuler
-            </button>
+              <UiText>Annuler
+            </UiText></button>
             <button
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

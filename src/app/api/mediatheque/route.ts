@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -12,10 +14,11 @@ const MAX_IMAGE_SIZE = 15 * 1024 * 1024   // 15 Mo
 const MAX_VIDEO_SIZE = 200 * 1024 * 1024  // 200 Mo
 
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = request.nextUrl
@@ -62,18 +65,19 @@ export async function GET(request: NextRequest) {
         }
       })
 
-    return NextResponse.json(results)
+    return localizedJson(results)
   } catch (error) {
     console.error('GET /api/mediatheque error:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const formData = await request.formData()
@@ -82,13 +86,13 @@ export async function POST(request: NextRequest) {
     const description = (formData.get('description') as string | null) ?? ''
 
     if (!file) {
-      return NextResponse.json({ error: 'Aucun fichier fourni' }, { status: 400 })
+      return localizedJson({ error: 'Aucun fichier fourni' }, { status: 400 })
     }
 
     const isVideo = file.type.startsWith('video/')
     const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE
     if (file.size > maxSize) {
-      return NextResponse.json({
+      return localizedJson({
         error: `Fichier trop volumineux (max ${isVideo ? '200' : '15'} Mo)`
       }, { status: 400 })
     }
@@ -98,7 +102,7 @@ export async function POST(request: NextRequest) {
 
     const validation = validateMediaBuffer(buffer, file.type, file.name)
     if (!validation.isValid) {
-      return NextResponse.json({
+      return localizedJson({
         error: 'Format non supporté (images : JPEG, PNG, WebP, HEIC, AVIF — vidéos : MP4, MOV, WebM, AVI)'
       }, { status: 400 })
     }
@@ -106,7 +110,7 @@ export async function POST(request: NextRequest) {
     let tagNames: string[] = []
     if (tagsRaw) {
       try { tagNames = JSON.parse(tagsRaw) }
-      catch { return NextResponse.json({ error: 'Format tags invalide' }, { status: 400 }) }
+      catch { return localizedJson({ error: 'Format tags invalide' }, { status: 400 }) }
     }
 
     if (!existsSync(PHOTOTHEQUE_DIR)) {
@@ -147,7 +151,7 @@ export async function POST(request: NextRequest) {
       include: { tags: true }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       id: doc.id,
       nom: doc.nom,
       url: doc.url,
@@ -160,6 +164,6 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('POST /api/mediatheque error:', error)
-    return NextResponse.json({ error: 'Erreur serveur lors de l\'upload' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur lors de l\'upload' }, { status: 500 })
   }
 }

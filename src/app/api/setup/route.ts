@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 import { prisma } from '@/lib/prisma/client';
@@ -48,13 +50,14 @@ async function initializeFeatureModules() {
 }
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const { company, admin } = await request.json();
 
     // Vérifier si l'application est déjà configurée
     const existingUsers = await prisma.user.count();
     if (existingUsers > 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'L\'application est déjà configurée' },
         { status: 400 }
       );
@@ -62,14 +65,14 @@ export async function POST(request: NextRequest) {
 
     // Vérifier les données requises
     if (!company?.name || !company?.address || !company?.email || !company?.tva) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Toutes les informations obligatoires de la société sont requises (nom, adresse, email, TVA)' },
         { status: 400 }
       );
     }
 
     if (!admin?.email || !admin?.password || !admin?.prenom || !admin?.nom) {
-        return NextResponse.json(
+        return localizedJson(
         { error: 'Toutes les informations de l\'administrateur sont requises' },
             { status: 400 }
         );
@@ -125,7 +128,7 @@ export async function POST(request: NextRequest) {
       return { companySettings, adminUser };
     });
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       message: 'Configuration initiale terminée avec succès',
       data: {
@@ -139,20 +142,20 @@ export async function POST(request: NextRequest) {
     // Gestion des erreurs spécifiques
     if (error instanceof Error) {
       if (error.message.includes('email')) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Cet email est déjà utilisé' },
           { status: 400 }
         );
       }
       if (error.message.includes('Unique constraint')) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Des données en conflit existent déjà' },
           { status: 400 }
         );
       }
     }
 
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur interne du serveur lors de la configuration' },
       { status: 500 }
     );
@@ -161,20 +164,21 @@ export async function POST(request: NextRequest) {
 
 // Endpoint pour vérifier si l'application est déjà configurée
 export async function GET() {
+  await bindRequestLocale()
   try {
     const userCount = await prisma.user.count();
     const companySettings = await prisma.companysettings.findFirst();
 
     const isConfigured = userCount > 0 && companySettings;
 
-    return NextResponse.json({
+    return localizedJson({
       isConfigured,
       userCount,
       hasCompanySettings: !!companySettings,
     });
   } catch (error) {
     console.error('Erreur lors de la vérification de la configuration:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la vérification de la configuration' },
       { status: 500 }
     );

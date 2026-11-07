@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import { useProjectStore, nextPosteColor } from '@/store/metres-plan/useProjectStore'
 import { usePdfStore } from '@/store/metres-plan/usePdfStore'
@@ -61,7 +63,7 @@ const MesuresTab: React.FC = () => {
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="text-center text-gray-400 dark:text-gray-600">
           <Ruler size={32} className="mx-auto mb-3 opacity-30" />
-          <p className="text-sm font-medium">Aucune mesure</p>
+          <p className="text-sm font-medium"><UiText>Aucune mesure</UiText></p>
           <p className="text-xs mt-1">Utilisez les outils pour mesurer</p>
         </div>
       </div>
@@ -72,7 +74,7 @@ const MesuresTab: React.FC = () => {
     <div className="flex-1 overflow-y-auto flex flex-col">
       {/* Global totals */}
       <div className="p-3 border-b border-gray-200 dark:border-gray-800 shrink-0">
-        <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">Résumé global</p>
+        <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2"><UiText>Résumé global</UiText></p>
         <div className="space-y-1">
           {Object.entries(totals).map(([key, t]) => (
             <div key={key} className="flex items-center justify-between py-0.5">
@@ -155,7 +157,7 @@ const MeasurementRow: React.FC<{
           {m.visible ? <Eye size={12} /> : <EyeOff size={12} />}
         </button>
         <button onClick={e => { e.stopPropagation(); onDelete() }}
-          className="p-0.5 rounded hover:bg-red-900 text-gray-500 hover:text-red-400" title="Supprimer">
+          className="p-0.5 rounded hover:bg-red-900 text-gray-500 hover:text-red-400" title={tx("Supprimer")}>
           <Trash2 size={12} />
         </button>
       </div>
@@ -204,8 +206,8 @@ const MetreTab: React.FC = () => {
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center text-gray-400 dark:text-gray-600">
             <Target size={32} className="mx-auto mb-3 opacity-30" />
-            <p className="text-sm font-medium">Aucun poste</p>
-            <p className="text-xs mt-1 leading-relaxed">Créez des postes pour<br />regrouper vos mesures</p>
+            <p className="text-sm font-medium"><UiText>Aucun poste</UiText></p>
+            <p className="text-xs mt-1 leading-relaxed"><UiText>Créez des postes pour</UiText><br />regrouper vos mesures</p>
           </div>
         </div>
       </div>
@@ -247,7 +249,7 @@ const MetreTab: React.FC = () => {
       {/* Grand total footer */}
       {postes.length > 0 && (
         <div className="p-3 border-t border-gray-200 dark:border-gray-800 shrink-0">
-          <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">Total global devis</p>
+          <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1"><UiText>Total global devis</UiText></p>
           {postes.map(p => {
             const s = posteStats[p.id]
             if (s.count === 0) return null
@@ -331,14 +333,14 @@ const PosteRow: React.FC<{
             <p
               className="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate cursor-text"
               onDoubleClick={() => { setEditVal(poste.name); setEditing(true) }}
-              title="Double-clic pour renommer"
+              title={tx("Double-clic pour renommer")}
             >
               {poste.name}
             </p>
           )}
           <p className="text-xs text-gray-500 mt-0.5">
             {stats.count === 0
-              ? <span className="italic">Aucune mesure assignée</span>
+              ? <span className="italic"><UiText>Aucune mesure assignée</UiText></span>
               : <span><span className="text-gray-900 dark:text-white font-semibold">{stats.total.toFixed(2)}</span> {stats.unit} <span className="text-gray-400 dark:text-gray-600">({stats.count} mesure{stats.count > 1 ? 's' : ''})</span></span>
             }
           </p>
@@ -348,7 +350,7 @@ const PosteRow: React.FC<{
         <button
           onClick={e => { e.stopPropagation(); onDelete() }}
           className="p-1 rounded hover:bg-red-900 text-gray-400 dark:text-gray-600 hover:text-red-400 transition-colors shrink-0"
-          title="Supprimer ce poste"
+          title={tx("Supprimer ce poste")}
         >
           <Trash2 size={13} />
         </button>
@@ -356,8 +358,8 @@ const PosteRow: React.FC<{
 
       {isActive && (
         <p className="text-xs text-blue-400 mt-1.5 flex items-center gap-1">
-          <Target size={10} /> Poste actif — les prochaines mesures seront assignées ici
-        </p>
+          <Target size={10} /> <UiText>Poste actif — les prochaines mesures seront assignées ici
+        </UiText></p>
       )}
     </div>
   )
@@ -418,7 +420,7 @@ const RightPanel: React.FC = () => {
       <div
         className="absolute left-0 top-0 bottom-0 w-2 z-10 cursor-col-resize group flex items-center justify-center"
         onMouseDown={onResizeStart}
-        title="Glisser pour redimensionner"
+        title={tx("Glisser pour redimensionner")}
       >
         {/* thin visual line */}
         <div className="w-px h-full bg-gray-200 dark:bg-gray-800 group-hover:bg-blue-500/60 transition-colors" />
@@ -448,8 +450,8 @@ const RightPanel: React.FC = () => {
             tab === 'metre' ? 'text-gray-900 dark:text-white border-b-2 border-blue-500 bg-gray-100/50 dark:bg-gray-800/50' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
           )}
         >
-          Métré
-          {activePosteId && (
+          <UiText>Métré
+          </UiText>{activePosteId && (
             <span className="absolute top-1.5 right-3 w-2 h-2 rounded-full bg-blue-500" title="Poste actif" />
           )}
           {postes.length > 0 && !activePosteId && (

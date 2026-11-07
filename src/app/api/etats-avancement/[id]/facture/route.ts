@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,16 +10,17 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await params
     const etatId = parseInt(id, 10)
     if (Number.isNaN(etatId)) {
-      return NextResponse.json({ error: 'ID invalide' }, { status: 400 })
+      return localizedJson({ error: 'ID invalide' }, { status: 400 })
     }
 
     const body = await request.json()
@@ -32,12 +35,12 @@ export async function PATCH(
       data: { factureNumero }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       id: updated.id,
       factureNumero: updated.factureNumero
     })
   } catch (error) {
     console.error('Erreur PATCH /api/etats-avancement/[id]/facture:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

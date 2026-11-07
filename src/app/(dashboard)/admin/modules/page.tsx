@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
@@ -195,7 +196,7 @@ export default function ModulesAdminPage() {
         onClick={syncModules}
         disabled={syncing || loading}
         className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-amber-500/30 transition hover:scale-[1.02] hover:shadow-xl disabled:opacity-50"
-        title="Ajoute les modules manquants (ex: Logistique magasiniers)"
+        title={tx("Ajoute les modules manquants (ex: Logistique magasiniers)")}
       >
         <ArrowPathIcon className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
         Synchroniser
@@ -214,8 +215,8 @@ export default function ModulesAdminPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Modules"
-        subtitle="Activez ou désactivez finement les fonctionnalités disponibles dans l'application."
+        title={tx("Modules")}
+        subtitle={tx("Activez ou désactivez finement les fonctionnalités disponibles dans l'application.")}
         icon={Cog6ToothIcon}
         badgeColor="from-indigo-500 via-indigo-600 to-blue-600"
         gradientColor="from-indigo-500/12 via-indigo-600/12 to-blue-600/12"
@@ -291,12 +292,12 @@ export default function ModulesAdminPage() {
                         {module.isActive ? (
                           <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
                             <CheckCircleIcon className="h-5 w-5" />
-                            <span className="text-sm font-medium">Activé</span>
+                            <span className="text-sm font-medium"><UiText>Activé</UiText></span>
                           </div>
                         ) : (
                           <div className="flex items-center gap-2 text-gray-400 dark:text-gray-500">
                             <XCircleIcon className="h-5 w-5" />
-                            <span className="text-sm font-medium">Désactivé</span>
+                            <span className="text-sm font-medium"><UiText>Désactivé</UiText></span>
                           </div>
                         )}
 
@@ -327,9 +328,9 @@ export default function ModulesAdminPage() {
         {/* Légende */}
         <div className="mt-8 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4">
           <p className="text-sm text-indigo-800 dark:text-indigo-200">
-            <strong>ℹ️ Note :</strong> Les modules marqués "Système" sont essentiels au fonctionnement de l'application et ne peuvent pas être désactivés.
+            <strong>ℹ️ Note :</strong> <UiText>Les modules marqués "Système" sont essentiels au fonctionnement de l'application et ne peuvent pas être désactivés.
             La désactivation d'un module masquera ses fonctionnalités dans l'interface et bloquera l'accès à ses pages.
-          </p>
+          </UiText></p>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { readPortalSessionFromCookie, unauthorized } from '@/app/public/portail/auth';
@@ -7,6 +9,7 @@ import { readPortalSessionFromCookie, unauthorized } from '@/app/public/portail/
  * Récupère les chantiers disponibles pour l'upload de photos
  */
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   const portalSession = readPortalSessionFromCookie(request.headers.get('cookie'))
   if (!portalSession) return unauthorized()
 
@@ -16,7 +19,7 @@ export async function GET(request: NextRequest) {
     const uploadedByType = searchParams.get('uploadedByType') as 'OUVRIER_INTERNE' | 'SOUSTRAITANT';
 
     if (!uploadedBy || !uploadedByType) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Paramètres manquants' },
         { status: 400 }
       );
@@ -89,14 +92,14 @@ export async function GET(request: NextRequest) {
       clientNom: chantier.clientNom
     }));
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       chantiers: chantiersFormates
     });
 
   } catch (error) {
     console.error('Erreur lors de la récupération des chantiers:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des chantiers' },
       { status: 500 }
     );

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -7,6 +9,7 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string; commandeId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -16,7 +19,7 @@ export async function POST(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -29,7 +32,7 @@ export async function POST(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier introuvable' }, { status: 404 })
+      return localizedJson({ error: 'Chantier introuvable' }, { status: 404 })
     }
 
     // Vérifier que la commande existe
@@ -41,7 +44,7 @@ export async function POST(
     `
 
     if (!commande || commande.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Commande sous-traitant non trouvée' },
         { status: 404 }
       )
@@ -49,7 +52,7 @@ export async function POST(
 
     // Vérifier si la commande est déjà verrouillée
     if (commande[0].estVerrouillee) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'La commande est déjà verrouillée' },
         { status: 400 }
       )
@@ -63,7 +66,7 @@ export async function POST(
     })
 
     if (countLignes === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'La commande ne contient aucune ligne' },
         { status: 400 }
       )
@@ -88,16 +91,16 @@ export async function POST(
     })
 
     if (!commandeMiseAJour) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Erreur lors de la récupération de la commande mise à jour' },
         { status: 500 }
       )
     }
 
-    return NextResponse.json(commandeMiseAJour)
+    return localizedJson(commandeMiseAJour)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la validation de la commande sous-traitant' },
       { status: 500 }
     )

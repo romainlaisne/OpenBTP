@@ -1,10 +1,12 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { readPortalSessionFromCookie, unauthorized } from '@/app/public/portail/auth';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { dateFnsLocale } from '@/lib/i18n/dates';
 import { validateMediaFile, TAILLE_MAX_VIDEO } from '@/lib/utils/image-validation';
 
 // Chemin de base pour les photos externes
@@ -15,6 +17,7 @@ const PHOTOS_BASE_PATH = join(process.cwd(), 'public', 'uploads', 'photos-extern
  * Upload de photos par les utilisateurs externes (ouvriers et sous-traitants)
  */
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   const portalSession = readPortalSessionFromCookie(request.headers.get('cookie'))
   if (!portalSession) return unauthorized()
 
@@ -31,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     // Validation des données
     if (!chantierId || !uploadedBy || !uploadedByType || !uploadedByName || !files || files.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Données manquantes' },
         { status: 400 }
       );
@@ -49,7 +52,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       );
@@ -57,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     // Vérifier que le chantier est actif
     if (!['EN_COURS', 'EN_PREPARATION'].includes(chantier.statut)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le chantier n\'est pas actif' },
         { status: 400 }
       );
@@ -65,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     // Limite de photos (20 max par envoi)
     if (files.length > 20) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Maximum 20 photos par envoi' },
         { status: 400 }
       );
@@ -110,7 +113,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (uploadedUrls.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Aucune photo valide n\'a été uploadée' },
         { status: 400 }
       );
@@ -137,7 +140,7 @@ export async function POST(request: NextRequest) {
       // Ne pas faire échouer l'upload pour une erreur de notification
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       photoId: photoExterne.id,
       uploadedCount: uploadedUrls.length,
@@ -146,7 +149,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Erreur lors de l\'upload des photos:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'upload des photos' },
       { status: 500 }
     );
@@ -203,7 +206,7 @@ async function sendChatNotification(
     // Créer le message de notification
     const messageContent = `📸 **Nouvelles photos ajoutées**
 • ${photoCount} photo(s) envoyée(s) par **${uploadedByName}** (${uploadedByType === 'OUVRIER_INTERNE' ? 'Ouvrier interne' : 'Sous-traitant'})
-• Date: ${format(new Date(), 'dd/MM/yyyy à HH:mm', { locale: fr })}
+• Date: ${format(new Date(), 'dd/MM/yyyy à HH:mm', { locale: dateFnsLocale() })}
 • 📁 [Voir toutes les photos du chantier](/chantiers/${chantierId})`;
 
     await prisma.chatMessage.create({

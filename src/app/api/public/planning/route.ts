@@ -1,9 +1,12 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { readPortalSessionFromCookie, unauthorized } from '@/app/public/portail/auth'
 
 // GET /api/public/planning?subjectType=OUVRIER_INTERNE|SOUSTRAITANT&subjectId&from&to
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   const portalSession = readPortalSessionFromCookie(request.headers.get('cookie'))
   if (!portalSession) return unauthorized()
 
@@ -13,7 +16,7 @@ export async function GET(request: NextRequest) {
     const subjectId = searchParams.get('subjectId')
     const from = searchParams.get('from')
     const to = searchParams.get('to')
-    if (!subjectType || !subjectId) return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 })
+    if (!subjectType || !subjectId) return localizedJson({ error: 'Paramètres manquants' }, { status: 400 })
 
     // Vérifier que l'utilisateur accède uniquement à ses propres données
     if (portalSession.id !== subjectId) return unauthorized()
@@ -35,8 +38,8 @@ export async function GET(request: NextRequest) {
       orderBy: { start: 'asc' },
       select: { id: true, title: true, start: true, end: true, status: true, chantierId: true }
     })
-    return NextResponse.json({ data: tasks })
+    return localizedJson({ data: tasks })
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

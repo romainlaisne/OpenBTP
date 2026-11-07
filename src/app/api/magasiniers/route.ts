@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,10 +7,11 @@ import { prisma } from '@/lib/prisma/client'
 import { ensureOuvrierInterneForMagasinier } from '@/lib/journalMagasinier'
 
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const magasiniers = await prisma.magasinier.findMany({
@@ -19,25 +22,26 @@ export async function GET() {
       }
     })
 
-    return NextResponse.json(magasiniers)
+    return localizedJson(magasiniers)
   } catch (error) {
     console.error('Erreur GET magasiniers:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
     const { nom, pin } = body as { nom: string; pin?: string }
 
     if (!nom?.trim()) {
-      return NextResponse.json({ error: 'Nom requis' }, { status: 400 })
+      return localizedJson({ error: 'Nom requis' }, { status: 400 })
     }
 
     const magasinier = await prisma.magasinier.create({
@@ -63,9 +67,9 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    return NextResponse.json(magasinier, { status: 201 })
+    return localizedJson(magasinier, { status: 201 })
   } catch (error) {
     console.error('Erreur POST magasiniers:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 
@@ -20,6 +22,7 @@ function getClientIP(request: NextRequest): string | null {
 }
 
 export async function GET(request: NextRequest, props: { params: Promise<{ token: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const contrat = await prisma.contrat.findUnique({
@@ -37,14 +40,14 @@ export async function GET(request: NextRequest, props: { params: Promise<{ token
     })
     
     if (!contrat) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Contrat non trouvé ou déjà signé' },
         { status: 404 }
       )
     }
     
     if (contrat.estSigne) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Ce contrat a déjà été signé' },
         { status: 400 }
       )
@@ -71,10 +74,10 @@ export async function GET(request: NextRequest, props: { params: Promise<{ token
       console.error('Erreur lors de l\'enregistrement de l\'audit de consultation:', auditError)
     }
     
-    return NextResponse.json(contrat)
+    return localizedJson(contrat)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du contrat' },
       { status: 500 }
     )

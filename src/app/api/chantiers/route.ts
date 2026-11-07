@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -9,6 +11,7 @@ import { notifier } from '@/lib/services/notificationService'
 
 // GET /api/chantiers - Liste tous les chantiers
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     // Essayer d'abord l'authentification normale
     const session = await getServerSession(authOptions)
@@ -25,7 +28,7 @@ export async function GET(request: Request) {
         console.log('🔐 Authentification portail détectée pour chantiers:', portalSession.t)
       } else {
         console.log('❌ Authentification portail échouée')
-        return NextResponse.json([], { status: 401 })
+        return localizedJson([], { status: 401 })
       }
     }
 
@@ -110,7 +113,7 @@ export async function GET(request: Request) {
       ])
 
       if (!chantiers || !Array.isArray(chantiers)) {
-        return NextResponse.json([])
+        return localizedJson([])
       }
 
       // Transformer les données pour compatibilité avec l'interface existante
@@ -168,16 +171,16 @@ export async function GET(request: Request) {
         clientsTrouvés: formattedChantiers.map(c => c.clientNom).filter((v, i, a) => a.indexOf(v) === i).join(', ')
       })
       
-      return NextResponse.json(response)
+      return localizedJson(response)
     } catch {
       // Erreur DB capturée
       // Retourner un tableau vide en cas d'erreur de base de données
-      return NextResponse.json([])
+      return localizedJson([])
     }
   } catch {
     // Erreur générique capturée
     // Retourner un tableau vide en cas d'erreur générale
-    return NextResponse.json([])
+    return localizedJson([])
   }
 }
 
@@ -193,10 +196,11 @@ function generateRandomString(length: number): string {
 
 // POST /api/chantiers - Créer un nouveau chantier
 export async function POST(req: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await req.json()
@@ -271,10 +275,10 @@ export async function POST(req: Request) {
       },
     })
 
-    return NextResponse.json(chantier)
+    return localizedJson(chantier)
   } catch {
     // Erreur lors de la création du chantier
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du chantier' },
       { status: 500 }
     )

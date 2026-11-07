@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,11 +7,12 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/clients/[clientId] - Récupère un client spécifique
 export async function GET(request: Request, props: { params: Promise<{ clientId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Vous devez être connecté pour accéder à cette ressource' },
         { status: 401 }
       )
@@ -35,16 +38,16 @@ export async function GET(request: Request, props: { params: Promise<{ clientId:
     })
 
     if (!client) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Client non trouvé' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(client)
+    return localizedJson(client)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du client' },
       { status: 500 }
     )
@@ -53,11 +56,12 @@ export async function GET(request: Request, props: { params: Promise<{ clientId:
 
 // PUT /api/clients/[clientId] - Met à jour un client
 export async function PUT(request: Request, props: { params: Promise<{ clientId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Vous devez être connecté pour modifier un client' },
         { status: 401 }
       )
@@ -91,10 +95,10 @@ export async function PUT(request: Request, props: { params: Promise<{ clientId:
       }
     })
 
-    return NextResponse.json(client)
+    return localizedJson(client)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour du client' },
       { status: 500 }
     )
@@ -103,21 +107,22 @@ export async function PUT(request: Request, props: { params: Promise<{ clientId:
 
 // DELETE /api/clients/[clientId] - Supprime un client
 export async function DELETE(request: Request, props: { params: Promise<{ clientId: string }> }) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     await prisma.client.delete({
       where: { id: params.clientId }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du client' },
       { status: 500 }
     )

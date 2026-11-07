@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import ExcelJS from 'exceljs'
 import type { Project, MeasurementType } from '@/types/metres-plan'
 
@@ -54,7 +55,7 @@ export async function exportExcel(project: Project) {
 
     ws.addRow([`Bordereau de métrés — ${project.name}`]).font = { bold: true, size: 13 }
     ws.addRow(['Projet:', project.name])
-    ws.addRow(['Date:', new Date().toLocaleDateString('fr-FR')])
+    ws.addRow(['Date:', new Date().toLocaleDateString(intlLocale(getActiveLocale()))])
     ws.addRow([])
     styleHeader(ws.addRow(['Désignation', 'Unité', 'Total', 'Nb mesures', 'Détail (mesures)']))
 
@@ -89,7 +90,7 @@ export async function exportExcel(project: Project) {
   wsSum.columns = [{ width: 16 }, { width: 22 }, { width: 14 }, { width: 16 }, { width: 12 }]
   wsSum.addRow(['MétréPlan — Résumé du projet']).font = { bold: true, size: 13 }
   wsSum.addRow(['Projet:', project.name])
-  wsSum.addRow(['Date:', new Date().toLocaleDateString('fr-FR')])
+  wsSum.addRow(['Date:', new Date().toLocaleDateString(intlLocale(getActiveLocale()))])
   wsSum.addRow(['Fichier PDF:', project.pdfFileName])
   wsSum.addRow(['Calibration:', project.calibration
     ? `1px = ${project.calibration.ratio.toFixed(5)} ${project.calibration.unit}`

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -13,11 +15,12 @@ export async function POST(
   request: Request,
   props: { params: Promise<{ id: string, ouvrierId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -30,14 +33,14 @@ export async function POST(
 
     // Validation basique
     if (!file || !type) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le fichier et le type sont requis' },
         { status: 400 }
       )
     }
 
     if (!ALLOWED_TYPES.includes(type)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Type de document non valide' },
         { status: 400 }
       )
@@ -52,7 +55,7 @@ export async function POST(
     })
 
     if (!ouvrier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Ouvrier non trouvé' },
         { status: 404 }
       )
@@ -60,7 +63,7 @@ export async function POST(
 
     const extension = (file.name.split('.').pop() || '').toLowerCase()
     if (!EXTENSIONS.includes(extension)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: `Format non accepté (.${extension}). Formats : ${EXTENSIONS.join(', ')}.` },
         { status: 400 }
       )
@@ -76,10 +79,10 @@ export async function POST(
       dateExpiration: dateExpiration ? new Date(dateExpiration) : null,
     })
 
-    return NextResponse.json(document)
+    return localizedJson(document)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de l\'upload du document' },
       { status: 500 }
     )

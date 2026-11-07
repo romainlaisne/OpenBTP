@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
@@ -12,7 +14,7 @@ import {
   ArrowDownTrayIcon,
 } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { useNotification } from '@/hooks/useNotification'
 
 interface MetreLigne {
@@ -116,7 +118,7 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
   }
 
   const handleDeleteMetre = async (metreId: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce métré ?')) return
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer ce métré ?"))) return
 
     try {
       setDeletingMetreId(metreId)
@@ -184,7 +186,7 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600">Chargement des métrés...</span>
+        <span className="ml-2 text-gray-600"><UiText>Chargement des métrés...</UiText></span>
       </div>
     )
   }
@@ -193,17 +195,17 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
     return (
       <div className="text-center py-12">
         <ClipboardDocumentListIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-        <p className="text-gray-600 font-medium mb-2">Aucun métré pour ce chantier</p>
+        <p className="text-gray-600 font-medium mb-2"><UiText>Aucun métré pour ce chantier</UiText></p>
         <p className="text-sm text-gray-500 mb-4">
-          Créez un nouveau métré pour ce chantier
-        </p>
+          <UiText>Créez un nouveau métré pour ce chantier
+        </UiText></p>
         <button
           onClick={() => router.push(`/chantiers/${chantierId}/metres/nouveau`)}
           className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           <PlusIcon className="h-5 w-5" />
-          Nouveau métré
-        </button>
+          <UiText>Nouveau métré
+        </UiText></button>
       </div>
     )
   }
@@ -240,14 +242,14 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
                         <ClipboardDocumentListIcon className="h-5 w-5 text-blue-600" />
                         <div>
                           <h4 className="font-semibold text-gray-900 dark:text-white">
-                            Métré du{' '}
+                            <UiText>Métré du</UiText>{' '}
                             {format(new Date(metre.date), 'dd/MM/yyyy', {
-                              locale: fr,
+                              locale: dateFnsLocale(),
                             })}
                           </h4>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {metre.categories.length} catégorie
-                            {metre.categories.length > 1 ? 's' : ''} • {totalLignes}{' '}
+                            {metre.categories.length} <UiText>catégorie
+                            </UiText>{metre.categories.length > 1 ? 's' : ''} • {totalLignes}{' '}
                             ligne{totalLignes > 1 ? 's' : ''} • Total : {totalMetre.toFixed(2)}
                           </p>
                         </div>
@@ -271,7 +273,7 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
                     <button
                       onClick={() => handleEditMetre(metre.id)}
                       className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                      title="Éditer"
+                      title={tx("Éditer")}
                     >
                       <PencilIcon className="h-5 w-5" />
                     </button>
@@ -279,7 +281,7 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
                       onClick={() => handleDeleteMetre(metre.id)}
                       disabled={deletingMetreId === metre.id}
                       className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg disabled:opacity-50 transition-colors"
-                      title="Supprimer"
+                      title={tx("Supprimer")}
                     >
                       <TrashIcon className="h-5 w-5" />
                     </button>
@@ -335,8 +337,8 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
                                 <thead>
                                   <tr className="border-b border-gray-200 dark:border-gray-700">
                                     <th className="text-left py-2 px-3 text-gray-700 dark:text-gray-300">
-                                      Description
-                                    </th>
+                                      <UiText>Description
+                                    </UiText></th>
                                     <th className="text-center py-2 px-3 text-gray-700 dark:text-gray-300">
                                       Longueur
                                     </th>
@@ -347,11 +349,11 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
                                       Hauteur
                                     </th>
                                     <th className="text-right py-2 px-3 text-gray-700 dark:text-gray-300">
-                                      Quantité
-                                    </th>
+                                      <UiText>Quantité
+                                    </UiText></th>
                                     <th className="text-left py-2 px-3 text-gray-700 dark:text-gray-300">
-                                      Notes
-                                    </th>
+                                      <UiText>Notes
+                                    </UiText></th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -387,8 +389,8 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
                                       colSpan={4}
                                       className="py-2 px-3 text-right text-gray-700 dark:text-gray-300"
                                     >
-                                      Total catégorie :
-                                    </td>
+                                      <UiText>Total catégorie :
+                                    </UiText></td>
                                     <td className="py-2 px-3 text-right text-gray-900 dark:text-white">
                                       {totalCategorie.toFixed(2)} {categorie.unite}
                                     </td>
@@ -417,8 +419,8 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                     <div className="flex justify-between items-center">
                       <span className="font-semibold text-gray-900 dark:text-white">
-                        Total général :
-                      </span>
+                        <UiText>Total général :
+                      </UiText></span>
                       <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
                         {totalMetre.toFixed(2)}
                       </span>
@@ -427,9 +429,9 @@ export default function MetresTabContent({ chantierId }: MetresTabContentProps) 
 
                   {/* Informations */}
                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                    Créé le{' '}
+                    <UiText>Créé le</UiText>{' '}
                     {format(new Date(metre.createdAt), 'dd/MM/yyyy à HH:mm', {
-                      locale: fr,
+                      locale: dateFnsLocale(),
                     })}{' '}
                     par {metre.createdByUser.name || metre.createdByUser.email}
                   </div>

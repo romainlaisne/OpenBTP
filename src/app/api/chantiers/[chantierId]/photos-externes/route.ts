@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -13,10 +15,11 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 });
     }
 
     const { chantierId } = await params;
@@ -28,7 +31,7 @@ export async function GET(
     });
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       );
@@ -58,7 +61,7 @@ export async function GET(
       createdAt: photo.createdAt.toISOString()
     }));
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       chantier: {
         id: chantier.chantierId,
@@ -70,7 +73,7 @@ export async function GET(
 
   } catch (error) {
     console.error('Erreur lors de la récupération des photos externes:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des photos externes' },
       { status: 500 }
     );
@@ -85,17 +88,18 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+      return localizedJson({ error: 'Non authentifié' }, { status: 401 });
     }
 
     const { chantierId } = await params;
     const { photoId } = await request.json();
 
     if (!photoId) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID de photo requis' },
         { status: 400 }
       );
@@ -108,7 +112,7 @@ export async function DELETE(
     });
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       );
@@ -123,7 +127,7 @@ export async function DELETE(
     });
 
     if (!photo) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Photo non trouvée' },
         { status: 404 }
       );
@@ -164,14 +168,14 @@ export async function DELETE(
       }
     });
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       message: 'Photo supprimée avec succès'
     });
 
   } catch (error) {
     console.error('Erreur lors de la suppression de la photo:', error);
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de la photo' },
       { status: 500 }
     );

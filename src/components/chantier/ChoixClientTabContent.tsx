@@ -1,9 +1,11 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 
 interface ChoixClient {
   id: string
@@ -100,7 +102,7 @@ export default function ChoixClientTabContent({ chantierId }: ChoixClientTabCont
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
-        <span className="ml-2 text-gray-600 dark:text-gray-400">Chargement des choix clients...</span>
+        <span className="ml-2 text-gray-600 dark:text-gray-400"><UiText>Chargement des choix clients...</UiText></span>
       </div>
     )
   }
@@ -120,16 +122,16 @@ export default function ChoixClientTabContent({ chantierId }: ChoixClientTabCont
         <div className="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-bold text-emerald-900 dark:text-white">Choix clients</h2>
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            Liste des choix clients associés à ce chantier
-          </p>
+            <UiText>Liste des choix clients associés à ce chantier
+          </UiText></p>
         </div>
       </div>
 
       {choixClients.length === 0 ? (
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-12 text-center">
           <p className="text-gray-500 dark:text-gray-400">
-            Aucun choix client associé à ce chantier
-          </p>
+            <UiText>Aucun choix client associé à ce chantier
+          </UiText></p>
         </div>
       ) : (
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
@@ -147,11 +149,11 @@ export default function ChoixClientTabContent({ chantierId }: ChoixClientTabCont
                     Choix
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                    Statut
-                  </th>
+                    <UiText>Statut
+                  </UiText></th>
                   <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
-                  </th>
+                    <UiText>Actions
+                  </UiText></th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -175,7 +177,7 @@ export default function ChoixClientTabContent({ chantierId }: ChoixClientTabCont
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      {format(new Date(choix.dateVisite), 'dd/MM/yyyy', { locale: fr })}
+                      {format(new Date(choix.dateVisite), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex gap-1">
@@ -211,14 +213,14 @@ export default function ChoixClientTabContent({ chantierId }: ChoixClientTabCont
                         <Link
                           href={`/choix-clients/${choix.id}/edit`}
                           className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
-                          title="Modifier"
+                          title={tx("Modifier")}
                         >
                           <PencilIcon className="h-5 w-5" />
                         </Link>
                         <button
                           onClick={() => setDeleteConfirm({ show: true, id: choix.id, nom: choix.nomClient })}
                           className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                          title="Supprimer"
+                          title={tx("Supprimer")}
                         >
                           <TrashIcon className="h-5 w-5" />
                         </button>
@@ -237,25 +239,25 @@ export default function ChoixClientTabContent({ chantierId }: ChoixClientTabCont
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              Confirmer la suppression
-            </h3>
+              <UiText>Confirmer la suppression
+            </UiText></h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-              Êtes-vous sûr de vouloir supprimer le choix de <strong>{deleteConfirm.nom}</strong> ? 
+              <UiText>Êtes-vous sûr de vouloir supprimer le choix de </UiText><strong>{deleteConfirm.nom}</strong> <UiText>? 
               Cette action est irréversible.
-            </p>
+            </UiText></p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirm({ show: false, id: null, nom: '' })}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 onClick={handleDelete}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
               >
-                Supprimer
-              </button>
+                <UiText>Supprimer
+              </UiText></button>
             </div>
           </div>
         </div>

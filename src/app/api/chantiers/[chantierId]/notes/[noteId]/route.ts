@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,6 +9,7 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string; noteId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -19,7 +22,7 @@ export async function GET(
     const session = await getServerSession(authOptions)
     if (!session) {
       console.log('Erreur: Utilisateur non authentifié')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -43,7 +46,7 @@ export async function GET(
 
     if (!note) {
       console.log(`Erreur: Note ${noteId} non trouvée pour le chantier ${chantierId}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Note non trouvée' },
         { status: 404 }
       )
@@ -56,10 +59,10 @@ export async function GET(
     }
 
     console.log(`Note ${noteId} récupérée pour le chantier ${chantierId}`)
-    return NextResponse.json(formattedNote)
+    return localizedJson(formattedNote)
   } catch (error: unknown) {
     console.error('Erreur lors de la récupération de la note:', error)
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la récupération de la note',
         details: (error as Error).message 
@@ -73,6 +76,7 @@ export async function PUT(
   request: Request,
   context: { params: Promise<{ chantierId: string; noteId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -85,7 +89,7 @@ export async function PUT(
     const session = await getServerSession(authOptions)
     if (!session?.user) {
       console.log('Erreur: Utilisateur non authentifié')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -103,7 +107,7 @@ export async function PUT(
     
     if (isNaN(noteId)) {
       console.log(`Erreur: ID de note invalide: ${noteIdStr}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID de note invalide' },
         { status: 400 }
       )
@@ -119,7 +123,7 @@ export async function PUT(
 
     if (!existingNote) {
       console.log(`Erreur: Note ${noteId} non trouvée pour le chantier ${chantierId}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Note non trouvée' },
         { status: 404 }
       )
@@ -131,7 +135,7 @@ export async function PUT(
 
     if (!isAdmin && !isAuthor) {
       console.log(`Erreur: L'utilisateur ${session.user.id} n'est pas autorisé à modifier la note ${noteId}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Vous n\'êtes pas autorisé à modifier cette note' },
         { status: 403 }
       )
@@ -162,10 +166,10 @@ export async function PUT(
     }
 
     console.log('Note modifiée avec succès:', formattedNote)
-    return NextResponse.json(formattedNote)
+    return localizedJson(formattedNote)
   } catch (error: unknown) {
     console.error('Erreur lors de la modification de la note:', error)
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la modification de la note',
         details: (error as Error).message 
@@ -179,6 +183,7 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ chantierId: string; noteId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -191,7 +196,7 @@ export async function DELETE(
     const session = await getServerSession(authOptions)
     if (!session) {
       console.log('Erreur: Utilisateur non authentifié')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -207,7 +212,7 @@ export async function DELETE(
 
     if (!note) {
       console.log(`Erreur: Note ${noteId} non trouvée pour le chantier ${chantierId}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Note non trouvée' },
         { status: 404 }
       )
@@ -219,7 +224,7 @@ export async function DELETE(
 
     if (!isAdmin && !isAuthor) {
       console.log(`Erreur: L'utilisateur ${session.user.id} n'est pas autorisé à supprimer la note ${noteId}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Vous n\'êtes pas autorisé à supprimer cette note' },
         { status: 403 }
       )
@@ -233,10 +238,10 @@ export async function DELETE(
     })
 
     console.log(`Note ${noteId} supprimée pour le chantier ${chantierId}`)
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error: unknown) {
     console.error('Erreur lors de la suppression de la note:', error)
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la suppression de la note',
         details: (error as Error).message 

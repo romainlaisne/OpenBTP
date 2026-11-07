@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -89,11 +91,11 @@ export default function RackAdminPage() {
       setLignes(4)
       setColonnes(5)
       setShowForm(false)
-      toast.success('Rack créé avec succès')
+      toast.success(tx("Rack créé avec succès"))
     } catch (err) {
       setError('Erreur lors de la création du rack')
       console.error(err)
-      toast.error('Impossible de créer le rack')
+      toast.error(tx("Impossible de créer le rack"))
     } finally {
       setSubmitting(false)
     }
@@ -173,7 +175,7 @@ export default function RackAdminPage() {
       
       // Fermer la modal
       setRackToDelete(null)
-      toast.success('Rack supprimé avec succès')
+      toast.success(tx("Rack supprimé avec succès"))
     } catch (err) {
       console.error('Erreur:', err)
       toast.error(err instanceof Error ? err.message : 'Erreur lors de la suppression du rack')
@@ -239,7 +241,7 @@ export default function RackAdminPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-100/40 dark:from-gray-950 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
         title="Administration des racks"
-        subtitle="Créez et gérez vos espaces de stockage"
+        subtitle={tx("Créez et gérez vos espaces de stockage")}
         icon={Cog6ToothIcon}
         badgeColor="from-emerald-500 via-teal-500 to-emerald-700"
         gradientColor="from-emerald-500/10 via-teal-500/10 to-emerald-700/10"
@@ -264,8 +266,8 @@ export default function RackAdminPage() {
               {showForm ? (
                 <>
                   <XMarkIcon className="h-4 w-4" />
-                  Annuler
-                </>
+                  <UiText>Annuler
+                </UiText></>
               ) : (
                 <>
                   <PlusIcon className="h-4 w-4" />
@@ -295,7 +297,7 @@ export default function RackAdminPage() {
           <div className="bg-white dark:bg-gray-800 shadow-lg rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-8">
             <div className="flex items-center mb-6">
               <PlusIcon className="h-6 w-6 text-emerald-600 mr-3" />
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Créer un nouveau rack</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white"><UiText>Créer un nouveau rack</UiText></h2>
             </div>
             
             <form onSubmit={handleSubmit}>
@@ -304,8 +306,8 @@ export default function RackAdminPage() {
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
                       <Cog6ToothIcon className="h-5 w-5 mr-2 text-emerald-600" />
-                      Informations générales
-                    </h3>
+                      <UiText>Informations générales
+                    </UiText></h3>
                     <div className="space-y-4">
                       <div>
                         <label htmlFor="nom" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -317,7 +319,7 @@ export default function RackAdminPage() {
                           value={nom}
                           onChange={(e) => setNom(e.target.value)}
                           className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white transition-colors"
-                          placeholder="Ex: Rack A - Outillage"
+                          placeholder={tx("Ex: Rack A - Outillage")}
                           required
                         />
                       </div>
@@ -378,10 +380,10 @@ export default function RackAdminPage() {
                       </div>
                       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
                         <p className="text-sm text-blue-700 dark:text-blue-300">
-                          💡 <strong>Total d'emplacements :</strong> {lignes * colonnes} emplacements
+                          💡 <strong><UiText>Total d'emplacements :</UiText></strong> {lignes * colonnes} emplacements
                         </p>
                         <p className="text-xs text-emerald-600 dark:text-blue-400 mt-1">
-                          Les lignes sont étiquetées A-Z et les colonnes 1-{colonnes}
+                          <UiText>Les lignes sont étiquetées A-Z et les colonnes 1-</UiText>{colonnes}
                         </p>
                       </div>
                     </div>
@@ -391,8 +393,8 @@ export default function RackAdminPage() {
                 <div className="lg:col-span-2 mt-6">
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
                     <EyeIcon className="h-5 w-5 mr-2 text-emerald-600" />
-                    Prévisualisation du rack
-                  </h3>
+                    <UiText>Prévisualisation du rack
+                  </UiText></h3>
                   <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 overflow-auto">
                     <div className="inline-block">
                       {renderRackPreview()}
@@ -406,8 +408,8 @@ export default function RackAdminPage() {
                     onClick={() => setShowForm(false)}
                     className="px-6 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
                   >
-                    Annuler
-                  </button>
+                    <UiText>Annuler
+                  </UiText></button>
                   <button
                     type="submit"
                     disabled={submitting}
@@ -416,13 +418,13 @@ export default function RackAdminPage() {
                     {submitting ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                        Création en cours...
-                      </>
+                        <UiText>Création en cours...
+                      </UiText></>
                     ) : (
                       <>
                         <PlusIcon className="h-4 w-4 mr-2" />
-                        Créer le rack
-                      </>
+                        <UiText>Créer le rack
+                      </UiText></>
                     )}
                   </button>
                 </div>
@@ -435,7 +437,7 @@ export default function RackAdminPage() {
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-12">
             <div className="text-center">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500 mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">Chargement des racks...</p>
+              <p className="text-gray-600 dark:text-gray-400"><UiText>Chargement des racks...</UiText></p>
             </div>
           </div>
         ) : (
@@ -446,18 +448,18 @@ export default function RackAdminPage() {
                   <BuildingStorefrontIcon className="h-10 w-10 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-emerald-900 dark:text-white mb-2">
-                  Aucun rack configuré
-                </h3>
+                  <UiText>Aucun rack configuré
+                </UiText></h3>
                 <p className="text-emerald-800/80 dark:text-emerald-200/80 text-sm mb-6 max-w-md mx-auto">
-                  Créez votre premier rack pour organiser efficacement vos matériaux dans l’inventaire.
-                </p>
+                  <UiText>Créez votre premier rack pour organiser efficacement vos matériaux dans l’inventaire.
+                </UiText></p>
                 <button
                   onClick={() => setShowForm(true)}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-transform duration-200 hover:-translate-y-0.5"
                 >
                   <PlusIcon className="h-4 w-4" />
-                  Créer mon premier rack
-                </button>
+                  <UiText>Créer mon premier rack
+                </UiText></button>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -494,8 +496,8 @@ export default function RackAdminPage() {
                         className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
                       >
                         <EyeIcon className="h-4 w-4 mr-1" />
-                        Voir détails
-                      </button>
+                        <UiText>Voir détails
+                      </UiText></button>
                       <button
                         onClick={() => router.push(`/admin/inventory/${rack.id}`)}
                         className="inline-flex items-center px-3 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
@@ -531,20 +533,20 @@ export default function RackAdminPage() {
                   <TrashIcon className="h-6 w-6 text-red-600" />
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mt-4">
-                  Supprimer le rack
-                </h3>
+                  <UiText>Supprimer le rack
+                </UiText></h3>
                 <div className="mt-2 px-7 py-3">
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Êtes-vous sûr de vouloir supprimer le rack <strong>"{rackToDelete.nom}"</strong> ?
+                    <UiText>Êtes-vous sûr de vouloir supprimer le rack </UiText><strong>"{rackToDelete.nom}"</strong> ?
                   </p>
                   <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                    Cette action supprimera définitivement le rack et tous ses emplacements. Cette action ne peut pas être annulée.
-                  </p>
+                    <UiText>Cette action supprimera définitivement le rack et tous ses emplacements. Cette action ne peut pas être annulée.
+                  </UiText></p>
                   {!isRackEmpty(rackToDelete) && (
                     <div className="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md">
                       <p className="text-xs text-amber-700 dark:text-amber-300">
-                        ⚠️ Attention : Ce rack contient encore des matériaux. Veuillez d'abord vider tous les emplacements.
-                      </p>
+                        <UiText>⚠️ Attention : Ce rack contient encore des matériaux. Veuillez d'abord vider tous les emplacements.
+                      </UiText></p>
                     </div>
                   )}
                 </div>
@@ -554,8 +556,8 @@ export default function RackAdminPage() {
                       onClick={() => setRackToDelete(null)}
                       className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors"
                     >
-                      Annuler
-                    </button>
+                      <UiText>Annuler
+                    </UiText></button>
                     <button
                       onClick={handleDeleteRack}
                       disabled={deleting || !isRackEmpty(rackToDelete)}
@@ -564,13 +566,13 @@ export default function RackAdminPage() {
                       {deleting ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                          Suppression...
-                        </>
+                          <UiText>Suppression...
+                        </UiText></>
                       ) : (
                         <>
                           <TrashIcon className="h-4 w-4 mr-2" />
-                          Supprimer
-                        </>
+                          <UiText>Supprimer
+                        </UiText></>
                       )}
                     </button>
                   </div>

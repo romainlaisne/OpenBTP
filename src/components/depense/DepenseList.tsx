@@ -1,4 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { Depense } from '@/types/depense'
 import { toast } from 'react-hot-toast'
@@ -43,7 +46,7 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
   }, [fetchDepenses])
 
   const handleDelete = async (depenseId: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette dépense ?')) {
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer cette dépense ?"))) {
       return
     }
 
@@ -58,7 +61,7 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
 
       // Mettre à jour la liste des dépenses
       setDepenses(depenses.filter(d => d.id !== depenseId))
-      toast.success('Dépense supprimée avec succès')
+      toast.success(tx("Dépense supprimée avec succès"))
       
       // Recalculer le total
       const newTotal = depenses
@@ -72,7 +75,7 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
       }))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la suppression de la dépense')
+      toast.error(tx("Erreur lors de la suppression de la dépense"))
     }
   }
 
@@ -81,7 +84,7 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
     : depenses.filter(d => d.categorie === selectedCategorie)
 
   if (loading) {
-    return <div className="p-4 text-center">Chargement...</div>
+    return <div className="p-4 text-center"><UiText>Chargement...</UiText></div>
   }
 
   if (error) {
@@ -91,8 +94,8 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
   if (depenses.length === 0) {
     return (
       <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-        Aucune dépense enregistrée pour ce chantier.
-      </div>
+        <UiText>Aucune dépense enregistrée pour ce chantier.
+      </UiText></div>
     )
   }
 
@@ -104,7 +107,7 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <SelectField
-            label="Filtrer par catégorie"
+            label={tx("Filtrer par catégorie")}
             id="categorie-filter"
             value={selectedCategorie}
             onChange={(e) => setSelectedCategorie(e.target.value)}
@@ -118,7 +121,7 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
         
         <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-md">
           <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Total des dépenses: <span className="font-bold">{totalDepenses.toLocaleString('fr-FR')} €</span>
+            <UiText>Total des dépenses: </UiText><span className="font-bold">{totalDepenses.toLocaleString(intlLocale(getActiveLocale()))} €</span>
           </p>
         </div>
       </div>
@@ -127,20 +130,20 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Description</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Catégorie</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Date</UiText></th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Description</UiText></th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Catégorie</UiText></th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Fournisseur</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Référence</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Montant</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Référence</UiText></th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Montant</UiText></th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Actions</UiText></th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
             {filteredDepenses.map((depense) => (
               <tr key={depense.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                  {new Date(depense.date).toLocaleDateString('fr-FR')}
+                  {new Date(depense.date).toLocaleDateString(intlLocale(getActiveLocale()))}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900 dark:text-white max-w-xs truncate">
                   {depense.description}
@@ -155,7 +158,7 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
                   {depense.reference || '-'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white text-right font-medium">
-                  {depense.montant.toLocaleString('fr-FR')} €
+                  {depense.montant.toLocaleString(intlLocale(getActiveLocale()))} €
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div className="flex justify-end space-x-2">
@@ -173,14 +176,14 @@ export default function DepenseList({ chantierId, onEdit }: DepenseListProps) {
                     <button
                       onClick={() => onEdit(depense.id)}
                       className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
-                      title="Modifier"
+                      title={tx("Modifier")}
                     >
                       <PencilIcon className="h-5 w-5" />
                     </button>
                     <button
                       onClick={() => handleDelete(depense.id)}
                       className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                      title="Supprimer"
+                      title={tx("Supprimer")}
                     >
                       <TrashIcon className="h-5 w-5" />
                     </button>

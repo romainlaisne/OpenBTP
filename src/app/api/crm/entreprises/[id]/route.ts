@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -8,10 +10,11 @@ export async function GET(
   _request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await props.params
@@ -38,16 +41,16 @@ export async function GET(
     })
 
     if (!entreprise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Entreprise non trouvée' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(entreprise)
+    return localizedJson(entreprise)
   } catch (error) {
     console.error('Erreur GET /api/crm/entreprises/[id]:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de l\'entreprise' },
       { status: 500 }
     )
@@ -59,10 +62,11 @@ export async function PATCH(
   request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await props.params
@@ -70,7 +74,7 @@ export async function PATCH(
 
     const exists = await prisma.prospectEntreprise.findUnique({ where: { id } })
     if (!exists) {
-      return NextResponse.json({ error: 'Entreprise non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Entreprise non trouvée' }, { status: 404 })
     }
 
     const updateData: Record<string, unknown> = {}
@@ -90,10 +94,10 @@ export async function PATCH(
       data: updateData,
     })
 
-    return NextResponse.json(entreprise)
+    return localizedJson(entreprise)
   } catch (error) {
     console.error('Erreur PATCH /api/crm/entreprises/[id]:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de l\'entreprise' },
       { status: 500 }
     )
@@ -105,25 +109,26 @@ export async function DELETE(
   _request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await props.params
 
     const exists = await prisma.prospectEntreprise.findUnique({ where: { id } })
     if (!exists) {
-      return NextResponse.json({ error: 'Entreprise non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Entreprise non trouvée' }, { status: 404 })
     }
 
     await prisma.prospectEntreprise.delete({ where: { id } })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur DELETE /api/crm/entreprises/[id]:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de l\'entreprise' },
       { status: 500 }
     )

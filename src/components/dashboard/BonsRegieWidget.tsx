@@ -1,8 +1,9 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { DocumentTextIcon, ArrowTopRightOnSquareIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline'
 
 interface BonRegie {
@@ -51,8 +52,8 @@ export default function BonsRegieWidget() {
             <DocumentTextIcon className="h-4 w-4 text-white"/>
           </div>
           <h2 className="text-lg font-black text-gray-900 dark:text-white">
-            Derniers bons de régie
-          </h2>
+            <UiText>Derniers bons de régie
+          </UiText></h2>
         </div>
         <Link 
           href="/bons-regie" 
@@ -88,13 +89,13 @@ export default function BonsRegieWidget() {
             <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <DocumentTextIcon className="h-10 w-10 text-blue-500 dark:text-blue-400" />
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-4 font-medium">Aucun bon de régie enregistré</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4 font-medium"><UiText>Aucun bon de régie enregistré</UiText></p>
             <Link 
               href="/public/bon-regie" 
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl shadow-lg text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:scale-105 transition-all duration-200"
             >
-              Créer un bon de régie
-            </Link>
+              <UiText>Créer un bon de régie
+            </UiText></Link>
           </div>
         ) : (
           <div className="space-y-3">
@@ -115,7 +116,7 @@ export default function BonsRegieWidget() {
                       {bon.dates}
                     </span>
                     <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-700 dark:text-green-400 font-bold">
-                      Signé le {format(new Date(bon.dateSignature), 'dd/MM/yyyy', { locale: fr })}
+                      <UiText>Signé le </UiText>{format(new Date(bon.dateSignature), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                     </span>
                   </div>
                 </Link>
@@ -127,8 +128,8 @@ export default function BonsRegieWidget() {
                 href="/public/bon-regie" 
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl shadow-lg text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:scale-105 transition-all duration-200"
               >
-                + Nouveau bon de régie
-              </Link>
+                <UiText>+ Nouveau bon de régie
+              </UiText></Link>
             </div>
           </div>
         )}

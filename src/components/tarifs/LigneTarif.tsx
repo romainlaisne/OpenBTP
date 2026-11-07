@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { useRef, useEffect } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { BarsArrowUpIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -104,7 +105,7 @@ export default function LigneTarif({
         <div
           ref={dragIconRef}
           className="flex items-center justify-center cursor-move hover:bg-gray-200 dark:hover:bg-gray-600 rounded p-1 transition-colors mt-1"
-          title="Réorganiser"
+          title={tx("Réorganiser")}
         >
           <BarsArrowUpIcon className={`h-4 w-4 ${isSectionHeader ? 'text-amber-500' : 'text-gray-400'}`} />
         </div>
@@ -207,7 +208,7 @@ export default function LigneTarif({
               t.style.height = 'auto'
               t.style.height = t.scrollHeight + 'px'
             }}
-            placeholder="Conditions, précisions…"
+            placeholder={tx("Conditions, précisions…")}
             className={`${inputClass} resize-none overflow-hidden`}
             style={{ minHeight: '2.25rem' }}
           />
@@ -220,7 +221,7 @@ export default function LigneTarif({
           type="button"
           onClick={() => deleteLigne(id)}
           className="text-red-400 hover:text-red-600 dark:hover:text-red-300 mt-1 transition-colors"
-          title="Supprimer"
+          title={tx("Supprimer")}
         >
           <TrashIcon className="h-4 w-4" />
         </button>

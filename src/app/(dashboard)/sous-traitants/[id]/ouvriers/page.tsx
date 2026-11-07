@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
@@ -13,7 +14,7 @@ import {
   ArrowLeftIcon
 } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import PageHeader from '@/components/PageHeader'
 
 interface Ouvrier {
@@ -53,10 +54,10 @@ function DeleteModal({
   return (
     <div className="fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full border border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Confirmer la suppression</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4"><UiText>Confirmer la suppression</UiText></h3>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Êtes-vous sûr de vouloir supprimer l'ouvrier {ouvrierName} ? Cette action est irréversible.
-        </p>
+          <UiText>Êtes-vous sûr de vouloir supprimer l'ouvrier </UiText>{ouvrierName} <UiText>? Cette action est irréversible.
+        </UiText></p>
         <div className="flex justify-end space-x-3">
           <button
             type="button"
@@ -188,7 +189,7 @@ export default function OuvriersPage(
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <PageHeader
         title={`Ouvriers de ${sousTraitant.nom}`}
-        subtitle="Gestion des ouvriers du sous-traitant"
+        subtitle={tx("Gestion des ouvriers du sous-traitant")}
         icon={UserGroupIcon}
         actions={
           <div className="flex gap-2">
@@ -204,7 +205,7 @@ export default function OuvriersPage(
               className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
             >
               <PlusIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Ajouter un ouvrier</span>
+              <span className="hidden sm:inline"><UiText>Ajouter un ouvrier</UiText></span>
             </button>
           </div>
         }
@@ -214,7 +215,7 @@ export default function OuvriersPage(
 
       {ouvriers.length === 0 ? (
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6 text-center">
-          <p className="text-gray-500 dark:text-gray-400">Aucun ouvrier trouvé pour ce sous-traitant.</p>
+          <p className="text-gray-500 dark:text-gray-400"><UiText>Aucun ouvrier trouvé pour ce sous-traitant.</UiText></p>
         </div>
       ) : (
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
@@ -225,14 +226,14 @@ export default function OuvriersPage(
                   <UiText>Nom</UiText>
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Poste
-                </th>
+                  <UiText>Poste
+                </UiText></th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Contact
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Date d'entrée
-                </th>
+                  <UiText>Date d'entrée
+                </UiText></th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   <UiText>Documents</UiText>
                 </th>
@@ -256,7 +257,7 @@ export default function OuvriersPage(
                     {ouvrier.email || ouvrier.telephone || '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {format(new Date(ouvrier.dateEntree), 'dd/MM/yyyy', { locale: fr })}
+                    {format(new Date(ouvrier.dateEntree), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     {ouvrier._count?.DocumentOuvrier ?? 0}
@@ -266,21 +267,21 @@ export default function OuvriersPage(
                       <Link
                         href={`/sous-traitants/${params.id}/ouvriers/${ouvrier.id}/documents`}
                         className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                        title="Documents"
+                        title={tx("Documents")}
                       >
                         <DocumentIcon className="h-5 w-5" />
                       </Link>
                       <Link
                         href={`/sous-traitants/${params.id}/ouvriers/${ouvrier.id}/edit`}
                         className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
-                        title="Modifier"
+                        title={tx("Modifier")}
                       >
                         <PencilSquareIcon className="h-5 w-5" />
                       </Link>
                       <button
                         onClick={() => openDeleteModal(ouvrier)}
                         className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
-                        title="Supprimer"
+                        title={tx("Supprimer")}
                       >
                         <TrashIcon className="h-5 w-5" />
                       </button>

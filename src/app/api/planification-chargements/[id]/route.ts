@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,10 +7,11 @@ import { prisma } from '@/lib/prisma/client'
 
 // PUT - Marquer un chargement comme chargé
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await params
@@ -24,14 +27,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         }
       })
 
-      return NextResponse.json(chargement)
+      return localizedJson(chargement)
     }
 
     if (action === 'reporter') {
       const chargementActuel = await prisma.chargement.findUnique({ where: { id } })
 
       if (!chargementActuel) {
-        return NextResponse.json({ error: 'Chargement non trouvé' }, { status: 404 })
+        return localizedJson({ error: 'Chargement non trouvé' }, { status: 404 })
       }
 
       // Calcul de la semaine ISO courante
@@ -53,13 +56,13 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         data: { semaine: targetWeek }
       })
 
-      return NextResponse.json(chargement)
+      return localizedJson(chargement)
     }
 
-    return NextResponse.json({ error: 'Action non reconnue' }, { status: 400 })
+    return localizedJson({ error: 'Action non reconnue' }, { status: 400 })
   } catch (error) {
     console.error('Erreur lors de la mise à jour du chargement:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour du chargement' },
       { status: 500 }
     )
@@ -68,10 +71,11 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
 // DELETE - Supprimer un chargement
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await params
@@ -80,10 +84,10 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       where: { id }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la suppression du chargement:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du chargement' },
       { status: 500 }
     )

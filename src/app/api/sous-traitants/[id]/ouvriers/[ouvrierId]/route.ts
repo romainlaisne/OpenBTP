@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -7,11 +9,12 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ id: string, ouvrierId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -28,7 +31,7 @@ export async function GET(
 
     if (!ouvrier) {
       console.log(`Ouvrier non trouvé avec ID: ${params.ouvrierId}`);
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Ouvrier non trouvé' },
         { status: 404 }
       )
@@ -56,10 +59,10 @@ export async function GET(
     };
 
     console.log(`Ouvrier trouvé: ${ouvrier.prenom} ${ouvrier.nom} avec ${documents.length} documents`);
-    return NextResponse.json(response)
+    return localizedJson(response)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de l\'ouvrier' },
       { status: 500 }
     )
@@ -70,11 +73,12 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ id: string, ouvrierId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -84,7 +88,7 @@ export async function PUT(
 
     // Validation basique
     if (!body.nom || !body.prenom || !body.dateEntree || !body.poste) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Tous les champs obligatoires doivent être remplis' },
         { status: 400 }
       )
@@ -105,10 +109,10 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json(ouvrier)
+    return localizedJson(ouvrier)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de l\'ouvrier' },
       { status: 500 }
     )
@@ -119,11 +123,12 @@ export async function DELETE(
   request: Request,
   props: { params: Promise<{ id: string, ouvrierId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -136,10 +141,10 @@ export async function DELETE(
       }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de l\'ouvrier' },
       { status: 500 }
     )

@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -159,13 +162,14 @@ function normalizeText(text: string): string {
 }
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   const startTime = Date.now()
   console.log('🚀 [API] Début de la génération du dossier à', new Date().toISOString())
   
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { chantierId, ficheIds, ficheReferences, options, dossierId, fichesStatuts, fichesSoustraitants, fichesRemarques } = await request.json()
@@ -200,13 +204,13 @@ export async function POST(request: Request) {
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
     // Récupérer les paramètres de l'entreprise
     const settings = await prisma.companysettings.findFirst()
     if (!settings) {
-      return NextResponse.json({ error: 'Paramètres de l\'entreprise non trouvés' }, { status: 404 })
+      return localizedJson({ error: 'Paramètres de l\'entreprise non trouvés' }, { status: 404 })
     }
 
     // Récupérer l'utilisateur
@@ -215,7 +219,7 @@ export async function POST(request: Request) {
     })
 
     if (!user) {
-      return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Utilisateur non trouvé' }, { status: 404 })
     }
 
     // Si dossierId est fourni, récupérer le dossier existant pour déterminer la version
@@ -289,7 +293,8 @@ export async function POST(request: Request) {
       logoBase64: logoBase64 || undefined
     }
 
-    const dossierCoverHTML = generateDossierTechniqueCoverHTML(dossierCoverData)
+    const __locale = await bindRequestLocale()
+    const dossierCoverHTML = localizeGeneratedHtml(__locale, generateDossierTechniqueCoverHTML(dossierCoverData), collectStrings(dossierCoverData))
     console.log('🖨️ [API] Génération PDF de la page de garde...', { timestamp: Date.now() - startTime })
     const dossierCoverPDF = await PDFGenerator.generatePDF(dossierCoverHTML, {
       format: 'A4',
@@ -687,7 +692,8 @@ export async function POST(request: Request) {
           soustraitantLogoBase64: soustraitantLogoBase64 || undefined
         }
         
-        const ficheCoverHTML = generateFicheTechniqueCoverHTML(ficheCoverData)
+        const __locale = await bindRequestLocale()
+        const ficheCoverHTML = localizeGeneratedHtml(__locale, generateFicheTechniqueCoverHTML(ficheCoverData), collectStrings(ficheCoverData))
         const ficheCoverPDF = await PDFGenerator.generatePDF(ficheCoverHTML, {
           format: 'A4',
           orientation: 'portrait',
@@ -801,7 +807,7 @@ export async function POST(request: Request) {
 
     // Si des erreurs sont survenues, les retourner
     if (errors.length > 0) {
-      return NextResponse.json({ 
+      return localizedJson({ 
         error: 'Erreurs lors de la génération du dossier',
         details: errors 
       }, { status: 400 })
@@ -956,7 +962,7 @@ export async function POST(request: Request) {
   } catch (error) {
     const totalDuration = Date.now() - startTime
     console.error(`❌ [API] Erreur après ${totalDuration}ms:`, error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la génération du dossier', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )

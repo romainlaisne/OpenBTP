@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { collectStrings, localizeGeneratedHtml } from '@/lib/i18n/translate'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import * as fs from 'fs'
@@ -8,17 +11,18 @@ import { PDFGenerator } from '@/lib/pdf/pdf-generator'
 import { generateBonRegieHTML, type BonRegieData } from '@/lib/pdf/templates/bon-regie-template'
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
     const { bonRegieId } = body
 
     if (!bonRegieId) {
-      return NextResponse.json({ error: 'ID du bon de régie manquant' }, { status: 400 })
+      return localizedJson({ error: 'ID du bon de régie manquant' }, { status: 400 })
     }
 
     // Récupérer les données du bon de régie
@@ -27,7 +31,7 @@ export async function POST(request: Request) {
     `
 
     if (!Array.isArray(bonRegie) || bonRegie.length === 0) {
-      return NextResponse.json({ error: 'Bon de régie non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Bon de régie non trouvé' }, { status: 404 })
     }
 
     const rawData = bonRegie[0] as Record<string, unknown>
@@ -51,7 +55,8 @@ export async function POST(request: Request) {
     const companySettings = await PDFGenerator.getCompanySettings()
 
     // Générer le HTML avec le template amélioré
-    const html = generateBonRegieHTML(bonRegieData, companySettings)
+    const __locale = await bindRequestLocale()
+    const html = localizeGeneratedHtml(__locale, generateBonRegieHTML(bonRegieData, companySettings), collectStrings(bonRegieData))
 
     // Générer le PDF via Puppeteer (comme tous les autres PDFs du projet)
     const pdfBuffer = await PDFGenerator.generatePDF(html, {
@@ -98,6 +103,6 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error('Erreur lors de la génération du PDF:', error)
-    return NextResponse.json({ error: 'Erreur lors de la génération du PDF' }, { status: 500 })
+    return localizedJson({ error: 'Erreur lors de la génération du PDF' }, { status: 500 })
   }
 }

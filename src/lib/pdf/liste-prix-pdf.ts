@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { prisma } from '@/lib/prisma/client'
 import { PDFGenerator } from '@/lib/pdf/pdf-generator'
 
@@ -24,7 +25,7 @@ export async function generateListePrixPDF(soustraitantId: string): Promise<Buff
   if (!st) return null
 
   const company = await PDFGenerator.getCompanySettings()
-  const dateStr = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
+  const dateStr = new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: 'long', year: 'numeric' })
 
   const logoImg = company?.logo
     ? `<img src="${company.logo}" alt="Logo" class="logo" />`
@@ -311,7 +312,7 @@ export async function generateListePrixPDF(soustraitantId: string): Promise<Buff
 
   <!-- Pied de page -->
   <div class="footer">
-    <span>Document généré le ${new Date().toLocaleString('fr-FR')}</span>
+    <span>Document généré le ${new Date().toLocaleString(intlLocale(getActiveLocale()))}</span>
     <span>Tarifs HT — TVA non incluse</span>
   </div>
 

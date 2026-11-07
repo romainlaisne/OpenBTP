@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -32,11 +34,12 @@ export async function GET(
   request: NextRequest,
   props: { params: Promise<{ chantierId: string; soustraitantEtatId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { soustraitantEtatId } = params
@@ -53,16 +56,16 @@ export async function GET(
     })
 
     if (!soustraitantEtat) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement sous-traitant non trouvé' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(soustraitantEtat)
+    return localizedJson(soustraitantEtat)
   } catch (error) {
     console.error('Erreur lors de la récupération:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de l\'état d\'avancement' },
       { status: 500 }
     )
@@ -74,11 +77,12 @@ export async function PUT(
   request: NextRequest,
   props: { params: Promise<{ chantierId: string; soustraitantEtatId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { soustraitantEtatId } = params
@@ -87,7 +91,7 @@ export async function PUT(
     // Validation des données
     const validationResult = updateSchema.safeParse(data)
     if (!validationResult.success) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Données invalides', details: validationResult.error.format() },
         { status: 400 }
       )
@@ -103,7 +107,7 @@ export async function PUT(
     })
 
     if (!existingEtat) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement sous-traitant non trouvé' },
         { status: 404 }
       )
@@ -111,7 +115,7 @@ export async function PUT(
 
     // Vérifier si l'état est finalisé
     if (existingEtat.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible de modifier un état d\'avancement finalisé' },
         { status: 400 }
       )
@@ -160,10 +164,10 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la mise à jour:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour de l\'état d\'avancement' },
       { status: 500 }
     )
@@ -175,11 +179,12 @@ export async function DELETE(
   request: NextRequest,
   props: { params: Promise<{ chantierId: string; soustraitantEtatId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { soustraitantEtatId } = params
@@ -192,7 +197,7 @@ export async function DELETE(
     })
 
     if (!existingEtat) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'État d\'avancement sous-traitant non trouvé' },
         { status: 404 }
       )
@@ -200,7 +205,7 @@ export async function DELETE(
 
     // Vérifier si l'état est finalisé
     if (existingEtat.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Impossible de supprimer un état d\'avancement finalisé' },
         { status: 400 }
       )
@@ -213,10 +218,10 @@ export async function DELETE(
       }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la suppression:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de l\'état d\'avancement' },
       { status: 500 }
     )

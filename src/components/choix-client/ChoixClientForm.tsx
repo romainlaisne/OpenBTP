@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useMemo } from 'react'
 import { 
   PlusIcon,
@@ -206,13 +208,13 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
       
       if (data.success) {
         setDocuments([...documents, data.url])
-        toast.success('Document uploadé avec succès')
+        toast.success(tx("Document uploadé avec succès"))
       } else {
-        toast.error('Erreur lors de l\'upload du document')
+        toast.error(tx("Erreur lors de l'upload du document"))
       }
     } catch (error) {
       console.error('Erreur upload:', error)
-      toast.error('Erreur lors de l\'upload du document')
+      toast.error(tx("Erreur lors de l'upload du document"))
     } finally {
       setUploadingDocument(false)
     }
@@ -283,8 +285,8 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Téléphone
-            </label>
+              <UiText>Téléphone
+            </UiText></label>
             <input
               type="tel"
               value={telephoneClient}
@@ -295,8 +297,8 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Email
-            </label>
+              <UiText>Email
+            </UiText></label>
             <input
               type="email"
               value={emailClient}
@@ -319,15 +321,15 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Chantier associé
-            </label>
+              <UiText>Chantier associé
+            </UiText></label>
             <SearchableSelect
               options={chantierOptions}
               value={chantierId || null}
               onChange={(value) => setChantierId(value ? String(value) : '')}
-              placeholder="Rechercher un chantier..."
-              searchPlaceholder="Rechercher un chantier..."
-              emptyMessage="Aucun chantier trouvé"
+              placeholder={tx("Rechercher un chantier...")}
+              searchPlaceholder={tx("Rechercher un chantier...")}
+              emptyMessage={tx("Aucun chantier trouvé")}
               showAllOption={true}
               allOptionLabel="Aucun (client en réflexion)"
             />
@@ -335,8 +337,8 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Statut
-            </label>
+              <UiText>Statut
+            </UiText></label>
             <div className="flex gap-4">
               {[
                 { value: 'BROUILLON', label: 'Brouillon' },
@@ -362,8 +364,8 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
 
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Notes générales
-          </label>
+            <UiText>Notes générales
+          </UiText></label>
           <textarea
             value={notesGenerales}
             onChange={(e) => setNotesGenerales(e.target.value)}
@@ -427,8 +429,8 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
                 />
               </label>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                PDF, Images, Documents Word acceptés
-              </p>
+                <UiText>PDF, Images, Documents Word acceptés
+              </UiText></p>
             </div>
           </div>
         </div>
@@ -437,8 +439,8 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
       {!initialData?.id && (
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            💡 Les documents pourront être ajoutés après la création du choix client
-          </p>
+            <UiText>💡 Les documents pourront être ajoutés après la création du choix client
+          </UiText></p>
         </div>
       )}
 
@@ -446,32 +448,32 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            Choix des revêtements
-          </h2>
+            <UiText>Choix des revêtements
+          </UiText></h2>
           <button
             type="button"
             onClick={handleAddDetailChoix}
             className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
           >
             <PlusIcon className="h-5 w-5 mr-2" />
-            Ajouter un choix
-          </button>
+            <UiText>Ajouter un choix
+          </UiText></button>
         </div>
 
         {detailsChoix.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
             <DocumentArrowUpIcon className="h-12 w-12 mx-auto text-gray-400 mb-3" />
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Aucun choix ajouté pour le moment
-            </p>
+              <UiText>Aucun choix ajouté pour le moment
+            </UiText></p>
             <button
               type="button"
               onClick={handleAddDetailChoix}
               className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
             >
               <PlusIcon className="h-5 w-5 mr-2" />
-              Ajouter le premier choix
-            </button>
+              <UiText>Ajouter le premier choix
+            </UiText></button>
           </div>
         ) : (
           <div className="space-y-6">
@@ -494,8 +496,8 @@ export default function ChoixClientForm({ initialData, onSubmit, saving }: Choix
                 className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors shadow-sm"
               >
                 <PlusIcon className="h-5 w-5 mr-2" />
-                Ajouter un choix
-              </button>
+                <UiText>Ajouter un choix
+              </UiText></button>
             </div>
           </div>
         )}

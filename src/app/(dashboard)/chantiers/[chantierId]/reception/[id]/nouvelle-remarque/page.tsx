@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -274,7 +275,7 @@ export default function NouvelleRemarquePage({
           <ArrowLeftIcon className="h-5 w-5" />
         </Link>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Nouvelle remarque - {chantier.nomChantier}
+          <UiText>Nouvelle remarque - </UiText>{chantier.nomChantier}
         </h1>
       </div>
 
@@ -299,8 +300,8 @@ export default function NouvelleRemarquePage({
             <FormTextarea
               id="description"
               name="description"
-              label="Description de la remarque"
-              placeholder="Décrivez la remarque en détail..."
+              label={tx("Description de la remarque")}
+              placeholder={tx("Décrivez la remarque en détail...")}
               value={formData.description}
               onChange={handleChange}
               rows={5}
@@ -312,15 +313,15 @@ export default function NouvelleRemarquePage({
               name="localisation"
               type="text"
               label="Localisation (optionnel)"
-              placeholder="Ex: Étage 2, Pièce 3, Mur nord"
+              placeholder={tx("Ex: Étage 2, Pièce 3, Mur nord")}
               value={formData.localisation}
               onChange={handleChange}
             />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Assigner à
-              </label>
+                <UiText>Assigner à
+              </UiText></label>
               <div className="mt-1">
                 <Select
                   className="react-select-container"
@@ -328,7 +329,7 @@ export default function NouvelleRemarquePage({
                   options={soustraitants}
                   value={selectedSoustraitant}
                   onChange={(selected) => setSelectedSoustraitant(selected as SousTraitantOption)}
-                  placeholder="Sélectionner une équipe ou un sous-traitant..."
+                  placeholder={tx("Sélectionner une équipe ou un sous-traitant...")}
                   isClearable
                   isSearchable
                   noOptionsMessage={() => "Aucune option trouvée"}
@@ -343,8 +344,8 @@ export default function NouvelleRemarquePage({
               <div className="mt-2 flex items-center">
                 <label htmlFor="photo-upload" className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600">
                   <PhotoIcon className="h-5 w-5 mr-2" />
-                  Ajouter des photos
-                </label>
+                  <UiText>Ajouter des photos
+                </UiText></label>
                 <input
                   id="photo-upload"
                   type="file"
@@ -383,8 +384,8 @@ export default function NouvelleRemarquePage({
             {/* Section pour lier un plan */}
             <div>
               <label htmlFor="plan-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Lier à un plan (optionnel)
-              </label>
+                <UiText>Lier à un plan (optionnel)
+              </UiText></label>
               {availablePlans.length > 0 ? (
                 <select
                   id="plan-select"
@@ -393,7 +394,7 @@ export default function NouvelleRemarquePage({
                   onChange={handlePlanSelect}
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
-                  <option value="">Aucun plan sélectionné</option>
+                  <option value=""><UiText>Aucun plan sélectionné</UiText></option>
                   {availablePlans.map(plan => (
                     <option key={plan.id} value={plan.id}>
                       {plan.nom}
@@ -401,7 +402,7 @@ export default function NouvelleRemarquePage({
                   ))}
                 </select>
               ) : (
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Aucun document marqué comme plan pour ce chantier.</p>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400"><UiText>Aucun document marqué comme plan pour ce chantier.</UiText></p>
               )}
             </div>
 
@@ -431,18 +432,18 @@ export default function NouvelleRemarquePage({
                 ) : selectedPlanForAnnotation.mimeType === 'application/pdf' ? (
                   <div className="p-4 border border-dashed border-gray-300 dark:border-gray-600 rounded-md">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Le pointage sur les plans PDF n'est pas encore supporté. Vous pouvez lier ce plan PDF à la remarque, mais le pointage précis doit se faire manuellement pour l'instant.
-                    </p>
+                      <UiText>Le pointage sur les plans PDF n'est pas encore supporté. Vous pouvez lier ce plan PDF à la remarque, mais le pointage précis doit se faire manuellement pour l'instant.
+                    </UiText></p>
                     <a href={selectedPlanForAnnotation.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                      Ouvrir le PDF : {selectedPlanForAnnotation.nom}
+                      <UiText>Ouvrir le PDF : </UiText>{selectedPlanForAnnotation.nom}
                     </a>
                   </div>
                 ) : (
-                    <p className="text-sm text-red-500 dark:text-red-400">Type de plan non supporté pour l'aperçu.</p>
+                    <p className="text-sm text-red-500 dark:text-red-400"><UiText>Type de plan non supporté pour l'aperçu.</UiText></p>
                 )}
                 {formData.coordonneesPlan && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Pointage enregistré à X: {formData.coordonneesPlan.x.toFixed(3)}, Y: {formData.coordonneesPlan.y.toFixed(3)} (relatif)
+                    <UiText>Pointage enregistré à X: </UiText>{formData.coordonneesPlan.x.toFixed(3)}, Y: {formData.coordonneesPlan.y.toFixed(3)} (relatif)
                   </p>
                 )}
               </div>

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -20,11 +22,12 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   const { id } = await params
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -35,16 +38,16 @@ export async function GET(
     `
 
     if (!taskTypes || taskTypes.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Type de tâche non trouvé' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(taskTypes[0])
+    return localizedJson(taskTypes[0])
   } catch (error) {
     console.error('Erreur lors de la récupération du type de tâche:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du type de tâche' },
       { status: 500 }
     )
@@ -57,11 +60,12 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   const { id } = await params
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -70,7 +74,7 @@ export async function PUT(
     const { label, category, isActive } = await request.json()
 
     if (!label) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le libellé est requis' },
         { status: 400 }
       )
@@ -82,7 +86,7 @@ export async function PUT(
     `
 
     if (!taskTypes || taskTypes.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Type de tâche non trouvé' },
         { status: 404 }
       )
@@ -105,10 +109,10 @@ export async function PUT(
       SELECT * FROM admin_task_types WHERE id = ${id} LIMIT 1
     `
 
-    return NextResponse.json(updatedTypes[0])
+    return localizedJson(updatedTypes[0])
   } catch (error) {
     console.error('Erreur lors de la mise à jour du type de tâche:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour du type de tâche' },
       { status: 500 }
     )
@@ -121,11 +125,12 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   const { id } = await params
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -135,7 +140,7 @@ export async function PATCH(
     
     // Vérifier si des données sont fournies
     if (!data.label && data.category === undefined && data.isActive === undefined && data.ordre === undefined) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Aucune donnée de mise à jour fournie' },
         { status: 400 }
       )
@@ -147,7 +152,7 @@ export async function PATCH(
     `
 
     if (!taskTypes || taskTypes.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Type de tâche non trouvé' },
         { status: 404 }
       )
@@ -178,10 +183,10 @@ export async function PATCH(
       SELECT * FROM admin_task_types WHERE id = ${id} LIMIT 1
     `
 
-    return NextResponse.json(updatedTypes[0])
+    return localizedJson(updatedTypes[0])
   } catch (error) {
     console.error('Erreur lors de la mise à jour du type de tâche:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la mise à jour du type de tâche' },
       { status: 500 }
     )
@@ -194,11 +199,12 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   const { id } = await params
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -213,7 +219,7 @@ export async function DELETE(
     const tasksCount = rows?.[0]?.count ?? 0
 
     if (tasksCount > 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Ce type de tâche est utilisé par des tâches existantes et ne peut pas être supprimé' },
         { status: 400 }
       )
@@ -225,7 +231,7 @@ export async function DELETE(
     `
 
     if (!taskTypes || taskTypes.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Type de tâche non trouvé' },
         { status: 404 }
       )
@@ -236,10 +242,10 @@ export async function DELETE(
       DELETE FROM admin_task_types WHERE id = ${id}
     `
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur lors de la suppression du type de tâche:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du type de tâche' },
       { status: 500 }
     )

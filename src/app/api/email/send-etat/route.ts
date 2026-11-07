@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { gabaritEmail, paragraphe, texteEnHtml, echapperHtml } from '@/lib/email/gabarit'
 import { societeEmail } from '@/lib/email/societe'
 import { NextResponse } from 'next/server';
@@ -12,10 +14,11 @@ import { piecesPourMail, TAILLE_MAX_MAIL } from '@/lib/etats/pieces-jointes';
 // Ancienne simulation PDF supprimée (non utilisée)
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -31,14 +34,14 @@ export async function POST(request: Request) {
     const idsPieces: number[] = Array.isArray(piecesJointesIds) ? piecesJointesIds.map(Number).filter(Number.isFinite) : [];
 
     if (!etatAvancementId || !chantierId || !subject || !emailBody) {
-      return NextResponse.json({ error: 'Données manquantes' }, { status: 400 });
+      return localizedJson({ error: 'Données manquantes' }, { status: 400 });
     }
 
     const toList: string[] = Array.isArray(recipients) ? recipients.filter((r) => typeof r === 'string' && r.trim().length > 0) : [];
     const ccList: string[] = Array.isArray(cc) ? cc.filter((r) => typeof r === 'string' && r.trim().length > 0) : [];
 
     if (toList.length === 0) {
-      return NextResponse.json({ error: 'Aucun destinataire fourni' }, { status: 400 });
+      return localizedJson({ error: 'Aucun destinataire fourni' }, { status: 400 });
     }
 
     // 1. Récupérer les détails de l'état d'avancement et du chantier
@@ -56,7 +59,7 @@ export async function POST(request: Request) {
 
     if (!etatAvancement) {
       console.error('❌ État d\'avancement non trouvé pour ID:', etatAvancementId);
-      return NextResponse.json({ error: `État d'avancement non trouvé (ID: ${etatAvancementId})` }, { status: 404 });
+      return localizedJson({ error: `État d'avancement non trouvé (ID: ${etatAvancementId})` }, { status: 404 });
     }
 
     if (!etatAvancement.Chantier) {
@@ -64,7 +67,7 @@ export async function POST(request: Request) {
         etatId: etatAvancement.id,
         chantierId: etatAvancement.chantierId
       });
-      return NextResponse.json({ 
+      return localizedJson({ 
         error: `Chantier manquant pour l'état d'avancement (chantierId: ${etatAvancement.chantierId})` 
       }, { status: 500 });
     }
@@ -75,7 +78,7 @@ export async function POST(request: Request) {
         etatChantierIdExterne: etatAvancement.Chantier.chantierId,
         expectedChantierId: chantierId
       });
-      return NextResponse.json({ 
+      return localizedJson({ 
         error: `Incohérence: l'état d'avancement appartient au chantier ${etatAvancement.Chantier.chantierId} mais ${chantierId} était attendu` 
       }, { status: 400 });
     }
@@ -88,7 +91,7 @@ export async function POST(request: Request) {
         hasChantier: !!etatAvancement.Chantier,
         chantierId: etatAvancement.Chantier?.chantierId
       });
-      return NextResponse.json({ 
+      return localizedJson({ 
         error: 'Données du chantier incomplètes après validation' 
       }, { status: 500 });
     }
@@ -100,14 +103,14 @@ export async function POST(request: Request) {
       where: { id: "COMPANY_SETTINGS" }
     }); 
     if (!companySettingsRaw || !companySettingsRaw.emailHost || !companySettingsRaw.emailPort || !companySettingsRaw.emailUser || !companySettingsRaw.emailPassword) {
-      return NextResponse.json({ error: 'Paramètres SMTP non configurés (companysettings)' }, { status: 500 });
+      return localizedJson({ error: 'Paramètres SMTP non configurés (companysettings)' }, { status: 500 });
     }
 
     // 3. Récupérer les paramètres formatés pour le PDF (avec logo en base64)
     const { PDFGenerator } = await import('@/lib/pdf/pdf-generator');
     const companySettings = await PDFGenerator.getCompanySettings();
     if (!companySettings) {
-      return NextResponse.json({ error: 'Paramètres entreprise non trouvés' }, { status: 500 });
+      return localizedJson({ error: 'Paramètres entreprise non trouvés' }, { status: 500 });
     }
 
     // 4. Générer le PDF de l'état d'avancement avec le nouveau système Puppeteer
@@ -229,7 +232,7 @@ export async function POST(request: Request) {
     if (manquants.length) console.warn('⚠️ Pièces jointes introuvables sur disque :', manquants);
     const tailleTotale = pdfBuffer.length + piecesJointes.reduce((t, p) => t + p.content.length, 0);
     if (tailleTotale > TAILLE_MAX_MAIL) {
-      return NextResponse.json({
+      return localizedJson({
         error: `Mail trop lourd (${(tailleTotale / 1048576).toFixed(1)} Mo, maximum ${TAILLE_MAX_MAIL / 1048576} Mo) : décochez des pièces jointes.`,
       }, { status: 413 });
     }
@@ -290,10 +293,10 @@ export async function POST(request: Request) {
 
     await transporter.sendMail(mailOptions);
 
-    return NextResponse.json({ success: true, message: 'E-mail envoyé avec succès' });
+    return localizedJson({ success: true, message: 'E-mail envoyé avec succès' });
 
   } catch (error: unknown) {
     console.error('Erreur API send-etat:', error);
-    return NextResponse.json({ error: (error as Error).message || 'Erreur serveur interne' }, { status: 500 });
+    return localizedJson({ error: (error as Error).message || 'Erreur serveur interne' }, { status: 500 });
   }
 } 

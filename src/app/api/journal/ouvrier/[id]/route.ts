@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { checkJournalEntryAuth } from '@/lib/journalAuth'
@@ -7,6 +9,7 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await params
 
@@ -29,18 +32,18 @@ export async function GET(
     })
 
     if (!entree) {
-      return NextResponse.json({ error: 'Entrée non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Entrée non trouvée' }, { status: 404 })
     }
 
     const auth = await checkJournalEntryAuth(request, entree.ouvrierId)
     if (auth.allowed === false) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: auth.status })
+      return localizedJson({ error: 'Non autorisé' }, { status: auth.status })
     }
 
-    return NextResponse.json(entree)
+    return localizedJson(entree)
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'entrée:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération de l\'entrée' },
       { status: 500 }
     )
@@ -52,6 +55,7 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await params
 
@@ -60,18 +64,18 @@ export async function PUT(
     })
 
     if (!entree) {
-      return NextResponse.json({ error: 'Entrée non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Entrée non trouvée' }, { status: 404 })
     }
 
     const auth = await checkJournalEntryAuth(request, entree.ouvrierId)
     if (auth.allowed === false) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: auth.status })
+      return localizedJson({ error: 'Non autorisé' }, { status: auth.status })
     }
 
     if (auth.isOwner) {
       const maintenant = new Date()
       if (maintenant > entree.modifiableJusquA) {
-        return NextResponse.json({ 
+        return localizedJson({ 
           error: 'Cette entrée n\'est plus modifiable (délai de 48h dépassé)' 
         }, { status: 400 })
       }
@@ -90,11 +94,11 @@ export async function PUT(
 
     // Validation des données
     if (!date || !heureDebut || !heureFin || !description) {
-      return NextResponse.json({ error: 'Données manquantes' }, { status: 400 })
+      return localizedJson({ error: 'Données manquantes' }, { status: 400 })
     }
 
     if (!chantierId && !lieuLibre) {
-      return NextResponse.json({ error: 'Chantier ou lieu libre requis' }, { status: 400 })
+      return localizedJson({ error: 'Chantier ou lieu libre requis' }, { status: 400 })
     }
 
     const entreeModifiee = await prisma.journalOuvrier.update({
@@ -119,10 +123,10 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json(entreeModifiee)
+    return localizedJson(entreeModifiee)
   } catch (error) {
     console.error('Erreur lors de la modification de l\'entrée:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la modification de l\'entrée' },
       { status: 500 }
     )
@@ -134,6 +138,7 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await params
 
@@ -142,18 +147,18 @@ export async function DELETE(
     })
 
     if (!entree) {
-      return NextResponse.json({ error: 'Entrée non trouvée' }, { status: 404 })
+      return localizedJson({ error: 'Entrée non trouvée' }, { status: 404 })
     }
 
     const auth = await checkJournalEntryAuth(request, entree.ouvrierId)
     if (auth.allowed === false) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: auth.status })
+      return localizedJson({ error: 'Non autorisé' }, { status: auth.status })
     }
 
     if (auth.isOwner) {
       const maintenant = new Date()
       if (maintenant > entree.modifiableJusquA) {
-        return NextResponse.json({ 
+        return localizedJson({ 
           error: 'Cette entrée n\'est plus supprimable (délai de 48h dépassé)' 
         }, { status: 400 })
       }
@@ -166,7 +171,7 @@ export async function DELETE(
     return new NextResponse(null, { status: 204 })
   } catch (error) {
     console.error('Erreur lors de la suppression de l\'entrée:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression de l\'entrée' },
       { status: 500 }
     )

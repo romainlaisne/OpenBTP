@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,6 +9,7 @@ import { ensureOuvrierInterneForMagasinier } from '@/lib/journalMagasinier'
 
 // GET - Récupérer le journal d'un ouvrier
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     // Essayer d'abord l'authentification normale
     const session = await getServerSession(authOptions)
@@ -20,7 +23,7 @@ export async function GET(request: Request) {
         isPortalAuth = true
         portalActorId = portalSession.id
       } else {
-        return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+        return localizedJson({ error: 'Non autorisé' }, { status: 401 })
       }
     }
 
@@ -30,26 +33,26 @@ export async function GET(request: Request) {
     const mois = searchParams.get('mois') // Format YYYY-MM
 
     if (!ouvrierId) {
-      return NextResponse.json({ error: 'ID ouvrier requis' }, { status: 400 })
+      return localizedJson({ error: 'ID ouvrier requis' }, { status: 400 })
     }
 
     // Portail magasinier : ouvrierId = magasinierId, créer OuvrierInterne si besoin
     const portalSession = readPortalSessionFromCookie(request.headers.get('cookie'))
     if (portalSession?.t === 'MAGASINIER') {
       if (ouvrierId !== portalSession.id) {
-        return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+        return localizedJson({ error: 'Non autorisé' }, { status: 403 })
       }
       const ok = await ensureOuvrierInterneForMagasinier(ouvrierId)
       if (!ok) {
-        return NextResponse.json({ error: 'Magasinier introuvable' }, { status: 404 })
+        return localizedJson({ error: 'Magasinier introuvable' }, { status: 404 })
       }
     } else if (isPortalAuth && portalActorId && ouvrierId !== portalActorId) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     // Vérifier que l'utilisateur est l'ouvrier ou un manager/admin
     if (!isPortalAuth && session && session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER' && session.user.role !== 'OUVRIER_INTERNE') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     const whereClause: Record<string, unknown> = { ouvrierId }
@@ -89,10 +92,10 @@ export async function GET(request: Request) {
       ]
     })
 
-    return NextResponse.json(journalEntries)
+    return localizedJson(journalEntries)
   } catch (error) {
     console.error('Erreur lors de la récupération du journal:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du journal' },
       { status: 500 }
     )
@@ -101,6 +104,7 @@ export async function GET(request: Request) {
 
 // POST - Créer une nouvelle entrée de journal
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     // Essayer d'abord l'authentification normale
     const session = await getServerSession(authOptions)
@@ -112,7 +116,7 @@ export async function POST(request: Request) {
       if (portalSession && (portalSession.t === 'OUVRIER_INTERNE' || portalSession.t === 'MAGASINIER')) {
         isPortalAuth = true
       } else {
-        return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+        return localizedJson({ error: 'Non autorisé' }, { status: 401 })
       }
     }
 
@@ -134,23 +138,23 @@ export async function POST(request: Request) {
     if (isPortalAuth) {
       const portalSession = readPortalSessionFromCookie(request.headers.get('cookie'))
       if (portalSession && ouvrierId !== portalSession.id) {
-        return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+        return localizedJson({ error: 'Non autorisé' }, { status: 403 })
       }
       if (portalSession?.t === 'MAGASINIER') {
         const ok = await ensureOuvrierInterneForMagasinier(ouvrierId)
-        if (!ok) return NextResponse.json({ error: 'Magasinier introuvable' }, { status: 404 })
+        if (!ok) return localizedJson({ error: 'Magasinier introuvable' }, { status: 404 })
       }
     } else if (session && session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER' && session.user.role !== 'OUVRIER_INTERNE') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     // Validation des données
     if (!date || !heureDebut || !heureFin || !description) {
-      return NextResponse.json({ error: 'Données manquantes' }, { status: 400 })
+      return localizedJson({ error: 'Données manquantes' }, { status: 400 })
     }
 
     if (!chantierId && !lieuLibre) {
-      return NextResponse.json({ error: 'Chantier ou lieu libre requis' }, { status: 400 })
+      return localizedJson({ error: 'Chantier ou lieu libre requis' }, { status: 400 })
     }
 
     // Calculer la date limite de modification (+48h)
@@ -191,10 +195,10 @@ export async function POST(request: Request) {
     })
 
     console.log('✅ Entrée journal créée avec succès:', nouvelleEntree.id)
-    return NextResponse.json(nouvelleEntree, { status: 201 })
+    return localizedJson(nouvelleEntree, { status: 201 })
   } catch (error) {
     console.error('Erreur lors de la création de l\'entrée journal:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de l\'entrée' },
       { status: 500 }
     )

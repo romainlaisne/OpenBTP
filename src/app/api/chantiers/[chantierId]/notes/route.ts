@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,6 +9,7 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -17,7 +20,7 @@ export async function GET(
     const session = await getServerSession(authOptions)
     if (!session) {
       console.log('Erreur: Utilisateur non authentifié')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -39,7 +42,7 @@ export async function GET(
 
     if (!chantier) {
       console.log(`Erreur: Chantier ${chantierId} non trouvé`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -67,7 +70,7 @@ export async function GET(
       console.log(`${notes.length} notes trouvées pour le chantier ${chantierId}`)
       console.log('Premier élément des notes (si disponible):', notes.length > 0 ? JSON.stringify(notes[0], null, 2) : 'Aucune note')
       
-      return NextResponse.json(notes)
+      return localizedJson(notes)
     } catch (prismaError: unknown) {
       console.error('Erreur Prisma lors de la récupération des notes:', prismaError)
       console.error('Stack trace complète:', (prismaError as Error).stack)
@@ -76,7 +79,7 @@ export async function GET(
         console.error('Métadonnées d\'erreur Prisma:', (prismaError as { meta?: unknown }).meta)
       }
       
-      return NextResponse.json(
+      return localizedJson(
         { 
           error: 'Erreur lors de la récupération des notes dans la base de données',
           details: (prismaError as Error).message,
@@ -88,7 +91,7 @@ export async function GET(
   } catch (error: unknown) {
     console.error('Erreur générale lors de la récupération des notes:', error)
     console.error('Stack trace complète:', (error as Error).stack)
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la récupération des notes',
         details: (error as Error).message,
@@ -103,6 +106,7 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -113,7 +117,7 @@ export async function POST(
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       console.log('Erreur: Utilisateur non authentifié')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -135,7 +139,7 @@ export async function POST(
 
     if (!chantier) {
       console.log(`Erreur: Chantier ${chantierId} non trouvé`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -147,7 +151,7 @@ export async function POST(
     // Vérifier que le contenu est présent
     if (!body.contenu) {
       console.log('Erreur: Contenu de la note manquant')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le contenu de la note est requis' },
         { status: 400 }
       )
@@ -172,10 +176,10 @@ export async function POST(
       })
 
       console.log('Note créée avec succès:', note)
-      return NextResponse.json(note)
+      return localizedJson(note)
     } catch (prismaError: unknown) {
       console.error('Erreur Prisma lors de la création de la note:', prismaError)
-      return NextResponse.json(
+      return localizedJson(
         { 
           error: 'Erreur lors de la création de la note dans la base de données',
           details: (prismaError as Error).message 
@@ -185,7 +189,7 @@ export async function POST(
     }
   } catch (error: unknown) {
     console.error('Erreur générale lors de la création de la note:', error)
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la création de la note',
         details: (error as Error).message 

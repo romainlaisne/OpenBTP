@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -93,10 +96,11 @@ const getTaskColor = (task: TaskForPDF, chantierColorMap: Map<string, number>) =
 };
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
 
     // Filtre optionnel par ressource
@@ -211,7 +215,7 @@ export async function POST(request: Request) {
         
         slots.push({
           date: date.toISOString().split('T')[0],
-          dayName: date.toLocaleDateString('fr-FR', { weekday: 'short' }),
+          dayName: date.toLocaleDateString(intlLocale(getActiveLocale()), { weekday: 'short' }),
           dayNumber: date.getDate(),
           isToday: date.toDateString() === today.toDateString(),
           isWeekend: date.getDay() === 0 || date.getDay() === 6
@@ -299,8 +303,8 @@ export async function POST(request: Request) {
                           <div class="task-item" style="background-color: ${colors.bg}; border-color: ${colors.border}; color: ${colors.text};">
                             <div class="task-title">${task.title}</div>
                             <div class="task-dates">
-                              ${new Date(task.start).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })} - 
-                              ${new Date(task.end).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
+                              ${new Date(task.start).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit' })} - 
+                              ${new Date(task.end).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit' })}
                             </div>
                             ${task.chantier ? `<div class="task-dates">${task.chantier.nomChantier}</div>` : ''}
                           </div>
@@ -357,8 +361,8 @@ export async function POST(request: Request) {
                           <div class="task-item" style="background-color: ${colors.bg}; border-color: ${colors.border}; color: ${colors.text};">
                             <div class="task-title">${task.title}</div>
                             <div class="task-dates">
-                              ${new Date(task.start).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })} - 
-                              ${new Date(task.end).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
+                              ${new Date(task.start).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit' })} - 
+                              ${new Date(task.end).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit' })}
                             </div>
                             ${task.chantier ? `<div class="task-dates">${task.chantier.nomChantier}</div>` : ''}
                           </div>
@@ -491,8 +495,8 @@ export async function POST(request: Request) {
       </style>
     </head>
     <body>
-      ${generateWeekHTML(timeSlotsCurrent, `Semaine du ${timeSlotsCurrent[0].dayNumber} au ${timeSlotsCurrent[6].dayNumber} ${new Date(timeSlotsCurrent[0].date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}`)}
-      ${generateWeekHTML(timeSlotsNext, `Semaine du ${timeSlotsNext[0].dayNumber} au ${timeSlotsNext[6].dayNumber} ${new Date(timeSlotsNext[0].date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}`)}
+      ${generateWeekHTML(timeSlotsCurrent, `Semaine du ${timeSlotsCurrent[0].dayNumber} au ${timeSlotsCurrent[6].dayNumber} ${new Date(timeSlotsCurrent[0].date).toLocaleDateString(intlLocale(getActiveLocale()), { month: 'long', year: 'numeric' })}`)}
+      ${generateWeekHTML(timeSlotsNext, `Semaine du ${timeSlotsNext[0].dayNumber} au ${timeSlotsNext[6].dayNumber} ${new Date(timeSlotsNext[0].date).toLocaleDateString(intlLocale(getActiveLocale()), { month: 'long', year: 'numeric' })}`)}
     </body>
     </html>
     `;
@@ -534,7 +538,7 @@ export async function POST(request: Request) {
     const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
     console.error('Détails de l\'erreur:', errorMessage);
     
-    return NextResponse.json(
+    return localizedJson(
       { 
         error: 'Erreur lors de la génération du PDF',
         details: errorMessage 

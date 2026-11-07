@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -48,10 +50,11 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -67,7 +70,7 @@ export async function GET(
     });
 
     if (!chantierData) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
     }
     const chantierIdInterne = chantierData.id;
 
@@ -81,7 +84,7 @@ export async function GET(
     `
 
     if (!soustraitantExists || !soustraitantExists[0] || soustraitantExists[0].count === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé ou non associé à ce chantier' },
         { status: 404 }
       )
@@ -180,10 +183,10 @@ export async function GET(
       })
     )
     
-    return NextResponse.json(formattedEtats)
+    return localizedJson(formattedEtats)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des états d\'avancement' },
       { status: 500 }
     )
@@ -196,6 +199,7 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ chantierId: string; soustraitantId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     console.log('Début de la requête POST pour créer un état d\'avancement')
     console.log('Paramètres:', (await context.params))
@@ -206,7 +210,7 @@ export async function POST(
     const session = await getServerSession(authOptions)
     if (!session) {
       console.log('Session non authentifiée')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -224,7 +228,7 @@ export async function POST(
 
     if (!chantierData) {
       console.log('Chantier non trouvé pour cet ID lisible:', chantierId);
-      return NextResponse.json({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour cet ID lisible' }, { status: 404 });
     }
     const chantierIdInterne = chantierData.id;
     console.log('ID interne du chantier récupéré:', chantierIdInterne);
@@ -243,7 +247,7 @@ export async function POST(
     console.log('Résultat de la requête sous-traitant:', soustraitantResult)
     if (!soustraitantResult || soustraitantResult.length === 0) {
       console.log('Sous-traitant non trouvé ou non associé au chantier')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé ou non associé à ce chantier' },
         { status: 404 }
       )
@@ -268,7 +272,7 @@ export async function POST(
     console.log('Résultat de la requête commande:', commande)
     if (!commande) {
       console.log('Commande sous-traitant non trouvée')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Commande sous-traitant non trouvée' },
         { status: 404 }
       )
@@ -277,7 +281,7 @@ export async function POST(
     // Vérifier que la commande est verrouillée
     if (!commande.estVerrouillee) {
       console.log('La commande n\'est pas verrouillée')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'La commande doit être verrouillée avant de créer un état d\'avancement' },
         { status: 400 }
       )
@@ -310,7 +314,7 @@ export async function POST(
 
     // Vérifier que le dernier état est finalisé SEULEMENT s'il y a des états existants
     if (existingEtats > 0 && lastEtat && !lastEtat.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'L\'état d\'avancement précédent doit être finalisé avant de créer un nouvel état.' },
         { status: 400 }
       )
@@ -490,7 +494,7 @@ export async function POST(
       }
     })
 
-    return NextResponse.json({
+    return localizedJson({
       id: etatAvancementComplet?.id,
       numero: etatAvancementComplet?.numero,
       date: etatAvancementComplet?.date,
@@ -502,7 +506,7 @@ export async function POST(
     })
   } catch (error) {
     console.error('Erreur détaillée:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de l\'état d\'avancement' },
       { status: 500 }
     )

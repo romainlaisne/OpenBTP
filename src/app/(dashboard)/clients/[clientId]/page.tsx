@@ -1,5 +1,6 @@
 'use client';
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
@@ -143,7 +144,7 @@ export default function ClientDetailPage() {
   };
   
   const handleDeleteContact = async (contactId: string) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer ce contact ?")) return;
+    if (!confirm(tx("Êtes-vous sûr de vouloir supprimer ce contact ?"))) return;
     setIsSubmittingContact(true); // Peut utiliser un autre état si nécessaire pour les actions de suppression
     try {
       const response = await fetch(`/api/contacts/${contactId}`, {
@@ -172,7 +173,7 @@ export default function ClientDetailPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-red-500">Erreur: {error}</div>
+        <div className="text-red-500"><UiText>Erreur: </UiText>{error}</div>
       </div>
     );
   }
@@ -180,7 +181,7 @@ export default function ClientDetailPage() {
   if (!client) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-300">Client non trouvé.</div>
+        <div className="text-gray-600 dark:text-gray-300"><UiText>Client non trouvé.</UiText></div>
       </div>
     );
   }
@@ -189,7 +190,7 @@ export default function ClientDetailPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
         title={client.nom}
-        subtitle="Détails du client"
+        subtitle={tx("Détails du client")}
         icon={BuildingStorefrontIcon}
         badgeColor="from-indigo-600 via-purple-600 to-pink-700"
         gradientColor="from-indigo-600/10 via-purple-600/10 to-pink-700/10"
@@ -228,7 +229,7 @@ export default function ClientDetailPage() {
               <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{client.email || 'N/A'}</dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Téléphone principal</dt>
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400"><UiText>Téléphone principal</UiText></dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{client.telephone || 'N/A'}</dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -253,7 +254,7 @@ export default function ClientDetailPage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                            title="Voir sur Companyweb"
+                            title={tx("Voir sur Companyweb")}
                           >
                             <UiText>Voir sur Companyweb</UiText>
                           </a>
@@ -279,18 +280,18 @@ export default function ClientDetailPage() {
             className="p-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white flex items-center"
           >
             <PlusCircleIcon className="h-5 w-5 mr-1.5" />
-            Ajouter un contact
-          </button>
+            <UiText>Ajouter un contact
+          </UiText></button>
         </div>
         <div className="border-t border-gray-200 dark:border-gray-700">
           {contacts.length === 0 ? (
-            <p className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">Aucun contact enregistré pour ce client.</p>
+            <p className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400"><UiText>Aucun contact enregistré pour ce client.</UiText></p>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Prénom & Nom</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Prénom & Nom</UiText></th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Fonction</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Email</UiText></th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"><UiText>Téléphone</UiText></th>
@@ -312,14 +313,14 @@ export default function ClientDetailPage() {
                         <button 
                           onClick={() => handleOpenEditContactModal(contact)}
                           className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3"
-                          title="Modifier le contact"
+                          title={tx("Modifier le contact")}
                         >
                           <PencilIcon className="h-5 w-5" />
                         </button>
                         <button 
                           onClick={() => handleDeleteContact(contact.id)}
                           className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                          title="Supprimer le contact"
+                          title={tx("Supprimer le contact")}
                         >
                           <TrashIcon className="h-5 w-5" />
                         </button>

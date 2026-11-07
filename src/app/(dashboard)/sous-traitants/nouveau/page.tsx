@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -144,8 +145,8 @@ export default function NouveauSousTraitantPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <PageHeader
-        title="Nouveau Sous-Traitant"
-        subtitle="Créer un nouveau sous-traitant"
+        title={tx("Nouveau Sous-Traitant")}
+        subtitle={tx("Créer un nouveau sous-traitant")}
         icon={BuildingOffice2Icon}
       />
 
@@ -171,7 +172,7 @@ export default function NouveauSousTraitantPage() {
             id="nom"
             name="nom"
             type="text"
-            label="Nom de l'entreprise"
+            label={tx("Nom de l'entreprise")}
             required
             value={formData.nom}
             onChange={handleChange}
@@ -181,7 +182,7 @@ export default function NouveauSousTraitantPage() {
             id="email"
             name="email"
             type="email"
-            label="Email"
+            label={tx("Email")}
             required
             value={formData.email}
             onChange={handleChange}
@@ -200,7 +201,7 @@ export default function NouveauSousTraitantPage() {
             id="tva"
             name="tva"
             type="text"
-            label="Numéro de TVA"
+            label={tx("Numéro de TVA")}
             value={formData.tva}
             onChange={handleChange}
             placeholder="BE0123456789"
@@ -210,7 +211,7 @@ export default function NouveauSousTraitantPage() {
             id="telephone"
             name="telephone"
             type="tel"
-            label="Téléphone"
+            label={tx("Téléphone")}
             value={formData.telephone}
             onChange={handleChange}
           />
@@ -219,7 +220,7 @@ export default function NouveauSousTraitantPage() {
             id="adresse"
             name="adresse"
             type="text"
-            label="Adresse"
+            label={tx("Adresse")}
             value={formData.adresse}
             onChange={handleChange}
           />
@@ -247,7 +248,7 @@ export default function NouveauSousTraitantPage() {
                   disabled:opacity-50 disabled:cursor-not-allowed"
               />
               {uploadingLogo && (
-                <span className="text-sm text-gray-500">Upload en cours...</span>
+                <span className="text-sm text-gray-500"><UiText>Upload en cours...</UiText></span>
               )}
             </div>
             {logoPreview && (

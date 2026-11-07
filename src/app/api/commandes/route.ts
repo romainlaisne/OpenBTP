@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,10 +7,11 @@ import { prisma } from '@/lib/prisma'
 import { generateAndStoreCommandePDF } from '@/lib/pdf/commande-pdf-storage'
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || !['ADMIN', 'MANAGER'].includes(session.user.role)) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const commandeData = await request.json()
@@ -20,7 +23,7 @@ export async function POST(request: Request) {
         where: { id: commandeData.clientId }
       })
       if (!client) {
-        return NextResponse.json(
+        return localizedJson(
           { error: 'Client non trouvé' },
           { status: 400 }
         )
@@ -31,7 +34,7 @@ export async function POST(request: Request) {
     const chantierSlug: string | undefined = commandeData.chantierSlug || commandeData.chantierId;
 
     if (!chantierPrimaryId && !chantierSlug) {
-      return NextResponse.json({ error: 'chantierId est requis' }, { status: 400 })
+      return localizedJson({ error: 'chantierId est requis' }, { status: 400 })
     }
 
     let chantier = null;
@@ -42,7 +45,7 @@ export async function POST(request: Request) {
       chantier = await prisma.chantier.findUnique({ where: { chantierId: chantierSlug } })
     }
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 400 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 400 })
     }
 
     try {
@@ -60,7 +63,7 @@ export async function POST(request: Request) {
         });
         
         if (!existingCommande) {
-          return NextResponse.json({ error: 'Commande non trouvée' }, { status: 404 });
+          return localizedJson({ error: 'Commande non trouvée' }, { status: 404 });
         }
         
         // Vérifier si c'est une nouvelle validation (passage à VALIDEE)
@@ -205,17 +208,17 @@ export async function POST(request: Request) {
         }
       }
 
-      return NextResponse.json(commandeWithLignes);
+      return localizedJson(commandeWithLignes);
     } catch (dbError: unknown) {
       console.error('Erreur base de données:', dbError)
-      return NextResponse.json(
+      return localizedJson(
         { error: `Erreur lors de la création de la commande: ${(dbError as Error).message}` },
         { status: 500 }
       )
     }
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de la commande' },
       { status: 500 }
     )
@@ -223,23 +226,24 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
     const chantierId = searchParams.get('chantierId')
 
     if (!chantierId) {
-      return NextResponse.json({ error: 'chantierId requis' }, { status: 400 })
+      return localizedJson({ error: 'chantierId requis' }, { status: 400 })
     }
 
     // Récupérer l'ID numérique du chantier
     const chantier = await prisma.chantier.findUnique({ where: { chantierId } })
     if (!chantier) {
-      return NextResponse.json([], { status: 200 })
+      return localizedJson([], { status: 200 })
     }
     const commandes = await prisma.commande.findMany({
       where: { chantierId: chantier.id },
@@ -247,10 +251,10 @@ export async function GET(request: Request) {
       orderBy: { dateCommande: 'desc' }
     })
 
-    return NextResponse.json(commandes)
+    return localizedJson(commandes)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des commandes' },
       { status: 500 }
     )

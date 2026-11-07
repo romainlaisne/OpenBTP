@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import jsPDF from 'jspdf'
 import type { Project, MeasurementType } from '@/types/metres-plan'
 
@@ -37,7 +38,7 @@ export function exportPdf(project: Project) {
   y += 10
 
   const infos = [
-    ['Date:', new Date().toLocaleDateString('fr-FR')],
+    ['Date:', new Date().toLocaleDateString(intlLocale(getActiveLocale()))],
     ['Fichier PDF:', project.pdfFileName || 'N/A'],
     ['Calibration:', project.calibration
       ? `1px = ${project.calibration.ratio.toFixed(5)} ${project.calibration.unit}`
@@ -182,7 +183,7 @@ export function exportPdf(project: Project) {
     doc.setFillColor(30, 58, 138)
     doc.rect(0, pageH - 10, pageW, 10, 'F')
     doc.setTextColor(255, 255, 255); doc.setFontSize(7)
-    doc.text(`MétréPlan — ${project.name} — ${new Date().toLocaleDateString('fr-FR')}`, margin, pageH - 3.5)
+    doc.text(`MétréPlan — ${project.name} — ${new Date().toLocaleDateString(intlLocale(getActiveLocale()))}`, margin, pageH - 3.5)
     doc.text(`Page ${p}/${pageCount}`, pageW - margin, pageH - 3.5, { align: 'right' })
   }
 

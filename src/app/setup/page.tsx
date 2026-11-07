@@ -104,7 +104,7 @@ export default function SetupPage() {
           'Des données en conflit existent déjà': 'setup.dataConflict',
           'Erreur interne du serveur lors de la configuration': 'setup.serverError',
         }
-        throw new Error(apiErrorKeys[errorData.error] || 'setup.configurationError')
+        throw new Error(apiErrorKeys[errorData.code] || apiErrorKeys[errorData.error] || 'setup.configurationError')
       }
 
       setStep(3)

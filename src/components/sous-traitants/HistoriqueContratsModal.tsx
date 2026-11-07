@@ -1,5 +1,8 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 // Historique des contrats d'un sous-traitant.
 //
 // Ouverte depuis le tableau des sous-traitants — jusqu'ici, RIEN dans
@@ -49,7 +52,7 @@ interface Props {
 }
 
 const formatDate = (iso: string | null) =>
-  iso ? new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—'
+  iso ? new Date(iso).toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—'
 
 const LIBELLE_STATUT: Record<StatutEcheance, { texte: string; classe: string }> = {
   expire: { texte: 'Échéance dépassée', classe: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300' },
@@ -149,14 +152,14 @@ export default function HistoriqueContratsModal({
                 <div className="flex items-start justify-between border-b border-gray-200 dark:border-gray-700 px-5 py-4">
                   <div>
                     <Dialog.Title className="text-lg font-semibold text-gray-900 dark:text-white">
-                      Historique des contrats
-                    </Dialog.Title>
+                      <UiText>Historique des contrats
+                    </UiText></Dialog.Title>
                     <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{soustraitantNom}</p>
                   </div>
                   <button
                     type="button"
                     onClick={onClose}
-                    aria-label="Fermer"
+                    aria-label={tx("Fermer")}
                     className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700"
                   >
                     <XMarkIcon className="h-5 w-5" />
@@ -172,8 +175,8 @@ export default function HistoriqueContratsModal({
                     <p className="py-8 text-center text-sm text-red-600 dark:text-red-400">{erreur}</p>
                   ) : contrats.length === 0 ? (
                     <p className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                      Aucun contrat généré pour ce sous-traitant.
-                    </p>
+                      <UiText>Aucun contrat généré pour ce sous-traitant.
+                    </UiText></p>
                   ) : (
                     <div className="space-y-3">
                       {contrats.map((c) => {
@@ -191,12 +194,12 @@ export default function HistoriqueContratsModal({
                             <div className="flex flex-wrap items-center gap-2">
                               {c.estSigne ? (
                                 <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/40 dark:text-green-300">
-                                  <CheckCircleIcon className="h-3.5 w-3.5" /> Signé
-                                </span>
+                                  <CheckCircleIcon className="h-3.5 w-3.5" /> <UiText>Signé
+                                </UiText></span>
                               ) : (
                                 <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
-                                  <ClockIcon className="h-3.5 w-3.5" /> En attente de signature
-                                </span>
+                                  <ClockIcon className="h-3.5 w-3.5" /> <UiText>En attente de signature
+                                </UiText></span>
                               )}
                               {c.estSigne && (
                                 <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${statut.classe}`}>
@@ -215,16 +218,16 @@ export default function HistoriqueContratsModal({
                                 rel="noopener noreferrer"
                                 className="ml-auto inline-flex items-center gap-1 text-xs text-blue-600 hover:underline dark:text-blue-400"
                               >
-                                <DocumentTextIcon className="h-3.5 w-3.5" /> Voir le PDF
-                              </a>
+                                <DocumentTextIcon className="h-3.5 w-3.5" /> <UiText>Voir le PDF
+                              </UiText></a>
                             </div>
                             <dl className="mt-2 grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-300">
                               <div>
-                                <dt className="text-gray-400 dark:text-gray-500">Généré le</dt>
+                                <dt className="text-gray-400 dark:text-gray-500"><UiText>Généré le</UiText></dt>
                                 <dd>{formatDate(c.dateGeneration)}</dd>
                               </div>
                               <div>
-                                <dt className="text-gray-400 dark:text-gray-500">Signé le</dt>
+                                <dt className="text-gray-400 dark:text-gray-500"><UiText>Signé le</UiText></dt>
                                 <dd>{formatDate(c.dateSignature)}</dd>
                               </div>
                               <div>
@@ -241,17 +244,17 @@ export default function HistoriqueContratsModal({
 
                 <div className="flex flex-wrap items-center gap-3 border-t border-gray-200 px-5 py-3 dark:border-gray-700">
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Renouveler génère un nouveau contrat (dates actualisées, échéance à {SEUIL_RENOUVELLEMENT_JOURS} jours)
+                    <UiText>Renouveler génère un nouveau contrat (dates actualisées, échéance à </UiText>{SEUIL_RENOUVELLEMENT_JOURS} <UiText>jours)
                     et l’envoie par email au sous-traitant.
-                  </p>
+                  </UiText></p>
                   <div className="ml-auto flex gap-2">
                     <button
                       type="button"
                       onClick={onClose}
                       className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
                     >
-                      Fermer
-                    </button>
+                      <UiText>Fermer
+                    </UiText></button>
                     <button
                       type="button"
                       onClick={renouveler}

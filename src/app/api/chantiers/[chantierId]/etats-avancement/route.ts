@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -17,6 +19,7 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -24,7 +27,7 @@ export async function GET(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -36,7 +39,7 @@ export async function GET(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé pour GET' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé pour GET' }, { status: 404 });
     }
 
     const etatsAvancement = await prisma.etatAvancement.findMany({
@@ -60,10 +63,10 @@ export async function GET(
       }
     })
 
-    return NextResponse.json(etatsAvancement)
+    return localizedJson(etatsAvancement)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des états d\'avancement' },
       { status: 500 }
     )
@@ -75,6 +78,7 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -82,7 +86,7 @@ export async function POST(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -94,7 +98,7 @@ export async function POST(
     });
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 });
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 });
     }
 
     // Vérifier si c'est le premier état d'avancement
@@ -130,7 +134,7 @@ export async function POST(
 
     // Vérifier que le dernier état est finalisé (sauf s'il n'y a pas d'état précédent)
     if (lastEtat && !lastEtat.estFinalise) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'L\'état d\'avancement précédent doit être finalisé avant de créer un nouvel état.' },
         { status: 400 }
       )
@@ -323,16 +327,16 @@ export async function POST(
     
     if (!etatAvancementComplet) {
       console.error('État d\'avancement non trouvé après création')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Erreur lors de la récupération de l\'état d\'avancement créé' },
         { status: 500 }
       )
     }
     
-    return NextResponse.json(etatAvancementComplet)
+    return localizedJson(etatAvancementComplet)
   } catch (error) {
     console.error('Erreur détaillée:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de l\'état d\'avancement' },
       { status: 500 }
     )

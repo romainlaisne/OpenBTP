@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -5,10 +7,11 @@ import { prisma } from '@/lib/prisma/client'
 
 // GET - Récupérer tous les chargements groupés par pays
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer tous les pays avec leurs usines et chargements
@@ -47,10 +50,10 @@ export async function GET() {
       })
     }))
 
-    return NextResponse.json(paysAvecChargements)
+    return localizedJson(paysAvecChargements)
   } catch (error) {
     console.error('Erreur lors de la récupération des chargements:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des chargements' },
       { status: 500 }
     )
@@ -59,16 +62,17 @@ export async function GET() {
 
 // POST - Créer un nouveau chargement
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { usineId, contenu, semaine } = await request.json()
 
     if (!usineId || !contenu || !semaine) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'usineId, contenu et semaine requis' },
         { status: 400 }
       )
@@ -90,10 +94,10 @@ export async function POST(request: Request) {
       }
     })
 
-    return NextResponse.json(chargement)
+    return localizedJson(chargement)
   } catch (error) {
     console.error('Erreur lors de la création du chargement:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du chargement' },
       { status: 500 }
     )

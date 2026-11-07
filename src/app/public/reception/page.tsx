@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { 
@@ -60,11 +62,11 @@ export default function PublicReceptionPage() {
         <div className="text-center mb-8">
           <ClipboardDocumentCheckIcon className="h-16 w-16 mx-auto text-red-500" />
           <h1 className="mt-4 text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            Accès aux remarques de réception
-          </h1>
+            <UiText>Accès aux remarques de réception
+          </UiText></h1>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 px-4">
-            Entrez le code PIN qui vous a été fourni pour accéder aux remarques du chantier.
-          </p>
+            <UiText>Entrez le code PIN qui vous a été fourni pour accéder aux remarques du chantier.
+          </UiText></p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
@@ -99,7 +101,7 @@ export default function PublicReceptionPage() {
                     onChange={handleChange}
                     required
                     maxLength={6}
-                    placeholder="Entrez le code PIN à 6 chiffres"
+                    placeholder={tx("Entrez le code PIN à 6 chiffres")}
                     className="pl-10 text-lg py-2 sm:py-3"
                   />
                 </div>
@@ -119,7 +121,7 @@ export default function PublicReceptionPage() {
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400 px-4">
-          <p>Si vous n&apos;avez pas de code PIN, veuillez contacter le responsable du chantier.</p>
+          <p><UiText>Si vous n&apos;avez pas de code PIN, veuillez contacter le responsable du chantier.</UiText></p>
         </div>
       </div>
     </div>

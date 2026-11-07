@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -14,13 +16,14 @@ export async function GET(
   request: NextRequest,
   props: { params: Promise<{ devisId: string }> }
 ) {
+  await bindRequestLocale()
   const params = await props.params
   const { devisId } = params
   try {
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer le devis avec toutes ses relations
@@ -37,7 +40,7 @@ export async function GET(
     })
 
     if (!devis) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Devis introuvable' },
         { status: 404 }
       )
@@ -141,7 +144,7 @@ export async function GET(
     return response
   } catch (error) {
     console.error('Erreur lors de la génération du PDF sans prix:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la génération du PDF sans prix' },
       { status: 500 }
     )

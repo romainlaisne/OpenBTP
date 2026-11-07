@@ -1,11 +1,16 @@
+import { getActiveLocale, intlLocale, type AppLocale } from '@/lib/i18n/locale'
+import { translateText } from '@/lib/i18n/translate'
+
+function numberLocale(locale?: AppLocale): string {
+  return intlLocale(locale ?? getActiveLocale())
+}
+
 /**
- * Formate un nombre en devise (EUR par défaut)
- * @param amount Le montant à formater
- * @param currency La devise (par défaut EUR)
- * @returns Le montant formaté en chaîne de caractères
+ * Formate un nombre en devise (EUR par défaut).
+ * The locale follows the active language. Currency stays EUR.
  */
-export const formatCurrency = (amount: number, currency: string = 'EUR'): string => {
-  return new Intl.NumberFormat('fr-FR', {
+export const formatCurrency = (amount: number, currency: string = 'EUR', locale?: AppLocale): string => {
+  return new Intl.NumberFormat(numberLocale(locale), {
     style: 'currency',
     currency
   }).format(amount);
@@ -17,8 +22,8 @@ export const formatCurrency = (amount: number, currency: string = 'EUR'): string
  * @param decimals Le nombre de décimales (par défaut 2)
  * @returns Le nombre formaté en chaîne de caractères
  */
-export const formatNumber = (num: number, decimals: number = 2): string => {
-  return new Intl.NumberFormat('fr-FR', {
+export const formatNumber = (num: number, decimals: number = 2, locale?: AppLocale): string => {
+  return new Intl.NumberFormat(numberLocale(locale), {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals
   }).format(num);
@@ -30,8 +35,8 @@ export const formatNumber = (num: number, decimals: number = 2): string => {
  * @param decimals Le nombre de décimales (par défaut 1)
  * @returns Le pourcentage formaté en chaîne de caractères
  */
-export const formatPercent = (value: number, decimals: number = 1): string => {
-  return new Intl.NumberFormat('fr-FR', {
+export const formatPercent = (value: number, decimals: number = 1, locale?: AppLocale): string => {
+  return new Intl.NumberFormat(numberLocale(locale), {
     style: 'percent',
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals
@@ -84,11 +89,11 @@ export function parseDate(date: unknown): Date | null {
  * @param fallbackText Texte à retourner si la date est invalide (défaut: "Date non disponible")
  * @returns La date formatée ou le texte de fallback
  */
-export function formatDate(date: unknown, fallbackText: string = "Date non disponible"): string {
+export function formatDate(date: unknown, fallbackText: string = "Date non disponible", locale?: AppLocale): string {
   const dateObj = parseDate(date);
-  if (!dateObj) return fallbackText;
+  if (!dateObj) return txFallback(fallbackText, locale);
   
-  return dateObj.toLocaleDateString('fr-FR', {
+  return dateObj.toLocaleDateString(numberLocale(locale), {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric'
@@ -101,15 +106,19 @@ export function formatDate(date: unknown, fallbackText: string = "Date non dispo
  * @param fallbackText Texte à retourner si la date est invalide (défaut: "Date non disponible")
  * @returns La date formatée en format long ou le texte de fallback
  */
-export function formatDateLong(date: unknown, fallbackText: string = "Date non disponible"): string {
+export function formatDateLong(date: unknown, fallbackText: string = "Date non disponible", locale?: AppLocale): string {
   const dateObj = parseDate(date);
-  if (!dateObj) return fallbackText;
+  if (!dateObj) return txFallback(fallbackText, locale);
   
-  return dateObj.toLocaleDateString('fr-FR', {
+  return dateObj.toLocaleDateString(numberLocale(locale), {
     day: '2-digit',
     month: 'long',
     year: 'numeric'
   });
+}
+
+function txFallback(text: string, locale?: AppLocale): string {
+  return translateText(locale ?? getActiveLocale(), text)
 }
 
 /**

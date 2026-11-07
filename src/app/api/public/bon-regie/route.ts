@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,9 +7,10 @@ import { authOptions } from '@/lib/auth'
 
 // Récupérer les bons de régie, avec limite optionnelle (réservé aux utilisateurs connectés)
 export async function GET(request: Request) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
   if (!session?.user?.email) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   }
   try {
     const { searchParams } = new URL(request.url);
@@ -21,7 +24,7 @@ export async function GET(request: Request) {
       },
     });
     
-    return NextResponse.json(bonsRegie)
+    return localizedJson(bonsRegie)
   } catch (error) {
     console.error('Erreur lors de la récupération des bons de régie:', error)
     let errorMessage = 'Erreur lors de la récupération des bons de régie';
@@ -37,6 +40,7 @@ export async function GET(request: Request) {
 
 // Ajouter un bon de régie
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const data = await request.json()
     
@@ -74,7 +78,7 @@ export async function POST(request: Request) {
       },
     });
     
-    return NextResponse.json(nouveauBonRegie)
+    return localizedJson(nouveauBonRegie)
   } catch (error) {
     console.error('Erreur lors de la création du bon de régie:', error)
     if (typeof error === 'object' && error && 'code' in error) {

@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import QRCodeScanner from '../outillage/QRCodeScanner'
 
@@ -76,18 +77,18 @@ export default function EmplacementQRScanner({ onScanComplete }: EmplacementQRSc
             onClick={() => setError(null)}
             className="mt-2 text-sm text-red-700 underline"
           >
-            Réessayer
-          </button>
+            <UiText>Réessayer
+          </UiText></button>
         </div>
       )}
       
       <div className="bg-blue-50 p-4 rounded-lg mb-4">
         <h3 className="font-medium text-blue-800 mb-2">Comment scanner un emplacement</h3>
         <ol className="text-blue-700 list-decimal pl-5 space-y-1">
-          <li>Autorisez l&apos;accès à la caméra lorsque demandé</li>
+          <li><UiText>Autorisez l&apos;accès à la caméra lorsque demandé</UiText></li>
           <li>Placez le QR code au centre de la zone de scan</li>
-          <li>Tenez l&apos;appareil stable jusqu&apos;à ce que le scan soit terminé</li>
-          <li>Vous pouvez également saisir le code manuellement ci-dessous</li>
+          <li><UiText>Tenez l&apos;appareil stable jusqu&apos;à ce que le scan soit terminé</UiText></li>
+          <li><UiText>Vous pouvez également saisir le code manuellement ci-dessous</UiText></li>
         </ol>
       </div>
       
@@ -105,8 +106,8 @@ export default function EmplacementQRScanner({ onScanComplete }: EmplacementQRSc
             type="submit"
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Valider
-          </button>
+            <UiText>Valider
+          </UiText></button>
         </div>
       </form>
       

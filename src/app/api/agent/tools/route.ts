@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Catalogue des outils agent — consommé au démarrage par le serveur MCP.
 // Auth : clé d'API uniquement (X-API-Key). Pas de session NextAuth ici.
 import { NextResponse } from 'next/server'
@@ -10,12 +12,13 @@ export const dynamic = 'force-dynamic'
 const CONTRACT_VERSION = '1'
 
 export async function GET(request: Request) {
+  await bindRequestLocale()
   const identity = await requireAgentAuth(request)
   if (!identity) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   }
 
-  return NextResponse.json({
+  return localizedJson({
     version: CONTRACT_VERSION,
     tools: getToolCatalog(),
   })

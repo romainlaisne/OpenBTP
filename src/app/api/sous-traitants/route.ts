@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -6,10 +8,11 @@ import { renouvellementConseille } from '@/lib/contrats/echeance'
 import { normaliserRepresentant } from '@/lib/soustraitants/representant-serveur'
 
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -110,10 +113,10 @@ export async function GET() {
       })
     )
 
-    return NextResponse.json(sousTraitantsWithContrats)
+    return localizedJson(sousTraitantsWithContrats)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des sous-traitants' },
       { status: 500 }
     )
@@ -121,10 +124,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -135,7 +139,7 @@ export async function POST(request: Request) {
 
     // Validation basique
     if (!body.nom || !body.email) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le nom et l\'email sont requis' },
         { status: 400 }
       )
@@ -147,7 +151,7 @@ export async function POST(request: Request) {
     // Représentant légal (facultatif à la création, exigé pour générer un contrat)
     const representant = await normaliserRepresentant(body)
     if (representant.erreur) {
-      return NextResponse.json({ error: representant.erreur }, { status: 400 })
+      return localizedJson({ error: representant.erreur }, { status: 400 })
     }
 
     // Générer un ID unique pour le sous-traitant
@@ -169,10 +173,10 @@ export async function POST(request: Request) {
     })
 
     console.log('Sous-traitant créé avec succès:', sousTraitant)
-    return NextResponse.json(sousTraitant)
+    return localizedJson(sousTraitant)
   } catch (error) {
     console.error('Erreur lors de la création du sous-traitant:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du sous-traitant' },
       { status: 500 }
     )

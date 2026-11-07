@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 // Situation d'une personne (statut, nationalité) — détermine ses documents exigés.
 
 import { NextResponse } from 'next/server'
@@ -9,15 +11,16 @@ const STATUTS = ['INDEPENDANT', 'ASSOCIE_ACTIF', 'SALARIE']
 const NATIONALITES = ['BE', 'UE', 'HORS_UE']
 
 export async function PUT(request: Request, context: { params: Promise<{ id: string; ouvrierId: string }> }) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
-  if (!session?.user) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  if (!session?.user) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   const { id, ouvrierId } = await context.params
   const body = await request.json().catch(() => ({}))
   const data: Record<string, string | null> = {}
   if (body.statut !== undefined) data.statut = STATUTS.includes(body.statut) ? body.statut : null
   if (body.nationalite !== undefined) data.nationalite = NATIONALITES.includes(body.nationalite) ? body.nationalite : null
   const o = await prisma.ouvrier.findFirst({ where: { id: ouvrierId, sousTraitantId: id }, select: { id: true } })
-  if (!o) return NextResponse.json({ error: 'Personne introuvable' }, { status: 404 })
+  if (!o) return localizedJson({ error: 'Personne introuvable' }, { status: 404 })
   await prisma.ouvrier.update({ where: { id: o.id }, data: { ...data, updatedAt: new Date() } })
-  return NextResponse.json({ ok: true })
+  return localizedJson({ ok: true })
 }

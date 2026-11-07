@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,15 +9,16 @@ export async function GET(
   _req: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     const { id } = await props.params
     const ouvrier = await prisma.ouvrierInterne.findUnique({ where: { id } })
-    if (!ouvrier) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
-    return NextResponse.json(ouvrier)
+    if (!ouvrier) return localizedJson({ error: 'Introuvable' }, { status: 404 })
+    return localizedJson(ouvrier)
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
@@ -23,9 +26,10 @@ export async function PATCH(
   request: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     const { id } = await props.params
     const body = await request.json()
     const { nom, prenom, poste, email, telephone, actif } = body as {
@@ -47,9 +51,9 @@ export async function PATCH(
         ...(actif !== undefined && { actif: Boolean(actif) }),
       }
     })
-    return NextResponse.json(updated)
+    return localizedJson(updated)
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
@@ -57,13 +61,14 @@ export async function DELETE(
   _req: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     const { id } = await props.params
     await prisma.ouvrierInterne.update({ where: { id }, data: { actif: false } })
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

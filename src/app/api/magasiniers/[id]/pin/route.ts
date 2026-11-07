@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,10 +10,11 @@ export async function GET(
   _req: NextRequest,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await props.params
@@ -23,10 +26,10 @@ export async function GET(
       }
     })
 
-    return NextResponse.json({ hasPin: !!access })
+    return localizedJson({ hasPin: !!access })
   } catch (error) {
     console.error('Erreur GET pin magasinier:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
@@ -34,10 +37,11 @@ export async function PUT(
   request: NextRequest,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id } = await props.params
@@ -46,13 +50,13 @@ export async function PUT(
 
     const codePIN = String(pin || '').replace(/\D/g, '').slice(0, 8)
     if (codePIN.length < 4) {
-      return NextResponse.json({ error: 'PIN doit contenir 4 à 8 chiffres' }, { status: 400 })
+      return localizedJson({ error: 'PIN doit contenir 4 à 8 chiffres' }, { status: 400 })
     }
 
     // Vérifier que le magasinier existe
     const magasinier = await prisma.magasinier.findUnique({ where: { id } })
     if (!magasinier) {
-      return NextResponse.json({ error: 'Magasinier introuvable' }, { status: 404 })
+      return localizedJson({ error: 'Magasinier introuvable' }, { status: 404 })
     }
 
     await prisma.publicAccessPIN.deleteMany({
@@ -73,9 +77,9 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json({ success: true })
+    return localizedJson({ success: true })
   } catch (error) {
     console.error('Erreur PUT pin magasinier:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

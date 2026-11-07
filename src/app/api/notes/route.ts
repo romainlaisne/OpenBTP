@@ -1,6 +1,9 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  return NextResponse.json({ ok: true })
+  await bindRequestLocale()
+  return localizedJson({ ok: true })
 }
  

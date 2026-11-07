@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
@@ -49,13 +51,14 @@ function getMimeType(filename: string): string {
 }
 
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     // Récupérer le chemin du fichier à prévisualiser
     const url = new URL(request.url)
     const filePath = url.searchParams.get('path')
     
     if (!filePath) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chemin du fichier manquant' },
         { status: 400 }
       )
@@ -63,7 +66,7 @@ export async function GET(request: NextRequest) {
     
     const fullPath = validateAndGetFullPath(filePath)
     if (!fullPath) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chemin invalide' },
         { status: 400 }
       )
@@ -71,7 +74,7 @@ export async function GET(request: NextRequest) {
     
     // Vérifier que le fichier existe
     if (!fs.existsSync(fullPath)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Fichier non trouvé' },
         { status: 404 }
       )
@@ -80,7 +83,7 @@ export async function GET(request: NextRequest) {
     // Vérifier que c'est bien un fichier
     const stats = fs.statSync(fullPath)
     if (!stats.isFile()) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'L\'élément n\'est pas un fichier' },
         { status: 400 }
       )
@@ -104,7 +107,7 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error('Erreur lors de la prévisualisation du fichier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la prévisualisation du fichier' },
       { status: 500 }
     )

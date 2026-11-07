@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 export interface DepensesData {
   chantier: {
     id: number
@@ -236,7 +237,7 @@ export function generateDepensesHTML(data: DepensesData): string {
                 <tbody>
                     ${depenses.map(depense => `
                         <tr>
-                            <td style="text-align: center;">${new Date(depense.date).toLocaleDateString('fr-FR')}</td>
+                            <td style="text-align: center;">${new Date(depense.date).toLocaleDateString(intlLocale(getActiveLocale()))}</td>
                             <td>${depense.description || ''}</td>
                             <td style="text-align: center;">${depense.categorie || ''}</td>
                             <td>${depense.fournisseur || ''}</td>
@@ -262,7 +263,7 @@ export function generateDepensesHTML(data: DepensesData): string {
         ` : ''}
         
         <div class="footer">
-            <p>Rapport généré le ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</p>
+            <p>Rapport généré le ${new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString(intlLocale(getActiveLocale()), { hour: '2-digit', minute: '2-digit' })}</p>
             <p>© ${new Date().getFullYear()} - Document généré automatiquement</p>
         </div>
     </div>

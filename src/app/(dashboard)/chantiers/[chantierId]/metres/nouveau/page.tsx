@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import NumericInput from '@/components/ui/NumericInput'
 import { useRouter } from 'next/navigation'
@@ -79,7 +80,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
 
   const addCategorie = () => {
     if (!newCategorieNom.trim()) {
-      toast.error('Veuillez saisir un nom de catégorie')
+      toast.error(tx("Veuillez saisir un nom de catégorie"))
       return
     }
 
@@ -98,7 +99,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
   }
 
   const deleteCategorie = (categorieId: string) => {
-    if (!confirm('Supprimer cette catégorie ?')) return
+    if (!confirm(tx("Supprimer cette catégorie ?"))) return
     setCategories((prev) => prev.filter((cat) => cat.id !== categorieId))
   }
 
@@ -189,7 +190,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
 
   const handleSubmit = async () => {
     if (categories.length === 0) {
-      toast.error('Veuillez ajouter au moins une catégorie')
+      toast.error(tx("Veuillez ajouter au moins une catégorie"))
       return
     }
 
@@ -203,7 +204,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
       // Vérifier que chaque ligne a une description
       for (const ligne of cat.lignes) {
         if (!ligne.description.trim()) {
-          toast.error('Veuillez remplir toutes les descriptions')
+          toast.error(tx("Veuillez remplir toutes les descriptions"))
           return
         }
       }
@@ -241,7 +242,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
         throw new Error(errorData.error || 'Erreur lors de la sauvegarde')
       }
 
-      toast.success('Métré créé avec succès !')
+      toast.success(tx("Métré créé avec succès !"))
       router.push(`/chantiers/${chantierId}/documents`)
     } catch (error) {
       console.error('Erreur:', error)
@@ -282,7 +283,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
                   <UiText>Nouveau métré</UiText>
                 </h1>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Chantier: {chantier?.nomChantier || 'Chargement...'}
+                  <UiText>Chantier: </UiText>{chantier?.nomChantier || 'Chargement...'}
                 </p>
               </div>
             </div>
@@ -324,14 +325,14 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
               >
                 <PlusIcon className="h-5 w-5" />
-                Ajouter une catégorie
-              </button>
+                <UiText>Ajouter une catégorie
+              </UiText></button>
             </div>
 
             {categories.length === 0 ? (
               <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-                Aucune catégorie. Ajoutez-en une pour commencer.
-              </p>
+                <UiText>Aucune catégorie. Ajoutez-en une pour commencer.
+              </UiText></p>
             ) : (
               <div className="space-y-4">
                 {categories.map((categorie) => (
@@ -455,7 +456,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
                                   <td className="py-2 px-3">
                                     <input
                                       type="text"
-                                      placeholder="Description"
+                                      placeholder={tx("Description")}
                                       value={ligne.description}
                                       onChange={(e) =>
                                         updateLigne(categorie.id, ligne.id, {
@@ -500,7 +501,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
                                   <td className="py-2 px-3">
                                     <input
                                       type="text"
-                                      placeholder="Notes"
+                                      placeholder={tx("Notes")}
                                       value={ligne.notes}
                                       onChange={(e) =>
                                         updateLigne(categorie.id, ligne.id, {
@@ -524,8 +525,8 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
                             <tfoot>
                               <tr className="bg-gray-50 dark:bg-gray-700/50 font-semibold">
                                 <td colSpan={4} className="py-2 px-3 text-right text-gray-700 dark:text-gray-300">
-                                  Total catégorie :
-                                </td>
+                                  <UiText>Total catégorie :
+                                </UiText></td>
                                 <td className="py-2 px-3 text-right text-gray-900 dark:text-white">
                                   {calculateTotalCategorie(categorie).toFixed(2)} {categorie.unite}
                                 </td>
@@ -557,7 +558,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
             <textarea
               value={commentaire}
               onChange={(e) => setCommentaire(e.target.value)}
-              placeholder="Notes générales sur le métré..."
+              placeholder={tx("Notes générales sur le métré...")}
               rows={4}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             />
@@ -570,8 +571,8 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Nouvelle catégorie
-            </h3>
+              <UiText>Nouvelle catégorie
+            </UiText></h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -581,15 +582,15 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
                   type="text"
                   value={newCategorieNom}
                   onChange={(e) => setNewCategorieNom(e.target.value)}
-                  placeholder="Ex: Carrelage sol, Plinthes..."
+                  placeholder={tx("Ex: Carrelage sol, Plinthes...")}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   autoFocus
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Unité par défaut
-                </label>
+                  <UiText>Unité par défaut
+                </UiText></label>
                 <select
                   value={newCategorieUnite}
                   onChange={(e) => setNewCategorieUnite(e.target.value)}

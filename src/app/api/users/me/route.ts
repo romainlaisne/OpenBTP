@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,11 +7,12 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/users/me - Récupère les informations de l'utilisateur connecté
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.email) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non authentifié' },
         { status: 401 }
       )
@@ -27,16 +30,16 @@ export async function GET() {
     })
 
     if (!user) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Utilisateur non trouvé' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(user)
+    return localizedJson(user)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Erreur lors de la récupération des informations de l'utilisateur" },
       { status: 500 }
     )
@@ -45,11 +48,12 @@ export async function GET() {
 
 // PUT /api/users/me - Met à jour les informations de l'utilisateur connecté
 export async function PUT(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.email) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non authentifié' },
         { status: 401 }
       )
@@ -60,7 +64,7 @@ export async function PUT(request: Request) {
     })
 
     if (!user) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Utilisateur non trouvé' },
         { status: 404 }
       )
@@ -84,10 +88,10 @@ export async function PUT(request: Request) {
       }
     })
 
-    return NextResponse.json(updatedUser)
+    return localizedJson(updatedUser)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: "Erreur lors de la mise à jour des informations de l'utilisateur" },
       { status: 500 }
     )

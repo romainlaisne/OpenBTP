@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { Fragment, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -171,7 +172,7 @@ export function Navbar() {
                   <div className="relative w-10 h-10 flex-shrink-0 rounded-xl overflow-hidden ring-2 ring-gray-200/50 dark:ring-gray-700/50 group-hover:ring-blue-500/30 transition-all duration-300">
                     <Image
                       src={companyLogo.startsWith('data:') ? companyLogo : companyLogo}
-                      alt="Logo entreprise"
+                      alt={tx("Logo entreprise")}
                       width={40}
                       height={40}
                       className="object-contain"

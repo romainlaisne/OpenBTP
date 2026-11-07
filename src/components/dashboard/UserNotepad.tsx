@@ -1,4 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { PencilIcon, PencilSquareIcon, CheckIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { toast } from 'react-hot-toast'
@@ -55,7 +58,7 @@ export default function UserNotepad({ userId }: { userId: string }) {
             content: data.content || '',
             todos: data.todos || []
           })
-          setLastSaved(data.updatedAt ? new Date(data.updatedAt).toLocaleString('fr-FR') : null)
+          setLastSaved(data.updatedAt ? new Date(data.updatedAt).toLocaleString(intlLocale(getActiveLocale())) : null)
         }
       } catch (error) {
         console.error('Erreur lors du chargement des notes:', error)
@@ -90,15 +93,15 @@ export default function UserNotepad({ userId }: { userId: string }) {
       if (response.ok) {
         await response.json()
         setNotepadData(data)
-        setLastSaved(new Date().toLocaleString('fr-FR'))
-        toast.success('Tableau blanc sauvegardé')
+        setLastSaved(new Date().toLocaleString(intlLocale(getActiveLocale())))
+        toast.success(tx("Tableau blanc sauvegardé"))
         setIsEditing(false)
       } else {
         throw new Error('Erreur lors de la sauvegarde')
       }
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error)
-      toast.error('Erreur lors de la sauvegarde')
+      toast.error(tx("Erreur lors de la sauvegarde"))
     } finally {
       setIsSaving(false)
     }
@@ -266,14 +269,14 @@ export default function UserNotepad({ userId }: { userId: string }) {
                   </button>
                   <button
                     onMouseDown={(e) => { e.preventDefault(); formatText('underline') }}
-                    title="Souligné (Ctrl+U)"
+                    title={tx("Souligné (Ctrl+U)")}
                     className="w-8 h-8 flex items-center justify-center rounded-lg underline text-sm text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-600 hover:shadow transition-all"
                   >
                     U
                   </button>
                   <button
                     onMouseDown={(e) => { e.preventDefault(); formatText('strikeThrough') }}
-                    title="Barré"
+                    title={tx("Barré")}
                     className="w-8 h-8 flex items-center justify-center rounded-lg line-through text-sm text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-600 hover:shadow transition-all"
                   >
                     S
@@ -313,8 +316,8 @@ export default function UserNotepad({ userId }: { userId: string }) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400 font-semibold">Aucune note</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Cliquez sur &quot;Modifier&quot; pour commencer</p>
+                    <p className="text-gray-600 dark:text-gray-400 font-semibold"><UiText>Aucune note</UiText></p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1"><UiText>Cliquez sur &quot;Modifier&quot; pour commencer</UiText></p>
                   </div>
                 )}
               </div>
@@ -330,8 +333,8 @@ export default function UserNotepad({ userId }: { userId: string }) {
                 <CheckIcon className="w-3.5 h-3.5 text-white" />
               </div>
               <h4 className="text-md font-black text-gray-900 dark:text-white">
-                ✓ Tâches
-              </h4>
+                <UiText>✓ Tâches
+              </UiText></h4>
             </div>
             {/* Graphique de progression moderne */}
             {notepadData.todos.length > 0 && (
@@ -360,7 +363,7 @@ export default function UserNotepad({ userId }: { userId: string }) {
               value={newTodoText}
               onChange={(e) => setNewTodoText(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && addTodo()}
-              placeholder="➕ Nouvelle tâche..."
+              placeholder={tx("➕ Nouvelle tâche...")}
               className="flex-1 px-4 py-2.5 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white font-medium shadow-lg transition-all duration-200"
             />
             <button
@@ -378,8 +381,8 @@ export default function UserNotepad({ userId }: { userId: string }) {
                 <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <CheckIcon className="h-10 w-10 text-green-500 dark:text-green-400" />
                 </div>
-                <p className="text-gray-600 dark:text-gray-400 font-semibold">Aucune tâche</p>
-                <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Ajoutez une tâche pour commencer</p>
+                <p className="text-gray-600 dark:text-gray-400 font-semibold"><UiText>Aucune tâche</UiText></p>
+                <p className="text-sm text-gray-500 dark:text-gray-500 mt-1"><UiText>Ajoutez une tâche pour commencer</UiText></p>
               </div>
             ) : (
               notepadData.todos.map((todo) => (
@@ -421,7 +424,7 @@ export default function UserNotepad({ userId }: { userId: string }) {
                         <button
                           onMouseDown={(e) => { e.preventDefault(); saveEditTodo(todo.id) }}
                           className="text-green-600 dark:text-green-400 hover:text-green-700 flex-shrink-0"
-                          title="Confirmer"
+                          title={tx("Confirmer")}
                         >
                           <CheckIcon className="h-4 w-4" />
                         </button>
@@ -456,14 +459,14 @@ export default function UserNotepad({ userId }: { userId: string }) {
                     <button
                       onClick={() => { setEditingTodoId(todo.id); setEditingTodoText(todo.text) }}
                       className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 flex items-center justify-center hover:scale-110 opacity-0 group-hover:opacity-100"
-                      title="Modifier"
+                      title={tx("Modifier")}
                     >
                       <PencilSquareIcon className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => deleteTodo(todo.id)}
                       className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-400 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-all duration-200 flex items-center justify-center hover:scale-110 opacity-0 group-hover:opacity-100"
-                      title="Supprimer"
+                      title={tx("Supprimer")}
                     >
                       <TrashIcon className="h-4 w-4" />
                     </button>

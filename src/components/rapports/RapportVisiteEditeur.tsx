@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 // Formulaire de rapport de visite, pensé d'abord pour le téléphone sur chantier.
 // Partagé par la version bureau (/chantiers/[id]/rapports/nouveau) et la
 // version mobile (/mobile/rapports/nouveau).
@@ -470,8 +472,8 @@ export default function RapportVisiteEditeur({
     toast(
       t => (
         <span className="flex items-center gap-3">
-          Photo retirée
-          <button
+          <UiText>Photo retirée
+          </UiText><button
             type="button"
             className="rounded-lg bg-blue-600 px-3 py-1 text-sm font-semibold text-white"
             onClick={() => {
@@ -484,8 +486,8 @@ export default function RapportVisiteEditeur({
               toast.dismiss(t.id)
             }}
           >
-            Annuler
-          </button>
+            <UiText>Annuler
+          </UiText></button>
         </span>
       ),
       { duration: 5000 }
@@ -650,8 +652,8 @@ export default function RapportVisiteEditeur({
           <p className="font-semibold">Rapport indisponible</p>
           <p className="mt-1">{erreurChargement}</p>
           <Link href={retourHref} className="mt-3 inline-flex items-center gap-2 font-semibold underline">
-            <ArrowLeftIcon className="h-4 w-4" /> Retour
-          </Link>
+            <ArrowLeftIcon className="h-4 w-4" /> <UiText>Retour
+          </UiText></Link>
         </div>
       </div>
     )
@@ -672,7 +674,7 @@ export default function RapportVisiteEditeur({
           <Link
             href={retourHref}
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
-            aria-label="Retour"
+            aria-label={tx("Retour")}
           >
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
@@ -687,13 +689,13 @@ export default function RapportVisiteEditeur({
         {horsLigne && (
           <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-100">
             <WifiIcon className="mt-0.5 h-5 w-5 shrink-0" />
-            Pas de réseau. Continuez : tout est gardé sur ce téléphone et les photos partiront quand la connexion reviendra.
-          </div>
+            <UiText>Pas de réseau. Continuez : tout est gardé sur ce téléphone et les photos partiront quand la connexion reviendra.
+          </UiText></div>
         )}
 
         {brouillonDu && (
           <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-900 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-100">
-            <span>Brouillon du {brouillonDu.toLocaleString('fr-BE', { dateStyle: 'short', timeStyle: 'short' })} repris.</span>
+            <span><UiText>Brouillon du </UiText>{brouillonDu.toLocaleString('fr-BE', { dateStyle: 'short', timeStyle: 'short' })} repris.</span>
             <button type="button" onClick={abandonnerBrouillon} className="font-semibold underline">
               {enEdition ? 'Annuler mes modifications' : 'Repartir de zéro'}
             </button>
@@ -721,7 +723,7 @@ export default function RapportVisiteEditeur({
             required
           />
 
-          <p className="mt-4 text-sm font-medium text-gray-700 dark:text-gray-300">Personnes présentes</p>
+          <p className="mt-4 text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Personnes présentes</UiText></p>
           {personnes.length > 0 && (
             <ul className="mt-2 flex flex-wrap gap-2">
               {personnes.map(p => (
@@ -749,30 +751,30 @@ export default function RapportVisiteEditeur({
               className="mt-2 inline-flex min-h-[40px] items-center gap-2 rounded-xl border border-dashed border-blue-300 px-3 text-sm font-medium text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/30"
             >
               <ArrowPathIcon className="h-4 w-4" />
-              Reprendre les présents de la dernière visite ({precedentsManquants.map(p => p.nom).join(', ')})
+              <UiText>Reprendre les présents de la dernière visite (</UiText>{precedentsManquants.map(p => p.nom).join(', ')})
             </button>
           )}
           <form
             className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto]"
             onSubmit={e => { e.preventDefault(); ajouterPersonne() }}
           >
-            <input className={champ} placeholder="Nom" value={nouveauNom} onChange={e => setNouveauNom(e.target.value)} autoComplete="off" />
+            <input className={champ} placeholder={tx("Nom")} value={nouveauNom} onChange={e => setNouveauNom(e.target.value)} autoComplete="off" />
             <input className={champ} placeholder="Fonction (facultatif)" value={nouvelleFonction} onChange={e => setNouvelleFonction(e.target.value)} autoComplete="off" />
             <button
               type="submit"
               disabled={!nouveauNom.trim()}
               className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 text-base font-semibold text-white disabled:opacity-40 dark:bg-gray-100 dark:text-gray-900"
             >
-              <PlusIcon className="h-5 w-5" /> Ajouter
-            </button>
+              <PlusIcon className="h-5 w-5" /> <UiText>Ajouter
+            </UiText></button>
           </form>
         </Carte>
 
         {/* Tags */}
         <Carte titre="Tags (lots, intervenants)" icone={<TagIcon className="h-5 w-5" />}>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Un PDF par tag est créé en plus du rapport complet, pour l&apos;envoyer à chaque intervenant.
-          </p>
+            <UiText>Un PDF par tag est créé en plus du rapport complet, pour l&apos;envoyer à chaque intervenant.
+          </UiText></p>
           <ul className="mt-3 flex flex-wrap gap-2">
             {tagsDisponibles.map(tag => (
               <li key={tag} className="flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 py-1 pl-3 pr-1 text-sm dark:border-gray-600 dark:bg-gray-700">
@@ -804,7 +806,7 @@ export default function RapportVisiteEditeur({
               type="submit"
               disabled={!nouveauTag.trim()}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gray-900 text-white disabled:opacity-40 dark:bg-gray-100 dark:text-gray-900"
-              aria-label="Ajouter le tag"
+              aria-label={tx("Ajouter le tag")}
             >
               <PlusIcon className="h-5 w-5" />
             </button>
@@ -827,7 +829,7 @@ export default function RapportVisiteEditeur({
           }
         >
           {notes.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400">Aucune note. Utilisez le bouton « Note » en bas de l&apos;écran.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Aucune note. Utilisez le bouton « Note » en bas de l&apos;écran.</UiText></p>
           ) : (
             <ol className="space-y-2">
               {notes.map((n, i) => (
@@ -870,7 +872,7 @@ export default function RapportVisiteEditeur({
           }
         >
           {photos.length === 0 && preparation === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400">Aucune photo. Utilisez « Photo » ou « Galerie » en bas de l&apos;écran.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Aucune photo. Utilisez « Photo » ou « Galerie » en bas de l&apos;écran.</UiText></p>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {photos.map((p, i) => (
@@ -902,10 +904,10 @@ export default function RapportVisiteEditeur({
                         {p.statut === 'erreur' ? (
                           <>
                             <ExclamationTriangleIcon className="h-4 w-4" />
-                            Non envoyée
-                            <button type="button" onClick={() => majPhoto(p.id, { statut: 'attente' })} className="ml-auto underline">
-                              Réessayer
-                            </button>
+                            <UiText>Non envoyée
+                            </UiText><button type="button" onClick={() => majPhoto(p.id, { statut: 'attente' })} className="ml-auto underline">
+                              <UiText>Réessayer
+                            </UiText></button>
                           </>
                         ) : (
                           <>
@@ -940,7 +942,7 @@ export default function RapportVisiteEditeur({
               {preparation > 0 && (
                 <div className="flex aspect-[4/3] items-center justify-center rounded-xl border border-dashed border-gray-300 text-sm text-gray-500 dark:border-gray-600">
                   <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
-                  Préparation de {preparation} photo(s)…
+                  <UiText>Préparation de </UiText>{preparation} photo(s)…
                 </div>
               )}
             </div>
@@ -1073,7 +1075,7 @@ function FenetreNote({ note, tags, nouvelle, onValider, onSupprimer, onFermer }:
       >
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-base font-semibold text-gray-900 dark:text-white">{nouvelle ? 'Nouvelle note' : 'Modifier la note'}</h3>
-          <button type="button" onClick={onFermer} className="flex h-10 w-10 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Fermer">
+          <button type="button" onClick={onFermer} className="flex h-10 w-10 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label={tx("Fermer")}>
             <XMarkIcon className="h-5 w-5" />
           </button>
         </div>
@@ -1082,7 +1084,7 @@ function FenetreNote({ note, tags, nouvelle, onValider, onSupprimer, onFermer }:
           value={contenu}
           onChange={e => setContenu(e.target.value)}
           rows={5}
-          placeholder="Observation, remarque, point à suivre…"
+          placeholder={tx("Observation, remarque, point à suivre…")}
           className={`${champ} resize-y`}
         />
         <div className="mt-3 flex flex-wrap gap-1.5">
@@ -1100,8 +1102,8 @@ function FenetreNote({ note, tags, nouvelle, onValider, onSupprimer, onFermer }:
         <div className="mt-4 flex items-center gap-2">
           {!nouvelle && (
             <button type="button" onClick={onSupprimer} className="inline-flex min-h-[44px] items-center gap-1 rounded-xl px-3 text-base font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30">
-              <TrashIcon className="h-5 w-5" /> Supprimer
-            </button>
+              <TrashIcon className="h-5 w-5" /> <UiText>Supprimer
+            </UiText></button>
           )}
           <button
             type="button"

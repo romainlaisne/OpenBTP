@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui';
 import Image from 'next/image';
@@ -275,7 +277,7 @@ const RemarqueForm: React.FC<RemarqueFormProps> = ({
     <form onSubmit={handleSubmitForm} className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{formTitle}</h2>
-        <Button type="button" variant="outline" onClick={onCancel} aria-label="Fermer" className="p-2">
+        <Button type="button" variant="outline" onClick={onCancel} aria-label={tx("Fermer")} className="p-2">
             <XMarkIcon className="h-5 w-5" />
         </Button>
       </div>
@@ -288,8 +290,8 @@ const RemarqueForm: React.FC<RemarqueFormProps> = ({
       <FormTextarea
         id="description"
         name="description"
-        label="Description de la remarque"
-        placeholder="Décrivez la remarque en détail..."
+        label={tx("Description de la remarque")}
+        placeholder={tx("Décrivez la remarque en détail...")}
         value={formData.description}
         onChange={handleChange}
         rows={5}
@@ -301,15 +303,15 @@ const RemarqueForm: React.FC<RemarqueFormProps> = ({
         name="localisation"
         type="text"
         label="Localisation (optionnel)"
-        placeholder="Ex: Étage 2, Pièce 3, Mur nord"
+        placeholder={tx("Ex: Étage 2, Pièce 3, Mur nord")}
         value={formData.localisation}
         onChange={handleChange}
       />
 
       <div>
         <label htmlFor="plan-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Lier à un plan (optionnel)
-        </label>
+          <UiText>Lier à un plan (optionnel)
+        </UiText></label>
         <select
           id="plan-select"
           name="planId"
@@ -317,7 +319,7 @@ const RemarqueForm: React.FC<RemarqueFormProps> = ({
           onChange={handlePlanSelect}
           className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         >
-          <option value="">Aucun plan sélectionné</option>
+          <option value=""><UiText>Aucun plan sélectionné</UiText></option>
           {availablePlans.map(plan => (
             <option key={plan.id} value={plan.id}>{plan.nom}</option>
           ))}
@@ -351,7 +353,7 @@ const RemarqueForm: React.FC<RemarqueFormProps> = ({
           ) : (
             <p className="p-4 text-center text-gray-600 dark:text-gray-400">
               {selectedPlanForAnnotation.mimeType === 'application/pdf' 
-                ? <a href={selectedPlanForAnnotation.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Ouvrir le PDF</a>
+                ? <a href={selectedPlanForAnnotation.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline"><UiText>Ouvrir le PDF</UiText></a>
                 : "Aperçu du pointage non disponible pour ce type de plan."
               }
             </p>
@@ -371,8 +373,8 @@ const RemarqueForm: React.FC<RemarqueFormProps> = ({
           className="flex items-center"
         >
           <PaperClipIcon className="h-5 w-5 mr-2" />
-          Ajouter des photos
-        </Button>
+          <UiText>Ajouter des photos
+        </UiText></Button>
         <input
           type="file" ref={fileInputRef} multiple accept="image/*" onChange={handleFileChange} className="hidden"
         />
@@ -396,7 +398,7 @@ const RemarqueForm: React.FC<RemarqueFormProps> = ({
                     type="button"
                     onClick={() => removePhoto(index)}
                     className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-75 group-hover:opacity-100 hover:bg-red-700 transition-all"
-                    aria-label="Supprimer la photo"
+                    aria-label={tx("Supprimer la photo")}
                   >
                     <XMarkIcon className="h-4 w-4" />
                   </button>
@@ -409,8 +411,8 @@ const RemarqueForm: React.FC<RemarqueFormProps> = ({
 
       <div className="pt-6 flex justify-end space-x-3">
         <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
-          Annuler
-        </Button>
+          <UiText>Annuler
+        </UiText></Button>
         <Button type="submit" variant="primary" disabled={isSaving} className="flex items-center min-w-[120px] justify-center">
           {isSaving && (
             <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

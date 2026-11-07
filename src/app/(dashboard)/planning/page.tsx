@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -94,7 +95,7 @@ export default function Planning() {
         <div className="flex items-center gap-2">
           <PlayIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">En cours</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>En cours</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{stats.enCours}</div>
           </div>
         </div>
@@ -112,7 +113,7 @@ export default function Planning() {
         <div className="flex items-center gap-2">
           <CheckCircleIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Terminés</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Terminés</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{stats.termines}</div>
           </div>
         </div>
@@ -123,8 +124,8 @@ export default function Planning() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Planning des Chantiers"
-        subtitle="Vue chronologique et suivi de l'avancement de vos projets de construction"
+        title={tx("Planning des Chantiers")}
+        subtitle={tx("Vue chronologique et suivi de l'avancement de vos projets de construction")}
         icon={CalendarIcon}
         badgeColor="from-blue-600 via-indigo-600 to-purple-700"
         gradientColor="from-blue-600/10 via-indigo-600/10 to-purple-700/10"
@@ -156,11 +157,11 @@ export default function Planning() {
               <div className="text-center py-12 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                 <CalendarIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  Aucun chantier à afficher
-                </h3>
+                  <UiText>Aucun chantier à afficher
+                </UiText></h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  Créez votre premier chantier pour voir le planning.
-                </p>
+                  <UiText>Créez votre premier chantier pour voir le planning.
+                </UiText></p>
                 <Link
                   href="/chantiers/nouveau"
                   className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md"

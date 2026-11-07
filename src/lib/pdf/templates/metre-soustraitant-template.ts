@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 export interface CompanySettings {
   name: string
   address: string
@@ -67,7 +68,7 @@ export function generateMetreSoustraitantHTML(
   const total = data.lignes.reduce((sum, ligne) => sum + (ligne.prixUnitaire * ligne.quantite), 0)
 
   // Formater la date
-  const dateFormatee = new Date(data.createdAt).toLocaleDateString('fr-FR', {
+  const dateFormatee = new Date(data.createdAt).toLocaleDateString(intlLocale(getActiveLocale()), {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -104,7 +105,7 @@ export function generateMetreSoustraitantHTML(
         </td>
         <td style="text-align: center;">${ligne.unite}</td>
         <td style="text-align: right; font-weight: 500;">${ligne.prixUnitaire.toFixed(2)} €</td>
-        <td style="text-align: right; font-weight: 500;">${ligne.quantite.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align: right; font-weight: 500;">${ligne.quantite.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         <td style="text-align: right; font-weight: 600; color: ${colors.primaryDark};">
           ${totalLigne.toFixed(2)} €
         </td>
@@ -472,7 +473,7 @@ export function generateMetreSoustraitantHTML(
 
         <!-- Pied de page -->
         <div class="footer">
-            <p>Document généré le ${new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+            <p>Document généré le ${new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
             <p>Métré ID: ${data.id}</p>
         </div>
     </div>

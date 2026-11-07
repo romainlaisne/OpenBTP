@@ -1,5 +1,8 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
 import { useSelectedChantier } from '@/contexts/SelectedChantierContext'
@@ -135,7 +138,7 @@ export default function MobileDashboardPage() {
   }
 
   const formatEuros = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat(intlLocale(getActiveLocale()), {
       style: 'currency',
       currency: 'EUR',
       maximumFractionDigits: 0,
@@ -176,16 +179,16 @@ export default function MobileDashboardPage() {
       if (response.ok) {
         // Mettre à jour l'état local
         setChantierDetails(prev => prev ? { ...prev, latitude, longitude } : null)
-        toast.success('Localisation enregistrée avec succès !')
+        toast.success(tx("Localisation enregistrée avec succès !"))
       } else {
         throw new Error('Erreur lors de l\'enregistrement')
       }
     } catch (error) {
       console.error('Erreur lors de la capture de la localisation:', error)
       if (error && typeof error === 'object' && 'code' in error && error.code === 1) {
-        toast.error('Permission de géolocalisation refusée. Veuillez autoriser l\'accès à votre position.')
+        toast.error(tx("Permission de géolocalisation refusée. Veuillez autoriser l'accès à votre position."))
       } else {
-        toast.error('Erreur lors de la capture de la localisation. Veuillez réessayer.')
+        toast.error(tx("Erreur lors de la capture de la localisation. Veuillez réessayer."))
       }
     } finally {
       setCapturingLocation(false)
@@ -224,10 +227,10 @@ export default function MobileDashboardPage() {
     } else {
       // Fallback : copier dans le presse-papiers
       navigator.clipboard.writeText(shareText).then(() => {
-        toast.success('Lien de localisation copié dans le presse-papiers !')
+        toast.success(tx("Lien de localisation copié dans le presse-papiers !"))
       }).catch(() => {
         // Fallback ultime : afficher les liens
-        toast.error('Impossible de copier le lien. Veuillez réessayer.')
+        toast.error(tx("Impossible de copier le lien. Veuillez réessayer."))
       })
     }
   }
@@ -263,13 +266,13 @@ export default function MobileDashboardPage() {
 
             if (response.ok) {
               setChantierDetails(prev => prev ? { ...prev, latitude: null, longitude: null } : null)
-              toast.success('Localisation supprimée avec succès !')
+              toast.success(tx("Localisation supprimée avec succès !"))
             } else {
               throw new Error('Erreur lors de la suppression')
             }
           } catch (error) {
             console.error('Erreur lors de la suppression de la localisation:', error)
-            toast.error('Erreur lors de la suppression de la localisation.')
+            toast.error(tx("Erreur lors de la suppression de la localisation."))
           }
         }
       })
@@ -291,7 +294,7 @@ export default function MobileDashboardPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
+          <p className="mt-4 text-gray-600"><UiText>Chargement...</UiText></p>
         </div>
       </div>
     )
@@ -332,7 +335,7 @@ export default function MobileDashboardPage() {
             <button
               onClick={handleChangeChantier}
               className="p-2 -mr-2 hover:bg-white/20 rounded-lg transition-colors group flex-shrink-0"
-              title="Changer de chantier"
+              title={tx("Changer de chantier")}
             >
               <ArrowPathIcon className="h-5 w-5 group-hover:animate-spin transition-transform" />
             </button>
@@ -344,7 +347,7 @@ export default function MobileDashboardPage() {
       <div className="max-w-md mx-auto px-4 py-6 space-y-4">
         {/* Informations du chantier */}
         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-          <h3 className="font-semibold text-gray-900 mb-3">Informations du chantier</h3>
+          <h3 className="font-semibold text-gray-900 mb-3"><UiText>Informations du chantier</UiText></h3>
           <div className="space-y-3">
             {chantierDetails.numeroIdentification && (
               <div className="flex items-start gap-3">
@@ -352,7 +355,7 @@ export default function MobileDashboardPage() {
                   <IdentificationIcon className="h-4 w-4 text-indigo-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-500">Numéro d'identification</p>
+                  <p className="text-xs text-gray-500"><UiText>Numéro d'identification</UiText></p>
                   <p className="text-sm font-medium text-gray-900">{chantierDetails.numeroIdentification}</p>
                 </div>
               </div>
@@ -364,7 +367,7 @@ export default function MobileDashboardPage() {
                   <MapPinIcon className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-500">Adresse</p>
+                  <p className="text-xs text-gray-500"><UiText>Adresse</UiText></p>
                   <p className="text-sm font-medium text-gray-900">
                     {chantierDetails.adresseChantier}
                     {chantierDetails.villeChantier && `, ${chantierDetails.villeChantier}`}
@@ -407,7 +410,7 @@ export default function MobileDashboardPage() {
                           ? 'bg-orange-600 scale-110' 
                           : 'bg-green-600 hover:bg-green-700 active:bg-green-800'
                       }`}
-                      title="Partager la localisation (maintenir 2s pour modifier/supprimer)"
+                      title={tx("Partager la localisation (maintenir 2s pour modifier/supprimer)")}
                     >
                       {isLongPressing ? (
                         <div className="flex items-center gap-1">
@@ -447,7 +450,7 @@ export default function MobileDashboardPage() {
                   <UserIcon className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-500">Nom</p>
+                  <p className="text-xs text-gray-500"><UiText>Nom</UiText></p>
                   <p className="text-sm font-medium text-gray-900">
                     {chantierDetails.contact.prenom} {chantierDetails.contact.nom}
                   </p>
@@ -460,7 +463,7 @@ export default function MobileDashboardPage() {
                     <EnvelopeIcon className="h-4 w-4 text-purple-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-500">Email</p>
+                    <p className="text-xs text-gray-500"><UiText>Email</UiText></p>
                     <a href={`mailto:${chantierDetails.contact.email}`} className="text-sm font-medium text-blue-600 hover:underline">
                       {chantierDetails.contact.email}
                     </a>
@@ -474,7 +477,7 @@ export default function MobileDashboardPage() {
                     <PhoneIcon className="h-4 w-4 text-orange-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-500">Téléphone</p>
+                    <p className="text-xs text-gray-500"><UiText>Téléphone</UiText></p>
                     <a href={`tel:${chantierDetails.contact.telephone}`} className="text-sm font-medium text-blue-600 hover:underline">
                       {chantierDetails.contact.telephone}
                     </a>
@@ -493,8 +496,8 @@ export default function MobileDashboardPage() {
                 <CurrencyEuroIcon className="h-5 w-5 text-purple-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Commande client</h3>
-                <p className="text-xs text-gray-500">Accès rapide à la commande</p>
+                <h3 className="font-semibold text-gray-900"><UiText>Commande client</UiText></h3>
+                <p className="text-xs text-gray-500"><UiText>Accès rapide à la commande</UiText></p>
               </div>
             </div>
           </div>
@@ -503,18 +506,18 @@ export default function MobileDashboardPage() {
             <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-3 mb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-gray-600 mb-1">Total commande</p>
+                  <p className="text-xs text-gray-600 mb-1"><UiText>Total commande</UiText></p>
                   <p className="text-lg font-bold text-gray-900">
                     {formatEuros(chantierDetails.commande.total)}
                   </p>
                 </div>
                 <span className="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-semibold">
-                  Validée
-                </span>
+                  <UiText>Validée
+                </UiText></span>
               </div>
             </div>
           ) : (
-            <p className="text-sm text-gray-500 mb-3">Aucune commande validée</p>
+            <p className="text-sm text-gray-500 mb-3"><UiText>Aucune commande validée</UiText></p>
           )}
 
           <button
@@ -522,14 +525,14 @@ export default function MobileDashboardPage() {
             disabled={!chantierDetails.commande}
             className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span>Voir la commande (PDF)</span>
+            <span><UiText>Voir la commande (PDF)</UiText></span>
             <ChevronRightIcon className="h-5 w-5" />
           </button>
         </div>
 
         {/* Accès rapides */}
         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
-          <h3 className="font-semibold text-gray-900 mb-3">Accès rapides</h3>
+          <h3 className="font-semibold text-gray-900 mb-3"><UiText>Accès rapides</UiText></h3>
           <div className="space-y-2">
             <button
               onClick={() => router.push('/mobile/documents')}
@@ -566,7 +569,7 @@ export default function MobileDashboardPage() {
               className="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border-2 border-green-200 hover:border-green-300 transition-colors"
             >
               <DocumentTextIcon className="h-8 w-8 text-green-600 mb-2" />
-              <span className="text-sm font-medium text-gray-900">Créer une note</span>
+              <span className="text-sm font-medium text-gray-900"><UiText>Créer une note</UiText></span>
             </button>
 
             <button
@@ -574,7 +577,7 @@ export default function MobileDashboardPage() {
               className="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border-2 border-orange-200 hover:border-orange-300 transition-colors"
             >
               <DocumentDuplicateIcon className="h-8 w-8 text-orange-600 mb-2" />
-              <span className="text-sm font-medium text-gray-900">Créer un rapport</span>
+              <span className="text-sm font-medium text-gray-900"><UiText>Créer un rapport</UiText></span>
             </button>
 
             <button
@@ -582,7 +585,7 @@ export default function MobileDashboardPage() {
               className="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border-2 border-indigo-200 hover:border-indigo-300 transition-colors"
             >
               <ClipboardDocumentListIcon className="h-8 w-8 text-indigo-600 mb-2" />
-              <span className="text-sm font-medium text-gray-900">Nouveau métré</span>
+              <span className="text-sm font-medium text-gray-900"><UiText>Nouveau métré</UiText></span>
             </button>
           </div>
         </div>

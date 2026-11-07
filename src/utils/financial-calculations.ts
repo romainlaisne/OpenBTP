@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { Depense } from '@/types/depense'
 
 /**
@@ -122,7 +123,7 @@ export function prepareLineChartData(
   
   // Créer les labels (dates)
   const labels = sortedEtats.map(etat => 
-    new Date(etat.date).toLocaleDateString('fr-FR')
+    new Date(etat.date).toLocaleDateString(intlLocale(getActiveLocale()))
   )
   
   // Calculer les revenus cumulés

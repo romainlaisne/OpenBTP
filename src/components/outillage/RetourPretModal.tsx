@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -41,10 +43,10 @@ export default function RetourPretModal({ pretId, onClose, onSuccess }: RetourPr
       }
 
       onSuccess()
-      toast.success('Prêt retourné avec succès')
+      toast.success(tx("Prêt retourné avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error("Une erreur s'est produite lors du retour du prêt")
+      toast.error(tx("Une erreur s'est produite lors du retour du prêt"))
     } finally {
       setSaving(false)
     }
@@ -83,12 +85,12 @@ export default function RetourPretModal({ pretId, onClose, onSuccess }: RetourPr
             as="h3"
             className="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4"
           >
-            Retour de prêt
-          </Dialog.Title>
+            <UiText>Retour de prêt
+          </UiText></Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <SelectField
-              label="État de la machine"
+              label={tx("État de la machine")}
               name="nouveauStatut"
               id="nouveauStatut"
               required
@@ -103,8 +105,8 @@ export default function RetourPretModal({ pretId, onClose, onSuccess }: RetourPr
 
             <div>
               <label htmlFor="commentaire" className="block text-sm font-medium text-gray-700">
-                Commentaire
-              </label>
+                <UiText>Commentaire
+              </UiText></label>
               <textarea
                 name="commentaire"
                 id="commentaire"
@@ -112,7 +114,7 @@ export default function RetourPretModal({ pretId, onClose, onSuccess }: RetourPr
                 value={formData.commentaire}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                placeholder="État de la machine, problèmes rencontrés..."
+                placeholder={tx("État de la machine, problèmes rencontrés...")}
               />
             </div>
 
@@ -122,8 +124,8 @@ export default function RetourPretModal({ pretId, onClose, onSuccess }: RetourPr
                 onClick={onClose}
                 className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 type="submit"
                 disabled={saving}

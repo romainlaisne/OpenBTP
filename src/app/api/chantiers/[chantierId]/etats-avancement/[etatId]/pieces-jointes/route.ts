@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,25 +9,27 @@ type Params = { params: Promise<{ chantierId: string; etatId: string }> }
 
 // GET : photos et fichiers joints à l'état (etatId = numéro de l'état)
 export async function GET(_request: Request, props: Params) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   const { chantierId, etatId } = await props.params
   const etat = await trouverEtat(chantierId, etatId)
-  if (!etat) return NextResponse.json({ error: 'État introuvable' }, { status: 404 })
-  return NextResponse.json({ pieces: await listerPieces(etat.id), estFinalise: etat.estFinalise })
+  if (!etat) return localizedJson({ error: 'État introuvable' }, { status: 404 })
+  return localizedJson({ pieces: await listerPieces(etat.id), estFinalise: etat.estFinalise })
 }
 
 // POST (multipart, champ « fichiers », plusieurs possibles)
 export async function POST(request: Request, props: Params) {
+  await bindRequestLocale()
   const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  if (!session) return localizedJson({ error: 'Non autorisé' }, { status: 401 })
   const { chantierId, etatId } = await props.params
   const etat = await trouverEtat(chantierId, etatId)
-  if (!etat) return NextResponse.json({ error: 'État introuvable' }, { status: 404 })
+  if (!etat) return localizedJson({ error: 'État introuvable' }, { status: 404 })
 
   const form = await request.formData()
   const fichiers = form.getAll('fichiers').filter((f): f is File => typeof f === 'object' && f !== null && 'arrayBuffer' in f && (f as File).size > 0)
-  if (!fichiers.length) return NextResponse.json({ error: 'Aucun fichier reçu' }, { status: 400 })
+  if (!fichiers.length) return localizedJson({ error: 'Aucun fichier reçu' }, { status: 400 })
 
   const ajoutees = []
   const erreurs: string[] = []
@@ -37,5 +41,5 @@ export async function POST(request: Request, props: Params) {
       if (!(e instanceof ErreurPiece)) console.error('[ETAT] Pièce jointe non enregistrée :', e)
     }
   }
-  return NextResponse.json({ pieces: ajoutees, erreurs }, { status: ajoutees.length ? 201 : 400 })
+  return localizedJson({ pieces: ajoutees, erreurs }, { status: ajoutees.length ? 201 : 400 })
 }

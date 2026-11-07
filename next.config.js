@@ -39,6 +39,12 @@ const nextConfig = {
 
     // Support canvas pour Konva (SSR)
     config.resolve.alias.canvas = false;
+    if (!isServer) {
+      const path = require('path');
+      const clientAls = path.resolve(__dirname, 'src/lib/i18n/locale-als.client.ts');
+      config.resolve.alias[path.resolve(__dirname, 'src/lib/i18n/locale-als.ts')] = clientAls;
+      config.resolve.alias[path.resolve(__dirname, 'src/lib/i18n/locale-als')] = clientAls;
+    }
 
     // PDF.js : éviter les erreurs de worker côté serveur
     if (!isServer) {

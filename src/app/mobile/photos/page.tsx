@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
 import { useSelectedChantier } from '@/contexts/SelectedChantierContext'
@@ -279,7 +280,7 @@ export default function MobilePhotosPage() {
                 ) : (
                   <>
                     <CameraIcon className="h-5 w-5" />
-                    <span className="text-sm">Photo / vidéo</span>
+                    <span className="text-sm"><UiText>Photo / vidéo</UiText></span>
                   </>
                 )}
               </button>
@@ -296,7 +297,7 @@ export default function MobilePhotosPage() {
                 ) : (
                   <>
                     <PhotoIcon className="h-5 w-5" />
-                    <span className="text-sm">Photothèque</span>
+                    <span className="text-sm"><UiText>Photothèque</UiText></span>
                   </>
                 )}
               </button>
@@ -341,7 +342,7 @@ export default function MobilePhotosPage() {
                   ) : (
                     <>
                       <CameraIcon className="h-5 w-5" />
-                      <span className="text-sm">Photo / vidéo</span>
+                      <span className="text-sm"><UiText>Photo / vidéo</UiText></span>
                     </>
                   )}
                 </button>
@@ -358,7 +359,7 @@ export default function MobilePhotosPage() {
                   ) : (
                     <>
                       <PhotoIcon className="h-5 w-5" />
-                      <span className="text-sm">Photothèque</span>
+                      <span className="text-sm"><UiText>Photothèque</UiText></span>
                     </>
                   )}
                 </button>
@@ -370,8 +371,8 @@ export default function MobilePhotosPage() {
                   onClick={handleCancelPreview}
                   className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-colors"
                 >
-                  Annuler
-                </button>
+                  <UiText>Annuler
+                </UiText></button>
                 <button
                   onClick={handleUpload}
                   disabled={uploading}
@@ -388,13 +389,13 @@ export default function MobilePhotosPage() {
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Chargement des photos...</p>
+            <p className="mt-4 text-gray-600"><UiText>Chargement des photos...</UiText></p>
           </div>
         ) : photos.length === 0 ? (
           <div className="text-center py-12">
             <PhotoIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 font-medium">Aucune photo</p>
-            <p className="text-sm text-gray-500 mt-1">Prenez votre première photo</p>
+            <p className="text-gray-600 font-medium"><UiText>Aucune photo</UiText></p>
+            <p className="text-sm text-gray-500 mt-1"><UiText>Prenez votre première photo</UiText></p>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3">

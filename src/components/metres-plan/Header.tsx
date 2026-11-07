@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React from 'react'
 import {
   FolderOpenIcon,
@@ -83,10 +85,10 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
       <Link
         href="/metres-plan"
         className="inline-flex items-center gap-1.5 px-2 py-1.5 rounded-md text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shrink-0"
-        title="Retour à la liste des métrés"
+        title={tx("Retour à la liste des métrés")}
       >
         <ArrowLeftIcon className="w-4 h-4" />
-        <span className="hidden sm:inline">Retour</span>
+        <span className="hidden sm:inline"><UiText>Retour</UiText></span>
       </Link>
 
       <Divider />
@@ -95,8 +97,8 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
       <div className="flex items-center gap-2 mr-1">
         <RulerIcon size={18} className="text-indigo-600 dark:text-indigo-400" />
         <span className="font-semibold text-gray-800 dark:text-gray-100 text-sm whitespace-nowrap">
-          Métré sur plan
-        </span>
+          <UiText>Métré sur plan
+        </UiText></span>
         {chantierNom && (
           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 ml-1 max-w-36 truncate" title={chantierNom}>
             {chantierNom}
@@ -119,9 +121,9 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
 
       {/* Actions fichier */}
       <div className="flex items-center gap-1">
-        <HeaderBtn onClick={onLoadFromFile} title="Ouvrir un fichier PDF ou .mplan (Ctrl+O)">
+        <HeaderBtn onClick={onLoadFromFile} title={tx("Ouvrir un fichier PDF ou .mplan (Ctrl+O)")}>
           <FolderOpenIcon className="w-4 h-4" />
-          <span>Ouvrir</span>
+          <span><UiText>Ouvrir</UiText></span>
         </HeaderBtn>
 
         <HeaderBtn
@@ -130,7 +132,7 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
           title={chantierId ? 'Charger depuis le chantier' : 'Aucun chantier sélectionné'}
         >
           <CloudArrowDownIcon className="w-4 h-4" />
-          <span>Chantier</span>
+          <span><UiText>Chantier</UiText></span>
         </HeaderBtn>
       </div>
 
@@ -138,7 +140,7 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
 
       {/* Undo / Redo */}
       <div className="flex items-center gap-1">
-        <HeaderBtn onClick={undo} disabled={!canUndo()} title="Annuler (Ctrl+Z)">
+        <HeaderBtn onClick={undo} disabled={!canUndo()} title={tx("Annuler (Ctrl+Z)")}>
           {/* rotate CCW */}
           <ArrowPathIcon className="w-4 h-4 scale-x-[-1]" />
         </HeaderBtn>
@@ -155,7 +157,7 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
             <HeaderBtn
               onClick={() => setCurrentPage(currentPage - 1)}
               disabled={currentPage <= 1}
-              title="Page précédente"
+              title={tx("Page précédente")}
             >
               <ChevronLeftIcon className="w-4 h-4" />
             </HeaderBtn>
@@ -178,16 +180,16 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
         <>
           <Divider />
           <div className="flex items-center gap-1">
-            <HeaderBtn onClick={zoomOut} title="Zoom arrière">
+            <HeaderBtn onClick={zoomOut} title={tx("Zoom arrière")}>
               <MagnifyingGlassMinusIcon className="w-4 h-4" />
             </HeaderBtn>
             <span className="text-xs text-gray-500 dark:text-gray-400 w-12 text-center">
               {zoom === -1 ? 'Ajusté' : `${Math.round(zoom * 100)}%`}
             </span>
-            <HeaderBtn onClick={zoomIn} title="Zoom avant">
+            <HeaderBtn onClick={zoomIn} title={tx("Zoom avant")}>
               <MagnifyingGlassPlusIcon className="w-4 h-4" />
             </HeaderBtn>
-            <HeaderBtn onClick={zoomFit} title="Ajuster à la fenêtre">
+            <HeaderBtn onClick={zoomFit} title={tx("Ajuster à la fenêtre")}>
               <ArrowsPointingOutIcon className="w-4 h-4" />
             </HeaderBtn>
           </div>
@@ -236,7 +238,7 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
           <span>Sauvegarder</span>
         </HeaderBtn>
 
-        <HeaderBtn onClick={onDownloadLocal} title="Télécharger en local (.mplan)">
+        <HeaderBtn onClick={onDownloadLocal} title={tx("Télécharger en local (.mplan)")}>
           <ArrowDownTrayIcon className="w-4 h-4" />
           <span>.mplan</span>
         </HeaderBtn>
@@ -245,7 +247,7 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
 
         <HeaderBtn
           onClick={onExportAnnotatedToChantier}
-          title="Exporter le plan annoté vers le chantier"
+          title={tx("Exporter le plan annoté vers le chantier")}
           disabled={!pdfDocument || !metrePlanId}
         >
           <DocumentArrowUpIcon className="w-4 h-4" />
@@ -254,7 +256,7 @@ const MetrePlanHeader: React.FC<MetrePlanHeaderProps> = ({
 
         <HeaderBtn
           onClick={onGenerateShareLink}
-          title="Générer un lien de partage"
+          title={tx("Générer un lien de partage")}
           disabled={!metrePlanId}
         >
           <ShareIcon className="w-4 h-4" />

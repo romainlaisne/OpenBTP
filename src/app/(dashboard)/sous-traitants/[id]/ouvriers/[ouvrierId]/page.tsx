@@ -9,7 +9,7 @@ import {
   DocumentIcon
 } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { Breadcrumb } from '@/components/Breadcrumb'
 
 interface Ouvrier {
@@ -95,8 +95,8 @@ export default function OuvrierPage(
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Informations de l'ouvrier
-          </h3>
+            <UiText>Informations de l'ouvrier
+          </UiText></h3>
         </div>
         <div className="border-t border-gray-200">
           <dl>
@@ -119,15 +119,15 @@ export default function OuvrierPage(
               </dd>
             </div>
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Poste</dt>
+              <dt className="text-sm font-medium text-gray-500"><UiText>Poste</UiText></dt>
               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                 {ouvrier.poste}
               </dd>
             </div>
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Date d'entrée</dt>
+              <dt className="text-sm font-medium text-gray-500"><UiText>Date d'entrée</UiText></dt>
               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                {format(new Date(ouvrier.dateEntree), 'dd MMMM yyyy', { locale: fr })}
+                {format(new Date(ouvrier.dateEntree), 'dd MMMM yyyy', { locale: dateFnsLocale() })}
               </dd>
             </div>
           </dl>

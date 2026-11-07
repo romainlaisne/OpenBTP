@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useSelectedChantier } from '@/contexts/SelectedChantierContext'
@@ -63,7 +65,7 @@ export default function MobileNouveauMetrePage() {
 
   const addCategorie = () => {
     if (!newCategorieNom.trim()) {
-      toast.error('Veuillez saisir un nom de catégorie')
+      toast.error(tx("Veuillez saisir un nom de catégorie"))
       return
     }
 
@@ -82,7 +84,7 @@ export default function MobileNouveauMetrePage() {
   }
 
   const deleteCategorie = (categorieId: string) => {
-    if (!confirm('Supprimer cette catégorie ?')) return
+    if (!confirm(tx("Supprimer cette catégorie ?"))) return
     setCategories((prev) => prev.filter((cat) => cat.id !== categorieId))
   }
 
@@ -182,7 +184,7 @@ export default function MobileNouveauMetrePage() {
     if (!selectedChantier) return
 
     if (categories.length === 0) {
-      toast.error('Veuillez ajouter au moins une catégorie')
+      toast.error(tx("Veuillez ajouter au moins une catégorie"))
       return
     }
 
@@ -196,7 +198,7 @@ export default function MobileNouveauMetrePage() {
       // Vérifier que chaque ligne a une description
       for (const ligne of cat.lignes) {
         if (!ligne.description.trim()) {
-          toast.error('Veuillez remplir toutes les descriptions')
+          toast.error(tx("Veuillez remplir toutes les descriptions"))
           return
         }
       }
@@ -237,7 +239,7 @@ export default function MobileNouveauMetrePage() {
         throw new Error(errorData.error || 'Erreur lors de la sauvegarde')
       }
 
-      toast.success('Métré créé avec succès !')
+      toast.success(tx("Métré créé avec succès !"))
       router.push('/mobile/dashboard')
     } catch (error) {
       console.error('Erreur:', error)
@@ -266,8 +268,8 @@ export default function MobileNouveauMetrePage() {
               <ArrowLeftIcon className="h-6 w-6" />
             </button>
             <h1 className="text-2xl font-black truncate flex-1 text-center -ml-6">
-              Nouveau métré
-            </h1>
+              <UiText>Nouveau métré
+            </UiText></h1>
           </div>
           <p className="text-sm text-blue-100 mt-1 text-center">
             {selectedChantier.nomChantier}
@@ -280,8 +282,8 @@ export default function MobileNouveauMetrePage() {
         {/* Date */}
         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Date
-          </label>
+            <UiText>Date
+          </UiText></label>
           <input
             type="date"
             value={date}
@@ -293,20 +295,20 @@ export default function MobileNouveauMetrePage() {
         {/* Catégories */}
         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Catégories</h3>
+            <h3 className="text-lg font-semibold text-gray-900"><UiText>Catégories</UiText></h3>
             <button
               onClick={() => setShowAddCategorieModal(true)}
               className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
             >
               <PlusIcon className="h-4 w-4" />
-              Ajouter
-            </button>
+              <UiText>Ajouter
+            </UiText></button>
           </div>
 
           {categories.length === 0 ? (
             <p className="text-gray-500 text-sm text-center py-4">
-              Aucune catégorie. Ajoutez-en une pour commencer.
-            </p>
+              <UiText>Aucune catégorie. Ajoutez-en une pour commencer.
+            </UiText></p>
           ) : (
             <div className="space-y-3">
               {categories.map((categorie) => (
@@ -492,7 +494,7 @@ export default function MobileNouveauMetrePage() {
                           </div>
 
                           <div className="mb-2">
-                            <label className="text-xs text-gray-500">Quantité</label>
+                            <label className="text-xs text-gray-500"><UiText>Quantité</UiText></label>
                             <input
                               type="number"
                               step="0.01"
@@ -525,14 +527,14 @@ export default function MobileNouveauMetrePage() {
                         className="w-full flex items-center justify-center gap-2 px-3 py-2 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-600 hover:border-blue-500 hover:text-blue-600"
                       >
                         <PlusIcon className="h-4 w-4" />
-                        Ajouter une ligne
-                      </button>
+                        <UiText>Ajouter une ligne
+                      </UiText></button>
 
                       <div className="pt-2 border-t border-gray-200">
                         <div className="flex justify-between items-center">
                           <span className="text-sm font-medium text-gray-700">
-                            Total catégorie
-                          </span>
+                            <UiText>Total catégorie
+                          </UiText></span>
                           <span className="text-lg font-bold text-gray-900">
                             {calculateTotalCategorie(categorie).toFixed(2)}{' '}
                             {categorie.unite}
@@ -555,7 +557,7 @@ export default function MobileNouveauMetrePage() {
           <textarea
             value={commentaire}
             onChange={(e) => setCommentaire(e.target.value)}
-            placeholder="Notes générales sur le métré..."
+            placeholder={tx("Notes générales sur le métré...")}
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -565,8 +567,8 @@ export default function MobileNouveauMetrePage() {
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border-2 border-blue-200">
           <div className="flex justify-between items-center">
             <span className="text-lg font-semibold text-gray-900">
-              Total général
-            </span>
+              <UiText>Total général
+            </UiText></span>
             <span className="text-2xl font-bold text-blue-600">
               {calculateTotalGeneral().toFixed(2)}
             </span>
@@ -601,8 +603,8 @@ export default function MobileNouveauMetrePage() {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Enregistrement...
-            </>
+              <UiText>Enregistrement...
+            </UiText></>
           ) : (
             '💾 Enregistrer le métré'
           )}
@@ -614,26 +616,26 @@ export default function MobileNouveauMetrePage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-6 max-w-sm w-full">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Nouvelle catégorie
-            </h3>
+              <UiText>Nouvelle catégorie
+            </UiText></h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nom de la catégorie
-                </label>
+                  <UiText>Nom de la catégorie
+                </UiText></label>
                 <input
                   type="text"
                   value={newCategorieNom}
                   onChange={(e) => setNewCategorieNom(e.target.value)}
-                  placeholder="Ex: Carrelage sol, Plinthes..."
+                  placeholder={tx("Ex: Carrelage sol, Plinthes...")}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   autoFocus
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Unité par défaut
-                </label>
+                  <UiText>Unité par défaut
+                </UiText></label>
                 <select
                   value={newCategorieUnite}
                   onChange={(e) => setNewCategorieUnite(e.target.value)}
@@ -656,14 +658,14 @@ export default function MobileNouveauMetrePage() {
                 }}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
               >
-                Annuler
-              </button>
+                <UiText>Annuler
+              </UiText></button>
               <button
                 onClick={addCategorie}
                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                Créer
-              </button>
+                <UiText>Créer
+              </UiText></button>
             </div>
           </div>
         </div>

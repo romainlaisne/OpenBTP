@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect } from 'react'
 import { XMarkIcon, ArrowDownTrayIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 
@@ -48,7 +50,7 @@ export default function ApercuDocument({
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-              title="Ouvrir dans un nouvel onglet"
+              title={tx("Ouvrir dans un nouvel onglet")}
             >
               <ArrowTopRightOnSquareIcon className="h-5 w-5" />
             </a>
@@ -56,14 +58,14 @@ export default function ApercuDocument({
               href={document.url}
               download={document.nom}
               className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-              title="Télécharger"
+              title={tx("Télécharger")}
             >
               <ArrowDownTrayIcon className="h-5 w-5" />
             </a>
             <button
               onClick={onClose}
               className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-              title="Fermer (Échap)"
+              title={tx("Fermer (Échap)")}
             >
               <XMarkIcon className="h-5 w-5" />
             </button>
@@ -76,15 +78,15 @@ export default function ApercuDocument({
             <iframe src={urlAffichage} title={document.nom} className="h-full w-full border-0" />
           ) : (
             <div className="p-8 text-center text-sm text-gray-600 dark:text-gray-300">
-              <p className="mb-4">Ce format (.{extension}) ne peut pas être affiché dans le navigateur.</p>
+              <p className="mb-4">Ce format (.{extension}<UiText>) ne peut pas être affiché dans le navigateur.</UiText></p>
               <a
                 href={document.url}
                 download={document.nom}
                 className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
               >
                 <ArrowDownTrayIcon className="h-4 w-4" />
-                Télécharger
-              </a>
+                <UiText>Télécharger
+              </UiText></a>
             </div>
           )}
         </div>

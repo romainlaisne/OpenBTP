@@ -1,4 +1,6 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import {
   XMarkIcon,
@@ -298,7 +300,7 @@ export default function SelectFicheModal({
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              placeholder="Rechercher une fiche technique..."
+              placeholder={tx("Rechercher une fiche technique...")}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
             {searchFilter && (
@@ -318,8 +320,8 @@ export default function SelectFicheModal({
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
               <p className="text-gray-500 dark:text-gray-400">
-                Chargement de la structure complète...
-              </p>
+                <UiText>Chargement de la structure complète...
+              </UiText></p>
             </div>
           ) : filteredStructure.length === 0 ? (
             <div className="text-center py-12">
@@ -341,11 +343,11 @@ export default function SelectFicheModal({
         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <div className="text-sm text-gray-600 dark:text-gray-400">
             {selectedFicheId ? (
-              <span>Fiche sélectionnée : <span className="font-medium text-gray-900 dark:text-white">{selectedFicheId.split('/').pop()}</span></span>
+              <span><UiText>Fiche sélectionnée : </UiText><span className="font-medium text-gray-900 dark:text-white">{selectedFicheId.split('/').pop()}</span></span>
             ) : (
               <span>
-                Sélectionnez une fiche technique
-                <span className="ml-2 text-xs text-gray-500">
+                <UiText>Sélectionnez une fiche technique
+                </UiText><span className="ml-2 text-xs text-gray-500">
                   ({totalFiches} fiches disponibles{excludeFicheId ? `, 1 exclue` : ''})
                 </span>
               </span>
@@ -356,8 +358,8 @@ export default function SelectFicheModal({
               onClick={onClose}
               className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              Annuler
-            </button>
+              <UiText>Annuler
+            </UiText></button>
             <button
               onClick={() => {
                 if (selectedFicheId) {
@@ -368,8 +370,8 @@ export default function SelectFicheModal({
               disabled={!selectedFicheId}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Valider
-            </button>
+              <UiText>Valider
+            </UiText></button>
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { prisma } from '@/lib/prisma/client'
 import { PDFGenerator } from '@/lib/pdf/pdf-generator'
 
@@ -20,7 +21,7 @@ export async function generateBonPreparationPDF(bonId: string): Promise<Buffer |
   const company = await PDFGenerator.getCompanySettings()
 
   const dateStr = bon.createdAt
-    ? bon.createdAt.toLocaleString('fr-FR', {
+    ? bon.createdAt.toLocaleString(intlLocale(getActiveLocale()), {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -190,7 +191,7 @@ export async function generateBonPreparationPDF(bonId: string): Promise<Buffer |
     </table>
 
     <div class="footer">
-      Généré le ${new Date().toLocaleString('fr-FR')}
+      Généré le ${new Date().toLocaleString(intlLocale(getActiveLocale()))}
     </div>
   </body>
   </html>`

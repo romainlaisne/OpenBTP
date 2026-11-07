@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 // Données et graphique des états d'avancement, utilisés par le rapport
 // d'activité hebdomadaire (src/lib/rapports/rapport-hebdo.ts).
 
@@ -163,7 +164,7 @@ export async function generateBarChart(monthlyData: MonthData[], titre = 'Évolu
           beginAtZero: true,
           ticks: {
             callback: (value: string | number) =>
-              new Intl.NumberFormat('fr-FR', { notation: 'compact', compactDisplay: 'short' }).format(Number(value)) + ' €'
+              new Intl.NumberFormat(intlLocale(getActiveLocale()), { notation: 'compact', compactDisplay: 'short' }).format(Number(value)) + ' €'
           }
         }
       }

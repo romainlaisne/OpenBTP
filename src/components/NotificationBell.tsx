@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { Fragment, useEffect, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { BellIcon, CheckIcon } from '@heroicons/react/24/outline'
@@ -140,7 +142,7 @@ export function NotificationBell() {
     if (diffInHours < 24) return `Il y a ${diffInHours}h`
     if (diffInDays < 7) return `Il y a ${diffInDays}j`
     
-    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+    return date.toLocaleDateString(intlLocale(getActiveLocale()), { day: 'numeric', month: 'short' })
   }
 
   return (
@@ -205,14 +207,14 @@ export function NotificationBell() {
                   {loading ? (
                     <div className="p-8 text-center">
                       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Chargement...</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2"><UiText>Chargement...</UiText></p>
                     </div>
                   ) : notifications.length === 0 ? (
                     <div className="p-8 text-center">
                       <BellIcon className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Aucune notification
-                      </p>
+                        <UiText>Aucune notification
+                      </UiText></p>
                     </div>
                   ) : (
                     <div className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -284,8 +286,8 @@ export function NotificationBell() {
                       href="/configuration/notifications"
                       className="block text-center text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium"
                     >
-                      Gérer les notifications →
-                    </Link>
+                      <UiText>Gérer les notifications →
+                    </UiText></Link>
                   </div>
                 )}
               </Menu.Items>

@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import * as React from 'react'
 import { useRef, useEffect, useState } from 'react'
 import { 
@@ -159,13 +160,13 @@ export default function RichTextEditor({
           <ToolbarButton
             onClick={undo}
             icon={ArrowUturnLeftIcon}
-            title="Annuler"
+            title={tx("Annuler")}
             disabled={!canUndo}
           />
           <ToolbarButton
             onClick={redo}
             icon={ArrowUturnRightIcon}
-            title="Rétablir"
+            title={tx("Rétablir")}
             disabled={!canRedo}
           />
         </div>
@@ -186,7 +187,7 @@ export default function RichTextEditor({
           <ToolbarButton
             onClick={() => toggleFormat('underline')}
             icon={UnderlineIcon}
-            title="Souligné"
+            title={tx("Souligné")}
           />
         </div>
         
@@ -196,12 +197,12 @@ export default function RichTextEditor({
           <ToolbarButton
             onClick={() => insertList('insertUnorderedList')}
             icon={ListBulletIcon}
-            title="Liste à puces"
+            title={tx("Liste à puces")}
           />
           <ToolbarButton
             onClick={() => insertList('insertOrderedList')}
             icon={Bars3Icon}
-            title="Liste numérotée"
+            title={tx("Liste numérotée")}
           />
           <ToolbarButton
             onClick={insertQuote}

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -7,11 +9,12 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -19,7 +22,7 @@ export async function GET(
 
     const bonRegieId = parseInt(id)
     if (isNaN(bonRegieId)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID invalide' },
         { status: 400 }
       )
@@ -32,16 +35,16 @@ export async function GET(
 
     // Vérifier si le bon de régie existe
     if (!bonRegie) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Bon de régie non trouvé' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(bonRegie)
+    return localizedJson(bonRegie)
   } catch (error) {
     console.error('Erreur lors de la récupération du bon de régie:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du bon de régie' },
       { status: 500 }
     )
@@ -53,6 +56,7 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const { id } = await params
     console.log(`🗑️ Tentative de suppression du bon de régie ${id}`)
@@ -60,7 +64,7 @@ export async function DELETE(
     const session = await getServerSession(authOptions)
     if (!session) {
       console.log('❌ Session non trouvée')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -71,7 +75,7 @@ export async function DELETE(
     // Vérifier que l'utilisateur est un administrateur
     if (session.user.role !== 'ADMIN') {
       console.log(`❌ Tentative de suppression par un utilisateur non-admin: ${session.user.email}`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Seuls les administrateurs peuvent supprimer des bons de régie' },
         { status: 403 }
       )
@@ -79,7 +83,7 @@ export async function DELETE(
 
     const bonRegieId = parseInt(id)
     if (isNaN(bonRegieId)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'ID invalide' },
         { status: 400 }
       )
@@ -92,7 +96,7 @@ export async function DELETE(
 
     if (!bonRegie) {
       console.log(`❌ Bon de régie ${bonRegieId} non trouvé`)
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Bon de régie non trouvé' },
         { status: 404 }
       )
@@ -109,7 +113,7 @@ export async function DELETE(
     return new NextResponse(null, { status: 204 })
   } catch (error) {
     console.error('❌ Erreur lors de la suppression du bon de régie:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du bon de régie' },
       { status: 500 }
     )

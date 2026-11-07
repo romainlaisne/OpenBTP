@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { TYPES_DOCUMENT_OUVRIER, libelleType } from '@/lib/documents/types'
 import { useState, useEffect, useRef, use } from 'react';
@@ -16,7 +17,7 @@ import {
 } from '@heroicons/react/24/outline'
 import ApercuDocument from '@/components/documents/ApercuDocument'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import PageHeader from '@/components/PageHeader'
 import SelectField from '@/components/ui/SelectField'
 
@@ -58,9 +59,9 @@ function DeleteModal({ isOpen, document, onClose, onConfirm, isDeleting }: Delet
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full border border-gray-200 dark:border-gray-700">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white">Retirer ce document ?</h3>
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          Le document &quot;{document?.nom}&quot; ne sera plus en vigueur. Il est archivé (conservé comme
+          Le document &quot;{document?.nom}<UiText>&quot; ne sera plus en vigueur. Il est archivé (conservé comme
           preuve, et dans _Archives sur le NAS), pas supprimé.
-        </p>
+        </UiText></p>
         <div className="mt-4 flex justify-end space-x-3">
           <button
             type="button"
@@ -111,7 +112,7 @@ function EditModal({ document, onClose, onSave, isSaving }: EditModalProps) {
   return (
     <div className="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 flex items-center justify-center p-4 z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full border border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Modifier le document</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white"><UiText>Modifier le document</UiText></h3>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 truncate" title={document.nom}>{document.nom}</p>
         <form
           onSubmit={async (e) => {
@@ -121,7 +122,7 @@ function EditModal({ document, onClose, onSave, isSaving }: EditModalProps) {
           className="mt-4 space-y-4"
         >
           <SelectField
-            label="Type de document"
+            label={tx("Type de document")}
             id="edit-type"
             name="type"
             required
@@ -142,7 +143,7 @@ function EditModal({ document, onClose, onSave, isSaving }: EditModalProps) {
               id="edit-precision"
               value={precision}
               onChange={(e) => setPrecision(e.target.value)}
-              placeholder="recto, verso, VCA, sécurité de base 8h…"
+              placeholder={tx("recto, verso, VCA, sécurité de base 8h…")}
               maxLength={60}
               className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             />
@@ -211,10 +212,10 @@ function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadModalProp
   return (
     <div className="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 flex items-center justify-center p-4 z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full border border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Ajouter un document</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white"><UiText>Ajouter un document</UiText></h3>
         <form ref={formRef} onSubmit={handleSubmit} className="mt-4 space-y-4">
           <SelectField
-            label="Type de document"
+            label={tx("Type de document")}
             id="type"
             name="type"
             required
@@ -222,7 +223,7 @@ function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadModalProp
             onChange={(e) => setSelectedType(e.target.value)}
             className="mt-1"
           >
-            <option value="">Sélectionner un type</option>
+            <option value=""><UiText>Sélectionner un type</UiText></option>
             {TYPES_DOCUMENT_OUVRIER.map((t) => (
               <option key={t.code} value={t.code}>{t.libelle}</option>
             ))}
@@ -230,8 +231,8 @@ function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadModalProp
 
           <div>
             <label htmlFor="file" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Fichier *
-            </label>
+              <UiText>Fichier *
+            </UiText></label>
             <input
               type="file"
               id="file"
@@ -250,8 +251,8 @@ function UploadModal({ isOpen, onClose, onUpload, isUploading }: UploadModalProp
 
           <div>
             <label htmlFor="dateExpiration" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Date d'expiration
-            </label>
+              <UiText>Date d'expiration
+            </UiText></label>
             <input
               type="date"
               id="dateExpiration"
@@ -436,7 +437,7 @@ export default function DocumentsOuvrierPage(
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <PageHeader
         title={`Documents de ${ouvrier.prenom} ${ouvrier.nom}`}
-        subtitle="Gestion des documents de l'ouvrier"
+        subtitle={tx("Gestion des documents de l'ouvrier")}
         icon={DocumentTextIcon}
         actions={
           <div className="flex gap-2">
@@ -465,7 +466,7 @@ export default function DocumentsOuvrierPage(
                 <thead className="bg-gray-50 dark:bg-gray-700/50">
                   <tr>
                     <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300"><UiText>Type</UiText></th>
-                    <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Date d'ajout</th>
+                    <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300"><UiText>Date d'ajout</UiText></th>
                     <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Expiration</th>
                     <th className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                       <span className="sr-only"><UiText>Actions</UiText></span>
@@ -489,7 +490,7 @@ export default function DocumentsOuvrierPage(
                           <button
                             onClick={() => setDocApercu(document)}
                             className="text-left hover:text-blue-600 hover:underline dark:hover:text-blue-400"
-                            title="Voir le document"
+                            title={tx("Voir le document")}
                           >
                             {getDocumentTypeName(document.type)}
                           </button>
@@ -499,11 +500,11 @@ export default function DocumentsOuvrierPage(
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
-                        {format(new Date(document.createdAt), 'dd/MM/yyyy', { locale: fr })}
+                        {format(new Date(document.createdAt), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
                         {document.dateExpiration 
-                          ? format(new Date(document.dateExpiration), 'dd/MM/yyyy', { locale: fr })
+                          ? format(new Date(document.dateExpiration), 'dd/MM/yyyy', { locale: dateFnsLocale() })
                           : 'N/A'
                         }
                       </td>
@@ -519,7 +520,7 @@ export default function DocumentsOuvrierPage(
                           <a
                             href={document.url}
                             download={document.nom}
-                            title="Télécharger"
+                            title={tx("Télécharger")}
                             className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                           >
                             <ArrowDownTrayIcon className="h-5 w-5" />
@@ -527,7 +528,7 @@ export default function DocumentsOuvrierPage(
                           <button
                             onClick={() => setDocEnEdition(document)}
                             className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                            title="Modifier le type, la date ou la précision"
+                            title={tx("Modifier le type, la date ou la précision")}
                           >
                             <PencilSquareIcon className="h-5 w-5" />
                           </button>

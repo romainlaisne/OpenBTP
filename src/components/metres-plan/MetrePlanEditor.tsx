@@ -1,4 +1,5 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import React, { useEffect, useState, useCallback } from 'react'
 import { toast } from 'react-hot-toast'
 import * as pdfjs from 'pdfjs-dist'
@@ -50,15 +51,15 @@ const MetrePlanEditor: React.FC<MetrePlanEditorProps> = ({
       if (!chantierId) {
         // Chantier libre → téléchargement local
         downloadProject(project, pdfBytes, pdfFileName || null)
-        toast.success('Fichiers téléchargés localement')
+        toast.success(tx("Fichiers téléchargés localement"))
       } else {
         // Chantier existant → sauvegarde sur le serveur
         await saveProjectToServer(metrePlanId, project, pdfBytes, pdfFileName || null)
-        toast.success('Projet sauvegardé')
+        toast.success(tx("Projet sauvegardé"))
       }
     } catch (err) {
       console.error(err)
-      toast.error('Erreur lors de la sauvegarde')
+      toast.error(tx("Erreur lors de la sauvegarde"))
     } finally {
       setIsSaving(false)
     }
@@ -78,7 +79,7 @@ const MetrePlanEditor: React.FC<MetrePlanEditorProps> = ({
       setPdfDocument(doc, result.pdfFileName ?? 'document.pdf')
       setPdfBytes(result.pdfBytes)
     }
-    toast.success('Projet chargé')
+    toast.success(tx("Projet chargé"))
   }, [loadProject, setPdfDocument, setPdfBytes])
 
   const handleExportAnnotatedToChantier = useCallback(async () => {
@@ -97,7 +98,7 @@ const MetrePlanEditor: React.FC<MetrePlanEditorProps> = ({
         document.body.appendChild(a); a.click()
         document.body.removeChild(a)
         setTimeout(() => URL.revokeObjectURL(url), 10000)
-        toast.success('Plan annoté téléchargé localement')
+        toast.success(tx("Plan annoté téléchargé localement"))
         return
       }
 
@@ -110,10 +111,10 @@ const MetrePlanEditor: React.FC<MetrePlanEditorProps> = ({
         body: formData,
       })
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
-      toast.success('Plan annoté sauvegardé dans les documents du chantier')
+      toast.success(tx("Plan annoté sauvegardé dans les documents du chantier"))
     } catch (err) {
       console.error(err)
-      toast.error("Erreur lors de l'export")
+      toast.error(tx("Erreur lors de l'export"))
     }
   }, [pdfDocument, metrePlanId, chantierId, getProject, pdfFileName])
 
@@ -127,7 +128,7 @@ const MetrePlanEditor: React.FC<MetrePlanEditorProps> = ({
       toast.success(`Lien copié : ${shareUrl}`, { duration: 5000 })
     } catch (err) {
       console.error(err)
-      toast.error('Erreur lors de la génération du lien')
+      toast.error(tx("Erreur lors de la génération du lien"))
     }
   }, [metrePlanId])
 
@@ -182,7 +183,7 @@ const MetrePlanEditor: React.FC<MetrePlanEditorProps> = ({
       toast.success(`PDF chargé : ${fileName}`)
     } catch (err) {
       console.error(err)
-      toast.error('Erreur lors du chargement du PDF')
+      toast.error(tx("Erreur lors du chargement du PDF"))
     }
   }, [setPdfDocument, setPdfBytes])
 
@@ -206,10 +207,10 @@ const MetrePlanEditor: React.FC<MetrePlanEditorProps> = ({
         setPdfDocument(doc, project.pdfFileName ?? 'document.pdf')
         setPdfBytes(bytes)
       }
-      toast.success('Projet métré chargé')
+      toast.success(tx("Projet métré chargé"))
     } catch (err) {
       console.error(err)
-      toast.error('Erreur lors du chargement du projet métré')
+      toast.error(tx("Erreur lors du chargement du projet métré"))
     }
   }, [loadProject, setPdfDocument, setPdfBytes])
 

@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Materiau } from '@/types/inventory'
@@ -139,7 +141,7 @@ export default function MobileInventoryPage() {
       />
 
       <div className="flex flex-col items-center">
-        <h1 className="text-2xl font-bold mb-6">Inventaire Mobile</h1>
+        <h1 className="text-2xl font-bold mb-6"><UiText>Inventaire Mobile</UiText></h1>
         
         {/* Barre de recherche */}
         <div className="w-full mb-6">
@@ -147,7 +149,7 @@ export default function MobileInventoryPage() {
             <div className="relative flex-grow">
               <input
                 type="text"
-                placeholder="Rechercher un matériau..."
+                placeholder={tx("Rechercher un matériau...")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -230,7 +232,7 @@ export default function MobileInventoryPage() {
             <p className="text-gray-600 mb-4">{foundItem.description}</p>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <span className="text-sm text-gray-500">Quantité</span>
+                <span className="text-sm text-gray-500"><UiText>Quantité</UiText></span>
                 <p className="font-medium">{foundItem.quantite}</p>
               </div>
               <div>
@@ -265,18 +267,18 @@ export default function MobileInventoryPage() {
             {loading ? (
               <div className="text-center py-10">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                <p className="mt-2">Recherche en cours...</p>
+                <p className="mt-2"><UiText>Recherche en cours...</UiText></p>
               </div>
             ) : searchResults.length > 0 ? (
               <div>
-                <h2 className="text-lg font-semibold mb-4">Résultats de recherche</h2>
+                <h2 className="text-lg font-semibold mb-4"><UiText>Résultats de recherche</UiText></h2>
                 <div className="space-y-4">
                   {searchResults.map(materiau => (
                     <div key={materiau.id} className="bg-white shadow-md rounded-lg p-4">
                       <h3 className="font-medium">{materiau.nom}</h3>
                       <p className="text-sm text-gray-600">{materiau.description || 'Aucune description'}</p>
                       <p className="text-sm mt-1">
-                        <span className="font-medium">Quantité:</span> {materiau.quantite}
+                        <span className="font-medium"><UiText>Quantité:</UiText></span> {materiau.quantite}
                       </p>
                       {materiau.emplacement && materiau.emplacement.rack && (
                         <p className="text-sm text-blue-500 mt-1">
@@ -290,10 +292,10 @@ export default function MobileInventoryPage() {
                 </div>
               </div>
             ) : searchTerm ? (
-              <p className="text-gray-500 text-center py-4">Aucun résultat trouvé pour &quot;{searchTerm}&quot;</p>
+              <p className="text-gray-500 text-center py-4"><UiText>Aucun résultat trouvé pour &quot;</UiText>{searchTerm}&quot;</p>
             ) : recentSearches.length > 0 ? (
               <div>
-                <h2 className="text-lg font-semibold mb-4">Recherches récentes</h2>
+                <h2 className="text-lg font-semibold mb-4"><UiText>Recherches récentes</UiText></h2>
                 <div className="bg-white shadow-md rounded-lg p-4">
                   <ul className="space-y-2">
                     {recentSearches.map((term, index) => (
@@ -314,8 +316,8 @@ export default function MobileInventoryPage() {
               </div>
             ) : (
               <p className="text-gray-500 text-center py-4">
-                Utilisez la barre de recherche ou scannez un code QR pour trouver des matériaux
-              </p>
+                <UiText>Utilisez la barre de recherche ou scannez un code QR pour trouver des matériaux
+              </UiText></p>
             )}
           </div>
         )}
@@ -323,8 +325,8 @@ export default function MobileInventoryPage() {
         {/* Navigation vers version bureau */}
         <div className="mt-10 w-full text-center">
           <Link href="/inventory" className="text-blue-500 hover:text-blue-700">
-            Accéder à la version complète →
-          </Link>
+            <UiText>Accéder à la version complète →
+          </UiText></Link>
         </div>
       </div>
     </div>

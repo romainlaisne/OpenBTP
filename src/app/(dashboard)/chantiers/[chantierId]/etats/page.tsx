@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react'
@@ -96,7 +98,7 @@ export default function ChantierEtatsPage(props: PageProps) {
       }
     } catch (error) {
       console.error('Erreur lors du rafraîchissement des données:', error);
-      toast.error('Erreur lors de la mise à jour des données');
+      toast.error(tx("Erreur lors de la mise à jour des données"));
     }
   };
 
@@ -228,7 +230,7 @@ export default function ChantierEtatsPage(props: PageProps) {
         if (responseData.id || responseData.numero) {
           console.log('État créé malgré l\'erreur, redirection...', responseData);
           router.push(`/chantiers/${chantierId}/etats/${responseData.numero}`);
-          toast.success('État d\'avancement créé avec succès');
+          toast.success(tx("État d'avancement créé avec succès"));
           return;
         }
         throw new Error(responseData.error || 'Erreur lors de la création de l\'état d\'avancement');
@@ -237,10 +239,10 @@ export default function ChantierEtatsPage(props: PageProps) {
       // Rediriger vers le nouvel état
       router.push(`/chantiers/${chantierId}/etats/${responseData.numero}`);
       
-      toast.success('État d\'avancement créé avec succès');
+      toast.success(tx("État d'avancement créé avec succès"));
     } catch (error) {
       console.error(error);
-      toast.error('Erreur lors de la création de l\'état d\'avancement');
+      toast.error(tx("Erreur lors de la création de l'état d'avancement"));
     } finally {
       setIsCreating(false);
     }
@@ -252,7 +254,7 @@ export default function ChantierEtatsPage(props: PageProps) {
     // Trouver la commande verrouillée pour ce sous-traitant
     const st = sousTraitants.find(s => s.soustraitantId === sousTraitantId);
     if (!st || !st.commande || !st.commande.estVerrouillee) {
-      toast.error('Commande sous-traitant non trouvée ou non verrouillée');
+      toast.error(tx("Commande sous-traitant non trouvée ou non verrouillée"));
       return;
     }
 
@@ -351,7 +353,7 @@ export default function ChantierEtatsPage(props: PageProps) {
     // Fonction pour exporter un état d'avancement en Excel
     const exportEtatToExcel = async (etat: EtatAvancementEtendu) => {
       if (!chantierId) {
-        toast.error('ID du chantier manquant');
+        toast.error(tx("ID du chantier manquant"));
         return;
       }
 
@@ -370,10 +372,10 @@ export default function ChantierEtatsPage(props: PageProps) {
         a.click();
         window.URL.revokeObjectURL(url);
         
-        toast.success('État d\'avancement exporté avec succès');
+        toast.success(tx("État d'avancement exporté avec succès"));
       } catch (error) {
         console.error('Erreur lors de l\'export:', error);
-        toast.error('Erreur lors de l\'export de l\'état d\'avancement');
+        toast.error(tx("Erreur lors de l'export de l'état d'avancement"));
       }
     };
     
@@ -424,7 +426,7 @@ export default function ChantierEtatsPage(props: PageProps) {
         }
       } catch (error) {
         console.error('Erreur:', error);
-        toast.error('Erreur lors de la suppression de l\'état d\'avancement');
+        toast.error(tx("Erreur lors de la suppression de l'état d'avancement"));
       } finally {
         setLoading(false);
       }
@@ -439,7 +441,7 @@ export default function ChantierEtatsPage(props: PageProps) {
               <tr>
                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">N°</th>
                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Date</UiText></th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Montant de l'état</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Montant de l'état</UiText></th>
                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Statut</UiText></th>
                 <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"><UiText>Actions</UiText></th>
               </tr>
@@ -458,13 +460,13 @@ export default function ChantierEtatsPage(props: PageProps) {
                     )}
                   </td>
                   <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {new Date(etat.date).toLocaleDateString('fr-FR')}
+                    {new Date(etat.date).toLocaleDateString(intlLocale(getActiveLocale()))}
                     {etat.mois && <span className="ml-2 italic">({etat.mois})</span>}
                   </td>
                   <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     {((etat.lignes.reduce((sum, ligne) => sum + ligne.montantActuel, 0) + 
                       etat.avenants.reduce((sum, avenant) => sum + avenant.montantActuel, 0)
-                    )).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                    )).toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                   </td>
                   <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -479,7 +481,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                     <button
                       onClick={(e) => { e.stopPropagation(); handleRowClick(etat); }}
                       className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
-                      title="Ouvrir cet état d'avancement"
+                      title={tx("Ouvrir cet état d'avancement")}
                     >
                       <EyeIcon className="h-5 w-5 inline" />
                     </button>
@@ -490,7 +492,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                         exportEtatToExcel(etat);
                       }}
                       className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 ml-2"
-                      title="Exporter en Excel"
+                      title={tx("Exporter en Excel")}
                     >
                       <DocumentArrowDownIcon className="h-5 w-5 inline" />
                     </button>
@@ -501,7 +503,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                         handleOpenEmailModal(etat);
                       }}
                       className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 ml-2"
-                      title="Envoyer par e-mail"
+                      title={tx("Envoyer par e-mail")}
                     >
                       <EnvelopeIcon className="h-5 w-5 inline" />
                     </button>
@@ -510,7 +512,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                       <button
                         onClick={(e) => handleDeleteEtat(e, etat)}
                         className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 ml-2"
-                        title="Supprimer cet état d'avancement"
+                        title={tx("Supprimer cet état d'avancement")}
                       >
                         <TrashIcon className="h-5 w-5 inline" />
                       </button>
@@ -596,7 +598,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
-                  <span className="font-bold text-lg">État d'avancement Client</span>
+                  <span className="font-bold text-lg"><UiText>État d'avancement Client</UiText></span>
                 </div>
                 <button
                   onClick={() => toggleSection('client')}
@@ -629,15 +631,15 @@ export default function ChantierEtatsPage(props: PageProps) {
                     <UiText>Aucun état d'avancement</UiText>
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                    Créez votre premier état d'avancement client pour commencer le suivi de votre chantier.
-                  </p>
+                    <UiText>Créez votre premier état d'avancement client pour commencer le suivi de votre chantier.
+                  </UiText></p>
                   <button
                     onClick={handleCreateEtat}
                     className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                   >
                     <PlusIcon className="h-5 w-5 mr-2" />
-                    Créer le premier état d'avancement
-                  </button>
+                    <UiText>Créer le premier état d'avancement
+                  </UiText></button>
                 </div>
               ) : (
                 <>
@@ -655,8 +657,8 @@ export default function ChantierEtatsPage(props: PageProps) {
                       ) : (
                         <>
                           <PlusIcon className="h-5 w-5 mr-2" />
-                          Nouvel état d'avancement
-                        </>
+                          <UiText>Nouvel état d'avancement
+                        </UiText></>
                       )}
                     </button>
                   </div>
@@ -676,7 +678,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
-                    <span className="font-bold text-lg">Sous-traitant: {st.nom}</span>
+                    <span className="font-bold text-lg"><UiText>Sous-traitant: </UiText>{st.nom}</span>
                   </div>
                   <button
                     onClick={() => toggleSection(`soustraitant-${st.soustraitantId}`)}
@@ -707,10 +709,10 @@ export default function ChantierEtatsPage(props: PageProps) {
                           <UiText>Commande</UiText> {st.commande.reference || `#${st.commande.id}`}
                         </span>
                         <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {new Date(st.commande.dateCommande).toLocaleDateString('fr-FR')}
+                          {new Date(st.commande.dateCommande).toLocaleDateString(intlLocale(getActiveLocale()))}
                         </span>
                         <span className="text-sm font-semibold text-amber-700 dark:text-amber-300">
-                          {st.commande.total.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                          {st.commande.total.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
                         </span>
                       </div>
                       {/* Badge de statut de verrouillage */}
@@ -719,15 +721,15 @@ export default function ChantierEtatsPage(props: PageProps) {
                           <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                           </svg>
-                          Commande verrouillée
-                        </span>
+                          <UiText>Commande verrouillée
+                        </UiText></span>
                       ) : (
                         <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 text-xs font-medium rounded-full border border-green-200 dark:border-green-700">
                           <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
-                          Commande modifiable
-                        </span>
+                          <UiText>Commande modifiable
+                        </UiText></span>
                       )}
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -742,8 +744,8 @@ export default function ChantierEtatsPage(props: PageProps) {
                         className="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <EyeIcon className="h-4 w-4 mr-1" />
-                        Voir commande
-                      </button>
+                        <UiText>Voir commande
+                      </UiText></button>
                       {st.commande.estVerrouillee && (
                         <button
                           onClick={() => {
@@ -756,8 +758,8 @@ export default function ChantierEtatsPage(props: PageProps) {
                           className="inline-flex items-center px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <PlusIcon className="h-4 w-4 mr-1" />
-                          Nouvel état
-                        </button>
+                          <UiText>Nouvel état
+                        </UiText></button>
                       )}
                     </div>
                   </div>
@@ -776,8 +778,8 @@ export default function ChantierEtatsPage(props: PageProps) {
                         <UiText>Aucun état d'avancement</UiText>
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                        Aucun état d'avancement n'a encore été créé pour ce sous-traitant.
-                      </p>
+                        <UiText>Aucun état d'avancement n'a encore été créé pour ce sous-traitant.
+                      </UiText></p>
                       
                       {/* Affichage conditionnel selon le statut de verrouillage */}
                       {st.commande.estVerrouillee ? (
@@ -791,8 +793,8 @@ export default function ChantierEtatsPage(props: PageProps) {
                           className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-700 text-white rounded-lg hover:from-amber-700 hover:to-orange-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <PlusIcon className="h-5 w-5 mr-2" />
-                          Créer le premier état d'avancement
-                        </button>
+                          <UiText>Créer le premier état d'avancement
+                        </UiText></button>
                       ) : (
                         <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4 max-w-md mx-auto">
                           <div className="flex items-center justify-center text-orange-600 dark:text-orange-400">
@@ -800,8 +802,8 @@ export default function ChantierEtatsPage(props: PageProps) {
                               <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                             </svg>
                             <span className="text-sm font-medium">
-                              La commande doit être validée et verrouillée avant de créer un état d'avancement
-                            </span>
+                              <UiText>La commande doit être validée et verrouillée avant de créer un état d'avancement
+                            </UiText></span>
                           </div>
                         </div>
                       )}
@@ -820,8 +822,8 @@ export default function ChantierEtatsPage(props: PageProps) {
                             className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-700 text-white rounded-lg hover:from-amber-700 hover:to-orange-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <PlusIcon className="h-5 w-5 mr-2" />
-                            Nouvel état d'avancement
-                          </button>
+                            <UiText>Nouvel état d'avancement
+                          </UiText></button>
                         </div>
                       )}
                       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -842,8 +844,8 @@ export default function ChantierEtatsPage(props: PageProps) {
               className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               <PlusIcon className="h-5 w-5 mr-2" />
-              Ajouter un nouveau sous-traitant
-            </button>
+              <UiText>Ajouter un nouveau sous-traitant
+            </UiText></button>
           </div>
 
           {/* Section Dépenses */}
@@ -853,7 +855,7 @@ export default function ChantierEtatsPage(props: PageProps) {
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                 </svg>
-                <span className="font-bold text-lg">Dépenses</span>
+                <span className="font-bold text-lg"><UiText>Dépenses</UiText></span>
               </div>
             </div>
             <div className="p-6">

@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
@@ -30,8 +32,8 @@ interface EtatRow {
   factureNumero: string | null
 }
 
-const formatEuro = (v: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(v)
-const formatDate = (s: string | null) => (s ? new Date(s).toLocaleDateString('fr-FR') : '-')
+const formatEuro = (v: number) => new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR' }).format(v)
+const formatDate = (s: string | null) => (s ? new Date(s).toLocaleDateString(intlLocale(getActiveLocale())) : '-')
 
 export default function EtatsAvancementStatsPage() {
   const [rows, setRows] = useState<EtatRow[]>([])
@@ -126,8 +128,8 @@ export default function EtatsAvancementStatsPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <PageHeader
         icon={ChartBarIcon}
-        title="Statistiques des états d'avancement"
-        subtitle="Tableau complet avec filtres et numéro de facture"
+        title={tx("Statistiques des états d'avancement")}
+        subtitle={tx("Tableau complet avec filtres et numéro de facture")}
       />
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-4">
@@ -136,8 +138,8 @@ export default function EtatsAvancementStatsPage() {
             className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
           >
             <ArrowLeftIcon className="h-4 w-4" />
-            Retour au tableau de bord
-          </Link>
+            <UiText>Retour au tableau de bord
+          </UiText></Link>
         </div>
 
         {/* Filtres */}
@@ -148,20 +150,20 @@ export default function EtatsAvancementStatsPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Période (mois)</label>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"><UiText>Période (mois)</UiText></label>
               <select
                 value={mois}
                 onChange={(e) => setMois(e.target.value)}
                 className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
               >
-                <option value="">Tous les mois</option>
+                <option value=""><UiText>Tous les mois</UiText></option>
                 {moisOptions.map((m) => (
                   <option key={m} value={m}>{m}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Réf. chantier</label>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"><UiText>Réf. chantier</UiText></label>
               <input
                 type="text"
                 value={chantierId}
@@ -176,7 +178,7 @@ export default function EtatsAvancementStatsPage() {
                 type="text"
                 value={client}
                 onChange={(e) => setClient(e.target.value)}
-                placeholder="Nom client"
+                placeholder={tx("Nom client")}
                 className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm px-3 py-2"
               />
             </div>
@@ -187,20 +189,20 @@ export default function EtatsAvancementStatsPage() {
                 onChange={(e) => setStatut(e.target.value)}
                 className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
               >
-                <option value="">Tous</option>
-                <option value="finalise">Finalisé</option>
-                <option value="brouillon">Brouillon</option>
+                <option value=""><UiText>Tous</UiText></option>
+                <option value="finalise"><UiText>Finalisé</UiText></option>
+                <option value="brouillon"><UiText>Brouillon</UiText></option>
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Facturé</label>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"><UiText>Facturé</UiText></label>
               <select
                 value={facture}
                 onChange={(e) => setFacture(e.target.value)}
                 className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
               >
-                <option value="">Tous</option>
-                <option value="oui">Oui</option>
+                <option value=""><UiText>Tous</UiText></option>
+                <option value="oui"><UiText>Oui</UiText></option>
                 <option value="non">Non</option>
               </select>
             </div>
@@ -212,7 +214,7 @@ export default function EtatsAvancementStatsPage() {
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Chantier, client, n° facture..."
+                  placeholder={tx("Chantier, client, n° facture...")}
                   className="w-full pl-8 pr-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
                 />
               </div>
@@ -234,17 +236,17 @@ export default function EtatsAvancementStatsPage() {
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700/50">
                   <tr>
-                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Chantier</th>
+                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>Chantier</UiText></th>
                     <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>Réf.</UiText></th>
-                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">N° état</th>
+                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>N° état</UiText></th>
                     <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Client</th>
                     <th className="py-3 px-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Mt. base</th>
                     <th className="py-3 px-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Mt. avenants</th>
-                    <th className="py-3 px-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Total période</th>
-                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Période (mois)</th>
+                    <th className="py-3 px-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>Total période</UiText></th>
+                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>Période (mois)</UiText></th>
                     <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>Date</UiText></th>
                     <th className="py-3 px-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>Statut</UiText></th>
-                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">N° facture</th>
+                    <th className="py-3 px-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase"><UiText>N° facture</UiText></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -291,7 +293,7 @@ export default function EtatsAvancementStatsPage() {
                               onClick={() => handleSaveFacture(row.id)}
                               disabled={savingFacture}
                               className="p-1 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded"
-                              title="Enregistrer"
+                              title={tx("Enregistrer")}
                             >
                               <CheckIcon className="h-4 w-4" />
                             </button>
@@ -299,7 +301,7 @@ export default function EtatsAvancementStatsPage() {
                               type="button"
                               onClick={cancelEditFacture}
                               className="p-1 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-600 rounded"
-                              title="Annuler"
+                              title={tx("Annuler")}
                             >
                               <XMarkIcon className="h-4 w-4" />
                             </button>
@@ -313,7 +315,7 @@ export default function EtatsAvancementStatsPage() {
                             {row.factureNumero ? (
                               <span>{row.factureNumero}</span>
                             ) : (
-                              <span className="text-gray-400 italic">Non facturé</span>
+                              <span className="text-gray-400 italic"><UiText>Non facturé</UiText></span>
                             )}
                             <PencilIcon className="h-3.5 w-3.5" />
                           </button>
@@ -326,7 +328,7 @@ export default function EtatsAvancementStatsPage() {
             </div>
           )}
           {!loading && rows.length === 0 && (
-            <div className="p-8 text-center text-gray-500 dark:text-gray-400">Aucun état d&apos;avancement trouvé.</div>
+            <div className="p-8 text-center text-gray-500 dark:text-gray-400"><UiText>Aucun état d&apos;avancement trouvé.</UiText></div>
           )}
         </div>
       </div>

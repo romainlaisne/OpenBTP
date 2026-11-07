@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -10,6 +12,7 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -17,7 +20,7 @@ export async function GET(
 
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const chantier = await prisma.chantier.findUnique({
@@ -46,13 +49,13 @@ export async function GET(
     })
 
     if (!chantier) {
-      return NextResponse.json({ error: 'Chantier non trouvé' }, { status: 404 })
+      return localizedJson({ error: 'Chantier non trouvé' }, { status: 404 })
     }
 
-    return NextResponse.json(chantier)
+    return localizedJson(chantier)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération du chantier' },
       { status: 500 }
     )
@@ -64,6 +67,7 @@ export async function PUT(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -71,7 +75,7 @@ export async function PUT(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -158,7 +162,7 @@ export async function PUT(
       console.error('Message d\'erreur:', (ppssError as Error).message);
       
       // On peut retourner l'erreur dans la réponse pour informer l'utilisateur
-      return NextResponse.json({
+      return localizedJson({
         ...chantier,
         ppssError: `Chantier mis à jour mais erreur PPSS: ${(ppssError as Error).message}`
       });
@@ -203,10 +207,10 @@ export async function PUT(
       })
     }
 
-    return NextResponse.json(chantier)
+    return localizedJson(chantier)
   } catch (error) {
     console.error('Erreur lors de la mise à jour du chantier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: `Erreur lors de la mise à jour du chantier: ${error}` },
       { status: 500 }
     )
@@ -218,6 +222,7 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ chantierId: string }> }
 ) {
+  await bindRequestLocale()
   try {
     // Récupérer et attendre les paramètres
     const params = await context.params;
@@ -225,7 +230,7 @@ export async function DELETE(
     
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Vous devez être connecté pour supprimer un chantier' },
         { status: 401 }
       )
@@ -237,7 +242,7 @@ export async function DELETE(
     })
 
     if (!chantier) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chantier non trouvé' },
         { status: 404 }
       )
@@ -248,13 +253,13 @@ export async function DELETE(
       where: { chantierId: chantierId }
     })
 
-    return NextResponse.json(
+    return localizedJson(
       { message: 'Chantier supprimé avec succès' },
       { status: 200 }
     )
   } catch (error) {
     console.error('Erreur lors de la suppression du chantier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la suppression du chantier' },
       { status: 500 }
     )

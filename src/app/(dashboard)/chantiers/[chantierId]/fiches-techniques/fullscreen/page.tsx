@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
@@ -450,7 +451,7 @@ export default function FichesTechniquesFullscreenPage() {
                       maxLength={20}
                       style={{ width: '120px', minWidth: '120px', maxWidth: '120px' }}
                       className="px-1.5 py-0.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white mr-2"
-                      title="Numéro du poste du cahier des charges (max 20 caractères)"
+                      title={tx("Numéro du poste du cahier des charges (max 20 caractères)")}
                     />
                   )}
                   
@@ -476,7 +477,7 @@ export default function FichesTechniquesFullscreenPage() {
                       style={{ width: '150px', minWidth: '150px', maxWidth: '150px' }}
                       className="px-2 py-0.5 text-xs border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ml-2"
                     >
-                      <option value="">Sous-traitant</option>
+                      <option value=""><UiText>Sous-traitant</UiText></option>
                       {soustraitants.map(st => (
                         <option key={st.id} value={st.id}>{st.nom}</option>
                       ))}
@@ -510,7 +511,7 @@ export default function FichesTechniquesFullscreenPage() {
         <div className="relative z-10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <DocumentTextIcon className="w-6 h-6 text-emerald-900 dark:text-white" />
-            <span className="font-bold text-xl text-emerald-900 dark:text-white">📋 Sélection des Fiches Techniques</span>
+            <span className="font-bold text-xl text-emerald-900 dark:text-white"><UiText>📋 Sélection des Fiches Techniques</UiText></span>
           </div>
           <button
             onClick={() => {
@@ -521,7 +522,7 @@ export default function FichesTechniquesFullscreenPage() {
               }
             }}
             className="inline-flex items-center px-3 py-2 bg-white/20 backdrop-blur-sm rounded-lg shadow-md ring-1 ring-white/30 hover:bg-white/30 transition-all duration-200"
-            title="Fermer"
+            title={tx("Fermer")}
           >
             <XMarkIcon className="w-5 h-5 text-emerald-900 dark:text-white" />
           </button>
@@ -539,13 +540,13 @@ export default function FichesTechniquesFullscreenPage() {
               className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span className="text-sm text-gray-700 dark:text-gray-300">
-              Inclure la table des matières
-            </span>
+              <UiText>Inclure la table des matières
+            </UiText></span>
           </label>
 
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {selectedFiches.size} fiche{selectedFiches.size > 1 ? 's' : ''} sélectionnée{selectedFiches.size > 1 ? 's' : ''}
+              {selectedFiches.size} fiche{selectedFiches.size > 1 ? 's' : ''} <UiText>sélectionnée</UiText>{selectedFiches.size > 1 ? 's' : ''}
             </span>
             <button
               onClick={handleGeneratePDF}
@@ -563,8 +564,8 @@ export default function FichesTechniquesFullscreenPage() {
               ) : (
                 <>
                   <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
-                  Générer le dossier PDF
-                </>
+                  <UiText>Générer le dossier PDF
+                </UiText></>
               )}
             </button>
           </div>
@@ -579,7 +580,7 @@ export default function FichesTechniquesFullscreenPage() {
             type="text"
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
-            placeholder="Rechercher une fiche technique..."
+            placeholder={tx("Rechercher une fiche technique...")}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
           {searchFilter && (
@@ -599,8 +600,8 @@ export default function FichesTechniquesFullscreenPage() {
           <div className="text-center py-12">
             <FolderIcon className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
             <p className="text-gray-500 dark:text-gray-400">
-              Aucune fiche technique disponible
-            </p>
+              <UiText>Aucune fiche technique disponible
+            </UiText></p>
             <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
               Ajoutez des fiches techniques via la page de Configuration
             </p>
@@ -609,8 +610,8 @@ export default function FichesTechniquesFullscreenPage() {
           <div className="text-center py-12">
             <MagnifyingGlassIcon className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
             <p className="text-gray-500 dark:text-gray-400">
-              Aucune fiche technique ne correspond à votre recherche
-            </p>
+              <UiText>Aucune fiche technique ne correspond à votre recherche
+            </UiText></p>
           </div>
         ) : (
           <div className="space-y-1">

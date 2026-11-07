@@ -1,3 +1,6 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,10 +8,11 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/dashboard/evolution - Récupère l'évolution du CA et des dépenses sur 12 mois
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -22,7 +26,7 @@ export async function GET() {
     for (let i = 11; i >= 0; i--) {
       const date = new Date(dateActuelle.getFullYear(), dateActuelle.getMonth() - i, 1)
       
-      const moisCourt = date.toLocaleString('fr-FR', { month: 'short' })
+      const moisCourt = date.toLocaleString(intlLocale(getActiveLocale()), { month: 'short' })
       const annee = date.getFullYear()
       const moisPeriode = `${MOIS_NAMES[date.getMonth()]} ${annee}`
       
@@ -114,10 +118,10 @@ export async function GET() {
       ]
     }
 
-    return NextResponse.json(donnéesGraphique)
+    return localizedJson(donnéesGraphique)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des données d\'évolution' },
       { status: 500 }
     )

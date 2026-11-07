@@ -1,6 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react'
+import { portalExtra } from './i18n-extra'
 
 export type Lang = 'fr' | 'en' | 'pt' | 'ro'
 
@@ -661,7 +662,7 @@ export function PortalI18nProvider({ children }: { children: React.ReactNode }) 
     } catch {}
   }
 
-  const t = useCallback((key: string) => STRINGS[lang][key] || key, [lang])
+  const t = useCallback((key: string) => STRINGS[lang][key] || portalExtra[lang][key] || key, [lang])
 
   const value = useMemo(() => ({ lang, setLang, t }), [lang, t])
 
@@ -672,5 +673,12 @@ export function usePortalI18n() {
   const ctx = useContext(I18nContext)
   if (!ctx) throw new Error('usePortalI18n must be used within PortalI18nProvider')
   return ctx
+}
+
+export function portalIntlLocale(lang: Lang): string {
+  if (lang === 'en') return 'en-GB'
+  if (lang === 'pt') return 'pt-PT'
+  if (lang === 'ro') return 'ro-RO'
+  return 'fr-FR'
 }
 

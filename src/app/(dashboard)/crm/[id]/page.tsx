@@ -1,10 +1,11 @@
 'use client'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback, useRef, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import {
   BuildingOffice2Icon,
   MapPinIcon,
@@ -223,8 +224,8 @@ function EditEntrepriseModal({ entreprise, isOpen, onClose, onUpdated, showNotif
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             <PencilSquareIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            Modifier l&apos;entreprise
-          </h3>
+            <UiText>Modifier l&apos;entreprise
+          </UiText></h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
             <XMarkIcon className="h-5 w-5" />
           </button>
@@ -237,7 +238,7 @@ function EditEntrepriseModal({ entreprise, isOpen, onClose, onUpdated, showNotif
           <div>
             <label className={labelCls}><UiText>Type</UiText></label>
             <select value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value as TypeEntreprise }))} className={inputCls}>
-              <option value="ENTREPRISE_GENERALE">Entreprise Générale</option>
+              <option value="ENTREPRISE_GENERALE"><UiText>Entreprise Générale</UiText></option>
               <option value="ARCHITECTE">Architecte</option>
               <option value="CLIENT_DIRECT">Client Direct</option>
               <option value="AUTRE">Autre</option>
@@ -245,7 +246,7 @@ function EditEntrepriseModal({ entreprise, isOpen, onClose, onUpdated, showNotif
           </div>
           <div>
             <label className={labelCls}><UiText>Adresse</UiText></label>
-            <input type="text" value={form.adresse} onChange={e => setForm(p => ({ ...p, adresse: e.target.value }))} className={inputCls} placeholder="Rue et numéro" />
+            <input type="text" value={form.adresse} onChange={e => setForm(p => ({ ...p, adresse: e.target.value }))} className={inputCls} placeholder={tx("Rue et numéro")} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -267,7 +268,7 @@ function EditEntrepriseModal({ entreprise, isOpen, onClose, onUpdated, showNotif
           </div>
           <div>
             <label className={labelCls}><UiText>Email</UiText></label>
-            <input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className={inputCls} placeholder="contact@entreprise.be" />
+            <input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className={inputCls} placeholder={tx("contact@entreprise.be")} />
           </div>
           <div>
             <label className={labelCls}>Site web</label>
@@ -379,11 +380,11 @@ function CreateContactModal({ entrepriseId, isOpen, onClose, onCreated, showNoti
           </div>
           <div>
             <label className={labelCls}><UiText>Email</UiText></label>
-            <input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className={inputCls} placeholder="jean.dupont@entreprise.be" />
+            <input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} className={inputCls} placeholder={tx("jean.dupont@entreprise.be")} />
           </div>
           <div>
             <label className={labelCls}><UiText>Notes</UiText></label>
-            <textarea rows={3} value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} className={inputCls} placeholder="Notes sur ce contact…" />
+            <textarea rows={3} value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} className={inputCls} placeholder={tx("Notes sur ce contact…")} />
           </div>
           <div className="flex justify-end gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
             <button type="button" onClick={handleClose} disabled={saving} className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
@@ -592,8 +593,8 @@ function CreateActiviteModal({ entrepriseId, isOpen, onClose, onCreated, showNot
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             <PlusIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            Nouvelle activité
-          </h3>
+            <UiText>Nouvelle activité
+          </UiText></h3>
           <button onClick={handleClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
             <XMarkIcon className="h-5 w-5" />
           </button>
@@ -601,7 +602,7 @@ function CreateActiviteModal({ entrepriseId, isOpen, onClose, onCreated, showNot
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Type selector */}
           <div>
-            <label className={labelCls}>Type d&apos;activité</label>
+            <label className={labelCls}><UiText>Type d&apos;activité</UiText></label>
             <div className="flex gap-2 flex-wrap mt-1">
               {ACTIVITE_TYPE_OPTIONS.map(opt => (
                 <button
@@ -641,7 +642,7 @@ function CreateActiviteModal({ entrepriseId, isOpen, onClose, onCreated, showNot
               value={form.description}
               onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
               className={inputCls}
-              placeholder="Décrivez l'activité…"
+              placeholder={tx("Décrivez l'activité…")}
             />
           </div>
 
@@ -729,7 +730,7 @@ function CreateRappelModal({ entrepriseId, isOpen, onClose, onCreated, showNotif
               value={form.titre}
               onChange={e => setForm(p => ({ ...p, titre: e.target.value }))}
               className={inputCls}
-              placeholder="Ex : Rappeler pour devis"
+              placeholder={tx("Ex : Rappeler pour devis")}
             />
           </div>
           <div>
@@ -749,7 +750,7 @@ function CreateRappelModal({ entrepriseId, isOpen, onClose, onCreated, showNotif
               value={form.description}
               onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
               className={inputCls}
-              placeholder="Détails du rappel…"
+              placeholder={tx("Détails du rappel…")}
             />
           </div>
           <div className="flex justify-end gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
@@ -890,7 +891,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
   }
 
   const handleDeleteActivite = async (activiteId: string) => {
-    if (!confirm('Supprimer cette activité ?')) return
+    if (!confirm(tx("Supprimer cette activité ?"))) return
     try {
       const res = await fetch(`/api/crm/entreprises/${params.id}/activites/${activiteId}`, { method: 'DELETE' })
       if (!res.ok) {
@@ -934,7 +935,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
   }
 
   const handleDeleteRappel = async (rappelId: string) => {
-    if (!confirm('Supprimer ce rappel ?')) return
+    if (!confirm(tx("Supprimer ce rappel ?"))) return
     try {
       const res = await fetch(`/api/crm/entreprises/${params.id}/rappels/${rappelId}`, { method: 'DELETE' })
       if (!res.ok) {
@@ -1100,7 +1101,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                     <button
                       onClick={() => setShowEditModal(true)}
                       className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
-                      title="Modifier"
+                      title={tx("Modifier")}
                     >
                       <PencilSquareIcon className="h-4 w-4" />
                     </button>
@@ -1155,8 +1156,8 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                   {/* Empty state */}
                   {!entreprise.adresse && !entreprise.telephone && !entreprise.email && !entreprise.siteWeb && (
                     <p className="text-sm text-gray-400 dark:text-gray-500 italic">
-                      Aucune information de contact renseignée. Cliquez sur le crayon pour les ajouter.
-                    </p>
+                      <UiText>Aucune information de contact renseignée. Cliquez sur le crayon pour les ajouter.
+                    </UiText></p>
                   )}
                 </div>
               </div>
@@ -1190,14 +1191,14 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                   {entreprise.contacts.length === 0 ? (
                     <div className="text-center py-8">
                       <UserGroupIcon className="h-10 w-10 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                      <p className="text-sm text-gray-400 dark:text-gray-500">Aucun contact pour ce prospect.</p>
+                      <p className="text-sm text-gray-400 dark:text-gray-500"><UiText>Aucun contact pour ce prospect.</UiText></p>
                       <button
                         onClick={() => setShowCreateContactModal(true)}
                         className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-colors"
                       >
                         <PlusIcon className="h-4 w-4" />
-                        Ajouter un contact
-                      </button>
+                        <UiText>Ajouter un contact
+                      </UiText></button>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -1236,14 +1237,14 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                             <button
                               onClick={() => setEditingContact(contact)}
                               className="p-1.5 rounded-md text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-colors"
-                              title="Modifier"
+                              title={tx("Modifier")}
                             >
                               <PencilSquareIcon className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => handleDeleteContact(contact.id, `${contact.prenom} ${contact.nom}`)}
                               className="p-1.5 rounded-md text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
-                              title="Supprimer"
+                              title={tx("Supprimer")}
                             >
                               <TrashIcon className="h-4 w-4" />
                             </button>
@@ -1263,7 +1264,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                   <div className="flex items-center justify-between">
                     <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-500 via-gray-600 to-gray-700 text-white rounded-full shadow-lg ring-2 ring-gray-200 dark:ring-gray-700">
                       <ClockIcon className="w-5 h-5 mr-2" />
-                      <span className="font-bold text-lg">Journal d&apos;activité</span>
+                      <span className="font-bold text-lg"><UiText>Journal d&apos;activité</UiText></span>
                     </div>
                     <button
                       onClick={() => setShowCreateActiviteModal(true)}
@@ -1279,20 +1280,20 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                   {entreprise.activites.length === 0 ? (
                     <div className="text-center py-8">
                       <ClockIcon className="h-10 w-10 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                      <p className="text-sm text-gray-400 dark:text-gray-500">Aucune activité enregistrée.</p>
+                      <p className="text-sm text-gray-400 dark:text-gray-500"><UiText>Aucune activité enregistrée.</UiText></p>
                       <button
                         onClick={() => setShowCreateActiviteModal(true)}
                         className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                       >
                         <PlusIcon className="h-4 w-4" />
-                        Ajouter une activité
-                      </button>
+                        <UiText>Ajouter une activité
+                      </UiText></button>
                     </div>
                   ) : (
                     <ol className="relative border-l border-gray-200 dark:border-gray-700 ml-3">
                       {entreprise.activites.map((activite, idx) => {
                         const dateObj = new Date(activite.date)
-                        const dateStr = format(dateObj, 'dd/MM/yyyy', { locale: fr })
+                        const dateStr = format(dateObj, 'dd/MM/yyyy', { locale: dateFnsLocale() })
                         return (
                           <li key={activite.id} className={`ml-6 ${idx < entreprise.activites.length - 1 ? 'pb-6' : ''}`}>
                             {/* Timeline dot */}
@@ -1320,7 +1321,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                               <button
                                 onClick={() => handleDeleteActivite(activite.id)}
                                 className="p-1.5 rounded-md text-gray-300 dark:text-gray-600 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
-                                title="Supprimer"
+                                title={tx("Supprimer")}
                               >
                                 <TrashIcon className="h-3.5 w-3.5" />
                               </button>
@@ -1352,8 +1353,8 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                     {notesSaved && (
                       <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400 font-medium animate-pulse">
                         <CheckCircleIcon className="h-3.5 w-3.5" />
-                        Sauvegardé
-                      </span>
+                        <UiText>Sauvegardé
+                      </UiText></span>
                     )}
                   </div>
                 </div>
@@ -1363,12 +1364,12 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                     value={notes}
                     onChange={e => handleNotesChange(e.target.value)}
                     onBlur={handleNotesBlur}
-                    placeholder="Notes libres sur ce prospect…"
+                    placeholder={tx("Notes libres sur ce prospect…")}
                     className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-amber-500 focus:ring-1 focus:ring-amber-200 dark:focus:border-amber-400 dark:focus:ring-amber-800 transition-colors resize-y"
                   />
                   <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
-                    Sauvegarde automatique 1,5 s après la dernière frappe ou à la sortie du champ.
-                  </p>
+                    <UiText>Sauvegarde automatique 1,5 s après la dernière frappe ou à la sortie du champ.
+                  </UiText></p>
                 </div>
               </div>
 
@@ -1401,14 +1402,14 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                   {entreprise.rappels.length === 0 ? (
                     <div className="text-center py-8">
                       <BellAlertIcon className="h-10 w-10 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                      <p className="text-sm text-gray-400 dark:text-gray-500">Aucun rappel en attente.</p>
+                      <p className="text-sm text-gray-400 dark:text-gray-500"><UiText>Aucun rappel en attente.</UiText></p>
                       <button
                         onClick={() => setShowCreateRappelModal(true)}
                         className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border border-orange-300 dark:border-orange-700 text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
                       >
                         <PlusIcon className="h-4 w-4" />
-                        Créer un rappel
-                      </button>
+                        <UiText>Créer un rappel
+                      </UiText></button>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -1416,7 +1417,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                         const dateRappel = new Date(rappel.dateRappel)
                         dateRappel.setHours(0, 0, 0, 0)
                         const isOverdue = dateRappel < today
-                        const dateStr = format(dateRappel, 'dd/MM/yyyy', { locale: fr })
+                        const dateStr = format(dateRappel, 'dd/MM/yyyy', { locale: dateFnsLocale() })
 
                         return (
                           <div
@@ -1452,7 +1453,7 @@ export default function CrmDetailPage(props: { params: Promise<{ id: string }> }
                                 <button
                                   onClick={() => handleDeleteRappel(rappel.id)}
                                   className="p-1.5 rounded-md text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
-                                  title="Supprimer"
+                                  title={tx("Supprimer")}
                                 >
                                   <TrashIcon className="h-4 w-4" />
                                 </button>

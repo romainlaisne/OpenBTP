@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -7,10 +9,11 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -27,7 +30,7 @@ export async function GET(
 
     if (!sousTraitant) {
       console.log('DEBUG - Sous-traitant non trouvé avec ID:', id);
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé' },
         { status: 404 }
       );
@@ -63,10 +66,10 @@ export async function GET(
       }
     }
 
-    return NextResponse.json(ouvriers)
+    return localizedJson(ouvriers)
   } catch (error) {
     console.error('Erreur lors de la récupération des ouvriers:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des ouvriers' },
       { status: 500 }
     )
@@ -77,10 +80,11 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -94,7 +98,7 @@ export async function POST(
     // Validation basique
     if (!body.nom || !body.prenom || !body.dateEntree) {
       console.log('DEBUG - Validation échouée, champs manquants');
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Tous les champs obligatoires doivent être remplis' },
         { status: 400 }
       )
@@ -107,7 +111,7 @@ export async function POST(
 
     if (!sousTraitant) {
       console.log('DEBUG - Sous-traitant non trouvé avec ID:', id);
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Sous-traitant non trouvé' },
         { status: 404 }
       )
@@ -149,10 +153,10 @@ export async function POST(
       console.log('DEBUG - Données de l\'ouvrier en DB:', JSON.stringify(ouvrierVerif, null, 2));
     }
     
-    return NextResponse.json(ouvrier)
+    return localizedJson(ouvrier)
   } catch (error) {
     console.error('Erreur lors de la création de l\'ouvrier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de l\'ouvrier' },
       { status: 500 }
     )

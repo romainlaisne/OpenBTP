@@ -15,7 +15,7 @@ import {
   ClipboardDocumentListIcon,
   ClockIcon,
 } from '@heroicons/react/24/outline'
-import { usePortalI18n } from '../../i18n'
+import { portalIntlLocale, usePortalI18n } from '../../i18n'
 
 type JournalEntry = {
   id: string
@@ -225,9 +225,9 @@ function JournalForm({
       } else {
         const errorData = await response.json()
         let errorMessage = t('error_save')
-        if (errorData.error === 'Chantier ou lieu libre requis') {
+        if (errorData.code === 'Chantier ou lieu libre requis' || errorData.error === 'Chantier ou lieu libre requis' || errorData.error === 'Project or free location required') {
           errorMessage = `⚠️ ${t('error_chantier_required')}`
-        } else if (errorData.error === 'Données manquantes') {
+        } else if (errorData.code === 'Données manquantes' || errorData.error === 'Données manquantes' || errorData.error === 'Missing data') {
           errorMessage = `⚠️ ${t('error_fill_required')}`
         } else {
           errorMessage = `❌ ${errorData.error || t('error_unknown')}`
@@ -381,7 +381,8 @@ function JournalForm({
 
 export default function MagasinierJournalPage() {
   const router = useRouter()
-  const { t } = usePortalI18n()
+  const { t, lang } = usePortalI18n()
+  const locale = portalIntlLocale(lang)
   const [magasinierId, setMagasinierId] = useState<string | null>(null)
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([])
   const [chantiers, setChantiers] = useState<Chantier[]>([])
@@ -492,8 +493,6 @@ export default function MagasinierJournalPage() {
     router.replace('/public/portail/magasinier')
   }
 
-  const locale = 'fr-FR'
-
   if (!magasinierId) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -530,7 +529,7 @@ export default function MagasinierJournalPage() {
             className="flex-1 min-w-0 py-3 px-2 font-medium text-gray-600 hover:text-blue-600 flex items-center justify-center gap-1"
           >
             <ClipboardDocumentListIcon className="h-5 w-5 flex-shrink-0" />
-            <span>Tâches</span>
+            <span>{t('tasks')}</span>
           </button>
           <button
             onClick={() => router.push('/public/portail/magasinier/historique')}

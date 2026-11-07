@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
@@ -14,11 +16,12 @@ interface ChantierStats {
 
 // GET /api/dashboard/stats - Récupère les statistiques pour le dashboard
 export async function GET() {
+  await bindRequestLocale()
   try {
     // Vérifier l'authentification
     const session = await getServerSession(authOptions)
     if (!session?.user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Récupérer les données des chantiers avec leurs relations
@@ -174,7 +177,7 @@ export async function GET() {
       montantEtatsAvancementMoisPrecedent: montantFinal
     }
 
-    return NextResponse.json({
+    return localizedJson({
       kpis,
       chantiersByCategory,
       chantiersMap
@@ -182,7 +185,7 @@ export async function GET() {
 
   } catch (error) {
     console.error('Erreur lors du chargement des statistiques:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur interne du serveur' },
       { status: 500 }
     )

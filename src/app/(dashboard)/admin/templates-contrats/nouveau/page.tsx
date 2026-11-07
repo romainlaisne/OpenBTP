@@ -1,5 +1,6 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -73,7 +74,7 @@ export default function NouveauTemplatePage() {
       })
 
       if (response.ok) {
-        toast.success('Template créé avec succès')
+        toast.success(tx("Template créé avec succès"))
         router.push('/admin/templates-contrats')
       } else {
         const error = await response.json()
@@ -81,7 +82,7 @@ export default function NouveauTemplatePage() {
       }
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la création du template')
+      toast.error(tx("Erreur lors de la création du template"))
     } finally {
       setSaving(false)
     }
@@ -96,8 +97,8 @@ export default function NouveauTemplatePage() {
           onClick={() => router.push('/admin/templates-contrats')}
           className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
         >
-          ← Retour à la liste
-        </button>
+          <UiText>← Retour à la liste
+        </UiText></button>
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -130,8 +131,8 @@ export default function NouveauTemplatePage() {
                       </span>
                       {isActive && (
                         <span className="text-[11px] font-medium text-amber-700 dark:text-amber-100">
-                          Sélectionné
-                        </span>
+                          <UiText>Sélectionné
+                        </UiText></span>
                       )}
                     </div>
                     <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -180,8 +181,8 @@ export default function NouveauTemplatePage() {
             )}
             {category === 'CGV' && (
               <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">
-                Astuce : vous pouvez utiliser du HTML simple (titres, listes, paragraphes). Le bloc sera automatiquement injecté à la fin des devis et commandes PDF.
-              </p>
+                <UiText>Astuce : vous pouvez utiliser du HTML simple (titres, listes, paragraphes). Le bloc sera automatiquement injecté à la fin des devis et commandes PDF.
+              </UiText></p>
             )}
 
             <textarea
@@ -189,7 +190,7 @@ export default function NouveauTemplatePage() {
               onChange={(e) => setHtmlContent(e.target.value)}
               rows={20}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm dark:bg-gray-700 dark:text-white"
-              placeholder="Entrez le code HTML du template..."
+              placeholder={tx("Entrez le code HTML du template...")}
               required
             />
           </div>

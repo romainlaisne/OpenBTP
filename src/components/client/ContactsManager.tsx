@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { usePermission } from '@/hooks/usePermission'
 
@@ -239,8 +240,8 @@ export default function ContactsManager({ clientId }: ContactsManagerProps) {
             
             <div>
               <label htmlFor="prenom" className="block text-sm font-medium text-gray-700 mb-1">
-                Prénom *
-              </label>
+                <UiText>Prénom *
+              </UiText></label>
               <input
                 type="text"
                 id="prenom"
@@ -283,8 +284,8 @@ export default function ContactsManager({ clientId }: ContactsManagerProps) {
             
             <div>
               <label htmlFor="telephone" className="block text-sm font-medium text-gray-700 mb-1">
-                Téléphone
-              </label>
+                <UiText>Téléphone
+              </UiText></label>
               <input
                 type="text"
                 id="telephone"
@@ -305,8 +306,8 @@ export default function ContactsManager({ clientId }: ContactsManagerProps) {
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
               <label htmlFor="estPrincipal" className="ml-2 block text-sm text-gray-700">
-                Contact principal
-              </label>
+                <UiText>Contact principal
+              </UiText></label>
             </div>
           </div>
           
@@ -316,8 +317,8 @@ export default function ContactsManager({ clientId }: ContactsManagerProps) {
               onClick={resetForm}
               className="py-2 px-4 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              Annuler
-            </button>
+              <UiText>Annuler
+            </UiText></button>
             
             <button
               type="submit"
@@ -340,8 +341,8 @@ export default function ContactsManager({ clientId }: ContactsManagerProps) {
             <thead className="bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Nom
-                </th>
+                  <UiText>Nom
+                </UiText></th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Fonction
                 </th>
@@ -353,8 +354,8 @@ export default function ContactsManager({ clientId }: ContactsManagerProps) {
                 </th>
                 {canEditClient && (
                   <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
+                    <UiText>Actions
+                  </UiText></th>
                 )}
               </tr>
             </thead>
@@ -376,8 +377,8 @@ export default function ContactsManager({ clientId }: ContactsManagerProps) {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {contact.estPrincipal ? (
                       <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        Oui
-                      </span>
+                        <UiText>Oui
+                      </UiText></span>
                     ) : (
                       <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                         Non
@@ -390,14 +391,14 @@ export default function ContactsManager({ clientId }: ContactsManagerProps) {
                         onClick={() => handleEdit(contact)}
                         className="text-blue-600 hover:text-blue-900 mr-4"
                       >
-                        Modifier
-                      </button>
+                        <UiText>Modifier
+                      </UiText></button>
                       <button
                         onClick={() => handleDelete(contact.id)}
                         className="text-red-600 hover:text-red-900"
                       >
-                        Supprimer
-                      </button>
+                        <UiText>Supprimer
+                      </UiText></button>
                     </td>
                   )}
                 </tr>
@@ -407,8 +408,8 @@ export default function ContactsManager({ clientId }: ContactsManagerProps) {
         </div>
       ) : (
         <div className="text-center py-8 text-gray-500">
-          Aucun contact enregistré pour ce client.
-        </div>
+          <UiText>Aucun contact enregistré pour ce client.
+        </UiText></div>
       )}
     </div>
   )

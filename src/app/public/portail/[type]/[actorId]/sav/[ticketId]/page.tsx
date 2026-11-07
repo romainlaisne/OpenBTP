@@ -1,9 +1,8 @@
 'use client'
-
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeftIcon, DocumentIcon, ArrowTopRightOnSquareIcon, PhotoIcon, ChatBubbleLeftRightIcon, InformationCircleIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
-import { PortalI18nProvider, usePortalI18n } from '../../../../i18n'
+import { PortalI18nProvider, portalIntlLocale, usePortalI18n } from '../../../../i18n'
 
 type Ticket = {
   id: string; numTicket: string; titre: string; description?: string; priorite: string; statut: string;
@@ -34,7 +33,7 @@ type Ticket = {
 function InnerPage(props: { params: { type: 'ouvrier'|'soustraitant'; actorId: string; ticketId: string } }) {
   const { type, actorId, ticketId } = props.params
   const router = useRouter()
-  const { t } = usePortalI18n()
+  const { t, lang } = usePortalI18n()
   const [ticket, setTicket] = useState<Ticket | null>(null)
   const [tab, setTab] = useState<'infos'|'docs'|'photos'|'interv'|'com'>('infos')
   const [loading, setLoading] = useState(true)
@@ -92,7 +91,7 @@ function InnerPage(props: { params: { type: 'ouvrier'|'soustraitant'; actorId: s
                 {/* Informations du chantier */}
                 {ticket.chantier && (
                   <div className="border-t pt-3">
-                    <div className="font-semibold text-gray-900 mb-2">Chantier</div>
+                    <div className="font-semibold text-gray-900 mb-2">{t('site')}</div>
                     <div className="space-y-1 text-gray-700">
                       {ticket.chantier.nomChantier && (
                         <div><span className="font-medium">Nom:</span> {ticket.chantier.nomChantier}</div>
@@ -116,7 +115,7 @@ function InnerPage(props: { params: { type: 'ouvrier'|'soustraitant'; actorId: s
                       )}
                       {(ticket.contactTelephone || ticket.chantier?.clientTelephone) && (
                         <div>
-                          <span className="font-medium">Téléphone:</span>{' '}
+                          <span className="font-medium">{t('phone_label')}</span>{' '}
                           <a href={`tel:${ticket.contactTelephone || ticket.chantier?.clientTelephone}`} className="text-blue-600 hover:underline">
                             {ticket.contactTelephone || ticket.chantier?.clientTelephone}
                           </a>
@@ -146,7 +145,7 @@ function InnerPage(props: { params: { type: 'ouvrier'|'soustraitant'; actorId: s
                         <div><span className="font-medium">Localisation:</span> {ticket.localisation}</div>
                       )}
                       {ticket.adresseIntervention && (
-                        <div><span className="font-medium">Adresse d'intervention:</span> {ticket.adresseIntervention}</div>
+                        <div><span className="font-medium">{t('intervention_address')}</span> {ticket.adresseIntervention}</div>
                       )}
                     </div>
                   </div>
@@ -158,13 +157,13 @@ function InnerPage(props: { params: { type: 'ouvrier'|'soustraitant'; actorId: s
                     <div className="font-semibold text-gray-900 mb-2">Dates</div>
                     <div className="space-y-1 text-gray-700">
                       {ticket.dateDemande && (
-                        <div><span className="font-medium">Date de demande:</span> {new Date(ticket.dateDemande).toLocaleDateString('fr-FR')}</div>
+                        <div><span className="font-medium">Date de demande:</span> {new Date(ticket.dateDemande).toLocaleDateString(portalIntlLocale(lang))}</div>
                       )}
                       {ticket.dateInterventionSouhaitee && (
-                        <div><span className="font-medium">Date souhaitée:</span> {new Date(ticket.dateInterventionSouhaitee).toLocaleDateString('fr-FR')}</div>
+                        <div><span className="font-medium">{t('requested_date')}</span> {new Date(ticket.dateInterventionSouhaitee).toLocaleDateString(portalIntlLocale(lang))}</div>
                       )}
                       {ticket.dateIntervention && (
-                        <div><span className="font-medium">Date d'intervention:</span> {new Date(ticket.dateIntervention).toLocaleDateString('fr-FR')}</div>
+                        <div><span className="font-medium">{t('intervention_date')}</span> {new Date(ticket.dateIntervention).toLocaleDateString(portalIntlLocale(lang))}</div>
                       )}
                     </div>
                   </div>

@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
@@ -31,12 +33,13 @@ function validateAndGetFullPath(relativePath: string): string | null {
 }
 
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const { name, path: folderPath } = await request.json()
     
     // Validation des entrées
     if (!isValidFolderName(name)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Nom de dossier invalide' },
         { status: 400 }
       )
@@ -44,7 +47,7 @@ export async function POST(request: NextRequest) {
     
     const parentPath = validateAndGetFullPath(folderPath)
     if (!parentPath) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Chemin parent invalide' },
         { status: 400 }
       )
@@ -60,7 +63,7 @@ export async function POST(request: NextRequest) {
     
     // Vérifier si le dossier existe déjà
     if (fs.existsSync(newFolderFullPath)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Un dossier avec ce nom existe déjà' },
         { status: 409 }
       )
@@ -79,10 +82,10 @@ export async function POST(request: NextRequest) {
       files: []
     }
     
-    return NextResponse.json(newFolder, { status: 201 })
+    return localizedJson(newFolder, { status: 201 })
   } catch (error) {
     console.error('Erreur lors de la création du dossier:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création du dossier' },
       { status: 500 }
     )

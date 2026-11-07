@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 // Ligne du tableau de validation d'une commande sous-traitant.
 //
 // Extraite de la page pour une seule raison : les hooks react-dnd ne peuvent pas
@@ -82,7 +84,7 @@ export default function LigneCommandeSoustraitantRow({
           <div
             ref={refPoignee}
             className="inline-flex cursor-move items-center justify-center rounded p-1 text-gray-400 transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
-            title="Glisser pour réorganiser"
+            title={tx("Glisser pour réorganiser")}
           >
             <Bars3Icon className={`h-5 w-5 ${estSection ? 'text-blue-500 dark:text-blue-300' : ''}`} />
           </div>
@@ -116,7 +118,7 @@ export default function LigneCommandeSoustraitantRow({
           />
         ) : (
           <span className="font-semibold text-gray-900 dark:text-gray-100">
-            {ligne.quantite.toLocaleString('fr-FR')}
+            {ligne.quantite.toLocaleString(intlLocale(getActiveLocale()))}
           </span>
         )}
       </td>
@@ -130,15 +132,15 @@ export default function LigneCommandeSoustraitantRow({
           />
         ) : (
           <span className="font-semibold text-gray-900 dark:text-gray-100">
-            {ligne.prixUnitaire.toLocaleString('fr-FR')} €
+            {ligne.prixUnitaire.toLocaleString(intlLocale(getActiveLocale()))} €
           </span>
         )}
       </td>
       <td className="px-4 py-4 text-right">
         <span className="font-bold text-gray-900 dark:text-gray-100">
           {isEditing && ligneTemp
-            ? (ligneTemp.prixUnitaire * ligneTemp.quantite).toLocaleString('fr-FR')
-            : ligne.total.toLocaleString('fr-FR')}{' '}
+            ? (ligneTemp.prixUnitaire * ligneTemp.quantite).toLocaleString(intlLocale(getActiveLocale()))
+            : ligne.total.toLocaleString(intlLocale(getActiveLocale()))}{' '}
           €
         </span>
       </td>
@@ -150,7 +152,7 @@ export default function LigneCommandeSoustraitantRow({
                 onClick={() => onSave(ligne.id)}
                 disabled={submitting}
                 className="p-2 rounded-lg bg-green-100 text-green-600 hover:bg-green-200 hover:text-green-700 transition disabled:opacity-50"
-                title="Enregistrer"
+                title={tx("Enregistrer")}
               >
                 <CheckIcon className="h-4 w-4" />
               </button>
@@ -158,7 +160,7 @@ export default function LigneCommandeSoustraitantRow({
                 onClick={onCancel}
                 disabled={submitting}
                 className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-700 transition disabled:opacity-50"
-                title="Annuler"
+                title={tx("Annuler")}
               >
                 <XMarkIcon className="h-4 w-4" />
               </button>
@@ -170,7 +172,7 @@ export default function LigneCommandeSoustraitantRow({
                   onClick={() => onEdit(ligne.id)}
                   disabled={submitting}
                   className="p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-700 transition disabled:opacity-50"
-                  title="Modifier"
+                  title={tx("Modifier")}
                 >
                   <PencilIcon className="h-4 w-4" />
                 </button>
@@ -178,7 +180,7 @@ export default function LigneCommandeSoustraitantRow({
                   onClick={() => onDelete(ligne.id)}
                   disabled={submitting}
                   className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-700 transition disabled:opacity-50"
-                  title="Supprimer"
+                  title={tx("Supprimer")}
                 >
                   <TrashIcon className="h-4 w-4" />
                 </button>

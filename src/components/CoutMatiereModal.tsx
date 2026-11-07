@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 // Saisie du coût matière d'un chantier.
 //
 // Ouverte depuis le résumé financier de la page États — c'est-à-dire à l'endroit
@@ -211,16 +213,16 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                 <div className="flex items-start justify-between border-b border-gray-200 dark:border-gray-700 px-5 py-4">
                   <div>
                     <Dialog.Title className="text-lg font-semibold text-gray-900 dark:text-white">
-                      Coût matière
-                    </Dialog.Title>
+                      <UiText>Coût matière
+                    </UiText></Dialog.Title>
                     <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
                       {etatNumero != null
                         ? `Quantités de l’état d’avancement n° ${etatNumero}`
                         : 'Aucun état d’avancement'}
                       {' · '}
                       <span className="font-medium text-gray-700 dark:text-gray-300">
-                        {formatEuro(total)} estimés
-                      </span>
+                        {formatEuro(total)} <UiText>estimés
+                      </UiText></span>
                       {poseUniquement && (
                         <span className="ml-1 text-blue-600 dark:text-blue-400">
                           · pose seule
@@ -231,7 +233,7 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                   <button
                     type="button"
                     onClick={onClose}
-                    aria-label="Fermer"
+                    aria-label={tx("Fermer")}
                     className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700"
                   >
                     <XMarkIcon className="h-5 w-5" />
@@ -247,9 +249,9 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                     <p className="py-10 text-center text-sm text-red-600 dark:text-red-400">{erreur}</p>
                   ) : lignes.length === 0 ? (
                     <p className="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
-                      Aucune ligne facturée pour l’instant : le coût matière se calcule sur les
+                      <UiText>Aucune ligne facturée pour l’instant : le coût matière se calcule sur les
                       quantités d’un état d’avancement. Encodez un état, puis revenez ici.
-                    </p>
+                    </UiText></p>
                   ) : (
                     <>
                       <label className="mb-4 flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 px-3 py-2.5 dark:border-gray-700">
@@ -264,13 +266,13 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                         />
                         <span>
                           <span className="block text-sm font-medium text-gray-900 dark:text-gray-100">
-                            Chantier en pose uniquement
-                          </span>
+                            <UiText>Chantier en pose uniquement
+                          </UiText></span>
                           <span className="block text-xs text-gray-500 dark:text-gray-400">
-                            Le carrelage est fourni par le client : on ne compte que la
+                            <UiText>Le carrelage est fourni par le client : on ne compte que la
                             main-d’œuvre et les consommables (colle, joint, silicone, clips).
                             Le coût matière est alors complet sans prix d’achat.
-                          </span>
+                          </UiText></span>
                         </span>
                       </label>
 
@@ -278,8 +280,8 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                         <div className="mb-4 flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 dark:border-blue-800 dark:bg-blue-900/30">
                           <SparklesIcon className="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                           <span className="text-sm text-blue-800 dark:text-blue-200">
-                            {suggestions.length} catégorie(s) détectée(s) depuis les libellés
-                          </span>
+                            {suggestions.length} <UiText>catégorie(s) détectée(s) depuis les libellés
+                          </UiText></span>
                           <button
                             type="button"
                             onClick={appliquerSuggestions}
@@ -296,17 +298,17 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                           <thead>
                             <tr className="border-b border-gray-200 dark:border-gray-700">
                               <th className="px-2 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                Description
-                              </th>
+                                <UiText>Description
+                              </UiText></th>
                               <th className="w-24 px-2 py-2 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                Quantité
-                              </th>
+                                <UiText>Quantité
+                              </UiText></th>
                               <th className="w-40 px-2 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                Catégorie
-                              </th>
+                                <UiText>Catégorie
+                              </UiText></th>
                               <th className="w-44 px-2 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                                Prix d’achat €/m²
-                              </th>
+                                <UiText>Prix d’achat €/m²
+                              </UiText></th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -344,7 +346,7 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                                     {alerte && (
                                       <div className="mt-1 flex items-start gap-1 text-xs text-amber-700 dark:text-amber-400">
                                         <ExclamationTriangleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                                        <span>{alerte} — le montant calculé n’aurait pas de sens.</span>
+                                        <span>{alerte} <UiText>— le montant calculé n’aurait pas de sens.</UiText></span>
                                       </div>
                                     )}
                                   </td>
@@ -359,7 +361,7 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                                       }
                                       className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
                                     >
-                                      <option value="">À traiter…</option>
+                                      <option value=""><UiText>À traiter…</UiText></option>
                                       {CATEGORIES_MATERIAU.map((c) => (
                                         <option key={c} value={c}>
                                           {LIBELLES_CATEGORIE[c]}
@@ -381,7 +383,7 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                                         }
                                         className="mt-1 text-xs text-blue-600 hover:underline dark:text-blue-400"
                                       >
-                                        Proposé : {LIBELLES_CATEGORIE[l.categorieSuggeree]}
+                                        <UiText>Proposé : </UiText>{LIBELLES_CATEGORIE[l.categorieSuggeree]}
                                       </button>
                                     )}
                                   </td>
@@ -450,7 +452,7 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                                   onChange={(e) => modifier(l.ligneCommandeId, 'categorie', e.target.value)}
                                   className="rounded-md border border-gray-300 bg-white px-2 py-2 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
                                 >
-                                  <option value="">À traiter…</option>
+                                  <option value=""><UiText>À traiter…</UiText></option>
                                   {CATEGORIES_MATERIAU.map((c) => (
                                     <option key={c} value={c}>
                                       {LIBELLES_CATEGORIE[c]}
@@ -499,8 +501,8 @@ export default function CoutMatiereModal({ chantierId, open, onClose, onSaved }:
                       onClick={onClose}
                       className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
                     >
-                      Fermer
-                    </button>
+                      <UiText>Fermer
+                    </UiText></button>
                     <button
                       type="button"
                       onClick={enregistrer}

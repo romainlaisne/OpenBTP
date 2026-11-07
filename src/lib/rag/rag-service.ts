@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 // Service RAG principal
 import { getOllamaClient } from '@/lib/ollama/client';
 import { vectorStore } from '@/lib/rag/vector-store';
@@ -653,10 +654,10 @@ ID: ${chantier.chantierId}
 Adresse: ${chantier.adresseChantier}
 Client: ${chantier.client?.nom || 'Non spécifié'}
 Statut: ${chantier.statut}
-Date de début: ${chantier.dateDebut ? new Date(chantier.dateDebut).toLocaleDateString('fr-FR') : 'Non spécifiée'}
-Date de fin: ${chantier.dateFin ? new Date(chantier.dateFin).toLocaleDateString('fr-FR') : 'Non spécifiée'}
+Date de début: ${chantier.dateDebut ? new Date(chantier.dateDebut).toLocaleDateString(intlLocale(getActiveLocale())) : 'Non spécifiée'}
+Date de fin: ${chantier.dateFin ? new Date(chantier.dateFin).toLocaleDateString(intlLocale(getActiveLocale())) : 'Non spécifiée'}
 Description: ${chantier.description || 'Aucune description'}
-Budget: ${chantier.budget ? `${chantier.budget.toLocaleString('fr-FR')} €` : 'Non spécifié'}
+Budget: ${chantier.budget ? `${chantier.budget.toLocaleString(intlLocale(getActiveLocale()))} €` : 'Non spécifié'}
     `.trim();
 
     const chunk: DocumentChunk = {
@@ -681,7 +682,7 @@ Budget: ${chantier.budget ? `${chantier.budget.toLocaleString('fr-FR')} €` : '
   public async indexNote(note: NoteEntity, chantier: ChantierEntity): Promise<void> {
     const content = `
 NOTE LIBRE - Chantier: ${chantier.nomChantier} (${chantier.chantierId})
-Date: ${new Date(note.createdAt).toLocaleDateString('fr-FR')}
+Date: ${new Date(note.createdAt).toLocaleDateString(intlLocale(getActiveLocale()))}
 Auteur: ${note.createdBy}
 Contenu:
 ${note.contenu}
@@ -711,7 +712,7 @@ Nom: ${document.nom}
 Type: ${document.type}
 Description: ${document.description || 'Aucune description'}
 URL: ${document.url}
-Date d'ajout: ${new Date(document.createdAt).toLocaleDateString('fr-FR')}
+Date d'ajout: ${new Date(document.createdAt).toLocaleDateString(intlLocale(getActiveLocale()))}
     `.trim();
 
     const chunk: DocumentChunk = {
@@ -737,7 +738,7 @@ REMARQUE DE RÉCEPTION - Chantier: ${chantier.nomChantier} (${chantier.chantierI
 Localisation: ${remarque.localisation || 'Non spécifiée'}
 Description: ${remarque.description}
 Statut: ${remarque.estResolue ? 'Résolue' : 'En cours'}
-Date: ${new Date(remarque.createdAt).toLocaleDateString('fr-FR')}
+Date: ${new Date(remarque.createdAt).toLocaleDateString(intlLocale(getActiveLocale()))}
     `.trim();
 
     const chunk: DocumentChunk = {
@@ -817,7 +818,7 @@ Modèle: ${machine.modele}
 Numéro de série: ${machine.numeroSerie || 'Non spécifié'}
 Localisation: ${machine.localisation}
 Statut: ${machine.statut}
-Date d'achat: ${machine.dateAchat ? new Date(machine.dateAchat).toLocaleDateString('fr-FR') : 'Non spécifiée'}
+Date d'achat: ${machine.dateAchat ? new Date(machine.dateAchat).toLocaleDateString(intlLocale(getActiveLocale())) : 'Non spécifiée'}
 Code QR: ${machine.qrCode}
 Commentaire: ${machine.commentaire || 'Aucun commentaire'}
     `.trim();
@@ -935,7 +936,7 @@ Statut: ${sousTraitant.actif ? 'Actif' : 'Inactif'}
 COMMANDE: ${commande.nomCommande}
 ID: ${commande.commandeId}
 Statut: ${commande.statut}
-Date: ${commande.dateCommande.toLocaleDateString('fr-FR')}
+Date: ${commande.dateCommande.toLocaleDateString(intlLocale(getActiveLocale()))}
 Montant HT: ${commande.montantHT.toFixed(2)}€
 Montant TTC: ${commande.montantTTC.toFixed(2)}€
 Chantier: ${commande.chantierNom || 'Non spécifié'}
@@ -1001,7 +1002,7 @@ Client: ${commande.clientNom || 'Non spécifié'}
     const content = `
 ÉTAT D'AVANCEMENT: ${etat.pourcentage}%
 ID: ${etat.etatId}
-Date: ${etat.dateCreation.toLocaleDateString('fr-FR')}
+Date: ${etat.dateCreation.toLocaleDateString(intlLocale(getActiveLocale()))}
 Description: ${etat.description || 'Aucune description'}
 Chantier: ${etat.chantierNom || 'Non spécifié'}
 Client: ${etat.clientNom || 'Non spécifié'}
@@ -1059,7 +1060,7 @@ Client: ${etat.clientNom || 'Non spécifié'}
 DÉPENSE: ${depense.description}
 Montant: ${depense.montant.toFixed(2)}€
 Catégorie: ${depense.categorie}
-Date: ${depense.dateDepense.toLocaleDateString('fr-FR')}
+Date: ${depense.dateDepense.toLocaleDateString(intlLocale(getActiveLocale()))}
 Chantier: ${depense.chantierNom || 'Non spécifié'}
 Client: ${depense.clientNom || 'Non spécifié'}
     `.trim();
@@ -1123,8 +1124,8 @@ TÂCHE: ${task.title}
 Description: ${task.description || 'Aucune description'}
 Statut: ${task.status}
 Priorité: ${task.priority || 'Non spécifiée'}
-Début: ${task.start.toLocaleDateString('fr-FR')}
-Fin: ${task.end.toLocaleDateString('fr-FR')}
+Début: ${task.start.toLocaleDateString(intlLocale(getActiveLocale()))}
+Fin: ${task.end.toLocaleDateString(intlLocale(getActiveLocale()))}
 Assignée à: ${task.assigneA || 'Non assignée'}
 Chantier: ${task.chantierNom || 'Non spécifié'}
     `.trim();

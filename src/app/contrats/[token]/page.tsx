@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useRef, useEffect, use } from 'react';
 import SignaturePad, { type SignaturePadHandle } from '@/components/ui/SignaturePad'
 
@@ -112,7 +114,7 @@ export default function SignerContratPage(props: { params: Promise<{ token: stri
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-700">Chargement du contrat...</p>
+          <p className="mt-4 text-gray-700"><UiText>Chargement du contrat...</UiText></p>
         </div>
       </div>
     )
@@ -128,7 +130,7 @@ export default function SignerContratPage(props: { params: Promise<{ token: stri
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <h2 className="mt-4 text-lg font-medium text-gray-900">Erreur</h2>
+            <h2 className="mt-4 text-lg font-medium text-gray-900"><UiText>Erreur</UiText></h2>
             <p className="mt-2 text-sm text-gray-500">{error}</p>
           </div>
         </div>
@@ -146,8 +148,8 @@ export default function SignerContratPage(props: { params: Promise<{ token: stri
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="mt-4 text-lg font-medium text-gray-900">Contrat signé avec succès</h2>
-            <p className="mt-2 text-sm text-gray-500">Vous allez être redirigé vers le contrat signé...</p>
+            <h2 className="mt-4 text-lg font-medium text-gray-900"><UiText>Contrat signé avec succès</UiText></h2>
+            <p className="mt-2 text-sm text-gray-500"><UiText>Vous allez être redirigé vers le contrat signé...</UiText></p>
           </div>
         </div>
       </div>
@@ -158,18 +160,18 @@ export default function SignerContratPage(props: { params: Promise<{ token: stri
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         <div className="px-4 py-5 sm:px-6 bg-blue-600">
-          <h1 className="text-xl font-semibold text-white">Signature de contrat de sous-traitance</h1>
+          <h1 className="text-xl font-semibold text-white"><UiText>Signature de contrat de sous-traitance</UiText></h1>
           <p className="mt-1 text-sm text-blue-100">
-            {contrat?.soustraitant.nom} - Généré le {new Date(contrat?.dateGeneration || '').toLocaleDateString('fr-FR')}
+            {contrat?.soustraitant.nom} <UiText>- Généré le </UiText>{new Date(contrat?.dateGeneration || '').toLocaleDateString(intlLocale(getActiveLocale()))}
           </p>
         </div>
         
         <div className="px-4 py-5 sm:p-6">
           <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-900">Aperçu du contrat</h2>
+            <h2 className="text-lg font-medium text-gray-900"><UiText>Aperçu du contrat</UiText></h2>
             <p className="mt-1 text-sm text-gray-500">
-              Veuillez consulter le contrat avant de le signer. Vous pouvez le télécharger pour le lire en détail.
-            </p>
+              <UiText>Veuillez consulter le contrat avant de le signer. Vous pouvez le télécharger pour le lire en détail.
+            </UiText></p>
             <div className="mt-4">
               <a 
                 href={contrat?.url} 
@@ -185,10 +187,10 @@ export default function SignerContratPage(props: { params: Promise<{ token: stri
           <div className="border-t border-gray-200 pt-6">
             {/* Vérification d'identité */}
             <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Vérification de votre identité</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2"><UiText>Vérification de votre identité</UiText></h3>
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                Veuillez confirmer que vous êtes bien :
-              </p>
+                <UiText>Veuillez confirmer que vous êtes bien :
+              </UiText></p>
               <div className="bg-white dark:bg-gray-800 p-3 rounded border border-blue-200 dark:border-blue-700 mb-3">
                 <p className="font-semibold text-gray-900 dark:text-white">{contrat?.soustraitant.nom}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">{contrat?.soustraitant.email}</p>
@@ -201,14 +203,14 @@ export default function SignerContratPage(props: { params: Promise<{ token: stri
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Je confirme être <strong>{contrat?.soustraitant.nom}</strong> et avoir accès à l'adresse email <strong>{contrat?.soustraitant.email}</strong>
+                  <UiText>Je confirme être </UiText><strong>{contrat?.soustraitant.nom}</strong> <UiText>et avoir accès à l'adresse email </UiText><strong>{contrat?.soustraitant.email}</strong>
                 </span>
               </label>
             </div>
 
             {/* Consentement explicite */}
             <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Consentement et acceptation</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2"><UiText>Consentement et acceptation</UiText></h3>
               <label className="flex items-start">
                 <input
                   type="checkbox"
@@ -217,16 +219,16 @@ export default function SignerContratPage(props: { params: Promise<{ token: stri
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-0.5"
                 />
                 <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  J'ai lu et compris les termes du contrat. Je confirme avoir consulté le document complet et j'accepte de signer électroniquement ce contrat de sous-traitance. 
+                  <UiText>J'ai lu et compris les termes du contrat. Je confirme avoir consulté le document complet et j'accepte de signer électroniquement ce contrat de sous-traitance. 
                   Je comprends que cette signature électronique a la même valeur légale qu'une signature manuscrite conformément au Règlement eIDAS (UE) 910/2014 et à la législation belge en vigueur.
-                </span>
+                </UiText></span>
               </label>
             </div>
 
-            <h2 className="text-lg font-medium text-gray-900">Votre signature</h2>
+            <h2 className="text-lg font-medium text-gray-900"><UiText>Votre signature</UiText></h2>
             <p className="mt-1 text-sm text-gray-500">
-              Veuillez signer ci-dessous en utilisant votre souris ou votre doigt sur un écran tactile.
-            </p>
+              <UiText>Veuillez signer ci-dessous en utilisant votre souris ou votre doigt sur un écran tactile.
+            </UiText></p>
             
             <div className="mt-4 border border-gray-300 rounded-md overflow-hidden bg-white">
               <SignaturePad

@@ -2,7 +2,7 @@ import { readFile, writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { prisma } from '@/lib/prisma/client'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 
 const DOCUMENTS_BASE_PATH = join(process.cwd(), 'public', 'uploads', 'documents')
@@ -371,9 +371,9 @@ export async function generatePPSS(chantierId: string, userId: string) {
     const fileName = `PPSS-${chantier.chantierId}.pdf`
     const filePath = join(chantierDir, fileName)
 
-    const dateGeneration = format(new Date(), 'dd/MM/yyyy', { locale: fr })
+    const dateGeneration = format(new Date(), 'dd/MM/yyyy', { locale: dateFnsLocale() })
     const dateDebut = chantier.dateDebut
-      ? format(new Date(chantier.dateDebut), 'MMMM yyyy', { locale: fr })
+      ? format(new Date(chantier.dateDebut), 'MMMM yyyy', { locale: dateFnsLocale() })
       : 'Non définie'
 
     const nomEntrepreneurGeneral = chantier.maitreOuvrageNom || 'À compléter'

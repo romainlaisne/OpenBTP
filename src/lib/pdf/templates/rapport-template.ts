@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 import { tagsInclude } from '@/lib/utils/tags'
 
 export interface RapportData {
@@ -412,7 +413,7 @@ export function generateRapportHTML(data: RapportData): string {
             <div class="document-title">
                 <h1>Rapport de Visite de Chantier</h1>
                 <div class="document-subtitle">${chantier.nomChantier}</div>
-                <div class="date-badge">${new Date(date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                <div class="date-badge">${new Date(date).toLocaleDateString(intlLocale(getActiveLocale()), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
                 ${tagFilter && tagFilter !== 'Tous' ? `<div class="filter-badge">Filtré: ${tagFilter}</div>` : ''}
             </div>
             <div class="project-info">
@@ -422,11 +423,11 @@ export function generateRapportHTML(data: RapportData): string {
                 </div>
                 <div class="info-row">
                     <span class="label">Généré le:</span> 
-                    <span class="value">${new Date().toLocaleDateString('fr-FR')}</span>
+                    <span class="value">${new Date().toLocaleDateString(intlLocale(getActiveLocale()))}</span>
                 </div>
                 <div class="info-row">
                     <span class="label">Heure:</span> 
-                    <span class="value">${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span class="value">${new Date().toLocaleTimeString(intlLocale(getActiveLocale()), { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
             </div>
         </div>
@@ -453,7 +454,7 @@ export function generateRapportHTML(data: RapportData): string {
                 <h3>Détails de la Visite</h3>
                 <div class="info-row">
                     <span class="info-label">Date:</span>
-                    <span class="info-value">${new Date(date).toLocaleDateString('fr-FR')}</span>
+                    <span class="info-value">${new Date(date).toLocaleDateString(intlLocale(getActiveLocale()))}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Personnes:</span>
@@ -565,7 +566,7 @@ export function generateRapportHTML(data: RapportData): string {
         
         <!-- Footer -->
         <div class="footer">
-            <p>Document généré automatiquement le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}</p>
+            <p>Document généré automatiquement le ${new Date().toLocaleDateString(intlLocale(getActiveLocale()))} à ${new Date().toLocaleTimeString(intlLocale(getActiveLocale()))}</p>
             <p>© ${new Date().getFullYear()} - Tous droits réservés</p>
         </div>
     </div>

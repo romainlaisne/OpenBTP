@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 export interface DevisData {
   devis: {
     numeroDevis: string
@@ -161,7 +162,7 @@ export function generateDevisHTML(data: DevisData): string {
   }).join('')
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+    return new Date(dateString).toLocaleDateString(intlLocale(getActiveLocale()), {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
@@ -940,7 +941,7 @@ export function generateDevisHTML(data: DevisData): string {
                 <p>© ${entreprise.name} - Document généré automatiquement</p>
             </div>
             <div class="footer-right">
-                <p>Généré le ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</p>
+                <p>Généré le ${new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString(intlLocale(getActiveLocale()), { hour: '2-digit', minute: '2-digit' })}</p>
             </div>
         </div>
     </div>
@@ -984,7 +985,7 @@ export function generateDevisHTMLWithoutPrices(data: DevisData): string {
   }).join('')
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+    return new Date(dateString).toLocaleDateString(intlLocale(getActiveLocale()), {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
@@ -1641,7 +1642,7 @@ export function generateDevisHTMLWithoutPrices(data: DevisData): string {
                 <p>© ${entreprise.name} - Document généré automatiquement</p>
             </div>
             <div class="footer-right">
-                <p>Généré le ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</p>
+                <p>Généré le ${new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' })} à ${new Date().toLocaleTimeString(intlLocale(getActiveLocale()), { hour: '2-digit', minute: '2-digit' })}</p>
             </div>
         </div>
     </div>

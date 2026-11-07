@@ -1,7 +1,8 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { dateFnsLocale } from '@/lib/i18n/dates'
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 
@@ -77,8 +78,8 @@ export function DocumentExpirationAlert() {
         </div>
         <div className="ml-3 flex-1">
           <h3 className="text-sm font-medium text-yellow-800">
-            Documents à surveiller
-          </h3>
+            <UiText>Documents à surveiller
+          </UiText></h3>
           <div className="mt-2">
             <ul className="list-disc pl-5 space-y-1">
               {documents.map((doc) => (
@@ -90,7 +91,7 @@ export function DocumentExpirationAlert() {
                     {getDocumentTypeName(doc.type)} de {doc.ouvrier.prenom} {doc.ouvrier.nom} 
                     ({doc.ouvrier.sousTraitant.nom}) - 
                     {doc.isExpired ? ' Expiré depuis le ' : ' Expire le '}
-                    {format(new Date(doc.dateExpiration), 'dd/MM/yyyy', { locale: fr })}
+                    {format(new Date(doc.dateExpiration), 'dd/MM/yyyy', { locale: dateFnsLocale() })}
                   </Link>
                 </li>
               ))}
@@ -104,7 +105,7 @@ export function DocumentExpirationAlert() {
               onClick={() => setIsOpen(false)}
               className="inline-flex rounded-md bg-yellow-50 p-1.5 text-yellow-500 hover:bg-yellow-100"
             >
-              <span className="sr-only">Fermer</span>
+              <span className="sr-only"><UiText>Fermer</UiText></span>
               <XMarkIcon className="h-5 w-5" />
             </button>
           </div>

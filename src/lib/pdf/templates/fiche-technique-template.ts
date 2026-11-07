@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 export interface FicheTechniqueCoverData {
   settings: {
     name: string
@@ -49,7 +50,7 @@ export function generateFicheTechniqueCoverHTML(data: FicheTechniqueCoverData): 
   
   const ficheNumero = fiche.id.split('/').pop()?.replace('.pdf', '') || '1'
   const ficheNumeroDisplay = ficheNumero.match(/\d+/)?.[0] || '1'
-  const formattedDate = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  const formattedDate = new Date().toLocaleDateString(intlLocale(getActiveLocale()), { day: '2-digit', month: '2-digit', year: 'numeric' })
   const hasSoustraitant = Boolean(soustraitant?.nom)
 
   const badgeClass =

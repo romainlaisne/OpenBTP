@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -343,7 +345,7 @@ export default function InventoryPage() {
             <div className="flex">
               <ExclamationCircleIcon className="h-5 w-5 text-red-400" />
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">Erreur</h3>
+                <h3 className="text-sm font-medium text-red-800"><UiText>Erreur</UiText></h3>
                 <div className="mt-2 text-sm text-red-700">
                   <p>{error}</p>
                 </div>
@@ -396,7 +398,7 @@ export default function InventoryPage() {
             <ChartBarIcon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Occupés</div>
+            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase"><UiText>Occupés</UiText></div>
             <div className="text-sm font-black text-gray-900 dark:text-white">{stats.emplacementsOccupes}</div>
           </div>
         </div>
@@ -407,7 +409,7 @@ export default function InventoryPage() {
             <CubeIcon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Matériaux</div>
+            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase"><UiText>Matériaux</UiText></div>
             <div className="text-sm font-black text-gray-900 dark:text-white">{stats.totalMateriaux}</div>
           </div>
         </div>
@@ -417,13 +419,13 @@ export default function InventoryPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-emerald-50/20 to-teal-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-      <Suspense fallback={<div>Chargement...</div>}>
+      <Suspense fallback={<div><UiText>Chargement...</UiText></div>}>
         <SearchParamsComponent onEmplacementFound={handleEmplacementFound} />
       </Suspense>
       
       <PageHeader
-        title="Gestion d'Inventaire"
-        subtitle="Gérez vos racks et matériaux en temps réel"
+        title={tx("Gestion d'Inventaire")}
+        subtitle={tx("Gérez vos racks et matériaux en temps réel")}
         icon={CubeIcon}
         badgeColor="from-emerald-600 via-teal-600 to-cyan-700"
         gradientColor="from-emerald-600/10 via-teal-600/10 to-cyan-700/10"
@@ -435,8 +437,8 @@ export default function InventoryPage() {
               className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors duration-200"
             >
               <Cog6ToothIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Gérer les racks</span>
-              <span className="sm:hidden">Gérer</span>
+              <span className="hidden sm:inline"><UiText>Gérer les racks</UiText></span>
+              <span className="sm:hidden"><UiText>Gérer</UiText></span>
             </Link>
             <Link
               href="/inventory/scanner"
@@ -461,7 +463,7 @@ export default function InventoryPage() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center">
                   <MagnifyingGlassIcon className="h-5 w-5 text-emerald-600 mr-2" />
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Recherche de matériaux</h2>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Recherche de matériaux</UiText></h2>
                 </div>
               </div>
               
@@ -469,7 +471,7 @@ export default function InventoryPage() {
                 <div className="flex-1">
                   <input
                     type="text"
-                    placeholder="Rechercher un matériau..."
+                    placeholder={tx("Rechercher un matériau...")}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white transition-colors"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -479,13 +481,13 @@ export default function InventoryPage() {
                   type="submit"
                   className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors duration-200"
                 >
-                  Rechercher
-                </button>
+                  <UiText>Rechercher
+                </UiText></button>
               </form>
               
               {recentSearches.length > 0 && (
                 <div className="mt-4">
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Recherches récentes :</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2"><UiText>Recherches récentes :</UiText></p>
                   <div className="flex flex-wrap gap-2">
                     {recentSearches.map((term, index) => (
                       <button
@@ -513,7 +515,7 @@ export default function InventoryPage() {
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-12">
                 <div className="text-center">
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500 mb-4"></div>
-                  <p className="text-gray-600 dark:text-gray-400">Chargement de l&apos;inventaire...</p>
+                  <p className="text-gray-600 dark:text-gray-400"><UiText>Chargement de l&apos;inventaire...</UiText></p>
                 </div>
               </div>
             ) : (
@@ -522,18 +524,18 @@ export default function InventoryPage() {
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-12 text-center">
                     <ArchiveBoxIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                      Aucun rack configuré
-                    </h3>
+                      <UiText>Aucun rack configuré
+                    </UiText></h3>
                     <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-                      Commencez par créer votre premier rack pour organiser vos matériaux.
-                    </p>
+                      <UiText>Commencez par créer votre premier rack pour organiser vos matériaux.
+                    </UiText></p>
                     <Link
                       href="/admin/inventory"
                       className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                     >
                       <PlusIcon className="h-4 w-4 mr-2" />
-                      Créer un rack
-                    </Link>
+                      <UiText>Créer un rack
+                    </UiText></Link>
                   </div>
                 ) : (
                   <div className="space-y-6">
@@ -550,7 +552,7 @@ export default function InventoryPage() {
                             <p className="text-gray-500 dark:text-gray-400 mt-1">{rack.position}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Taux d'occupation</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Taux d'occupation</UiText></p>
                             <div className="flex items-center mt-1">
                               <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
                                 <div 
@@ -579,15 +581,15 @@ export default function InventoryPage() {
                           </div>
                           <div className="flex items-center">
                             <div className="w-4 h-4 bg-red-500 border border-red-600 rounded mr-2"></div>
-                            <span className="text-sm text-gray-600 dark:text-gray-300">Occupé</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-300"><UiText>Occupé</UiText></span>
                           </div>
                           <div className="flex items-center">
                             <div className="w-4 h-4 bg-blue-500 border border-blue-600 rounded mr-2"></div>
-                            <span className="text-sm text-gray-600 dark:text-gray-300">Sélectionné/Résultat</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-300"><UiText>Sélectionné/Résultat</UiText></span>
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400 ml-auto">
-                            💡 Libre: clic = ajouter • Occupé: clic = supprimer • Clic droit = QR code
-                          </div>
+                            <UiText>💡 Libre: clic = ajouter • Occupé: clic = supprimer • Clic droit = QR code
+                          </UiText></div>
                         </div>
                       </div>
                     ))}
@@ -602,7 +604,7 @@ export default function InventoryPage() {
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center">
                     <PlusIcon className="h-5 w-5 text-emerald-600 mr-2" />
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Ajouter un matériau</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Ajouter un matériau</UiText></h2>
                   </div>
                   <button 
                     onClick={() => {
@@ -623,7 +625,7 @@ export default function InventoryPage() {
                     if (emplacement) {
                       return (
                         <div>
-                          <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">Emplacement sélectionné</p>
+                          <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium"><UiText>Emplacement sélectionné</UiText></p>
                           <p className="text-emerald-900 dark:text-emerald-100 font-semibold text-lg">
                             {selectedRackForAddition.nom} - {String.fromCharCode(64 + emplacement.ligne)}{emplacement.colonne}
                           </p>
@@ -637,8 +639,8 @@ export default function InventoryPage() {
                 <form onSubmit={handleAddMateriau} className="space-y-4">
                   <div>
                     <label htmlFor="nom" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Nom du matériau *
-                    </label>
+                      <UiText>Nom du matériau *
+                    </UiText></label>
                     <input
                       type="text"
                       id="nom"
@@ -651,8 +653,8 @@ export default function InventoryPage() {
                   
                   <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Description
-                    </label>
+                      <UiText>Description
+                    </UiText></label>
                     <textarea
                       id="description"
                       rows={3}
@@ -664,8 +666,8 @@ export default function InventoryPage() {
                   
                   <div>
                     <label htmlFor="quantite" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Quantité
-                    </label>
+                      <UiText>Quantité
+                    </UiText></label>
                     <input
                       type="number"
                       id="quantite"
@@ -685,8 +687,8 @@ export default function InventoryPage() {
                     {submitting ? (
                       <div className="flex items-center justify-center">
                         <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                        Ajout en cours...
-                      </div>
+                        <UiText>Ajout en cours...
+                      </UiText></div>
                     ) : (
                       'Ajouter ce matériau'
                     )}
@@ -699,42 +701,42 @@ export default function InventoryPage() {
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-center mb-4">
                 <InformationCircleIcon className="h-5 w-5 text-emerald-600 mr-2" />
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Guide d'utilisation</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Guide d'utilisation</UiText></h2>
               </div>
               <div className="space-y-3">
                 <div className="flex items-start">
                   <CheckCircleIcon className="h-4 w-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Ajouter un matériau</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Cliquez sur un emplacement <span className="text-green-600 font-medium">libre</span></p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white"><UiText>Ajouter un matériau</UiText></p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400"><UiText>Cliquez sur un emplacement </UiText><span className="text-green-600 font-medium">libre</span></p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <TrashIcon className="h-4 w-4 text-red-500 mr-3 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Supprimer un matériau</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Cliquez sur un emplacement <span className="text-red-600 font-medium">occupé</span></p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white"><UiText>Supprimer un matériau</UiText></p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400"><UiText>Cliquez sur un emplacement </UiText><span className="text-red-600 font-medium"><UiText>occupé</UiText></span></p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <QrCodeIcon className="h-4 w-4 text-emerald-500 mr-3 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Générer QR code</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white"><UiText>Générer QR code</UiText></p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">Clic droit sur un emplacement</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <MagnifyingGlassIcon className="h-4 w-4 text-purple-500 mr-3 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Rechercher matériaux</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white"><UiText>Rechercher matériaux</UiText></p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">Utilisez la barre de recherche ci-dessus</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Cog6ToothIcon className="h-4 w-4 text-orange-500 mr-3 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Gérer les racks</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Créez de nouveaux racks via le bouton en haut</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white"><UiText>Gérer les racks</UiText></p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400"><UiText>Créez de nouveaux racks via le bouton en haut</UiText></p>
                   </div>
                 </div>
               </div>
@@ -748,7 +750,7 @@ export default function InventoryPage() {
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-center mb-4">
                 <MagnifyingGlassIcon className="h-5 w-5 text-emerald-600 mr-2" />
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Résultats de recherche</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Résultats de recherche</UiText></h2>
                 {searchResults.length > 0 && (
                   <span className="ml-auto bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-xs font-medium px-2 py-1 rounded-full">
                     {searchResults.length}
@@ -764,7 +766,7 @@ export default function InventoryPage() {
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{materiau.description || 'Aucune description'}</p>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-500 dark:text-gray-400">
-                          Quantité: <span className="font-medium">{typeof materiau.quantite === 'number' ? materiau.quantite.toFixed(2) : materiau.quantite}</span>
+                          <UiText>Quantité: </UiText><span className="font-medium">{typeof materiau.quantite === 'number' ? materiau.quantite.toFixed(2) : materiau.quantite}</span>
                         </span>
                         {materiau.emplacement && materiau.emplacement.rack && (
                           <span className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
@@ -810,15 +812,15 @@ export default function InventoryPage() {
                 <TrashIcon className="h-6 w-6 text-red-600" />
               </div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mt-4">
-                Supprimer le matériau
-              </h3>
+                <UiText>Supprimer le matériau
+              </UiText></h3>
               <div className="mt-2 px-7 py-3">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Êtes-vous sûr de vouloir supprimer le matériau <strong>"{selectedMateriau.nom}"</strong> ?
+                  <UiText>Êtes-vous sûr de vouloir supprimer le matériau </UiText><strong>"{selectedMateriau.nom}"</strong> ?
                 </p>
                 <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                  Cette action ne peut pas être annulée et libérera l'emplacement.
-                </p>
+                  <UiText>Cette action ne peut pas être annulée et libérera l'emplacement.
+                </UiText></p>
               </div>
               <div className="items-center px-4 py-3">
                 <div className="flex space-x-3">
@@ -829,8 +831,8 @@ export default function InventoryPage() {
                     }}
                     className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors"
                   >
-                    Annuler
-                  </button>
+                    <UiText>Annuler
+                  </UiText></button>
                   <button
                     onClick={handleDeleteMateriau}
                     disabled={deleting}
@@ -839,13 +841,13 @@ export default function InventoryPage() {
                     {deleting ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                        Suppression...
-                      </>
+                        <UiText>Suppression...
+                      </UiText></>
                     ) : (
                       <>
                         <TrashIcon className="h-4 w-4 mr-2" />
-                        Supprimer
-                      </>
+                        <UiText>Supprimer
+                      </UiText></>
                     )}
                   </button>
                 </div>

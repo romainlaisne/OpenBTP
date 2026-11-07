@@ -1,4 +1,6 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -124,7 +126,7 @@ function ChantierCard({
               className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium cursor-pointer hover:opacity-80 hover:shadow-md transition-all ${getStatusStyle(chantier.etatChantier)} ${
                 updatingStatus === chantier.chantierId ? 'opacity-50 cursor-not-allowed' : ''
               }`}
-              title="Cliquer pour changer le statut"
+              title={tx("Cliquer pour changer le statut")}
             >
               {updatingStatus === chantier.chantierId ? (
                 <span className="flex items-center gap-1">
@@ -171,11 +173,11 @@ function ChantierCard({
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <BanknotesIcon className="h-4 w-4 mr-2" />
-            <span>{chantier.budget ? `${chantier.budget.toLocaleString('fr-FR')} €` : 'Non défini'}</span>
+            <span>{chantier.budget ? `${chantier.budget.toLocaleString(intlLocale(getActiveLocale()))} €` : 'Non défini'}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <CalendarIcon className="h-4 w-4 mr-2" />
-            <span>{chantier.dateCommencement ? new Date(chantier.dateCommencement).toLocaleDateString('fr-FR') : 'Non définie'}</span>
+            <span>{chantier.dateCommencement ? new Date(chantier.dateCommencement).toLocaleDateString(intlLocale(getActiveLocale())) : 'Non définie'}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 col-span-2">
             <ClockIcon className="h-4 w-4 mr-2" />
@@ -191,35 +193,35 @@ function ChantierCard({
           <Link
             href={`/chantiers/${chantier.chantierId}`}
             className="p-2 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 dark:bg-indigo-900 dark:text-indigo-300 dark:hover:bg-indigo-800 transition-colors"
-            title="Consulter"
+            title={tx("Consulter")}
           >
             <EyeIcon className="h-4 w-4" />
           </Link>
           <Link
             href={`/chantiers/${chantier.chantierId}/commande`}
             className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800 transition-colors"
-            title="Commande"
+            title={tx("Commande")}
           >
             <CurrencyEuroIcon className="h-4 w-4" />
           </Link>
           <Link
             href={`/chantiers/${chantier.chantierId}/etats`}
             className="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 dark:bg-purple-900 dark:text-purple-300 dark:hover:bg-purple-800 transition-colors"
-            title="États d'avancement"
+            title={tx("États d'avancement")}
           >
             <ChartBarIcon className="h-4 w-4" />
           </Link>
           <Link
             href={`/chantiers/${chantier.chantierId}/documents`}
             className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800 transition-colors"
-            title="Documents"
+            title={tx("Documents")}
           >
             <DocumentDuplicateIcon className="h-4 w-4" />
           </Link>
           <Link
             href={`/chantiers/${chantier.chantierId}/notes`}
             className="p-2 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 dark:bg-indigo-900 dark:text-indigo-300 dark:hover:bg-indigo-800 transition-colors"
-            title="Notes"
+            title={tx("Notes")}
           >
             <ClipboardDocumentListIcon className="h-4 w-4" />
           </Link>
@@ -233,7 +235,7 @@ function ChantierCard({
           <Link
             href={`/chantiers/${chantier.chantierId}/reception`}
             className="p-2 bg-orange-100 text-orange-600 rounded-lg hover:bg-orange-200 dark:bg-orange-900 dark:text-orange-300 dark:hover:bg-orange-800 transition-colors"
-            title="Réception"
+            title={tx("Réception")}
           >
             <ClipboardDocumentCheckIcon className="h-4 w-4" />
           </Link>
@@ -609,7 +611,7 @@ export default function ChantiersPage() {
         <div className="flex items-center gap-2">
           <ChartPieIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">En cours</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>En cours</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{stats.enCours}</div>
           </div>
         </div>
@@ -629,7 +631,7 @@ export default function ChantiersPage() {
           <div>
             <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">CA</div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">
-              {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0, notation: 'compact' }).format(stats.chiffreAffaires)}
+              {new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR', maximumFractionDigits: 0, notation: 'compact' }).format(stats.chiffreAffaires)}
             </div>
           </div>
         </div>
@@ -640,8 +642,8 @@ export default function ChantiersPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-amber-50/20 to-orange-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Gestion des Chantiers"
-        subtitle="Gérez et suivez tous vos projets de construction"
+        title={tx("Gestion des Chantiers")}
+        subtitle={tx("Gérez et suivez tous vos projets de construction")}
         icon={BuildingOffice2Icon}
         badgeColor="from-red-700 via-red-800 to-red-900"
         gradientColor="from-red-700/10 via-red-800/10 to-red-900/10"
@@ -671,10 +673,10 @@ export default function ChantiersPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <span className="text-sm font-medium text-indigo-900 dark:text-indigo-100">
-                  Filtré par client : <span className="font-semibold">{clientName}</span>
+                  <UiText>Filtré par client : </UiText><span className="font-semibold">{clientName}</span>
                 </span>
                 <span className="ml-2 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs px-2 py-1 rounded-full">
-                  {chantiersFiltrés.length} chantier{chantiersFiltrés.length !== 1 ? 's' : ''}
+                  {chantiersFiltrés.length} <UiText>chantier</UiText>{chantiersFiltrés.length !== 1 ? 's' : ''}
                 </span>
               </div>
               <button
@@ -682,8 +684,8 @@ export default function ChantiersPage() {
                 className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-800 dark:text-indigo-200 dark:hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
               >
                 <XMarkIcon className="h-4 w-4 mr-1" />
-                Supprimer le filtre
-              </button>
+                <UiText>Supprimer le filtre
+              </UiText></button>
             </div>
           </div>
         )}
@@ -694,11 +696,11 @@ export default function ChantiersPage() {
             <div className="flex flex-col sm:flex-row gap-4 flex-1">
               <div className="sm:w-64">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sr-only">
-                  Filtrer par chantier
-                </label>
+                  <UiText>Filtrer par chantier
+                </UiText></label>
                 <SearchInput
                   id="search-chantier"
-                  placeholder="Rechercher un chantier..."
+                  placeholder={tx("Rechercher un chantier...")}
                   value={filtreNom}
                   onChange={(e) => setFiltreNom(e.target.value)}
                   className="w-full"
@@ -706,11 +708,11 @@ export default function ChantiersPage() {
               </div>
               <div className="sm:w-64">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sr-only">
-                  Filtrer par client
-                </label>
+                  <UiText>Filtrer par client
+                </UiText></label>
                 <SearchInput
                   id="search-client"
-                  placeholder="Rechercher un client..."
+                  placeholder={tx("Rechercher un client...")}
                   value={filtreClient}
                   onChange={(e) => setFiltreClient(e.target.value)}
                   className="w-full"
@@ -718,18 +720,18 @@ export default function ChantiersPage() {
               </div>
               <div className="sm:w-48">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sr-only">
-                  Filtrer par état
-                </label>
+                  <UiText>Filtrer par état
+                </UiText></label>
                 <select
                   id="filter-etat"
                   value={filtreEtat}
                   onChange={(e) => setFiltreEtat(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
                 >
-                  <option value="">Tous les états</option>
-                  <option value="En préparation">En préparation</option>
-                  <option value="En cours">En cours</option>
-                  <option value="Terminé">Terminé</option>
+                  <option value=""><UiText>Tous les états</UiText></option>
+                  <option value="En préparation"><UiText>En préparation</UiText></option>
+                  <option value="En cours"><UiText>En cours</UiText></option>
+                  <option value="Terminé"><UiText>Terminé</UiText></option>
                 </select>
               </div>
               {filtresActifs && (
@@ -810,7 +812,7 @@ export default function ChantiersPage() {
                       <tr>
                         <SortableHeader
                           field="nomChantier"
-                          label="Chantier"
+                          label={tx("Chantier")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
@@ -831,21 +833,21 @@ export default function ChantiersPage() {
                         />
                         <SortableHeader
                           field="etatChantier"
-                          label="État"
+                          label={tx("État")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
                         />
                         <SortableHeader
                           field="budget"
-                          label="Montant"
+                          label={tx("Montant")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
                         />
                         <SortableHeader
                           field="dateCommencement"
-                          label="Date de début"
+                          label={tx("Date de début")}
                           currentSortField={sortField}
                           sortDirection={sortDirection}
                           onSort={handleSort}
@@ -857,10 +859,10 @@ export default function ChantiersPage() {
                               {Object.values(marges).some((m) => m.matiereIncomplete) && (
                                 <span
                                   className="ml-1 text-xs font-normal text-amber-600 dark:text-amber-400"
-                                  title="* coût matière non renseigné : la marge est surévaluée"
+                                  title={tx("* coût matière non renseigné : la marge est surévaluée")}
                                 >
-                                  (* surévaluée)
-                                </span>
+                                  <UiText>(* surévaluée)
+                                </UiText></span>
                               )}
                             </>
                           ) : (
@@ -869,7 +871,7 @@ export default function ChantiersPage() {
                               onClick={calculerMarges}
                               disabled={chargementMarges}
                               className="text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:opacity-50 dark:text-indigo-400"
-                              title="Calcule la marge des chantiers affichés (peut prendre quelques secondes)"
+                              title={tx("Calcule la marge des chantiers affichés (peut prendre quelques secondes)")}
                             >
                               {chargementMarges ? 'Calcul…' : 'Marge ▸'}
                             </button>
@@ -901,7 +903,7 @@ export default function ChantiersPage() {
                                 className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium cursor-pointer hover:opacity-80 hover:shadow-md transition-all ${getStatusStyle(chantier.etatChantier)} ${
                                   updatingStatus === chantier.chantierId ? 'opacity-50 cursor-not-allowed' : ''
                                 }`}
-                                title="Cliquer pour changer le statut"
+                                title={tx("Cliquer pour changer le statut")}
                               >
                                 {updatingStatus === chantier.chantierId ? (
                                   <span className="flex items-center gap-1">
@@ -945,10 +947,10 @@ export default function ChantiersPage() {
                             </div>
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
-                            {chantier.budget ? `${chantier.budget.toLocaleString('fr-FR')} €` : '-'}
+                            {chantier.budget ? `${chantier.budget.toLocaleString(intlLocale(getActiveLocale()))} €` : '-'}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
-                            {chantier.dateCommencement ? new Date(chantier.dateCommencement).toLocaleDateString('fr-FR') : '-'}
+                            {chantier.dateCommencement ? new Date(chantier.dateCommencement).toLocaleDateString(intlLocale(getActiveLocale())) : '-'}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm">
                             {marges[chantier.chantierId] ? (
@@ -977,25 +979,25 @@ export default function ChantiersPage() {
                           </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <div className="flex space-x-1 justify-end">
-                              <Link href={`/chantiers/${chantier.chantierId}`} className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors" title="Consulter">
+                              <Link href={`/chantiers/${chantier.chantierId}`} className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors" title={tx("Consulter")}>
                                 <EyeIcon className="h-4 w-4" />
                               </Link>
-                              <Link href={`/chantiers/${chantier.chantierId}/commande`} className="p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900 rounded transition-colors" title="Commande">
+                              <Link href={`/chantiers/${chantier.chantierId}/commande`} className="p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900 rounded transition-colors" title={tx("Commande")}>
                                 <CurrencyEuroIcon className="h-4 w-4" />
                               </Link>
-                              <Link href={`/chantiers/${chantier.chantierId}/etats`} className="p-2 text-purple-600 hover:bg-purple-100 dark:text-purple-400 dark:hover:bg-purple-900 rounded transition-colors" title="États d'avancement">
+                              <Link href={`/chantiers/${chantier.chantierId}/etats`} className="p-2 text-purple-600 hover:bg-purple-100 dark:text-purple-400 dark:hover:bg-purple-900 rounded transition-colors" title={tx("États d'avancement")}>
                                 <ChartBarIcon className="h-4 w-4" />
                               </Link>
-                              <Link href={`/chantiers/${chantier.chantierId}/documents`} className="p-2 text-green-600 hover:bg-green-100 dark:text-green-400 dark:hover:bg-green-900 rounded transition-colors" title="Documents">
+                              <Link href={`/chantiers/${chantier.chantierId}/documents`} className="p-2 text-green-600 hover:bg-green-100 dark:text-green-400 dark:hover:bg-green-900 rounded transition-colors" title={tx("Documents")}>
                                 <DocumentDuplicateIcon className="h-4 w-4" />
                               </Link>
-                              <Link href={`/chantiers/${chantier.chantierId}/notes`} className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors" title="Notes">
+                              <Link href={`/chantiers/${chantier.chantierId}/notes`} className="p-2 text-indigo-600 hover:bg-indigo-100 dark:text-indigo-400 dark:hover:bg-indigo-900 rounded transition-colors" title={tx("Notes")}>
                                 <ClipboardDocumentListIcon className="h-4 w-4" />
                               </Link>
                               <Link href={`/chantiers/${chantier.chantierId}/rapports`} className="p-2 text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900 rounded transition-colors" title="Rapports">
                                 <DocumentTextIcon className="h-4 w-4" />
                               </Link>
-                              <Link href={`/chantiers/${chantier.chantierId}/reception`} className="p-2 text-orange-600 hover:bg-orange-100 dark:text-orange-400 dark:hover:bg-orange-900 rounded transition-colors" title="Réception">
+                              <Link href={`/chantiers/${chantier.chantierId}/reception`} className="p-2 text-orange-600 hover:bg-orange-100 dark:text-orange-400 dark:hover:bg-orange-900 rounded transition-colors" title={tx("Réception")}>
                                 <ClipboardDocumentCheckIcon className="h-4 w-4" />
                               </Link>
                             </div>

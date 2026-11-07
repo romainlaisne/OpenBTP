@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import bcrypt from 'bcrypt'
@@ -7,17 +9,18 @@ import { prisma } from '@/lib/prisma/client'
 
 // GET /api/users - Liste des utilisateurs (ADMIN et MANAGER)
 export async function GET(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     
     // Vérification de l'authentification
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     // Seuls les admins et managers peuvent voir tous les utilisateurs
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     // Récupérer les paramètres de pagination
@@ -57,7 +60,7 @@ export async function GET(request: NextRequest) {
       take: limit,
     })
 
-    return NextResponse.json({
+    return localizedJson({
       users,
       total,
       page,
@@ -65,7 +68,7 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error('Erreur lors de la récupération des utilisateurs:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des utilisateurs' },
       { status: 500 }
     )
@@ -74,22 +77,23 @@ export async function GET(request: NextRequest) {
 
 // POST /api/users - Création d'un utilisateur (ADMIN ou MANAGER)
 export async function POST(request: NextRequest) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 403 })
     }
 
     const body = await request.json()
     const { name, email, password, role } = body ?? {}
 
     if (!email || !password || !role) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Email, mot de passe et rôle sont obligatoires' },
         { status: 400 }
       )
@@ -97,7 +101,7 @@ export async function POST(request: NextRequest) {
 
     const allowedRoles = new Set(['ADMIN', 'MANAGER', 'USER'])
     if (!allowedRoles.has(role)) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Rôle invalide' },
         { status: 400 }
       )
@@ -108,7 +112,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (existingUser) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Un utilisateur avec cet email existe déjà' },
         { status: 409 }
       )
@@ -134,10 +138,10 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(newUser, { status: 201 })
+    return localizedJson(newUser, { status: 201 })
   } catch (error) {
     console.error('Erreur lors de la création de l’utilisateur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de l’utilisateur' },
       { status: 500 }
     )

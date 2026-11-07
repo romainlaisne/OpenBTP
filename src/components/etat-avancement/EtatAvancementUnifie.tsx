@@ -1,4 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { EtatAvancement, SoustraitantEtat, EtatAvancementSummary, AvenantEtatAvancement, AvenantSoustraitantEtat } from '@/types/etat-avancement'
 import { TrashIcon, PlusIcon, PencilSquareIcon } from '@heroicons/react/24/outline'
@@ -9,7 +12,7 @@ import NumericInput from '@/components/ui/NumericInput'
 import { roundToTwoDecimals } from '@/utils/calculs'
 
 // Fonction helper pour formater les montants avec 2 décimales
-const formatMontant = (value: number) => value.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+const formatMontant = (value: number) => value.toLocaleString(intlLocale(getActiveLocale()), { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 interface EtatAvancementUnifieProps {
   etat: EtatAvancement | SoustraitantEtat
@@ -320,7 +323,7 @@ export default function EtatAvancementUnifie({
       }, 100)
     } catch (error) {
       console.error('Erreur détaillée:', error)
-      toast.error('Erreur lors de la mise à jour de la quantité')
+      toast.error(tx("Erreur lors de la mise à jour de la quantité"))
     }
   }
 
@@ -377,7 +380,7 @@ export default function EtatAvancementUnifie({
       
 
       
-      toast.success('Avenant ajouté localement. Sauvegardez pour enregistrer.')
+      toast.success(tx("Avenant ajouté localement. Sauvegardez pour enregistrer."))
       return
     }
     
@@ -429,11 +432,11 @@ export default function EtatAvancementUnifie({
         }
       }))
       
-      toast.success('Avenant ajouté avec succès')
+      toast.success(tx("Avenant ajouté avec succès"))
       router.refresh()
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de l\'ajout de l\'avenant')
+      toast.error(tx("Erreur lors de l'ajout de l'avenant"))
     }
   }
 
@@ -609,7 +612,7 @@ export default function EtatAvancementUnifie({
       }, 100);
     } catch (error) {
       console.error('Erreur lors de la mise à jour de l\'avenant:', error)
-      toast.error('Erreur lors de la mise à jour de l\'avenant')
+      toast.error(tx("Erreur lors de la mise à jour de l'avenant"))
     } finally {
       setIsLoading(false)
     }
@@ -629,7 +632,7 @@ export default function EtatAvancementUnifie({
       if (onCommentairesChange) {
         onCommentairesChange(commentaires)
       }
-      toast.success('Commentaires sauvegardés localement')
+      toast.success(tx("Commentaires sauvegardés localement"))
       return
     }
     
@@ -654,10 +657,10 @@ export default function EtatAvancementUnifie({
       if (onCommentairesChange) {
         onCommentairesChange(commentaires)
       }
-      toast.success('Commentaires sauvegardés avec succès')
+      toast.success(tx("Commentaires sauvegardés avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la sauvegarde des commentaires')
+      toast.error(tx("Erreur lors de la sauvegarde des commentaires"))
     }
   }
 
@@ -689,10 +692,10 @@ export default function EtatAvancementUnifie({
         return newValues
       })
 
-      toast.success('Avenant supprimé avec succès')
+      toast.success(tx("Avenant supprimé avec succès"))
     } catch (error) {
       console.error('Erreur:', error)
-      toast.error('Erreur lors de la suppression de l\'avenant')
+      toast.error(tx("Erreur lors de la suppression de l'avenant"))
     }
   }
 
@@ -736,7 +739,7 @@ export default function EtatAvancementUnifie({
             }}
             className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             rows={6}
-            placeholder="Saisissez vos commentaires..."
+            placeholder={tx("Saisissez vos commentaires...")}
           />
         ) : (
           <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600">
@@ -752,7 +755,7 @@ export default function EtatAvancementUnifie({
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <span className="font-bold text-lg">Commande initiale</span>
+            <span className="font-bold text-lg"><UiText>Commande initiale</UiText></span>
           </div>
         </div>
         
@@ -778,14 +781,14 @@ export default function EtatAvancementUnifie({
                   Art.
                 </th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Description
-                </th>
+                  <UiText>Description
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Type
-                </th>
+                  <UiText>Type
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Unité
-                </th>
+                  <UiText>Unité
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Prix unit.
                 </th>
@@ -793,8 +796,8 @@ export default function EtatAvancementUnifie({
                   Q. Init.
                 </th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Q. Préc.
-                </th>
+                  <UiText>Q. Préc.
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-gradient-to-r from-blue-50 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/20 font-bold text-blue-700 dark:text-blue-300">
                   Q. Actuelle
                 </th>
@@ -802,8 +805,8 @@ export default function EtatAvancementUnifie({
                   Q. Totale
                 </th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Mont. Préc.
-                </th>
+                  <UiText>Mont. Préc.
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Mont. Act.
                 </th>
@@ -852,9 +855,9 @@ export default function EtatAvancementUnifie({
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right font-medium">
                       {formatMontant(ligne.prixUnitaire)} €
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{ligne.quantite.toLocaleString('fr-FR')}</td>
+                    <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{ligne.quantite.toLocaleString(intlLocale(getActiveLocale()))}</td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">
-                      {ligne.quantitePrecedente.toLocaleString('fr-FR')}
+                      {ligne.quantitePrecedente.toLocaleString(intlLocale(getActiveLocale()))}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/20 border-r border-blue-200 dark:border-blue-700 shadow-sm">
                       {!etat.estFinalise ? (
@@ -867,12 +870,12 @@ export default function EtatAvancementUnifie({
                         />
                       ) : (
                         <span className="font-bold text-center text-blue-800 dark:text-blue-300 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent block">
-                          {ligne.quantiteActuelle.toLocaleString('fr-FR')}
+                          {ligne.quantiteActuelle.toLocaleString(intlLocale(getActiveLocale()))}
                         </span>
                       )}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right font-medium">
-                      {ligne.quantiteTotale.toLocaleString('fr-FR')}
+                      {ligne.quantiteTotale.toLocaleString(intlLocale(getActiveLocale()))}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{formatMontant(ligne.montantPrecedent)} €</td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right font-medium">
@@ -905,7 +908,7 @@ export default function EtatAvancementUnifie({
               className="flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
             >
               <PlusIcon className="h-4 w-4" />
-              <span>Ajouter un avenant</span>
+              <span><UiText>Ajouter un avenant</UiText></span>
             </button>
           )}
         </div>
@@ -932,14 +935,14 @@ export default function EtatAvancementUnifie({
                   Art.
                 </th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Description
-                </th>
+                  <UiText>Description
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Type
-                </th>
+                  <UiText>Type
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Unité
-                </th>
+                  <UiText>Unité
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Prix unit.
                 </th>
@@ -947,8 +950,8 @@ export default function EtatAvancementUnifie({
                   Q. Init.
                 </th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Q. Préc.
-                </th>
+                  <UiText>Q. Préc.
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider bg-gradient-to-r from-blue-50 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/20 font-bold text-blue-700 dark:text-blue-300">
                   Q. Actuelle
                 </th>
@@ -956,8 +959,8 @@ export default function EtatAvancementUnifie({
                   Q. Totale
                 </th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Mont. Préc.
-                </th>
+                  <UiText>Mont. Préc.
+                </UiText></th>
                 <th scope="col" className="px-2 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Mont. Act.
                 </th>
@@ -1053,7 +1056,7 @@ export default function EtatAvancementUnifie({
                         <option value="M2">M²</option>
                         <option value="M3">M³</option>
                         <option value="Heures">Heures</option>
-                        <option value="Pièces">Pièces</option>
+                        <option value="Pièces"><UiText>Pièces</UiText></option>
                         <option value="Fft">Forfait</option>
                       </select>
                     ) : (
@@ -1083,11 +1086,11 @@ export default function EtatAvancementUnifie({
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-center bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 shadow-sm"
                       />
                     ) : (
-                      <span className="text-gray-700 dark:text-gray-300">{avenant.quantite.toLocaleString('fr-FR')}</span>
+                      <span className="text-gray-700 dark:text-gray-300">{avenant.quantite.toLocaleString(intlLocale(getActiveLocale()))}</span>
                     )}
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">
-                    {avenant.quantitePrecedente.toLocaleString('fr-FR')}
+                    {avenant.quantitePrecedente.toLocaleString(intlLocale(getActiveLocale()))}
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap text-sm bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/20 border-r border-blue-200 dark:border-blue-700 shadow-sm">
                     {!etat.estFinalise ? (
@@ -1099,12 +1102,12 @@ export default function EtatAvancementUnifie({
                       />
                     ) : (
                       <span className="font-bold text-center text-blue-800 dark:text-blue-300 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent block">
-                        {avenant.quantiteActuelle.toLocaleString('fr-FR')}
+                        {avenant.quantiteActuelle.toLocaleString(intlLocale(getActiveLocale()))}
                       </span>
                     )}
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right font-medium">
-                    {avenant.quantiteTotale.toLocaleString('fr-FR')}
+                    {avenant.quantiteTotale.toLocaleString(intlLocale(getActiveLocale()))}
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{formatMontant(avenant.montantPrecedent)} €</td>
                   <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right font-medium">
@@ -1118,7 +1121,7 @@ export default function EtatAvancementUnifie({
                       <button
                         onClick={() => handleDeleteAvenant(avenant.id)}
                         className="absolute right-1 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg z-10 hover:scale-110"
-                        title="Supprimer cet avenant"
+                        title={tx("Supprimer cet avenant")}
                       >
                         <TrashIcon className="h-3 w-3" />
                       </button>
@@ -1135,16 +1138,16 @@ export default function EtatAvancementUnifie({
       {/* Résumé des totaux */}
       <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-gray-800 to-gray-600 dark:from-gray-200 dark:to-gray-400 bg-clip-text text-transparent">
-          Résumé des montants
-        </h2>
+          <UiText>Résumé des montants
+        </UiText></h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-cyan-900/30 dark:to-blue-900/40 p-6 rounded-xl shadow-md border border-cyan-200 dark:border-cyan-700 hover:shadow-lg transition-all duration-300">
             <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-cyan-700 to-blue-700 dark:from-cyan-300 dark:to-blue-300 bg-clip-text text-transparent">
-              🏗️ Commande initiale
-            </h3>
+              <UiText>🏗️ Commande initiale
+            </UiText></h3>
             <div className="space-y-2">
               <p className="text-sm text-cyan-700 dark:text-cyan-300">
-                <span className="font-medium">Précédent:</span> 
+                <span className="font-medium"><UiText>Précédent:</UiText></span> 
                 <span className="font-bold ml-2">{formatMontant(summary.totalCommandeInitiale.precedent)} €</span>
               </p>
               <p className="text-sm text-cyan-700 dark:text-cyan-300">
@@ -1164,7 +1167,7 @@ export default function EtatAvancementUnifie({
             </h3>
             <div className="space-y-2">
               <p className="text-sm text-emerald-700 dark:text-emerald-300">
-                <span className="font-medium">Précédent:</span> 
+                <span className="font-medium"><UiText>Précédent:</UiText></span> 
                 <span className="font-bold ml-2">{formatMontant(summary.totalAvenants.precedent)} €</span>
               </p>
               <p className="text-sm text-emerald-700 dark:text-emerald-300">
@@ -1180,11 +1183,11 @@ export default function EtatAvancementUnifie({
           </div>
           <div className="bg-gradient-to-br from-red-50 to-rose-100 dark:from-red-900/30 dark:to-rose-900/40 p-6 rounded-xl shadow-md border border-red-200 dark:border-red-700 hover:shadow-lg transition-all duration-300 ring-2 ring-red-300 dark:ring-red-600">
             <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-red-700 to-rose-700 dark:from-red-300 dark:to-rose-300 bg-clip-text text-transparent">
-              💰 Total général
-            </h3>
+              <UiText>💰 Total général
+            </UiText></h3>
             <div className="space-y-2">
               <p className="text-sm text-red-700 dark:text-red-300">
-                <span className="font-medium">Précédent:</span> 
+                <span className="font-medium"><UiText>Précédent:</UiText></span> 
                 <span className="font-bold ml-2">{formatMontant(summary.totalGeneral.precedent)} €</span>
               </p>
               <p className="text-sm text-red-700 dark:text-red-300">
@@ -1205,7 +1208,7 @@ export default function EtatAvancementUnifie({
         isOpen={confirmDelete.open}
         onClose={() => setConfirmDelete({ open: false, avenantId: null })}
         onConfirm={doDeleteAvenant}
-        title="Supprimer l'avenant"
+        title={tx("Supprimer l'avenant")}
         message="Êtes-vous sûr de vouloir supprimer cet avenant ? Cette action est irréversible."
         confirmText="Supprimer"
         cancelText="Annuler"

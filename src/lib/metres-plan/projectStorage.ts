@@ -1,3 +1,4 @@
+import { tx } from '@/lib/i18n/translate'
 import JSZip from 'jszip'
 import type { Project } from '@/types/metres-plan'
 
@@ -61,7 +62,7 @@ export async function loadProjectFromFile(): Promise<LoadResult | null> {
           resolve({ project: project as Project, pdfBytes: null, pdfFileName: null })
         }
       } catch {
-        alert('Fichier .mplan invalide.')
+        alert(tx("Fichier .mplan invalide."))
         resolve(null)
       }
     }

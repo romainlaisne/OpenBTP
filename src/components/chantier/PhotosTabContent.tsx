@@ -1,5 +1,7 @@
 'use client'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useState, useEffect } from 'react'
 import { CameraIcon, CloudArrowUpIcon, XMarkIcon, TrashIcon } from '@heroicons/react/24/outline'
 import PhotosContent from './PhotosContent'
@@ -207,13 +209,13 @@ export default function PhotosTabContent({ chantierId }: PhotosTabContentProps) 
             <CameraIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
             <div className="space-y-2">
               <p className="text-lg font-medium text-gray-900 dark:text-white">
-                Glissez-déposez vos photos ici
-              </p>
+                <UiText>Glissez-déposez vos photos ici
+              </UiText></p>
               <p className="text-gray-500 dark:text-gray-400">
                 ou{' '}
                 <label className="text-green-600 dark:text-green-400 hover:text-green-500 cursor-pointer font-medium">
-                  cliquez pour sélectionner
-                  <input
+                  <UiText>cliquez pour sélectionner
+                  </UiText><input
                     type="file"
                     multiple
                     accept="image/*"
@@ -223,8 +225,8 @@ export default function PhotosTabContent({ chantierId }: PhotosTabContentProps) 
                 </label>
               </p>
               <p className="text-sm text-gray-400 dark:text-gray-500">
-                PNG, JPG, JPEG jusqu'à 10MB par fichier
-              </p>
+                <UiText>PNG, JPG, JPEG jusqu'à 10MB par fichier
+              </UiText></p>
             </div>
           </div>
 
@@ -248,7 +250,7 @@ export default function PhotosTabContent({ chantierId }: PhotosTabContentProps) 
           {uploadedFiles.length > 0 && (
             <div className="mt-6">
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                Photos sélectionnées ({uploadedFiles.length})
+                <UiText>Photos sélectionnées (</UiText>{uploadedFiles.length})
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {uploadedFiles.map((uploadedFile) => (
@@ -256,14 +258,14 @@ export default function PhotosTabContent({ chantierId }: PhotosTabContentProps) 
                     <div className="aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
                       <img
                         src={uploadedFile.preview}
-                        alt="Aperçu"
+                        alt={tx("Aperçu")}
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <button
                       onClick={() => removeFile(uploadedFile.id)}
                       className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="Supprimer"
+                      title={tx("Supprimer")}
                     >
                       <XMarkIcon className="h-4 w-4" />
                     </button>
@@ -283,7 +285,7 @@ export default function PhotosTabContent({ chantierId }: PhotosTabContentProps) 
               {uploading && (
                 <div className="mb-4">
                   <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
-                    <span>Upload en cours...</span>
+                    <span><UiText>Upload en cours...</UiText></span>
                     <span>{uploadProgress}%</span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -305,8 +307,8 @@ export default function PhotosTabContent({ chantierId }: PhotosTabContentProps) 
                   disabled={uploading}
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors disabled:opacity-50"
                 >
-                  Réinitialiser
-                </button>
+                  <UiText>Réinitialiser
+                </UiText></button>
                 
                 <button
                   onClick={uploadPhotos}
@@ -319,8 +321,8 @@ export default function PhotosTabContent({ chantierId }: PhotosTabContentProps) 
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Upload en cours...
-                    </>
+                      <UiText>Upload en cours...
+                    </UiText></>
                   ) : (
                     <>
                       <CloudArrowUpIcon className="h-4 w-4 mr-2" />
@@ -339,10 +341,10 @@ export default function PhotosTabContent({ chantierId }: PhotosTabContentProps) 
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                Photos de chantier dans la base de données
-              </h3>
+                <UiText>Photos de chantier dans la base de données
+              </UiText></h3>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                {photosCount} photo{photosCount > 1 ? 's' : ''} trouvée{photosCount > 1 ? 's' : ''}
+                {photosCount} photo{photosCount > 1 ? 's' : ''} <UiText>trouvée</UiText>{photosCount > 1 ? 's' : ''}
               </p>
             </div>
             <button

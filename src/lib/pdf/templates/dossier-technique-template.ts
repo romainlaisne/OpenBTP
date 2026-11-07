@@ -1,3 +1,4 @@
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 export interface DossierTechniqueCoverData {
   settings: {
     name: string
@@ -242,7 +243,7 @@ export function generateDossierTechniqueCoverHTML(data: DossierTechniqueCoverDat
             
             <div class="project-info">
                 <div class="label">Date de génération</div>
-                <div class="value">${new Date(dossier.dateGeneration).toLocaleDateString('fr-FR', { 
+                <div class="value">${new Date(dossier.dateGeneration).toLocaleDateString(intlLocale(getActiveLocale()), { 
                     year: 'numeric', 
                     month: 'long', 
                     day: 'numeric' 
@@ -260,15 +261,15 @@ export function generateDossierTechniqueCoverHTML(data: DossierTechniqueCoverDat
                 <p><span class="label">Client:</span> ${chantier.client?.nom || 'Non spécifié'}</p>
                 ${chantier.adresseChantier ? `<p><span class="label">Adresse:</span> ${chantier.adresseChantier}</p>` : ''}
                 ${chantier.villeChantier ? `<p><span class="label">Ville:</span> ${chantier.villeChantier}</p>` : ''}
-                ${chantier.dateDebut ? `<p><span class="label">Date de début:</span> ${new Date(chantier.dateDebut).toLocaleDateString('fr-FR')}</p>` : ''}
+                ${chantier.dateDebut ? `<p><span class="label">Date de début:</span> ${new Date(chantier.dateDebut).toLocaleDateString(intlLocale(getActiveLocale()))}</p>` : ''}
             </div>
             
             <div class="info-section">
                 <h3>Détails du dossier</h3>
                 <p><span class="label">Nombre de fiches:</span> ${dossier.nombreFiches}</p>
                 ${dossier.version > 1 ? `<p><span class="label">Version du dossier:</span> V${dossier.version}</p>` : ''}
-                ${dossier.datePremiereGeneration ? `<p><span class="label">Date de première génération:</span> ${new Date(dossier.datePremiereGeneration).toLocaleDateString('fr-FR')}</p>` : ''}
-                <p><span class="label">Date de génération:</span> ${new Date(dossier.dateGeneration).toLocaleDateString('fr-FR')}</p>
+                ${dossier.datePremiereGeneration ? `<p><span class="label">Date de première génération:</span> ${new Date(dossier.datePremiereGeneration).toLocaleDateString(intlLocale(getActiveLocale()))}</p>` : ''}
+                <p><span class="label">Date de génération:</span> ${new Date(dossier.dateGeneration).toLocaleDateString(intlLocale(getActiveLocale()))}</p>
                 ${dossier.fichesValidees > 0 ? `<p><span class="label">Fiches validées:</span> ${dossier.fichesValidees}</p>` : ''}
                 ${dossier.fichesNouvelles > 0 ? `<p><span class="label">Nouvelles propositions:</span> ${dossier.fichesNouvelles}</p>` : ''}
             </div>

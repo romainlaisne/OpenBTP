@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -12,10 +14,11 @@ export async function POST(
   request: NextRequest,
   props: { params: Promise<{ id: string }> }
 ) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { id: tacheId } = await props.params
@@ -24,7 +27,7 @@ export async function POST(
       select: { id: true }
     })
     if (!tache) {
-      return NextResponse.json({ error: 'Tâche introuvable' }, { status: 404 })
+      return localizedJson({ error: 'Tâche introuvable' }, { status: 404 })
     }
 
     const formData = await request.formData()
@@ -32,7 +35,7 @@ export async function POST(
     const rawFiles = formData.getAll('photos') as File[]
 
     if (!rawFiles?.length) {
-      return NextResponse.json({ error: 'Aucune photo' }, { status: 400 })
+      return localizedJson({ error: 'Aucune photo' }, { status: 400 })
     }
 
     // Lire TOUS les buffers en mémoire d'un seul coup avant tout traitement.
@@ -80,19 +83,19 @@ export async function POST(
     }
 
     if (urls.length === 0) {
-      return NextResponse.json(
+      return localizedJson(
         { error: `Aucune photo valide. ${rejected} fichier(s) rejeté(s) : format non supporté (acceptés : JPEG, PNG, WebP, HEIC, AVIF).` },
         { status: 400 }
       )
     }
 
-    return NextResponse.json({
+    return localizedJson({
       success: true,
       urls,
       ...(rejected > 0 && { warning: `${rejected} photo(s) ignorée(s) : format non supporté.` })
     })
   } catch (error) {
     console.error('Erreur POST photos tache:', error)
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+    return localizedJson({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

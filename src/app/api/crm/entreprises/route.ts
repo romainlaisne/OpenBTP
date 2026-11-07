@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,10 +7,11 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/crm/entreprises - Liste des entreprises prospects
 export async function GET(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -41,10 +44,10 @@ export async function GET(request: Request) {
       orderBy: { nom: 'asc' },
     })
 
-    return NextResponse.json(entreprises)
+    return localizedJson(entreprises)
   } catch (error) {
     console.error('Erreur GET /api/crm/entreprises:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des entreprises' },
       { status: 500 }
     )
@@ -53,16 +56,17 @@ export async function GET(request: Request) {
 
 // POST /api/crm/entreprises - Créer une entreprise prospect
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 })
     }
 
     const body = await request.json()
 
     if (!body.nom) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Le nom de l\'entreprise est requis' },
         { status: 400 }
       )
@@ -83,10 +87,10 @@ export async function POST(request: Request) {
       },
     })
 
-    return NextResponse.json(entreprise, { status: 201 })
+    return localizedJson(entreprise, { status: 201 })
   } catch (error) {
     console.error('Erreur POST /api/crm/entreprises:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de l\'entreprise' },
       { status: 500 }
     )

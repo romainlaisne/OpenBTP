@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma/client'
 import { getServerSession } from 'next-auth'
@@ -5,10 +7,11 @@ import { authOptions } from '@/lib/auth'
 
 // GET /api/outillage/machines - Liste toutes les machines
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -20,10 +23,10 @@ export async function GET() {
       }
     })
 
-    return NextResponse.json(machines)
+    return localizedJson(machines)
   } catch (error) {
     console.error('Erreur:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la récupération des machines' },
       { status: 500 }
     )
@@ -32,13 +35,14 @@ export async function GET() {
 
 // POST /api/outillage/machines - Crée une nouvelle machine
 export async function POST(request: Request) {
+  await bindRequestLocale()
   try {
     console.log('Tentative de création d\'une nouvelle machine')
     
     const session = await getServerSession(authOptions)
     if (!session) {
       console.log('Erreur: Session non trouvée')
-      return NextResponse.json(
+      return localizedJson(
         { error: 'Non autorisé' },
         { status: 401 }
       )
@@ -76,17 +80,17 @@ export async function POST(request: Request) {
       })
       
       console.log('Machine créée avec succès:', machine)
-      return NextResponse.json(machine)
+      return localizedJson(machine)
     } catch (prismaError: unknown) {
       console.error('Erreur Prisma lors de la création:', prismaError)
-      return NextResponse.json(
+      return localizedJson(
         { error: `Erreur de base de données: ${(prismaError as Error).message}` },
         { status: 500 }
       )
     }
   } catch (error) {
     console.error('Erreur générale:', error)
-    return NextResponse.json(
+    return localizedJson(
       { error: 'Erreur lors de la création de la machine' },
       { status: 500 }
     )

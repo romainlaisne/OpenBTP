@@ -1,3 +1,5 @@
+import { bindRequestLocale } from '@/lib/i18n/server'
+import { localizedJson } from '@/lib/i18n/localized-json'
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { getServerSession } from 'next-auth';
@@ -7,10 +9,11 @@ import { canonicalTagName, normalizeTagKey } from '@/lib/utils/tags';
 
 // GET /api/tags - Récupérer tous les tags
 export async function GET() {
+  await bindRequestLocale()
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+      return localizedJson({ error: 'Non autorisé' }, { status: 401 });
     }
 
     // Pour l'instant, nous ne filtrons pas par contexte (administratif, chantier)
@@ -28,16 +31,17 @@ export async function GET() {
       }
     });
 
-    return NextResponse.json(tags);
+    return localizedJson(tags);
 
   } catch (error) {
     console.error("Erreur lors de la récupération des tags:", error);
-    return NextResponse.json({ error: 'Erreur serveur lors de la récupération des tags' }, { status: 500 });
+    return localizedJson({ error: 'Erreur serveur lors de la récupération des tags' }, { status: 500 });
   }
 }
 
 // POST /api/tags - Créer un nouveau tag
 export async function POST(request: Request) {
+  await bindRequestLocale()
   let nom: string | undefined
   try {
     const body = await request.json();
@@ -55,7 +59,7 @@ export async function POST(request: Request) {
     const existingTag = allTags.find(t => normalizeTagKey(t.nom) === key)
 
     if (existingTag) {
-      return NextResponse.json(existingTag, { status: 200 }); // Retourner le tag existant
+      return localizedJson(existingTag, { status: 200 }); // Retourner le tag existant
     }
 
     const newTag = await prisma.tag.create({
@@ -63,14 +67,14 @@ export async function POST(request: Request) {
         nom,
       },
     });
-    return NextResponse.json(newTag, { status: 201 });
+    return localizedJson(newTag, { status: 201 });
   } catch (error) {
     console.error('[API_TAGS_POST]', error);
     if (typeof error === 'object' && error && 'code' in error) {
       // Contrainte unique violée (requêtes quasi-simultanées) : renvoyer le tag existant
       if ((error as { code?: string }).code === 'P2002' && nom) {
         const conflictingTag = await prisma.tag.findUnique({ where: { nom } });
-        if (conflictingTag) return NextResponse.json(conflictingTag, { status: 200 });
+        if (conflictingTag) return localizedJson(conflictingTag, { status: 200 });
         return new NextResponse('Un tag avec ce nom existe déjà (conflit de base de données).', { status: 409 });
       }
     }

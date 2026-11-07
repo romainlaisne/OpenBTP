@@ -1,5 +1,8 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
+import { UiText } from '@/contexts/LocaleContext'
 import Link from 'next/link'
 import { 
   EyeIcon, 
@@ -55,38 +58,38 @@ export default function ChantiersTable({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-indigo-50 dark:bg-indigo-900/20 flex justify-between items-center">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Chantiers récents</h3>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white"><UiText>Chantiers récents</UiText></h3>
         <Link 
           href="/chantiers/nouveau"
           className="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
         >
-          Nouveau chantier
-        </Link>
+          <UiText>Nouveau chantier
+        </UiText></Link>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Nom
-              </th>
+                <UiText>Nom
+              </UiText></th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Date de début
-              </th>
+                <UiText>Date de début
+              </UiText></th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                État
-              </th>
+                <UiText>État
+              </UiText></th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Actions
-              </th>
+                <UiText>Actions
+              </UiText></th>
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {chantiers.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                  Aucun chantier trouvé
-                </td>
+                  <UiText>Aucun chantier trouvé
+                </UiText></td>
               </tr>
             ) : (
               chantiers.map((chantier) => (
@@ -95,7 +98,7 @@ export default function ChantiersTable({
                     {chantier.nomChantier}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {new Date(chantier.dateCommencement).toLocaleDateString('fr-FR')}
+                    {new Date(chantier.dateCommencement).toLocaleDateString(intlLocale(getActiveLocale()))}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     <ChantierStatus 
@@ -113,35 +116,35 @@ export default function ChantiersTable({
                       <Link 
                         href={`/chantiers/${chantier.chantierId}`}
                         className="p-2 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 transition-colors"
-                        title="Voir le chantier"
+                        title={tx("Voir le chantier")}
                       >
                         <EyeIcon className="h-5 w-5" />
                       </Link>
                       <Link 
                         href={`/chantiers/${chantier.chantierId}/notes`}
                         className="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
-                        title="Notes"
+                        title={tx("Notes")}
                       >
                         <DocumentTextIcon className="h-5 w-5" />
                       </Link>
                       <Link 
                         href={`/chantiers/${chantier.chantierId}/documents`}
                         className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
-                        title="Documents"
+                        title={tx("Documents")}
                       >
                         <FolderIcon className="h-5 w-5" />
                       </Link>
                       <Link 
                         href={`/chantiers/${chantier.chantierId}/etats`}
                         className="p-2 bg-orange-100 text-orange-600 rounded-lg hover:bg-orange-200 transition-colors"
-                        title="États"
+                        title={tx("États")}
                       >
                         <ClipboardDocumentListIcon className="h-5 w-5" />
                       </Link>
                       <Link
                         href={`/chantiers/${chantier.chantierId}/modifier`}
                         className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
-                        title="Modifier"
+                        title={tx("Modifier")}
                       >
                         <PencilIcon className="h-5 w-5" />
                       </Link>

@@ -1,5 +1,7 @@
 'use client'
+import { getActiveLocale, intlLocale } from '@/lib/i18n/locale'
 
+import { tx } from '@/lib/i18n/translate'
 import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
@@ -87,7 +89,7 @@ export default function ChantierMetresPlanPage() {
       else loadProjets()
     } catch (err) {
       console.error('Erreur création:', err)
-      alert('Impossible de créer le métré sur plan.')
+      alert(tx("Impossible de créer le métré sur plan."))
     } finally {
       setCreating(false)
     }
@@ -109,14 +111,14 @@ export default function ChantierMetresPlanPage() {
       className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
     >
       <ArrowLeftIcon className="h-4 w-4" />
-      Retour au chantier
-    </Link>
+      <UiText>Retour au chantier
+    </UiText></Link>
   )
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-indigo-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <PageHeader
-        title="Métrés sur plan"
+        title={tx("Métrés sur plan")}
         subtitle={chantier ? `Chantier : ${chantier.nomChantier}` : 'Chargement...'}
         icon={PencilSquareIcon}
         badgeColor="from-indigo-600 via-blue-600 to-sky-700"
@@ -150,18 +152,18 @@ export default function ChantierMetresPlanPage() {
           <div className="text-center py-20">
             <PencilSquareIcon className="h-20 w-20 text-gray-300 dark:text-gray-600 mx-auto mb-5" />
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Aucun métré sur plan pour ce chantier
-            </h3>
+              <UiText>Aucun métré sur plan pour ce chantier
+            </UiText></h3>
             <p className="text-gray-500 dark:text-gray-400 mb-6">
-              Créez un nouveau métré pour commencer à dessiner sur vos plans PDF.
-            </p>
+              <UiText>Créez un nouveau métré pour commencer à dessiner sur vos plans PDF.
+            </UiText></p>
             <button
               onClick={() => setDialogOpen(true)}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white rounded-lg shadow-md text-sm font-semibold"
             >
               <PlusIcon className="h-4 w-4" />
-              Créer un métré
-            </button>
+              <UiText>Créer un métré
+            </UiText></button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -179,8 +181,8 @@ export default function ChantierMetresPlanPage() {
                       {projet.nom}
                     </h3>
                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                      Mis à jour le{' '}
-                      {new Date(projet.updatedAt).toLocaleDateString('fr-FR', {
+                      <UiText>Mis à jour le</UiText>{' '}
+                      {new Date(projet.updatedAt).toLocaleDateString(intlLocale(getActiveLocale()), {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric',
@@ -194,8 +196,8 @@ export default function ChantierMetresPlanPage() {
                     className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 text-sm font-semibold"
                   >
                     <FolderOpenIcon className="h-4 w-4" />
-                    Ouvrir
-                  </button>
+                    <UiText>Ouvrir
+                  </UiText></button>
                 </div>
               </div>
             ))}
@@ -210,7 +212,7 @@ export default function ChantierMetresPlanPage() {
             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1"><UiText>Nouveau métré sur plan</UiText></h2>
             {chantier && (
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                Chantier : <span className="font-medium text-gray-700 dark:text-gray-300">{chantier.nomChantier}</span>
+                <UiText>Chantier : </UiText><span className="font-medium text-gray-700 dark:text-gray-300">{chantier.nomChantier}</span>
               </p>
             )}
             <div>
@@ -222,7 +224,7 @@ export default function ChantierMetresPlanPage() {
                 value={nomProjet}
                 onChange={(e) => setNomProjet(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
-                placeholder="Ex : Façade - Niveau R+1"
+                placeholder={tx("Ex : Façade - Niveau R+1")}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 autoFocus
               />
