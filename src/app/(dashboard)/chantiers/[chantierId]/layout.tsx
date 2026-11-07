@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { ChantierHeader } from '@/components/ChantierHeader'
 import { useSession } from 'next-auth/react'
@@ -73,7 +74,7 @@ export default function ChantierLayout(
   if (!chantier) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-gray-700 dark:text-gray-300 text-xl">Chantier non trouvé</div>
+        <div className="text-gray-700 dark:text-gray-300 text-xl"><UiText>Chantier non trouvé</UiText></div>
       </div>
     )
   }

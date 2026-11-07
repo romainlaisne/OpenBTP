@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -89,7 +90,7 @@ export default function DocumentsExpiresPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-600 mx-auto" />
           <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm font-medium">
-            Chargement de la page…
+            <UiText>Chargement de la page…</UiText>
           </p>
         </div>
       </div>
@@ -135,7 +136,7 @@ export default function DocumentsExpiresPage() {
               </div>
               <div>
                 <h2 className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">
-                  Suivi des documents
+                  <UiText>Suivi des documents</UiText>
                 </h2>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">
                   {documents.length === 0
@@ -152,7 +153,7 @@ export default function DocumentsExpiresPage() {
             <div className="p-8 flex flex-col items-center justify-center">
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-600" />
               <p className="mt-4 text-sm text-gray-600 dark:text-gray-400 font-medium">
-                Chargement des documents expirés…
+                <UiText>Chargement des documents expirés…</UiText>
               </p>
             </div>
           ) : error ? (
@@ -199,7 +200,7 @@ export default function DocumentsExpiresPage() {
                 <thead className="bg-gray-50 dark:bg-gray-800/80">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                      Statut
+                      <UiText>Statut</UiText>
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                       Document
@@ -217,7 +218,7 @@ export default function DocumentsExpiresPage() {
                       Délai
                     </th>
                     <th className="px-4 py-3 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                      Actions
+                      <UiText>Actions</UiText>
                     </th>
                   </tr>
                 </thead>
@@ -243,7 +244,7 @@ export default function DocumentsExpiresPage() {
                           ) : (
                             <>
                               <ClockIcon className="h-4 w-4" />
-                              À surveiller
+                              <UiText>À surveiller</UiText>
                             </>
                           )}
                         </span>

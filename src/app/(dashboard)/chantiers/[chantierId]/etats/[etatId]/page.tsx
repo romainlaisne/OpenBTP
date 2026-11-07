@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use, useMemo } from 'react';
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -313,9 +314,9 @@ export default function EtatAvancementPage(props: PageProps) {
     }
   };
 
-  if (loading) return <div className="p-8">Chargement...</div>
+  if (loading) return <div className="p-8"><UiText>Chargement...</UiText></div>
   if (error) return <div className="p-8 text-red-500">{error}</div>
-  if (!chantier || !etatAvancement) return <div className="p-8">État d'avancement non trouvé</div>
+  if (!chantier || !etatAvancement) return <div className="p-8"><UiText>État d'avancement non trouvé</UiText></div>
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -333,7 +334,7 @@ export default function EtatAvancementPage(props: PageProps) {
                     className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/40 bg-white/20 backdrop-blur-sm text-white shadow-sm shadow-indigo-900/30 hover:bg-white/30 transition"
                   >
                     <ArrowLeftIcon className="h-4 w-4" />
-                    <span className="text-sm font-semibold">Retour</span>
+                    <span className="text-sm font-semibold"><UiText>Retour</UiText></span>
                   </Link>
 
                   <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full shadow-lg ring-2 ring-white/30 text-white">
@@ -351,7 +352,7 @@ export default function EtatAvancementPage(props: PageProps) {
 
                 <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-white/90">
                   <span className="inline-flex items-center gap-2">
-                    <span className="opacity-90">Date</span>
+                    <span className="opacity-90"><UiText>Date</UiText></span>
                     <span className="font-semibold">{new Date(etatAvancement.date).toLocaleDateString('fr-FR')}</span>
                   </span>
                   <span className="inline-flex items-center gap-2">
@@ -405,7 +406,7 @@ export default function EtatAvancementPage(props: PageProps) {
                     {validating ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                        Validation...
+                        <UiText>Validation...</UiText>
                       </>
                     ) : (
                       <>

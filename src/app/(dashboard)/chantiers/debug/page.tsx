@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
@@ -26,14 +27,14 @@ export default function DebugPage() {
 
       {/* Table des chantiers existants */}
       <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Chantiers dans la base de données</h2>
+        <h2 className="text-xl font-bold mb-4"><UiText>Chantiers dans la base de données</UiText></h2>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID (numérique)</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">UUID (chantierId)</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><UiText>Nom</UiText></th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><UiText>Actions</UiText></th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -58,7 +59,7 @@ export default function DebugPage() {
 
       {/* Test avec ID personnalisé */}
       <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Test avec ID personnalisé</h2>
+        <h2 className="text-xl font-bold mb-4"><UiText>Test avec ID personnalisé</UiText></h2>
         <div className="flex gap-4 items-center">
           <input
             type="text"
@@ -78,7 +79,7 @@ export default function DebugPage() {
 
       {/* ID correct à utiliser */}
       <div className="bg-green-50 border border-green-200 rounded p-4">
-        <h2 className="text-lg font-bold text-green-800 mb-2">ID correct à utiliser</h2>
+        <h2 className="text-lg font-bold text-green-800 mb-2"><UiText>ID correct à utiliser</UiText></h2>
         <p className="font-mono bg-white p-2 rounded">
           {chantiers[0]?.chantierId || 'Chargement...'}
         </p>

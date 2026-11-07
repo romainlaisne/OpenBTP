@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { 
   DocumentIcon, 
@@ -296,7 +297,7 @@ export default function DocumentsAdministratifsPage() {
               className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl text-white bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200"
             >
               <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
-              Télécharger
+              <UiText>Télécharger</UiText>
             </a>
           </div>
         </div>
@@ -411,7 +412,7 @@ export default function DocumentsAdministratifsPage() {
                 onClick={handleAddNewTagToModal}
                 className="px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 text-sm font-semibold inline-flex items-center shadow-lg hover:shadow-xl transition-all duration-200"
               >
-                <PlusCircleIcon className="h-5 w-5 mr-1" /> Ajouter
+                <PlusCircleIcon className="h-5 w-5 mr-1" /> <UiText>Ajouter</UiText>
               </button>
             </div>
           </div>
@@ -439,7 +440,7 @@ export default function DocumentsAdministratifsPage() {
               onClick={handleCloseModal}
               className="px-4 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-500 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200"
             >
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button 
               onClick={handleSubmitModal}
@@ -470,7 +471,7 @@ export default function DocumentsAdministratifsPage() {
             <DocumentTextIcon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Documents</div>
+            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase"><UiText>Documents</UiText></div>
             <div className="text-sm font-black text-gray-900 dark:text-white">{totalDocuments}</div>
           </div>
         </div>
@@ -545,7 +546,7 @@ export default function DocumentsAdministratifsPage() {
             >
               <ArrowUpTrayIcon className="h-4 w-4 mr-1.5" />
               <span className="hidden sm:inline">Ajouter un document</span>
-              <span className="sm:hidden">Ajouter</span>
+              <span className="sm:hidden"><UiText>Ajouter</UiText></span>
             </label>
           </div>
         }

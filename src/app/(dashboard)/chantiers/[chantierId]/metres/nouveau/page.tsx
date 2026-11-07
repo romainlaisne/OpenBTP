@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import NumericInput from '@/components/ui/NumericInput'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -257,7 +258,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Chargement...</p>
+          <p className="text-gray-600 dark:text-gray-400"><UiText>Chargement...</UiText></p>
         </div>
       </div>
     )
@@ -278,7 +279,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
               </button>
               <div>
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  Nouveau métré
+                  <UiText>Nouveau métré</UiText>
                 </h1>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   Chantier: {chantier?.nomChantier || 'Chargement...'}
@@ -302,7 +303,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
           {/* Date */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Date
+              <UiText>Date</UiText>
             </label>
             <input
               type="date"
@@ -316,7 +317,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Catégories
+                <UiText>Catégories</UiText>
               </h3>
               <button
                 onClick={() => setShowAddCategorieModal(true)}
@@ -436,13 +437,13 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-gray-200 dark:border-gray-700">
-                                <th className="text-left py-2 px-3 text-gray-700 dark:text-gray-300">Description</th>
+                                <th className="text-left py-2 px-3 text-gray-700 dark:text-gray-300"><UiText>Description</UiText></th>
                                 <th className="text-center py-2 px-3 text-gray-700 dark:text-gray-300">Longueur (m)</th>
                                 <th className="text-center py-2 px-3 text-gray-700 dark:text-gray-300">Largeur (m)</th>
                                 <th className="text-center py-2 px-3 text-gray-700 dark:text-gray-300">Hauteur (m)</th>
-                                <th className="text-right py-2 px-3 text-gray-700 dark:text-gray-300">Quantité</th>
-                                <th className="text-left py-2 px-3 text-gray-700 dark:text-gray-300">Notes</th>
-                                <th className="text-center py-2 px-3 text-gray-700 dark:text-gray-300">Actions</th>
+                                <th className="text-right py-2 px-3 text-gray-700 dark:text-gray-300"><UiText>Quantité</UiText></th>
+                                <th className="text-left py-2 px-3 text-gray-700 dark:text-gray-300"><UiText>Notes</UiText></th>
+                                <th className="text-center py-2 px-3 text-gray-700 dark:text-gray-300"><UiText>Actions</UiText></th>
                               </tr>
                             </thead>
                             <tbody>
@@ -538,7 +539,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
                           className="w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400"
                         >
                           <PlusIcon className="h-4 w-4" />
-                          Ajouter une ligne
+                          <UiText>Ajouter une ligne</UiText>
                         </button>
                       </div>
                     )}
@@ -574,7 +575,7 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Nom de la catégorie
+                  <UiText>Nom de la catégorie</UiText>
                 </label>
                 <input
                   type="text"
@@ -611,13 +612,13 @@ export default function NouveauMetrePage(props: { params: Promise<{ chantierId: 
                 }}
                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={addCategorie}
                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                Créer
+                <UiText>Créer</UiText>
               </button>
             </div>
           </div>

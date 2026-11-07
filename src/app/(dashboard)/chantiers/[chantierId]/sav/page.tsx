@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -127,7 +128,7 @@ export default function ChantierSAVPage() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            Service Après-Vente
+            <UiText>Service Après-Vente</UiText>
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
             Tickets SAV pour ce chantier
@@ -137,7 +138,7 @@ export default function ChantierSAVPage() {
         <Link href={`/sav/nouveau?chantierId=${chantierId}`}>
           <Button className="bg-blue-600 hover:bg-blue-700 text-white">
             <PlusIcon className="h-5 w-5 mr-2" />
-            Nouveau ticket
+            <UiText>Nouveau ticket</UiText>
           </Button>
         </Link>
       </div>

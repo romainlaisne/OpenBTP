@@ -1,6 +1,7 @@
 // Page d'administration du système RAG
 'use client';
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { usePermission } from '@/hooks/usePermission';
@@ -65,7 +66,7 @@ export default function RAGAdminPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
           <h1 className="text-xl font-semibold text-red-800 dark:text-red-200 mb-2">
-            Accès non autorisé
+            <UiText>Accès non autorisé</UiText>
           </h1>
           <p className="text-red-600 dark:text-red-300">
             Vous n'avez pas les permissions nécessaires pour accéder à cette page.
@@ -129,7 +130,7 @@ export default function RAGAdminPage() {
         {/* En-tête */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Administration RAG
+            <UiText>Administration RAG</UiText>
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
             Gestion du système de questions-réponses intelligentes

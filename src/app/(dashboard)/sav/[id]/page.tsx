@@ -13,6 +13,7 @@ import {
   ArrowLeftIcon
 } from '@heroicons/react/24/outline'
 import { PageHeader } from '@/components/PageHeader'
+import { UiText } from '@/contexts/LocaleContext'
 import { StatutSAV, LABELS_STATUT_SAV } from '@/types/sav'
 
 type Statut = StatutSAV
@@ -126,7 +127,7 @@ export default function SavDetailPage() {
     if (res.ok) load()
   }
 
-  if (!ticket) return <div className="p-6">Chargement…</div>
+  if (!ticket) return <div className="p-6"><UiText>Chargement…</UiText></div>
 
   const onChangeForm = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -275,7 +276,7 @@ export default function SavDetailPage() {
             </div>
           </div>
           <div>
-            <label className="block text-sm mb-1">Description</label>
+            <label className="block text-sm mb-1"><UiText>Description</UiText></label>
             <textarea name="description" value={form.description} onChange={onChangeForm} rows={4} className="w-full p-2 border rounded bg-white" placeholder="Description" />
           </div>
         </div>
@@ -321,7 +322,7 @@ export default function SavDetailPage() {
                 <input name="dateFin" type="datetime-local" className="p-2 border rounded" />
                 <input name="description" placeholder="Description" className="p-2 border rounded md:col-span-4" />
               </div>
-              <div className="mt-2 text-right"><button className="px-3 py-2 bg-blue-600 text-white rounded">Ajouter</button></div>
+              <div className="mt-2 text-right"><button className="px-3 py-2 bg-blue-600 text-white rounded"><UiText>Ajouter</UiText></button></div>
             </form>
           </div>
         </div>
@@ -347,7 +348,7 @@ export default function SavDetailPage() {
           <div className="mt-2 p-3 border rounded bg-white">
             <div className="font-medium mb-2">Ajouter un document</div>
             <label className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded cursor-pointer hover:bg-blue-700">
-              Télécharger
+              <UiText>Télécharger</UiText>
               <input hidden type="file" onChange={async(e)=>{
                 if (!e.target.files?.length) return
                 setUploading(true)
@@ -360,7 +361,7 @@ export default function SavDetailPage() {
                 ;(e.target as HTMLInputElement).value = ''
               }} />
             </label>
-            {uploading && <div className="text-xs text-gray-500 mt-2">Envoi…</div>}
+            {uploading && <div className="text-xs text-gray-500 mt-2"><UiText>Envoi…</UiText></div>}
           </div>
         </div>
       )}
@@ -415,7 +416,7 @@ function PhotosSection({ ticket, ticketId, reload, uploading, setUploading }: { 
       <div className="mt-4 p-3 border rounded bg-white">
         <div className="font-medium mb-2">Ajouter une photo</div>
         <label className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded cursor-pointer hover:bg-blue-700">
-          Télécharger
+          <UiText>Télécharger</UiText>
           <input hidden type="file" accept="image/*" onChange={async(e)=>{
             if (!e.target.files?.length) return
             setUploading(true)
@@ -428,7 +429,7 @@ function PhotosSection({ ticket, ticketId, reload, uploading, setUploading }: { 
             ;(e.target as HTMLInputElement).value = ''
           }} />
         </label>
-        {uploading && <div className="text-xs text-gray-500 mt-2">Envoi…</div>}
+        {uploading && <div className="text-xs text-gray-500 mt-2"><UiText>Envoi…</UiText></div>}
       </div>
     </div>
   )

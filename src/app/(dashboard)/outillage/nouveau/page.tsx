@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -77,7 +78,7 @@ export default function NouvelleMachinePage() {
         gradientColor="from-blue-600/10 via-indigo-600/10 to-purple-700/10"
         infoCard={
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-gray-900/60 border border-gray-200/70 dark:border-gray-700/60 text-xs font-semibold text-blue-700 dark:text-blue-200 shadow-sm">
-            <CheckCircleIcon className="h-4 w-4" /> Création de machine
+            <CheckCircleIcon className="h-4 w-4" /> <UiText>Création de machine</UiText>
           </span>
         }
         actions={
@@ -87,7 +88,7 @@ export default function NouvelleMachinePage() {
               className="inline-flex items-center gap-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 bg-white/90 dark:bg-gray-800/80 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm"
             >
               <ArrowLeftIcon className="h-4 w-4" />
-              Retour
+              <UiText>Retour</UiText>
             </Link>
           </div>
         }
@@ -189,7 +190,7 @@ export default function NouvelleMachinePage() {
 
               <div className="space-y-2 md:col-span-2">
                 <label htmlFor="commentaire" className="block text-sm font-semibold text-gray-800 dark:text-gray-200">
-                  Commentaire
+                  <UiText>Commentaire</UiText>
                 </label>
                 <textarea
                   name="commentaire"
@@ -214,7 +215,7 @@ export default function NouvelleMachinePage() {
                   className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white/80 dark:bg-gray-900/60 hover:bg-gray-50 dark:hover:bg-gray-800/80 transition-colors"
                   disabled={saving}
                 >
-                  Annuler
+                  <UiText>Annuler</UiText>
                 </button>
                 <button
                   type="submit"

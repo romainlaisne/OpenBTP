@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
@@ -144,7 +145,7 @@ function DeleteModal({ isOpen, sousTraitant, onClose, onConfirm, isDeleting }: D
             disabled={isDeleting}
             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </button>
           <button
             type="button"
@@ -745,7 +746,7 @@ export default function SousTraitantsPage() {
             onClick={() => window.location.reload()} 
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
-            Réessayer
+            <UiText>Réessayer</UiText>
           </button>
         </div>
       </div>
@@ -758,7 +759,7 @@ export default function SousTraitantsPage() {
         <div className="flex items-center gap-2">
           <UsersIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Sous-traitants</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Sous-traitants</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{totalSousTraitants}</div>
           </div>
         </div>
@@ -776,7 +777,7 @@ export default function SousTraitantsPage() {
         <div className="flex items-center gap-2">
           <CheckCircleIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Signés</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Signés</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{contratsSignes}</div>
           </div>
         </div>
@@ -819,7 +820,7 @@ export default function SousTraitantsPage() {
               title="Tableau des documents de toutes les personnes"
             >
               <ClipboardDocumentListIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Documents</span>
+              <span className="hidden sm:inline"><UiText>Documents</UiText></span>
             </Link>
             <Link
               href="/sous-traitants/nouveau"
@@ -898,7 +899,7 @@ export default function SousTraitantsPage() {
           <div className="text-center py-12">
             <UsersIcon className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-              Aucun sous-traitant
+              <UiText>Aucun sous-traitant</UiText>
             </h3>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               {filtreNom
@@ -1034,7 +1035,7 @@ export default function SousTraitantsPage() {
                       {st.contrats && st.contrats.length > 0 && st.contrats[0].estSigne ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
                           <CheckCircleIcon className="h-3 w-3 mr-1" />
-                          Contrat signé
+                          <UiText>Contrat signé</UiText>
                         </span>
                       ) : st.contrats && st.contrats.length > 0 ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100">
@@ -1071,7 +1072,7 @@ export default function SousTraitantsPage() {
                         className="inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:bg-green-900 dark:text-green-200 dark:hover:bg-green-800 transition-colors duration-200"
                             >
                         <DocumentTextIcon className="h-4 w-4 mr-2" />
-                              Voir contrat signé
+                              <UiText>Voir contrat signé</UiText>
                             </a>
                           ) : (
                       <>
@@ -1086,12 +1087,12 @@ export default function SousTraitantsPage() {
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                   </svg>
-                                  Génération...
+                                  <UiText>Génération...</UiText>
                                 </span>
                               ) : (
                                 <>
                               <DocumentTextIcon className="h-4 w-4 mr-2" />
-                                  Générer contrat
+                                  <UiText>Générer contrat</UiText>
                                 </>
                               )}
                             </button>
@@ -1104,7 +1105,7 @@ export default function SousTraitantsPage() {
                             className="inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-indigo-900 dark:text-indigo-200 dark:hover:bg-indigo-800 transition-colors duration-200"
                             >
                             <DocumentTextIcon className="h-4 w-4 mr-2" />
-                              Consulter contrat
+                              <UiText>Consulter contrat</UiText>
                             </a>
                           )}
                           
@@ -1119,12 +1120,12 @@ export default function SousTraitantsPage() {
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                   </svg>
-                                  Envoi...
+                                  <UiText>Envoi...</UiText>
                                 </span>
                               ) : (
                                 <>
                                <EnvelopeIcon className="h-4 w-4 mr-2" />
-                                  Envoyer contrat
+                                  <UiText>Envoyer contrat</UiText>
                                 </>
                               )}
                             </button>
@@ -1147,7 +1148,7 @@ export default function SousTraitantsPage() {
                                     className="inline-flex items-center rounded-md bg-white px-2 py-1 font-medium text-indigo-700 hover:bg-indigo-50 dark:bg-gray-800 dark:text-indigo-300"
                                   >
                                     <EyeIcon className="h-3.5 w-3.5 mr-1" />
-                                    Consulter
+                                    <UiText>Consulter</UiText>
                                   </a>
                                   <button
                                     onClick={() => envoyerContrat(st.id, st.renouvellement?.dateEnvoi ? 'relance' : 'envoi')}
@@ -1188,7 +1189,7 @@ export default function SousTraitantsPage() {
                               className="inline-flex items-center gap-1 text-xs text-gray-600 hover:underline dark:text-gray-300"
                             >
                               <ClipboardDocumentListIcon className="h-3.5 w-3.5" />
-                              Historique
+                              <UiText>Historique</UiText>
                             </button>
                           </div>
                         </div>
@@ -1244,7 +1245,7 @@ export default function SousTraitantsPage() {
                           Fin de contrat
                         </th>
                         <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 dark:text-gray-200 pr-4 sm:pr-6">
-                          Actions
+                          <UiText>Actions</UiText>
                         </th>
                       </tr>
                     </thead>
@@ -1304,7 +1305,7 @@ export default function SousTraitantsPage() {
                                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    Mise à jour...
+                                    <UiText>Mise à jour...</UiText>
                                   </span>
                                 ) : (
                                   <>
@@ -1610,7 +1611,7 @@ export default function SousTraitantsPage() {
               <input className="p-2 border rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:ring-blue-400 dark:focus:border-blue-400" placeholder="Poste" value={newOuvrier.poste} onChange={e=>setNewOuvrier(prev=>({...prev, poste:e.target.value}))} />
               <div className="md:col-span-5 flex items-center gap-3 mt-2">
                 <label className="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input type="checkbox" checked={newOuvrier.actif} onChange={e=>setNewOuvrier(prev=>({...prev, actif:e.target.checked}))} /> Actif</label>
-                <button className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">Ajouter</button>
+                <button className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"><UiText>Ajouter</UiText></button>
               </div>
             </form>
           </div>
@@ -1640,7 +1641,7 @@ export default function SousTraitantsPage() {
                         }}
                       >
                         <div className="flex items-center gap-1">
-                          <span>Prénom</span>
+                          <span><UiText>Prénom</UiText></span>
                           {ouvrierSortField === 'prenom' ? (
                             ouvrierSortDirection === 'asc' ? (
                               <ChevronUpIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -1665,7 +1666,7 @@ export default function SousTraitantsPage() {
                         }}
                       >
                         <div className="flex items-center gap-1">
-                          <span>Nom</span>
+                          <span><UiText>Nom</UiText></span>
                           {ouvrierSortField === 'nom' ? (
                             ouvrierSortDirection === 'asc' ? (
                               <ChevronUpIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -1715,7 +1716,7 @@ export default function SousTraitantsPage() {
                         }}
                       >
                         <div className="flex items-center gap-1">
-                          <span>Email</span>
+                          <span><UiText>Email</UiText></span>
                           {ouvrierSortField === 'email' ? (
                             ouvrierSortDirection === 'asc' ? (
                               <ChevronUpIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -1740,7 +1741,7 @@ export default function SousTraitantsPage() {
                         }}
                       >
                         <div className="flex items-center gap-1">
-                          <span>Téléphone</span>
+                          <span><UiText>Téléphone</UiText></span>
                           {ouvrierSortField === 'telephone' ? (
                             ouvrierSortDirection === 'asc' ? (
                               <ChevronUpIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -1753,7 +1754,7 @@ export default function SousTraitantsPage() {
                         </div>
                       </th>
                       <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 dark:text-gray-200 pr-4 sm:pr-6">
-                        Actions
+                        <UiText>Actions</UiText>
                       </th>
                     </tr>
                   </thead>
@@ -1901,11 +1902,11 @@ export default function SousTraitantsPage() {
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                      <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Nom</th>
-                      <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Statut</th>
-                      <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Tâches</th>
+                      <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200"><UiText>Nom</UiText></th>
+                      <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200"><UiText>Statut</UiText></th>
+                      <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200"><UiText>Tâches</UiText></th>
                       <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Portail</th>
-                      <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 dark:text-gray-200 pr-4 sm:pr-6">Actions</th>
+                      <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 dark:text-gray-200 pr-4 sm:pr-6"><UiText>Actions</UiText></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
@@ -1982,7 +1983,7 @@ export default function SousTraitantsPage() {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Modifier l&apos;ouvrier</h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prénom</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Prénom</UiText></label>
                 <input
                   className="w-full p-2 border rounded dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   value={editOuvrierForm.prenom}
@@ -1990,7 +1991,7 @@ export default function SousTraitantsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Nom</UiText></label>
                 <input
                   className="w-full p-2 border rounded dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   value={editOuvrierForm.nom}
@@ -2006,7 +2007,7 @@ export default function SousTraitantsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Email</UiText></label>
                 <input
                   type="email"
                   className="w-full p-2 border rounded dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -2015,7 +2016,7 @@ export default function SousTraitantsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Téléphone</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Téléphone</UiText></label>
                 <input
                   className="w-full p-2 border rounded dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   value={editOuvrierForm.telephone}
@@ -2041,7 +2042,7 @@ export default function SousTraitantsPage() {
                 Code PIN du portail
               </h4>
               {editOuvrierModal.loadingPin ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">Chargement...</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Chargement...</UiText></p>
               ) : (
                 <div className="flex gap-2">
                   <div className="relative flex-1">
@@ -2079,7 +2080,7 @@ export default function SousTraitantsPage() {
                 onClick={() => setEditOuvrierModal({open:false, ouvrier:null, pin:'', pinVisible:false, loadingPin:false, savingPin:false})}
                 className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 type="button"
@@ -2103,7 +2104,7 @@ export default function SousTraitantsPage() {
             {/* Infos générales */}
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><UiText>Nom</UiText></label>
                 <input
                   className="w-full p-2 border rounded dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   value={editMagForm.nom}
@@ -2136,7 +2137,7 @@ export default function SousTraitantsPage() {
                 Code PIN du portail
               </h4>
               {editMagModal.loadingPin ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">Chargement...</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400"><UiText>Chargement...</UiText></p>
               ) : (
                 <div className="flex gap-2">
                   <div className="relative flex-1">
@@ -2175,7 +2176,7 @@ export default function SousTraitantsPage() {
                 onClick={() => setEditMagModal({open:false, mag:null, pin:'', pinVisible:false, loadingPin:false, savingPin:false})}
                 className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600"
               >
-                Fermer
+                <UiText>Fermer</UiText>
               </button>
             </div>
           </div>
@@ -2246,7 +2247,7 @@ export default function SousTraitantsPage() {
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-gray-900 dark:text-gray-100 truncate">{r.nom}</span>
                           {r.sent ? (
-                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 inline-flex items-center gap-1"><CheckIcon className="h-3 w-3" />Email envoyé</span>
+                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 inline-flex items-center gap-1"><CheckIcon className="h-3 w-3" /><UiText>Email envoyé</UiText></span>
                           ) : r.email ? (
                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">Échec email</span>
                           ) : (
@@ -2287,14 +2288,14 @@ export default function SousTraitantsPage() {
             <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end gap-2">
               {!inviteResults ? (
                 <>
-                  <button onClick={() => setInviteOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600">Annuler</button>
+                  <button onClick={() => setInviteOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600"><UiText>Annuler</UiText></button>
                   <button
                     onClick={sendInvitations}
                     disabled={inviteSending || inviteSelected.size === 0}
                     className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-700 rounded-lg hover:from-blue-700 hover:to-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {inviteSending ? (
-                      <><div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />Envoi...</>
+                      <><div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" /><UiText>Envoi...</UiText></>
                     ) : (
                       <><PaperAirplaneIcon className="h-4 w-4" />Inviter ({inviteSelected.size})</>
                     )}

@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
@@ -223,7 +224,7 @@ export default function ChoixClientsPage() {
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-2 text-gray-600 dark:text-gray-400">Chargement...</span>
+          <span className="ml-2 text-gray-600 dark:text-gray-400"><UiText>Chargement...</UiText></span>
         </div>
       ) : filteredChoixClients.length === 0 ? (
         <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg border-2 border-gray-200 dark:border-gray-700">
@@ -260,10 +261,10 @@ export default function ChoixClientsPage() {
                     Nb choix
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Statut
+                    <UiText>Statut</UiText>
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
+                    <UiText>Actions</UiText>
                   </th>
                 </tr>
               </thead>
@@ -370,13 +371,13 @@ export default function ChoixClientsPage() {
                 onClick={() => setDeleteConfirm({ show: false, id: '', nom: '' })}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm.id)}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors"
               >
-                Supprimer
+                <UiText>Supprimer</UiText>
               </button>
             </div>
           </div>

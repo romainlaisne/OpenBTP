@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link'
@@ -458,7 +459,7 @@ export default function RapportsVisitePage(props: { params: Promise<{ chantierId
 
   if (!chantier) return (
     <div className="bg-yellow-50 dark:bg-yellow-900/10 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400">
-      Chantier non trouvé
+      <UiText>Chantier non trouvé</UiText>
     </div>
   )
 
@@ -473,7 +474,7 @@ export default function RapportsVisitePage(props: { params: Promise<{ chantierId
         <div className="flex min-w-0 items-center gap-3">
           <DocumentTextIcon className="h-7 w-7 shrink-0 text-blue-600 dark:text-blue-400" />
           <div className="min-w-0">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Rapports de visite</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white"><UiText>Rapports de visite</UiText></h1>
             {chantier.nomChantier && <p className="truncate text-sm text-gray-500 dark:text-gray-400">{chantier.nomChantier}</p>}
           </div>
         </div>

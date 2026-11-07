@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
@@ -129,7 +130,7 @@ function EntrepriseForm({
       {/* Nom */}
       <div>
         <label className={labelCls}>
-          Nom <span className="text-red-500">*</span>
+          <UiText>Nom</UiText> <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -143,7 +144,7 @@ function EntrepriseForm({
 
       {/* Type */}
       <div>
-        <label className={labelCls}>Type</label>
+        <label className={labelCls}><UiText>Type</UiText></label>
         <select
           value={form.type}
           onChange={(e) => onChange('type', e.target.value)}
@@ -158,7 +159,7 @@ function EntrepriseForm({
 
       {/* Adresse */}
       <div>
-        <label className={labelCls}>Adresse</label>
+        <label className={labelCls}><UiText>Adresse</UiText></label>
         <input
           type="text"
           value={form.adresse}
@@ -171,7 +172,7 @@ function EntrepriseForm({
       {/* Code postal + Ville */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className={labelCls}>Code postal</label>
+          <label className={labelCls}><UiText>Code postal</UiText></label>
           <input
             type="text"
             value={form.codePostal}
@@ -181,7 +182,7 @@ function EntrepriseForm({
           />
         </div>
         <div>
-          <label className={labelCls}>Ville</label>
+          <label className={labelCls}><UiText>Ville</UiText></label>
           <input
             type="text"
             value={form.ville}
@@ -206,7 +207,7 @@ function EntrepriseForm({
 
       {/* Téléphone */}
       <div>
-        <label className={labelCls}>Téléphone</label>
+        <label className={labelCls}><UiText>Téléphone</UiText></label>
         <input
           type="tel"
           value={form.telephone}
@@ -218,7 +219,7 @@ function EntrepriseForm({
 
       {/* Email */}
       <div>
-        <label className={labelCls}>Email</label>
+        <label className={labelCls}><UiText>Email</UiText></label>
         <input
           type="email"
           value={form.email}
@@ -248,7 +249,7 @@ function EntrepriseForm({
           disabled={saving}
           className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors"
         >
-          Annuler
+          <UiText>Annuler</UiText>
         </button>
         <button
           type="submit"
@@ -500,7 +501,7 @@ function DeleteModal({
             disabled={state.isDeleting}
             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors"
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </button>
           <button
             type="button"
@@ -812,7 +813,7 @@ export default function CrmPage() {
             onClick={() => window.location.reload()}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
-            Réessayer
+            <UiText>Réessayer</UiText>
           </button>
         </div>
       </div>
@@ -951,19 +952,19 @@ export default function CrmPage() {
                 <thead>
                   <tr className="bg-gray-50 dark:bg-gray-700/50">
                     <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200 sm:pl-6">
-                      Nom
+                      <UiText>Nom</UiText>
                     </th>
                     <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
-                      Type
+                      <UiText>Type</UiText>
                     </th>
                     <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
-                      Ville
+                      <UiText>Ville</UiText>
                     </th>
                     <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
-                      Téléphone
+                      <UiText>Téléphone</UiText>
                     </th>
                     <th scope="col" className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
-                      Email
+                      <UiText>Email</UiText>
                     </th>
                     <th scope="col" className="py-3.5 px-3 text-center text-sm font-semibold text-gray-900 dark:text-gray-200">
                       Contacts
@@ -972,7 +973,7 @@ export default function CrmPage() {
                       Rappels
                     </th>
                     <th scope="col" className="py-3.5 px-3 text-right text-sm font-semibold text-gray-900 dark:text-gray-200 pr-4 sm:pr-6">
-                      Actions
+                      <UiText>Actions</UiText>
                     </th>
                   </tr>
                 </thead>

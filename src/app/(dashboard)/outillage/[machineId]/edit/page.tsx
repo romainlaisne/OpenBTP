@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use, useRef } from 'react';
 import { useRouter } from 'next/navigation'
 import SelectField from '@/components/ui/SelectField'
@@ -187,14 +188,14 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
   }
 
   if (loading) {
-    return <div className="p-4">Chargement...</div>
+    return <div className="p-4"><UiText>Chargement...</UiText></div>
   }
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="md:flex md:items-center md:justify-between md:space-x-4 xl:border-b xl:pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Modifier la machine</h1>
+          <h1 className="text-2xl font-bold text-gray-900"><UiText>Modifier la machine</UiText></h1>
         </div>
       </div>
 
@@ -202,7 +203,7 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
         {/* Photo de la machine */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Photo de la machine
+            <UiText>Photo de la machine</UiText>
           </label>
           {photoUrl ? (
             <div className="relative">
@@ -232,7 +233,7 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
                   className="inline-flex items-center justify-center px-4 py-2 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
                 >
                   <TrashIcon className="h-4 w-4 mr-2" />
-                  Supprimer
+                  <UiText>Supprimer</UiText>
                 </button>
               </div>
               <input
@@ -365,7 +366,7 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
 
         <div>
           <label htmlFor="commentaire" className="block text-sm font-medium text-gray-700">
-            Commentaire
+            <UiText>Commentaire</UiText>
           </label>
           <textarea
             name="commentaire"
@@ -383,7 +384,7 @@ export default function EditMachinePage(props: { params: Promise<{ machineId: st
             onClick={() => router.back()}
             className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50"
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </button>
           <button
             type="submit"

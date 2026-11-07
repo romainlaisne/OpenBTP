@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { 
@@ -495,7 +496,7 @@ export default function FichesTechniquesFullscreenPage() {
       <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <span className="text-gray-600 dark:text-gray-300">Chargement des fiches techniques...</span>
+          <span className="text-gray-600 dark:text-gray-300"><UiText>Chargement des fiches techniques...</UiText></span>
         </div>
       </div>
     )
@@ -557,7 +558,7 @@ export default function FichesTechniquesFullscreenPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Génération...
+                  <UiText>Génération...</UiText>
                 </>
               ) : (
                 <>

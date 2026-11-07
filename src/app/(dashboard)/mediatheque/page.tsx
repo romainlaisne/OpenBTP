@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useSession } from 'next-auth/react'
 import {
@@ -403,7 +404,7 @@ export default function MediathequePage() {
               className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-violet-600 to-purple-700 hover:from-violet-700 hover:to-purple-800 text-white rounded-lg shadow-lg transition-all text-sm font-semibold"
             >
               <ArrowUpTrayIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Ajouter</span>
+              <span className="hidden sm:inline"><UiText>Ajouter</UiText></span>
             </button>
             <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={handleFilePick} />
           </div>
@@ -665,7 +666,7 @@ export default function MediathequePage() {
               {/* Description */}
               <div>
                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Description <span className="text-gray-400">(optionnel)</span>
+                  <UiText>Description</UiText> <span className="text-gray-400">(optionnel)</span>
                 </label>
                 <textarea
                   value={uploadDescription}
@@ -732,7 +733,7 @@ export default function MediathequePage() {
 
             <div className="flex justify-end gap-2 px-5 py-4 border-t border-gray-100 dark:border-gray-800 sticky bottom-0 bg-white dark:bg-gray-900">
               <button onClick={() => setUploadDialog(false)} className="px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 transition rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={handleUploadSubmit}
@@ -740,7 +741,7 @@ export default function MediathequePage() {
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-purple-700 hover:from-violet-700 hover:to-purple-800 disabled:opacity-60 text-white rounded-xl text-sm font-semibold shadow-lg transition"
               >
                 {uploading
-                  ? <><div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />Envoi…</>
+                  ? <><div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" /><UiText>Envoi…</UiText></>
                   : <><ArrowUpTrayIcon className="h-4 w-4" />Publier {pendingFiles.length > 1 ? `(${pendingFiles.length})` : ''}</>
                 }
               </button>
@@ -754,14 +755,14 @@ export default function MediathequePage() {
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-4">
           <div className="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-md border-t sm:border border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 z-10">
-              <h2 className="text-base font-semibold text-gray-900 dark:text-white">Modifier</h2>
+              <h2 className="text-base font-semibold text-gray-900 dark:text-white"><UiText>Modifier</UiText></h2>
               <button onClick={() => setEditingItem(null)} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                 <XMarkIcon className="h-5 w-5" />
               </button>
             </div>
             <div className="px-5 py-4 space-y-4">
               <div>
-                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Description</label>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5"><UiText>Description</UiText></label>
                 <textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} rows={2}
                   className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-violet-400 focus:border-transparent outline-none resize-none" />
               </div>
@@ -795,11 +796,11 @@ export default function MediathequePage() {
               </div>
             </div>
             <div className="flex justify-end gap-2 px-5 py-4 border-t border-gray-100 dark:border-gray-800 sticky bottom-0 bg-white dark:bg-gray-900">
-              <button onClick={() => setEditingItem(null)} className="px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 transition rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">Annuler</button>
+              <button onClick={() => setEditingItem(null)} className="px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 transition rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><UiText>Annuler</UiText></button>
               <button onClick={saveEdit} disabled={saving}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-purple-700 hover:from-violet-700 hover:to-purple-800 disabled:opacity-60 text-white rounded-xl text-sm font-semibold shadow-lg transition">
                 {saving ? <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" /> : <CheckIcon className="h-4 w-4" />}
-                Enregistrer
+                <UiText>Enregistrer</UiText>
               </button>
             </div>
           </div>

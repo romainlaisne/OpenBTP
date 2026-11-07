@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -107,7 +108,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/20 to-purple-50/10 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-300">Chargement...</div>
+        <div className="text-gray-600 dark:text-gray-300"><UiText>Chargement...</UiText></div>
       </div>
     )
   }
@@ -141,7 +142,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
             href="/clients"
             className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
           >
-            Retour
+            <UiText>Retour</UiText>
           </Link>
         }
       />
@@ -208,7 +209,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                 variant="outline"
                 onClick={() => router.push('/clients')}
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </Button>
               <Button
                 type="submit"
@@ -231,7 +232,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Nom du chantier
+                      <UiText>Nom du chantier</UiText>
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Date de commencement
@@ -240,10 +241,10 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                       État
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Montant
+                      <UiText>Montant</UiText>
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Actions
+                      <UiText>Actions</UiText>
                     </th>
                   </tr>
                 </thead>
@@ -269,7 +270,7 @@ export default function EditClientPage(props: { params: Promise<{ clientId: stri
                           href={`/chantiers/${chantier.chantierId}/etats`}
                           className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                         >
-                          Voir le chantier
+                          <UiText>Voir le chantier</UiText>
                         </Link>
                       </td>
                     </tr>

@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { FormInput, Button } from '@/components/ui'
@@ -267,7 +268,7 @@ export default function NouveauSousTraitantPage() {
             variant="outline"
             onClick={() => router.back()}
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </Button>
           <Button
             type="submit"

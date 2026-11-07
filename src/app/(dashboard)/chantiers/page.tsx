@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -131,7 +132,7 @@ function ChantierCard({
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Mise à jour...
+                  <UiText>Mise à jour...</UiText>
                 </span>
               ) : (
                 <>
@@ -617,7 +618,7 @@ export default function ChantiersPage() {
         <div className="flex items-center gap-2">
           <ClockIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Préparation</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Préparation</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{stats.enPreparation}</div>
           </div>
         </div>
@@ -651,7 +652,7 @@ export default function ChantiersPage() {
             className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
           >
             <PlusIcon className="h-4 w-4 mr-1.5" />
-            <span className="hidden sm:inline">Nouveau chantier</span>
+            <span className="hidden sm:inline"><UiText>Nouveau chantier</UiText></span>
             <span className="sm:hidden">Nouveau</span>
           </Link>
         }
@@ -737,7 +738,7 @@ export default function ChantiersPage() {
                   onClick={effacerFiltres}
                   className="self-center text-sm text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
                 >
-                  Effacer les filtres
+                  <UiText>Effacer les filtres</UiText>
                 </button>
               )}
             </div>
@@ -771,7 +772,7 @@ export default function ChantiersPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
             <BuildingOffice2Icon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              Aucun chantier trouvé
+              <UiText>Aucun chantier trouvé</UiText>
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               {filtreNom || filtreEtat || filtreClientId
@@ -782,7 +783,7 @@ export default function ChantiersPage() {
               href="/chantiers/nouveau"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Créer un chantier
+              <UiText>Créer un chantier</UiText>
             </Link>
           </div>
         ) : (
@@ -875,7 +876,7 @@ export default function ChantiersPage() {
                           )}
                         </th>
                         <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 dark:text-gray-200 pr-4 sm:pr-6">
-                          Actions
+                          <UiText>Actions</UiText>
                         </th>
                       </tr>
                     </thead>
@@ -908,7 +909,7 @@ export default function ChantiersPage() {
                                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    Mise à jour...
+                                    <UiText>Mise à jour...</UiText>
                                   </span>
                                 ) : (
                                   <>

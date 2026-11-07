@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation'
 import { DocumentExpirationAlert } from '@/components/DocumentExpirationAlert'
@@ -291,7 +292,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
 
   if (!chantier) return (
     <div className="bg-yellow-50 dark:bg-yellow-900/10 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400">
-      Chantier non trouvé
+      <UiText>Chantier non trouvé</UiText>
     </div>
   )
 
@@ -326,7 +327,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                     className="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-lg text-sm font-semibold shadow-lg hover:bg-white/40 transition-all duration-200 text-sky-900 dark:text-white"
                   >
                     <EyeIcon className="h-5 w-5" />
-                    Consulter
+                    <UiText>Consulter</UiText>
                   </button>
                 </div>
               </div>
@@ -349,12 +350,12 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                 {/* Section Informations générales */}
                 <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-6">
                   <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-600 pb-2">
-                    Informations générales
+                    <UiText>Informations générales</UiText>
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Nom du chantier
+                        <UiText>Nom du chantier</UiText>
                       </label>
                       <input
                         type="text"
@@ -371,7 +372,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Numéro d'identification
+                        <UiText>Numéro d'identification</UiText>
                       </label>
                       <input
                         type="text"
@@ -415,7 +416,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                     {selectedClientId && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Contact principal <span className="text-xs text-gray-500">(Optionnel)</span>
+                          <UiText>Contact principal</UiText> <span className="text-xs text-gray-500">(Optionnel)</span>
                         </label>
                         <SearchableSelect
                           options={contactsDuClient.map((contact) => ({
@@ -438,12 +439,12 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                     {/* Section Maitre d'ouvrage */}
                     <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
                       <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
-                        Maître d'ouvrage (optionnel)
+                        <UiText>Maître d'ouvrage (optionnel)</UiText>
                       </h4>
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Nom
+                            <UiText>Nom</UiText>
                           </label>
                           <input
                             type="text"
@@ -458,7 +459,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Adresse
+                            <UiText>Adresse</UiText>
                           </label>
                           <input
                             type="text"
@@ -492,12 +493,12 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                     {/* Section Bureau d'architecture */}
                     <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
                       <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
-                        Bureau d'architecture (optionnel)
+                        <UiText>Bureau d'architecture (optionnel)</UiText>
                       </h4>
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Nom
+                            <UiText>Nom</UiText>
                           </label>
                           <input
                             type="text"
@@ -512,7 +513,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Adresse
+                            <UiText>Adresse</UiText>
                           </label>
                           <input
                             type="text"
@@ -648,7 +649,7 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                     onClick={() => router.push(`/chantiers`)}
                     className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition-colors"
                   >
-                    Annuler
+                    <UiText>Annuler</UiText>
                   </button>
                   <button
                     type="submit"
@@ -661,12 +662,12 @@ export default function EditChantierPage(props: { params: Promise<{ chantierId: 
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        <span>Enregistrement...</span>
+                        <span><UiText>Enregistrement...</UiText></span>
                       </>
                     ) : (
                       <>
                         <PencilSquareIcon className="h-5 w-5 mr-2" />
-                        <span>Enregistrer</span>
+                        <span><UiText>Enregistrer</UiText></span>
                       </>
                     )}
                   </button>

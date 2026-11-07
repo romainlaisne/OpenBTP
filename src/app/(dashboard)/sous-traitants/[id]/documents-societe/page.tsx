@@ -4,6 +4,7 @@
 // fiscale, assurance RC, statuts…) : ajout, correction (type, date, précision)
 // et archivage — jamais de suppression, l'historique reste consultable.
 
+import { UiText } from '@/contexts/LocaleContext'
 import { use, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
@@ -64,7 +65,7 @@ function ChampsDocument(p: {
         ))}
       </SelectField>
       <div>
-        <label htmlFor="precision" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Précision (facultatif)</label>
+        <label htmlFor="precision" className="block text-sm font-medium text-gray-700 dark:text-gray-300"><UiText>Précision (facultatif)</UiText></label>
         <input id="precision" value={p.precision} onChange={(e) => p.setPrecision(e.target.value)} maxLength={60} placeholder="2026, 2e trimestre, page 2…" className={champ} />
       </div>
       <div>
@@ -110,7 +111,7 @@ function ModaleAjout({ onClose, onUpload, enCours }: { onClose: () => void; onUp
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Un document du même type déjà en vigueur sera archivé (conservé).</p>
         </div>
         <div className="mt-5 flex justify-end space-x-3">
-          <button type="button" onClick={onClose} disabled={enCours} className={btnSecondaire}>Annuler</button>
+          <button type="button" onClick={onClose} disabled={enCours} className={btnSecondaire}><UiText>Annuler</UiText></button>
           <button type="submit" disabled={enCours || !type || !fichier} className={btnPrimaire}>{enCours ? 'Envoi...' : 'Envoyer'}</button>
         </div>
       </form>
@@ -137,7 +138,7 @@ function ModaleEdition({ doc, onClose, onSave, enCours }: {
       >
         <ChampsDocument type={type} setType={setType} precision={precision} setPrecision={setPrecision} date={date} setDate={setDate} />
         <div className="mt-5 flex justify-end space-x-3">
-          <button type="button" onClick={onClose} disabled={enCours} className={btnSecondaire}>Annuler</button>
+          <button type="button" onClick={onClose} disabled={enCours} className={btnSecondaire}><UiText>Annuler</UiText></button>
           <button type="submit" disabled={enCours || !type} className={btnPrimaire}>{enCours ? 'Enregistrement...' : 'Enregistrer'}</button>
         </div>
       </form>
@@ -213,7 +214,7 @@ export default function DocumentsSocietePage(props: { params: Promise<{ id: stri
           <div className="flex gap-2">
             <button onClick={() => router.push('/sous-traitants/documents')} className="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
               <ArrowLeftIcon className="h-4 w-4" />
-              <span className="hidden sm:inline">Retour</span>
+              <span className="hidden sm:inline"><UiText>Retour</UiText></span>
             </button>
             <button onClick={() => setAjout(true)} className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
               <PlusIcon className="h-4 w-4" />
@@ -229,15 +230,15 @@ export default function DocumentsSocietePage(props: { params: Promise<{ id: stri
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700/50">
               <tr>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Type</th>
+                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300"><UiText>Type</UiText></th>
                 <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Date d&apos;ajout</th>
                 <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Expiration</th>
-                <th className="relative py-3.5 pl-3 pr-4 sm:pr-6"><span className="sr-only">Actions</span></th>
+                <th className="relative py-3.5 pl-3 pr-4 sm:pr-6"><span className="sr-only"><UiText>Actions</UiText></span></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
               {chargement ? (
-                <tr><td colSpan={4} className="px-3 py-6 text-sm text-gray-500">Chargement…</td></tr>
+                <tr><td colSpan={4} className="px-3 py-6 text-sm text-gray-500"><UiText>Chargement…</UiText></td></tr>
               ) : enVigueur.length === 0 ? (
                 <tr><td colSpan={4} className="px-3 py-6 text-sm text-gray-500 dark:text-gray-400">Aucun document de société en vigueur.</td></tr>
               ) : (
@@ -333,7 +334,7 @@ export default function DocumentsSocietePage(props: { params: Promise<{ id: stri
             « {libelleType(aArchiver.type)} » ne sera plus en vigueur. Il est conservé dans l&apos;historique (et dans _Archives sur le NAS), pas supprimé.
           </p>
           <div className="mt-4 flex justify-end space-x-3">
-            <button onClick={() => setAArchiver(null)} disabled={enCours} className={btnSecondaire}>Annuler</button>
+            <button onClick={() => setAArchiver(null)} disabled={enCours} className={btnSecondaire}><UiText>Annuler</UiText></button>
             <button
               onClick={() => executer(() => fetch(`${base}/${aArchiver.id}`, { method: 'DELETE' }), () => setAArchiver(null))}
               disabled={enCours}

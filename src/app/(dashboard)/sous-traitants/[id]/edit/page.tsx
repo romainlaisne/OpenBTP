@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -343,7 +344,7 @@ export default function EditSousTraitantPage(
 
           <div>
             <label htmlFor="parentId" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Rattaché à (sous-traitant principal)
+              <UiText>Rattaché à (sous-traitant principal)</UiText>
             </label>
             {rattaches.length > 0 ? (
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
@@ -429,7 +430,7 @@ export default function EditSousTraitantPage(
           <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-4">
               <KeyIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Accès Portail (PIN)</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white"><UiText>Accès Portail (PIN)</UiText></h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
               <div className="sm:col-span-2">
@@ -499,7 +500,7 @@ export default function EditSousTraitantPage(
                   }}
                   className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-medium hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
                 >
-                  Copier
+                  <UiText>Copier</UiText>
                 </button>
               </div>
             </div>
@@ -513,7 +514,7 @@ export default function EditSousTraitantPage(
             onClick={() => router.push(`/sous-traitants/${params.id}`)}
             className="px-6"
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </Button>
           <Button
             type="submit"

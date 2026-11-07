@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { PageHeader } from '@/components/PageHeader'
@@ -210,7 +211,7 @@ export default function JournalPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Accès non autorisé</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4"><UiText>Accès non autorisé</UiText></h1>
           <p className="text-gray-600">Vous n'avez pas les permissions pour accéder à cette page.</p>
         </div>
       </div>
@@ -360,12 +361,12 @@ export default function JournalPage() {
         {loading ? (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-8 text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Chargement du journal...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400"><UiText>Chargement du journal...</UiText></p>
           </div>
         ) : groupedEntries.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-gray-200 dark:border-gray-700 p-8 text-center">
             <CalendarDaysIcon className="h-12 w-12 text-gray-400 mx-auto mb-4"/>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Aucune entrée trouvée</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2"><UiText>Aucune entrée trouvée</UiText></h3>
             <p className="text-gray-600 dark:text-gray-400">
               Aucune activité n'a été enregistrée pour les critères sélectionnés.
             </p>
@@ -380,7 +381,7 @@ export default function JournalPage() {
                       Ouvrier
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
-                      Date
+                      <UiText>Date</UiText>
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
                       Heures
@@ -389,10 +390,10 @@ export default function JournalPage() {
                       Lieu
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
-                      Description
+                      <UiText>Description</UiText>
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
-                      Actions
+                      <UiText>Actions</UiText>
                     </th>
                   </tr>
                 </thead>
@@ -553,7 +554,7 @@ function JournalManagerForm({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1"><UiText>Date</UiText></label>
               <input
                 type="date"
                 value={formData.date}
@@ -623,7 +624,7 @@ function JournalManagerForm({
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1"><UiText>Description</UiText></label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -640,7 +641,7 @@ function JournalManagerForm({
               className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
               disabled={saving}
             >
-              Annuler
+              <UiText>Annuler</UiText>
             </button>
             <button
               type="submit"
@@ -684,7 +685,7 @@ function DeleteEntryModal({
             className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
             disabled={loading}
           >
-            Annuler
+            <UiText>Annuler</UiText>
           </button>
           <button
             onClick={onConfirm}

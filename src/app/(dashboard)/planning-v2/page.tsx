@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
@@ -102,7 +103,7 @@ export default function PlanningV2() {
         <div className="flex items-center gap-2">
           <ClockIcon className="h-4 w-4 text-amber-500" />
           <div>
-            <div className="text-[10px] font-medium text-gray-500 dark:text-gray-400">Préparation</div>
+            <div className="text-[10px] font-medium text-gray-500 dark:text-gray-400"><UiText>Préparation</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{stats.enPreparation}</div>
           </div>
         </div>
@@ -174,7 +175,7 @@ export default function PlanningV2() {
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Créer un chantier
+                  <UiText>Créer un chantier</UiText>
                 </Link>
               </div>
             )}

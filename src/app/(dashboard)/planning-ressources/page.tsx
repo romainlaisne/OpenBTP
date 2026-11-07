@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { PageHeader } from '@/components/PageHeader'
@@ -338,7 +339,7 @@ export default function PlanningRessourcesPage() {
         <div className="flex items-center gap-2">
           <BuildingOfficeIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Sous-traitants</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Sous-traitants</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{soustraitants.length}</div>
           </div>
         </div>
@@ -347,7 +348,7 @@ export default function PlanningRessourcesPage() {
         <div className="flex items-center gap-2">
           <CalendarIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">Chantiers</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400"><UiText>Chantiers</UiText></div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{chantiers.length}</div>
           </div>
         </div>
@@ -363,7 +364,7 @@ export default function PlanningRessourcesPage() {
             <div className="p-8">
               <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
-                <span className="ml-3 text-gray-600 dark:text-gray-400">Chargement du planning...</span>
+                <span className="ml-3 text-gray-600 dark:text-gray-400"><UiText>Chargement du planning...</UiText></span>
               </div>
             </div>
           </div>
@@ -437,7 +438,7 @@ export default function PlanningRessourcesPage() {
                     {soustraitants.length > 0 && (
                       <>
                         <div className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-gray-700 mt-1">
-                          Sous-traitants
+                          <UiText>Sous-traitants</UiText>
                         </div>
                         {soustraitants.map(s => (
                           <button
@@ -461,7 +462,7 @@ export default function PlanningRessourcesPage() {
               className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-orange-600 to-rose-700 hover:from-orange-700 hover:to-rose-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
             >
               <PlusIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Nouvelle tâche</span>
+              <span className="hidden sm:inline"><UiText>Nouvelle tâche</UiText></span>
               <span className="sm:hidden">Nouveau</span>
             </button>
           </div>

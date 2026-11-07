@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import useSWR from 'swr'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { jsonFetcher } from '@/lib/client/fetcher'
@@ -102,7 +103,7 @@ export default function SavListPage() {
           <Link href="/sav/nouveau">
             <button className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold">
               <PlusIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Nouveau ticket</span>
+              <span className="hidden sm:inline"><UiText>Nouveau ticket</UiText></span>
               <span className="sm:hidden">Nouveau</span>
             </button>
           </Link>
@@ -172,8 +173,8 @@ export default function SavListPage() {
                 <th className="text-left p-3">Titre</th>
                 <th className="text-left p-3">Chantier</th>
                 <th className="text-left p-3">Priorité</th>
-                <th className="text-left p-3">Statut</th>
-                <th className="text-right p-3">Actions</th>
+                <th className="text-left p-3"><UiText>Statut</UiText></th>
+                <th className="text-right p-3"><UiText>Actions</UiText></th>
               </tr>
             </thead>
             <tbody>

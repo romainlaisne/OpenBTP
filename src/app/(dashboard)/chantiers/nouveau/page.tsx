@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ArrowLeftIcon, BuildingOfficeIcon, MapPinIcon, CalendarIcon, ClockIcon, PlusIcon, ExclamationCircleIcon, DocumentTextIcon, BuildingOffice2Icon } from '@heroicons/react/24/outline'
@@ -171,7 +172,7 @@ export default function NouveauChantierPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Chargement des clients...</p>
+          <p className="text-gray-600 dark:text-gray-400"><UiText>Chargement des clients...</UiText></p>
         </div>
       </div>
     )
@@ -190,7 +191,7 @@ export default function NouveauChantierPage() {
             onClick={() => router.push('/chantiers')}
             className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
           >
-            Retour
+            <UiText>Retour</UiText>
           </button>
         }
       />
@@ -226,7 +227,7 @@ export default function NouveauChantierPage() {
                     <BuildingOfficeIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                    Informations générales
+                    <UiText>Informations générales</UiText>
                   </h3>
                 </div>
               
@@ -251,7 +252,7 @@ export default function NouveauChantierPage() {
 
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Numéro d'identification
+                    <UiText>Numéro d'identification</UiText>
                   </label>
                   <input
                     type="text"
@@ -292,7 +293,7 @@ export default function NouveauChantierPage() {
                 {selectedClientId && (
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Contact principal
+                      <UiText>Contact principal</UiText>
                     </label>
                     <SearchableSelect
                       options={contacts.map((contact) => ({
@@ -321,12 +322,12 @@ export default function NouveauChantierPage() {
                 {/* Section Maitre d'ouvrage */}
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
                   <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
-                    Maître d'ouvrage (optionnel)
+                    <UiText>Maître d'ouvrage (optionnel)</UiText>
                   </h4>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Nom
+                        <UiText>Nom</UiText>
                       </label>
                       <input
                         type="text"
@@ -341,7 +342,7 @@ export default function NouveauChantierPage() {
                     </div>
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Adresse
+                        <UiText>Adresse</UiText>
                       </label>
                       <input
                         type="text"
@@ -375,12 +376,12 @@ export default function NouveauChantierPage() {
                 {/* Section Bureau d'architecture */}
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
                   <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
-                    Bureau d'architecture (optionnel)
+                    <UiText>Bureau d'architecture (optionnel)</UiText>
                   </h4>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Nom
+                        <UiText>Nom</UiText>
                       </label>
                       <input
                         type="text"
@@ -395,7 +396,7 @@ export default function NouveauChantierPage() {
                     </div>
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Adresse
+                        <UiText>Adresse</UiText>
                       </label>
                       <input
                         type="text"
@@ -435,7 +436,7 @@ export default function NouveauChantierPage() {
                     <DocumentTextIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                    Détail chantier
+                    <UiText>Détail chantier</UiText>
                   </h3>
                 </div>
               
@@ -574,7 +575,7 @@ export default function NouveauChantierPage() {
                   className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors"
                 >
                   <ArrowLeftIcon className="h-4 w-4 mr-2" />
-                  Annuler
+                  <UiText>Annuler</UiText>
                 </button>
                 <button
                   type="submit"
@@ -584,12 +585,12 @@ export default function NouveauChantierPage() {
                   {saving ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                      Création...
+                      <UiText>Création...</UiText>
                     </>
                   ) : (
                     <>
                       <PlusIcon className="h-4 w-4 mr-2" />
-                      Créer le chantier
+                      <UiText>Créer le chantier</UiText>
                     </>
                   )}
                 </button>

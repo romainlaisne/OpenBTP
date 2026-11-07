@@ -1,4 +1,5 @@
 'use client'
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -222,7 +223,7 @@ export default function OutillagePage() {
             <ClockIcon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Prêtées</div>
+            <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase"><UiText>Prêtées</UiText></div>
             <div className="text-sm font-black text-gray-900 dark:text-white">{machinesPretees}</div>
           </div>
         </div>
@@ -277,7 +278,7 @@ export default function OutillagePage() {
               className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-md shadow-lg hover:shadow-xl transition-all duration-200 text-sm font-semibold"
             >
               <PlusIcon className="h-4 w-4 mr-1.5" />
-              <span className="hidden sm:inline">Nouvelle machine</span>
+              <span className="hidden sm:inline"><UiText>Nouvelle machine</UiText></span>
               <span className="sm:hidden">Nouveau</span>
             </Link>
           </div>
@@ -335,7 +336,7 @@ export default function OutillagePage() {
                   className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   <PlusIcon className="h-4 w-4 mr-2" />
-                  Nouvelle machine
+                  <UiText>Nouvelle machine</UiText>
                 </Link>
               </div>
             )}
@@ -451,10 +452,10 @@ export default function OutillagePage() {
                     Localisation
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Statut
+                    <UiText>Statut</UiText>
                   </th>
                   <th className="relative px-6 py-3">
-                    <span className="sr-only">Actions</span>
+                    <span className="sr-only"><UiText>Actions</UiText></span>
                   </th>
                 </tr>
               </thead>
@@ -553,13 +554,13 @@ export default function OutillagePage() {
                 onClick={cancelDelete}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </button>
               <button
                 onClick={confirmDelete}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 dark:bg-red-700 border border-transparent rounded-md hover:bg-red-700 dark:hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-800"
               >
-                Supprimer
+                <UiText>Supprimer</UiText>
               </button>
             </div>
           </div>

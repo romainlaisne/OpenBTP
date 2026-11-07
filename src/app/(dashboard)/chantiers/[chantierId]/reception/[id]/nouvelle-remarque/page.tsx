@@ -1,5 +1,6 @@
 'use client'
 
+import { UiText } from '@/contexts/LocaleContext'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 // import { useSession } from 'next-auth/react'
@@ -260,8 +261,8 @@ export default function NouvelleRemarquePage({
     setFormData(prev => ({ ...prev, coordonneesPlan: { x: normalizedX, y: normalizedY } }));
   };
 
-  if (loading) return <div className="p-8">Chargement...</div>
-  if (!chantier) return <div className="p-8">Chantier non trouvé</div>
+  if (loading) return <div className="p-8"><UiText>Chargement...</UiText></div>
+  if (!chantier) return <div className="p-8"><UiText>Chantier non trouvé</UiText></div>
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -453,7 +454,7 @@ export default function NouvelleRemarquePage({
                 href={`/chantiers/${chantierId}/reception/${receptionId}`}
                 className="mr-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600"
               >
-                Annuler
+                <UiText>Annuler</UiText>
               </Link>
               <Button
                 type="submit"
