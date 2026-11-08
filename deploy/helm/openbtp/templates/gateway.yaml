@@ -7,20 +7,22 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "openbtp.labels" . | nindent 4 }}
-  {{- with .Values.gateway.annotations }}
   annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
+    {{- with .Values.gateway.annotations }}
     {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- end }}
 spec:
   gatewayClassName: {{ .Values.gateway.className | quote }}
   listeners:
     - name: http
       protocol: HTTP
       port: 80
+      hostname: {{ .Values.gateway.host | quote }}
       allowedRoutes:
         namespaces:
           from: Same
-    {{- if .Values.gateway.tls.enabled }}
+    {{- if and .Values.gateway.tls.enabled .Values.gateway.tls.httpsListener }}
     - name: https
       protocol: HTTPS
       port: 443
@@ -35,7 +37,57 @@ spec:
           from: Same
     {{- end }}
 ---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "openbtp.fullname" . }}-http
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ include "openbtp.fullname" . }}-gateway
+      sectionName: http
+  hostnames:
+    - {{ .Values.gateway.host | quote }}
+  rules:
+    {{- if and .Values.gateway.tls.enabled .Values.gateway.tls.redirect }}
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+    {{- else }}
+    - backendRefs:
+        - name: {{ include "openbtp.fullname" . }}
+          port: {{ .Values.service.port }}
+    {{- end }}
+{{- if and .Values.gateway.tls.enabled .Values.gateway.tls.httpsListener }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "openbtp.fullname" . }}-https
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ include "openbtp.fullname" . }}-gateway
+      sectionName: https
+  hostnames:
+    - {{ .Values.gateway.host | quote }}
+  rules:
+    - backendRefs:
+        - name: {{ include "openbtp.fullname" . }}
+          port: {{ .Values.service.port }}
+{{- end }}
 {{- if .Values.gateway.tls.enabled }}
+---
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -43,9 +95,13 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "openbtp.labels" . | nindent 4 }}
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
 spec:
   acme:
+    {{- if .Values.gateway.tls.email }}
     email: {{ .Values.gateway.tls.email | quote }}
+    {{- end }}
     server: {{ .Values.gateway.tls.acmeServer | quote }}
     privateKeySecretRef:
       name: {{ include "openbtp.fullname" . }}-acme-account
@@ -65,6 +121,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "openbtp.labels" . | nindent 4 }}
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
 spec:
   secretName: {{ include "openbtp.fullname" . }}-tls
   issuerRef:
@@ -73,61 +131,5 @@ spec:
     group: cert-manager.io
   dnsNames:
     - {{ .Values.gateway.host | quote }}
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: {{ include "openbtp.fullname" . }}-https
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "openbtp.labels" . | nindent 4 }}
-spec:
-  parentRefs:
-    - name: {{ include "openbtp.fullname" . }}-gateway
-      sectionName: https
-  hostnames:
-    - {{ .Values.gateway.host | quote }}
-  rules:
-    - backendRefs:
-        - name: {{ include "openbtp.fullname" . }}
-          port: {{ .Values.service.port }}
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: {{ include "openbtp.fullname" . }}-http-redirect
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "openbtp.labels" . | nindent 4 }}
-spec:
-  parentRefs:
-    - name: {{ include "openbtp.fullname" . }}-gateway
-      sectionName: http
-  hostnames:
-    - {{ .Values.gateway.host | quote }}
-  rules:
-    - filters:
-        - type: RequestRedirect
-          requestRedirect:
-            scheme: https
-            statusCode: 301
-{{- else }}
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: {{ include "openbtp.fullname" . }}-http
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "openbtp.labels" . | nindent 4 }}
-spec:
-  parentRefs:
-    - name: {{ include "openbtp.fullname" . }}-gateway
-      sectionName: http
-  hostnames:
-    - {{ .Values.gateway.host | quote }}
-  rules:
-    - backendRefs:
-        - name: {{ include "openbtp.fullname" . }}
-          port: {{ .Values.service.port }}
 {{- end }}
 {{- end }}

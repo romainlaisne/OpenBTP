@@ -2,7 +2,7 @@ apiVersion: v2
 name: openbtp
 description: OpenBTP and a dedicated 3-member MariaDB Galera cluster for an already installed mariadb-operator.
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "0.1.0"
 kubeVersion: ">=1.29.0-0"
 keywords:

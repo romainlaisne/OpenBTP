@@ -94,7 +94,7 @@ if "replicas: 1" not in text:
 print("acknowledged render checks passed")
 PY
 
-echo "== gateway render stays namespaced and has no invented host by default =="
+echo "== gateway without a host must be refused =="
 set +e
 gw_missing=$(helm template openbtp "${CHART}" ${COMMON} ${ACK} --set gateway.enabled=true 2>&1)
 gw_status=$?
@@ -102,22 +102,33 @@ set -e
 [ "$gw_status" -ne 0 ] || fail "gateway without a host rendered"
 printf '%s\n' "$gw_missing" | grep -q "gateway.host" || fail "gateway host requirement missing"
 
-gw=$(helm template openbtp "${CHART}" ${COMMON} ${ACK} \
-  --set gateway.enabled=true \
-  --set gateway.host=openbtp.example.test \
-  --set config.publicUrl=https://openbtp.example.test \
-  --set gateway.tls.enabled=true \
-  --set gateway.tls.email=certs@example.test)
-printf '%s\n' "$gw" | grep -q "kind: Gateway" || fail "Gateway missing"
-printf '%s\n' "$gw" | grep -q 'gatewayClassName: "eg"' || fail "Gateway class is not eg"
-printf '%s\n' "$gw" | grep -q "kind: Issuer" || fail "namespaced Issuer missing"
-printf '%s\n' "$gw" | grep -q "kind: HTTPRoute" || fail "HTTPRoute missing"
-printf '%s\n' "$gw" | grep -q "kind: ClusterIssuer" && fail "ClusterIssuer must not be rendered"
-printf '%s\n' "$gw" | grep -q "kind: Ingress" && fail "Ingress must not be rendered"
-printf '%s\n' "$gw" | grep -q "cut2d" && fail "gateway render mentions cut2d"
-printf '%s\n' "$gw" | grep -q "name: letsencrypt" && fail "existing ClusterIssuer name was reused"
+echo "== cl01 values enable openbtp.cut-api.com and keep 3 Galera members =="
+cl01=$(helm template openbtp "${CHART}" ${COMMON} \
+  --values "${CHART}/values-cl01.yaml" \
+  --set image.digest="${DIGEST}")
+printf '%s\n' "$cl01" | grep -q "openbtp.cut-api.com" || fail "cl01 host missing"
+printf '%s\n' "$cl01" | grep -q 'gatewayClassName: "eg"' || fail "cl01 Gateway class is not eg"
+printf '%s\n' "$cl01" | grep -q "kind: Issuer" || fail "cl01 namespaced Issuer missing"
+printf '%s\n' "$cl01" | grep -q "kind: Certificate" || fail "cl01 Certificate missing"
+printf '%s\n' "$cl01" | grep -q "email:" && fail "cl01 Issuer invented an ACME email"
+printf '%s\n' "$cl01" | grep -q "RequestRedirect" && fail "HTTP redirects to HTTPS before the certificate exists"
+printf '%s\n' "$cl01" | grep -q "protocol: HTTPS" && fail "HTTPS listener is attached before the certificate exists"
+printf '%s\n' "$cl01" | grep -q "replicas: 3" || fail "cl01 database is not 3 members"
+printf '%s\n' "$cl01" | grep -q "kind: ClusterIssuer" && fail "ClusterIssuer must not be rendered"
+printf '%s\n' "$cl01" | grep -q "name: letsencrypt" && fail "existing ClusterIssuer name was reused"
+printf '%s\n' "$cl01" | grep -q "cut2d" && fail "cl01 render mentions cut2d"
+
+echo "== gateway-only stage renders without an application image =="
+stage=$(helm template openbtp "${CHART}" ${COMMON} --values "${CHART}/values-cl01-gateway.yaml")
+printf '%s\n' "$stage" | grep -q "kind: Gateway" || fail "gateway stage has no Gateway"
+printf '%s\n' "$stage" | grep -q "kind: MariaDB" && fail "gateway stage created MariaDB"
+printf '%s\n' "$stage" | grep -q "kind: Deployment" && fail "gateway stage created the application"
+printf '%s\n' "$stage" | grep -q "example.invalid" && fail "gateway stage references a fixture image"
+printf '%s\n' "$stage" | grep -q "openbtp.cut-api.com" || fail "gateway stage host missing"
+printf '%s\n' "$stage" > /tmp/openbtp-gateway-stage.yaml
 
 echo "== helm lint =="
 helm lint "${CHART}" ${COMMON} ${ACK} >/tmp/openbtp-helm-lint.txt
+helm lint "${CHART}" ${COMMON} --values "${CHART}/values-cl01-gateway.yaml" >/tmp/openbtp-helm-lint-gateway.txt
 
 echo "render-test passed"

@@ -92,25 +92,36 @@ kubectl -n openbtp create secret generic openbtp-app \
 
 Label `openbtp-db-app` with `k8s.mariadb.com/watch=true` only when rotating the password, so the operator reloads it. Do not commit the Secret.
 
-## Install
+## Gateway first, then the application
 
-From the packaged chart, with a private values file that sets the acknowledgement and the image digest:
+The public host is `openbtp.cut-api.com`. Capacity for this release, including the Envoy data plane, was accepted. The application Service stays ClusterIP. The Gateway class is `eg`.
+
+HTTP can become ready before DNS. The HTTPS listener is left off until the certificate exists, because a missing certificate would keep that listener unprogrammed. The namespaced Issuer and Certificate are still created. The Issuer does not set an email: none was verified, and cert-manager 1.21 does not require one. It does not use the ClusterIssuer whose HTTP-01 solver is pinned to another namespace.
+
+Stage 1, no application image and no MariaDB:
 
 ```sh
-helm upgrade --install openbtp openbtp-0.1.0.tgz \
+kubectl apply -f openbtp-gateway-bootstrap.yaml
+kubectl -n openbtp get gateway openbtp-gateway
+```
+
+The address to use for the DNS A/AAAA record is `status.addresses[0].value`. That address is not known until the Gateway is applied on cl01. This repository does not contact the cluster.
+
+After `openbtp.cut-api.com` points at that address, the Certificate can finish HTTP-01. Then set `gateway.tls.httpsListener: true` and `gateway.tls.redirect: true` in `values-cl01.yaml` and upgrade. Until then, HTTP forwards to the Service.
+
+Stage 2 is the full release. Fill `image.digest` in `values-cl01.yaml` only after a registry publish is verified. Create the two Secrets first. The chart still refuses a blank digest.
+
+```sh
+helm upgrade --install openbtp openbtp-0.1.1.tgz \
   --namespace openbtp \
   --create-namespace \
-  --values openbtp-values.yaml \
+  --values values-cl01.yaml \
   --timeout 30m
 ```
 
-`--wait` is optional. Helm waits on the Deployment, and the migration init container waits up to 15 minutes for the primary. Galera bootstrap can use most of that. The Deployment uses `Recreate` because the file volumes are ReadWriteOnce, so an upgrade stops the old pod before the new one starts.
+Helm adopts the Gateway objects from stage 1 when their `meta.helm.sh/release-name` and `meta.helm.sh/release-namespace` annotations match this release. `--wait` waits on the Deployment. The migration init container waits up to 15 minutes for the primary. The Deployment uses `Recreate` because the file volumes are ReadWriteOnce.
 
-The Service is ClusterIP. Nothing is published on a node port or a load balancer. `config.publicUrl` is empty, so links use:
-
-`http://openbtp.openbtp.svc.cluster.local:3000`
-
-That name is not public. Set `config.publicUrl` to the real origin before sending mail or contract links. Do not invent a hostname.
+Server-side links use `https://openbtp.cut-api.com`. `NEXT_PUBLIC_APP_URL` is still baked at image build; the server reads `APP_PUBLIC_URL` at runtime.
 
 ## What the release creates
 
@@ -128,23 +139,27 @@ An empty database with a pre-created ConfigMap of one `.sql` file can be importe
 
 The process also runs, inside the single replica: Friday report, database backup at 20:00 Europe/Brussels into `/app/backups`, Checkinatwork reminders, and contract renewal. Those jobs are why the replica count is fixed at 1. Backup files are on the backups PVC. There is no off-cluster backup target.
 
-## Gateway, only after a hostname and capacity are chosen
+## Gateway and certificates
 
-cl01 has no IngressClass. Routing is Gateway API, class `eg`, Envoy Gateway. Existing Gateways allow routes only from their own namespace, so this release cannot attach to them. The chart can create its own Gateway, HTTPRoutes, a namespaced cert-manager Issuer, and a Certificate. It does not create a GatewayClass, a ClusterIssuer, or a reference to the HTTP-01 solver hardcoded for another namespace.
+cl01 has no IngressClass. Routing is Gateway API, class `eg`. Existing Gateways allow routes only from their own namespace, so this release creates `openbtp-gateway` in namespace `openbtp`. It does not create a GatewayClass or a ClusterIssuer.
+
+`values-cl01.yaml` sets:
 
 ```yaml
+config:
+  publicUrl: https://openbtp.cut-api.com
 gateway:
   enabled: true
   className: eg
-  host: name.example
+  host: openbtp.cut-api.com
   tls:
     enabled: true
-    email: you@example
-config:
-  publicUrl: https://name.example
+    email: ""
+    httpsListener: false
+    redirect: false
 ```
 
-Leave this off until DNS and the extra Envoy memory are accepted. Re-check that the namespaced Issuer becomes Ready. The cluster Issuer was not copied.
+The certificate DNS name is `openbtp.cut-api.com`. HTTP-01 uses the HTTP listener in this namespace. The certificate remains pending until public DNS reaches the Gateway address.
 
 ## Rollback
 
@@ -170,9 +185,9 @@ Expect MariaDB `Ready=True` and the application pod passing readiness. Do not re
 
 ## Known gaps
 
-- No published application image digest yet.
-- Memory headroom was already insufficient for this footprint.
-- No public hostname, so links are in-cluster until `config.publicUrl` is set.
+- No published application image digest yet. `.github/workflows/app-image.yml` builds `ghcr.io/romainlaisne/openbtp` and pushes with `GITHUB_TOKEN` when Actions can run. A private package still needs a pull Secret in namespace `openbtp`; this chart does not create one.
+- Memory headroom was already short. The capacity flag is set in `values-cl01.yaml` because that risk was accepted for this release.
+- HTTPS is pending until DNS for `openbtp.cut-api.com` exists. HTTP is the listener that can become ready before that record.
 - PDF, Ollama, and SMTP are unset. The application runs without them. Add endpoints only when those services are known, and put passwords in an existing Secret.
 - NAS document mirror is off unless `nas.existingClaim` names a volume that already exists.
 - Database member memory limits of 1Gi with a 128M buffer pool are a capacity compromise. A loaded Galera member can still be OOMKilled.

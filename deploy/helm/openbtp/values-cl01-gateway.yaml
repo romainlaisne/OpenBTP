@@ -1,0 +1,28 @@
+# Gateway-only stage for cl01. Apply this before the application image exists.
+# It creates the HTTP Gateway, the Service it points at, and the namespaced
+# cert-manager Issuer and Certificate. It does not create MariaDB or the app.
+# The HTTPS listener stays off so the Gateway can become ready before DNS.
+capacity:
+  acknowledged: true
+
+config:
+  publicUrl: https://openbtp.cut-api.com
+
+app:
+  enabled: false
+
+mariadb:
+  enabled: false
+
+persistence:
+  enabled: false
+
+gateway:
+  enabled: true
+  className: eg
+  host: openbtp.cut-api.com
+  tls:
+    enabled: true
+    email: ""
+    httpsListener: false
+    redirect: false

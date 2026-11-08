@@ -1,4 +1,5 @@
 {{- include "openbtp.validate" . -}}
+{{- if .Values.mariadb.enabled }}
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: MariaDB
 metadata:
@@ -7,6 +8,8 @@ metadata:
   labels:
     {{- include "openbtp.labels" . | nindent 4 }}
     app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
 spec:
   replicas: {{ .Values.mariadb.replicas }}
   replicasAllowEvenNumber: false
@@ -73,6 +76,8 @@ metadata:
   labels:
     {{- include "openbtp.labels" . | nindent 4 }}
     app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
 spec:
   name: {{ .Values.mariadb.database.name | quote }}
   characterSet: {{ .Values.mariadb.database.characterSet | quote }}
@@ -91,6 +96,8 @@ metadata:
   labels:
     {{- include "openbtp.labels" . | nindent 4 }}
     app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
 spec:
   name: {{ .Values.mariadb.user.name | quote }}
   host: {{ .Values.mariadb.user.host | quote }}
@@ -112,6 +119,8 @@ metadata:
   labels:
     {{- include "openbtp.labels" . | nindent 4 }}
     app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
 spec:
   username: {{ .Values.mariadb.user.name | quote }}
   host: {{ .Values.mariadb.grant.host | quote }}
@@ -136,6 +145,8 @@ metadata:
   labels:
     {{- include "openbtp.labels" . | nindent 4 }}
     app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
 spec:
   username: {{ .Values.mariadb.user.name | quote }}
   database: {{ .Values.mariadb.database.name | quote }}
@@ -154,3 +165,4 @@ spec:
     name: {{ include "openbtp.mariadbName" . }}
     namespace: {{ .Release.Namespace }}
     waitForIt: true
+{{- end }}

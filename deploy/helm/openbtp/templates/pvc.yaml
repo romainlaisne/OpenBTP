@@ -1,4 +1,5 @@
 {{- include "openbtp.validate" . -}}
+{{- if .Values.app.enabled }}
 {{- $root := . -}}
 {{- $volumes := list
   (dict "name" "uploads" "size" .Values.persistence.uploads)
@@ -19,6 +20,7 @@ metadata:
     app.kubernetes.io/component: {{ .name }}
   annotations:
     helm.sh/resource-policy: keep
+    {{- include "openbtp.releaseAnnotations" $root | nindent 4 }}
 spec:
   accessModes:
     - ReadWriteOnce
@@ -26,4 +28,5 @@ spec:
   resources:
     requests:
       storage: {{ .size }}
+{{- end }}
 {{- end }}

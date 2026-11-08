@@ -24,8 +24,9 @@ image:
   existingPullSecret: ""
 
 # One replica. The process starts in-process schedulers (backup, mail, check-in).
-# File volumes are ReadWriteOnce.
+# File volumes are ReadWriteOnce. Set enabled false only for a Gateway-only render.
 app:
+  enabled: true
   replicaCount: 1
   resources:
     requests:
@@ -216,5 +217,13 @@ gateway:
   annotations: {}
   tls:
     enabled: false
+    # Leave empty. cert-manager 1.21 accepts an ACME Issuer without email.
+    # Do not invent an address. Set one only when it is a real contact.
     email: ""
+    # HTTPS listener stays off until the certificate Secret exists. HTTP can
+    # become ready and publish a load-balancer address before DNS exists.
+    httpsListener: false
+    # Keep false until HTTPS is actually serving. A redirect before that
+    # sends browsers to a certificate that is not ready.
+    redirect: false
     acmeServer: https://acme-v02.api.letsencrypt.org/directory

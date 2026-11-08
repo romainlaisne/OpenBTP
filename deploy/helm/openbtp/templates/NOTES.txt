@@ -1,31 +1,38 @@
 OpenBTP release {{ .Release.Name }} in namespace {{ .Release.Namespace }}.
 
-The application Service is ClusterIP only:
-  {{ include "openbtp.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+{{- if .Values.gateway.enabled }}
 
-Public URL currently rendered into the application:
+Gateway {{ include "openbtp.fullname" . }}-gateway uses class {{ .Values.gateway.className }} for {{ .Values.gateway.host }}.
+The HTTP listener is the one that can become ready before DNS. Read its address with:
+
+  kubectl -n {{ .Release.Namespace }} get gateway {{ include "openbtp.fullname" . }}-gateway -o jsonpath='{.status.addresses[0].value}{"\n"}'
+
+Point DNS for {{ .Values.gateway.host }} at that address. The namespaced ACME Issuer has no copied account email. The certificate stays pending until that DNS record exists.
+{{- if not .Values.gateway.tls.httpsListener }}
+The HTTPS listener is off so a missing certificate does not block the HTTP Gateway. After the Certificate is Ready, set gateway.tls.httpsListener=true and gateway.tls.redirect=true and upgrade.
+{{- end }}
+{{- else }}
+The Gateway is off. The application Service is ClusterIP only.
+{{- end }}
+
+Public URL rendered for server-side links:
   {{ include "openbtp.publicUrl" . }}
+
+{{- if .Values.mariadb.enabled }}
 
 Database: {{ include "openbtp.mariadbName" . }} (3 Galera members, primary Service {{ include "openbtp.mariadbPrimaryService" . }}).
 This chart does not install mariadb-operator and does not touch any other database.
 
-Before pods can start, these Secrets must already exist in {{ .Release.Namespace }}.
-The chart does not create them and this output does not contain their values.
-  {{ .Values.mariadb.user.passwordSecretName }} key {{ .Values.mariadb.user.passwordSecretKey }}
-    Use a URL-safe hex password. The operator copies it into the connection string as-is.
-  {{ .Values.secrets.nextauth.name }} key {{ .Values.secrets.nextauth.key }}
-    At least 32 characters.
+Before database pods can start, Secret {{ .Values.mariadb.user.passwordSecretName }} key {{ .Values.mariadb.user.passwordSecretKey }} must exist.
+Use a URL-safe hex password. The operator copies it into the connection string as-is.
+The operator generates the root password into {{ .Values.mariadb.root.secretName }} when that Secret is absent.
+{{- end }}
+{{- if .Values.app.enabled }}
 
-The operator generates the MariaDB root password into {{ .Values.mariadb.root.secretName }}
-when that Secret is absent. Do not point it at another application's Secret.
-
-Memory on cl01 was already over capacity when this chart was written.
-Requests added by a default install are about:
-  database  3 x 256Mi plus 3 x 64Mi Galera agent
-  application 512Mi
-A Gateway is off. Turning gateway.enabled on asks Envoy Gateway for another data plane
-(about 544Mi requested on the existing installation). Do not enable it until a hostname
-and the extra memory are both accepted.
-
+Secret {{ .Values.secrets.nextauth.name }} key {{ .Values.secrets.nextauth.key }} must exist before the application starts. At least 32 characters.
 Migrations run once in an init container with Prisma advisory locks disabled.
-Galera rejects GET_LOCK. Helm rollback does not undo a migration that already committed.
+Helm rollback does not undo a migration that already committed.
+{{- else }}
+
+The application Deployment is off in this render. The Service has no endpoints until the application is installed.
+{{- end }}

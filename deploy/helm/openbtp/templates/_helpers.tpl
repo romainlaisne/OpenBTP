@@ -50,6 +50,11 @@ app.kubernetes.io/component: web
 {{- printf "%s-primary" (include "openbtp.mariadbName" .) -}}
 {{- end -}}
 
+{{- define "openbtp.releaseAnnotations" -}}
+meta.helm.sh/release-name: {{ .Release.Name | quote }}
+meta.helm.sh/release-namespace: {{ .Release.Namespace | quote }}
+{{- end -}}
+
 {{- define "openbtp.publicUrl" -}}
 {{- if .Values.config.publicUrl -}}
 {{- .Values.config.publicUrl -}}
@@ -68,10 +73,11 @@ app.kubernetes.io/component: web
 
 {{- define "openbtp.validate" -}}
 {{- if not .Values.capacity.acknowledged -}}
-{{- fail "Refusing to render. cl01 nodes were at about 101%, 91%, and 81% of allocatable memory (~1976Mi). This release keeps 3 Galera members and does not fall back to one. Set capacity.acknowledged=true only after that capacity risk is accepted." -}}
+{{- fail "Refusing to render. cl01 nodes were at about 101%, 91%, and 81% of allocatable memory (~1976Mi). This release keeps 3 Galera members when the database is enabled. Set capacity.acknowledged=true only after that capacity risk is accepted." -}}
 {{- end -}}
+{{- if .Values.app.enabled -}}
 {{- if or (not .Values.image.repository) (not .Values.image.digest) -}}
-{{- fail "image.repository and image.digest are required. Build and push the application image, then set the registry digest. A floating tag is not accepted." -}}
+{{- fail "image.repository and image.digest are required when the application is enabled. Build and push the application image, then set the registry digest. A floating tag is not accepted." -}}
 {{- end -}}
 {{- if not (regexMatch "^sha256:[a-f0-9]{64}$" .Values.image.digest) -}}
 {{- fail "image.digest must look like sha256: followed by 64 hex characters." -}}
@@ -79,15 +85,20 @@ app.kubernetes.io/component: web
 {{- if ne (int .Values.app.replicaCount) 1 -}}
 {{- fail "app.replicaCount must stay 1. The process runs in-process schedulers and the file volumes are ReadWriteOnce." -}}
 {{- end -}}
-{{- if ne .Values.service.type "ClusterIP" -}}
-{{- fail "service.type must stay ClusterIP. Public exposure is a Gateway, and it is off until a hostname is set." -}}
-{{- end -}}
 {{- if not .Values.persistence.enabled -}}
-{{- fail "persistence.enabled must stay true. Uploaded files are stored on local volumes." -}}
+{{- fail "persistence.enabled must stay true while the application is enabled. Uploaded files are stored on local volumes." -}}
 {{- end -}}
 {{- if not .Values.persistence.storageClassName -}}
 {{- fail "persistence.storageClassName must be set explicitly. The cl01 class is csi-cinder-high-speed-gen2." -}}
 {{- end -}}
+{{- if not .Values.secrets.nextauth.name -}}
+{{- fail "secrets.nextauth.name is required when the application is enabled. This chart does not create Secret data." -}}
+{{- end -}}
+{{- end -}}
+{{- if ne .Values.service.type "ClusterIP" -}}
+{{- fail "service.type must stay ClusterIP. Public exposure is the Gateway." -}}
+{{- end -}}
+{{- if .Values.mariadb.enabled -}}
 {{- if or (ne (int .Values.mariadb.replicas) 3) (not .Values.mariadb.galera.enabled) -}}
 {{- fail "Refusing to render a database that is not a 3-member Galera cluster." -}}
 {{- end -}}
@@ -100,8 +111,9 @@ app.kubernetes.io/component: web
 {{- if ne .Values.mariadb.database.characterSet "utf8mb4" -}}
 {{- fail "mariadb.database.characterSet must be utf8mb4. Prisma migrations are utf8mb4_unicode_ci." -}}
 {{- end -}}
-{{- if or (not .Values.mariadb.user.passwordSecretName) (not .Values.secrets.nextauth.name) -}}
-{{- fail "Database and NextAuth Secret names are required. This chart does not create Secret data." -}}
+{{- if not .Values.mariadb.user.passwordSecretName -}}
+{{- fail "mariadb.user.passwordSecretName is required. This chart does not create Secret data." -}}
+{{- end -}}
 {{- end -}}
 {{- if .Values.nas.enabled -}}
 {{- if not .Values.nas.existingClaim -}}
@@ -110,15 +122,10 @@ app.kubernetes.io/component: web
 {{- end -}}
 {{- if .Values.gateway.enabled -}}
 {{- if or (not .Values.gateway.host) (not .Values.config.publicUrl) -}}
-{{- fail "gateway.enabled requires gateway.host and config.publicUrl. No hostname is invented." -}}
+{{- fail "gateway.enabled requires gateway.host and config.publicUrl." -}}
 {{- end -}}
 {{- if not (contains .Values.gateway.host .Values.config.publicUrl) -}}
 {{- fail "config.publicUrl must contain gateway.host." -}}
-{{- end -}}
-{{- if .Values.gateway.tls.enabled -}}
-{{- if not .Values.gateway.tls.email -}}
-{{- fail "gateway.tls.enabled requires gateway.tls.email for the namespaced ACME Issuer. The existing ClusterIssuer is not reused." -}}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

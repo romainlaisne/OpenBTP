@@ -1,4 +1,5 @@
 {{- include "openbtp.validate" . -}}
+{{- if .Values.app.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,6 +7,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "openbtp.labels" . | nindent 4 }}
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -218,3 +221,4 @@ spec:
           configMap:
             name: {{ .Values.initSql.existingConfigMap }}
         {{- end }}
+{{- end }}

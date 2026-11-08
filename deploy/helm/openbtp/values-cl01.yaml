@@ -1,0 +1,29 @@
+# cl01 deploy values. Capacity risk was accepted for this release.
+# No credentials. The application image digest stays empty until a registry
+# publish is verified; helm install of the application refuses a blank digest.
+capacity:
+  acknowledged: true
+
+config:
+  publicUrl: https://openbtp.cut-api.com
+
+image:
+  repository: ghcr.io/romainlaisne/openbtp
+  digest: ""
+  existingPullSecret: ""
+
+app:
+  enabled: true
+
+mariadb:
+  enabled: true
+
+gateway:
+  enabled: true
+  className: eg
+  host: openbtp.cut-api.com
+  tls:
+    enabled: true
+    email: ""
+    httpsListener: false
+    redirect: false
