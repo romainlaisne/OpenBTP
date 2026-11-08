@@ -21,7 +21,7 @@ Public URL rendered for server-side links:
 
 {{- if .Values.mariadb.enabled }}
 
-Database: {{ include "openbtp.mariadbName" . }} (3 Galera members, primary Service {{ include "openbtp.mariadbPrimaryService" . }}).
+Database: {{ include "openbtp.mariadbName" . }} ({{ .Values.mariadb.replicas }} {{ if .Values.mariadb.galera.enabled }}Galera{{ else }}standalone{{ end }} member{{ if gt (int .Values.mariadb.replicas) 1 }}s{{ end }}, Service {{ include "openbtp.mariadbServiceName" . }}).
 This chart does not install mariadb-operator and does not touch any other database.
 
 Before database pods can start, Secret {{ .Values.mariadb.user.passwordSecretName }} key {{ .Values.mariadb.user.passwordSecretKey }} must exist.

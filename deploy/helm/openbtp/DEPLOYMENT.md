@@ -117,8 +117,9 @@ Server-side links use `https://openbtp.cut-api.com`. `NEXT_PUBLIC_APP_URL` is st
 - Deployment `openbtp`, one replica, uid/gid 1001, dropped capabilities, no ServiceAccount token.
 - Probes: startup and liveness `GET /api/health/live` (no database), readiness `GET /api/health/ready` (`SELECT 1`, no error text).
 - Five PVCs on `csi-cinder-high-speed-gen2`: uploads 20Gi, chantiers 10Gi, documents 10Gi, fiches 10Gi, backups 10Gi. They are mounted directly (not with `subPath`) so `fsGroup` can make them writable. Annotation `helm.sh/resource-policy: keep` leaves them in place on `helm uninstall`. The storage class reclaim policy is `Delete`, so a later `kubectl delete pvc` destroys the volume.
-- MariaDB, Database, User, Grant, and Connection in the release namespace. Storage is 10Gi RWO per member, `pvcRetentionPolicy` Retain/Retain. `antiAffinityEnabled` places one member on each node; a member stays Pending when a node cannot take it. PDB `minAvailable: 2`. Update strategy `ReplicasFirstPrimaryLast`, one unavailable at a time. Galera SST is `mariabackup`.
-- Connection Secret `openbtp-db-connection`, written by the operator, key `DATABASE_URL`, host `openbtp-mariadb-primary`.
+- MariaDB `openbtp-mariadb`, Database, User, Grant, and Connection. `values-cl01.yaml` selects one standalone member. Galera with three members remains available by setting `mariadb.replicas: 3` and `mariadb.galera.enabled: true` together. Storage stays 10Gi RWO, `pvcRetentionPolicy` Retain/Retain. The MariaDB image digest is unchanged.
+- For the standalone member, Connection `serviceName` is the base Service `openbtp-mariadb`. `secretName` stays `openbtp-db-connection`. PDB `minAvailable` is 0. Galera SST, the agent, and the primary Service are not required.
+- `updateStrategy.type: ReplicasFirstPrimaryLast` is what operator 26.10.2 writes onto the StatefulSet as `OnDelete`. The data pod does not restart by itself when the template changes.
 
 Helm applies custom resources in kind-name order. The operator waits (`waitForIt: true`). An early User or Grant error that clears after MariaDB is Ready is expected.
 
@@ -150,6 +151,53 @@ gateway:
 
 The certificate DNS name is `openbtp.cut-api.com`. HTTP-01 uses the HTTP listener in this namespace. The certificate remains pending until public DNS reaches the Gateway address.
 
+## Convert the running Galera cluster to one member
+
+This is an in-place update of MariaDB `openbtp-mariadb`. It is not a new cluster. Chart 0.1.1 revision 1 is already installed: member 0 is Ready and Synced with `wsrep_cluster_size=1`, members 1 and 2 are Pending, and the application database `openbtp` has no tables and no Prisma history. Do not treat a failed dump of that missing database as a backup.
+
+Operator 26.10.2, checked against the installed webhook and the tagged controller:
+
+- One API update that sets `spec.replicas: 1`, `spec.galera.enabled: false`, and `spec.podDisruptionBudget.minAvailable: 0` is accepted. The same webhook rejects `replicas: 1` while Galera stays enabled.
+- `spec.galera.enabled` and `spec.replicas` are not immutable fields. `spec.storage.storageClassName`, `spec.database`, `spec.timeZone`, and the root password Secret reference are immutable. The chart does not change them.
+- The controller's StatefulSet reconcile patches only `spec.template`, `spec.updateStrategy`, and `spec.replicas`. It does not send `volumeClaimTemplates`. The live templates for `storage` and `galera` therefore stay. Kubernetes would reject a change to those templates; do not delete the StatefulSet to "fix" that, and do not orphan-delete it.
+- `ReplicasFirstPrimaryLast` is stored on the StatefulSet as `OnDelete`. Updating the pod template does not restart member 0. The Galera agent and the wsrep config mount stay on the running pod until that pod is deleted and recreated.
+- With Galera disabled, the new pod template omits the agent container and the mount of the Galera config volume at `/etc/mysql/mariadb.conf.d`. The data volume stays mounted. The `galera-openbtp-mariadb-*` PVCs remain Bound and unused. That is intentional.
+- Scale-down removes the highest ordinals first, so Pending pods `openbtp-mariadb-2` and `openbtp-mariadb-1` go away and `openbtp-mariadb-0` remains. `whenScaled: Retain` keeps every PVC, including the ones for ordinals 1 and 2.
+- The operator updates the base Service `openbtp-mariadb` for every topology. It only reconciles `openbtp-mariadb-primary` while Galera or replication is enabled. After this change the Connection uses `openbtp-mariadb` and the same Secret name `openbtp-db-connection`. Leave the primary and secondary Services in place; they hold no data.
+- Desired database requests fall from about 960Mi plus three agents to 256Mi. Members 1 and 2 never started, so they were not using node memory; they were holding scheduling requests.
+
+Do all of the following before the upgrade. Stop if any check fails.
+
+1. Do not run `helm uninstall`. Do not delete the MariaDB object, the StatefulSet, any PVC, or the namespace.
+2. Do not run a Galera force-quorum or bootstrap command, and do not pass `--force` to delete or replace the StatefulSet.
+3. Confirm `openbtp-mariadb-0` is Ready, and `openbtp-mariadb-1` and `openbtp-mariadb-2` are the Pending pods.
+4. Confirm all eleven PVCs are Bound, including `storage-openbtp-mariadb-0` and `galera-openbtp-mariadb-0`.
+5. Confirm the MariaDB spec still has the same root Secret reference, the same image digest, and `pvcRetentionPolicy` Retain/Retain.
+6. A logical dump of database `openbtp` cannot succeed: that database has not been created. The volume to preserve is `storage-openbtp-mariadb-0`.
+
+Upgrade with the packaged chart and `values-cl01.yaml`. One Helm upgrade sends replicas and `galera.enabled` together. Do not patch replicas by itself first.
+
+```sh
+helm upgrade openbtp openbtp-0.1.2.tgz \
+  --namespace openbtp \
+  --values values-cl01.yaml \
+  --timeout 30m
+```
+
+Wait until the MariaDB spec shows `replicas: 1` and `galera.enabled: false`, and the StatefulSet spec shows `replicas: 1` while its `volumeClaimTemplates` still list both `storage` and `galera`. If the StatefulSet update is rejected because `volumeClaimTemplates` is immutable, stop. Do not delete the StatefulSet.
+
+The running pod is still the old Galera pod. After the StatefulSet template no longer contains the `agent` container, delete only that pod:
+
+```sh
+kubectl -n openbtp delete pod openbtp-mariadb-0
+```
+
+`OnDelete` recreates it on the same `storage-openbtp-mariadb-0` claim. Do not delete the claim. The recreated pod should be one container, not two. The Galera config PVC stays Bound and unmounted, so that file is not loaded as `wsrep` configuration.
+
+Then wait for the operator Connection to become Ready and to write Secret `openbtp-db-connection`. The application init container can migrate only after that Secret exists. It will create the empty `openbtp` schema. There is no previous application data to replay.
+
+Gateway `openbtp-gateway` and address `57.129.58.97` are unchanged. DNS for `openbtp.cut-api.com` was still NXDOMAIN at the preflight. The certificate stays pending until that A record exists. Do not enable the HTTPS listener before the certificate is Ready.
+
 ## Rollback
 
 ```sh
@@ -175,7 +223,7 @@ Expect MariaDB `Ready=True` and the application pod passing readiness. Do not re
 ## Known gaps
 
 - The published image is public and pinned in `values-cl01.yaml`. Do not add a pull Secret copied from another namespace.
-- Memory headroom was already short. The capacity flag is set in `values-cl01.yaml` because that risk was accepted for this release.
+- cl01 selects one standalone member because two Galera pods were Pending. The conversion keeps every PVC. It restarts only `openbtp-mariadb-0` after the StatefulSet template has changed, because the live strategy is OnDelete.
 - HTTPS is pending until DNS for `openbtp.cut-api.com` exists. HTTP is the listener that can become ready before that record.
 - PDF, Ollama, and SMTP are unset. The application runs without them. Add endpoints only when those services are known, and put passwords in an existing Secret.
 - NAS document mirror is off unless `nas.existingClaim` names a volume that already exists.

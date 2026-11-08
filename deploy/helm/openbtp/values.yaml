@@ -113,6 +113,9 @@ initSql:
 # any object outside the release namespace.
 mariadb:
   enabled: true
+  # HA option: replicas 3 and galera.enabled true.
+  # Single member: replicas 1 and galera.enabled false, together.
+  # Operator 26.10.2 rejects either combination on its own.
   replicas: 3
   # Prisma ORM 6 documents MariaDB 10.0+ and 11.0+. It does not document 12.x.
   # 11.4.13 is the current 11.4 LTS patch and is inside that matrix.

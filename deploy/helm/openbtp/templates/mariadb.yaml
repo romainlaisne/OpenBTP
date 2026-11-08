@@ -43,7 +43,8 @@ spec:
   resources:
     {{- toYaml .Values.mariadb.resources | nindent 4 }}
   galera:
-    enabled: true
+    enabled: {{ .Values.mariadb.galera.enabled }}
+    {{- if .Values.mariadb.galera.enabled }}
     sst: {{ .Values.mariadb.galera.sst }}
     availableWhenDonor: false
     primary:
@@ -51,6 +52,7 @@ spec:
     agent:
       resources:
         {{- toYaml .Values.mariadb.galera.agent.resources | nindent 8 }}
+    {{- end }}
   tls:
     enabled: {{ .Values.mariadb.tls.enabled }}
     required: {{ .Values.mariadb.tls.required }}
@@ -64,9 +66,13 @@ spec:
     rollingUpdate:
       maxUnavailable: 1
   affinity:
-    antiAffinityEnabled: true
+    antiAffinityEnabled: {{ .Values.mariadb.galera.enabled }}
   podDisruptionBudget:
+    {{- if .Values.mariadb.galera.enabled }}
     minAvailable: {{ .Values.mariadb.podDisruptionBudget.minAvailable }}
+    {{- else }}
+    minAvailable: 0
+    {{- end }}
 ---
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: Database
@@ -151,7 +157,7 @@ spec:
   username: {{ .Values.mariadb.user.name | quote }}
   database: {{ .Values.mariadb.database.name | quote }}
   secretName: {{ .Values.mariadb.connection.secretName | quote }}
-  serviceName: {{ include "openbtp.mariadbPrimaryService" . | quote }}
+  serviceName: {{ include "openbtp.mariadbServiceName" . | quote }}
   passwordSecretKeyRef:
     name: {{ .Values.mariadb.user.passwordSecretName | quote }}
     key: {{ .Values.mariadb.user.passwordSecretKey | quote }}

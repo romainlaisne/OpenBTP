@@ -96,8 +96,10 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.mariadb.connection.secretName }}
                   key: {{ .Values.mariadb.connection.databaseUrlKey }}
+            {{- if .Values.mariadb.galera.enabled }}
             - name: PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK
               value: "1"
+            {{- end }}
             - name: OPENBTP_RUN_MIGRATIONS
               value: "1"
             - name: OPENBTP_RUN_SEED

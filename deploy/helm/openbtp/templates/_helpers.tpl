@@ -50,6 +50,14 @@ app.kubernetes.io/component: web
 {{- printf "%s-primary" (include "openbtp.mariadbName" .) -}}
 {{- end -}}
 
+{{- define "openbtp.mariadbServiceName" -}}
+{{- if .Values.mariadb.galera.enabled -}}
+{{- include "openbtp.mariadbPrimaryService" . -}}
+{{- else -}}
+{{- include "openbtp.mariadbName" . -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "openbtp.releaseAnnotations" -}}
 meta.helm.sh/release-name: {{ .Release.Name | quote }}
 meta.helm.sh/release-namespace: {{ .Release.Namespace | quote }}
@@ -73,7 +81,7 @@ meta.helm.sh/release-namespace: {{ .Release.Namespace | quote }}
 
 {{- define "openbtp.validate" -}}
 {{- if not .Values.capacity.acknowledged -}}
-{{- fail "Refusing to render. cl01 nodes were at about 101%, 91%, and 81% of allocatable memory (~1976Mi). This release keeps 3 Galera members when the database is enabled. Set capacity.acknowledged=true only after that capacity risk is accepted." -}}
+{{- fail "Refusing to render. cl01 nodes were at about 101%, 91%, and 81% of allocatable memory (~1976Mi). Set capacity.acknowledged=true only after that capacity risk is accepted." -}}
 {{- end -}}
 {{- if .Values.app.enabled -}}
 {{- if or (not .Values.image.repository) (not .Values.image.digest) -}}
@@ -99,8 +107,14 @@ meta.helm.sh/release-namespace: {{ .Release.Namespace | quote }}
 {{- fail "service.type must stay ClusterIP. Public exposure is the Gateway." -}}
 {{- end -}}
 {{- if .Values.mariadb.enabled -}}
-{{- if or (ne (int .Values.mariadb.replicas) 3) (not .Values.mariadb.galera.enabled) -}}
-{{- fail "Refusing to render a database that is not a 3-member Galera cluster." -}}
+{{- if .Values.mariadb.galera.enabled -}}
+{{- if ne (int .Values.mariadb.replicas) 3 -}}
+{{- fail "Galera is a 3-member cluster. Operator 26.10.2 rejects Galera with one replica: multiple replicas must be specified when spec.galera is configured." -}}
+{{- end -}}
+{{- else -}}
+{{- if ne (int .Values.mariadb.replicas) 1 -}}
+{{- fail "Standalone MariaDB is one member. Operator 26.10.2 rejects multiple replicas unless spec.galera or spec.replication is enabled." -}}
+{{- end -}}
 {{- end -}}
 {{- if not .Values.mariadb.storage.storageClassName -}}
 {{- fail "mariadb.storage.storageClassName must be set explicitly." -}}

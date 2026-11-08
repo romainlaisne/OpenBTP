@@ -20,15 +20,23 @@ gate_status=$?
 set -e
 [ "$gate_status" -ne 0 ] || fail "default helm template succeeded"
 printf '%s\n' "$gate_out" | grep -q "101%" || fail "capacity message missing"
-printf '%s\n' "$gate_out" | grep -q "3 Galera" || fail "capacity message does not keep the 3-member cluster"
+printf '%s\n' "$gate_out" | grep -q "capacity.acknowledged=true" || fail "capacity acknowledgement instruction missing"
 
-echo "== a 1-member database must be refused =="
+echo "== Galera with one member must be refused =="
 set +e
 one_out=$(helm template openbtp "${CHART}" ${COMMON} ${ACK} --set mariadb.replicas=1 2>&1)
 one_status=$?
 set -e
-[ "$one_status" -ne 0 ] || fail "single replica render succeeded"
-printf '%s\n' "$one_out" | grep -q "3-member" || fail "single replica was not rejected as a non-cluster"
+[ "$one_status" -ne 0 ] || fail "Galera with one replica rendered"
+printf '%s\n' "$one_out" | grep -q "3-member" || fail "Galera with one replica was not rejected"
+
+echo "== standalone with three members must be refused =="
+set +e
+many_out=$(helm template openbtp "${CHART}" ${COMMON} ${ACK} --set mariadb.galera.enabled=false --set mariadb.replicas=3 2>&1)
+many_status=$?
+set -e
+[ "$many_status" -ne 0 ] || fail "standalone with three replicas rendered"
+printf '%s\n' "$many_out" | grep -q "one member" || fail "standalone replica rule missing"
 
 echo "== acknowledged render =="
 rendered=$(helm template openbtp "${CHART}" ${COMMON} ${ACK})
@@ -102,7 +110,7 @@ set -e
 [ "$gw_status" -ne 0 ] || fail "gateway without a host rendered"
 printf '%s\n' "$gw_missing" | grep -q "gateway.host" || fail "gateway host requirement missing"
 
-echo "== cl01 values enable openbtp.cut-api.com and keep 3 Galera members =="
+echo "== cl01 values select one standalone member and keep the Gateway =="
 cl01=$(helm template openbtp "${CHART}" ${COMMON} --values "${CHART}/values-cl01.yaml")
 printf '%s\n' "$cl01" | grep -q "ghcr.io/romainlaisne/openbtp:82562f97a5706e5ecb9206aa321edc3c73e7c244@sha256:11e34ef46675a1114938d9558ed4093cae70fe9c4519ea6fa5e700e0773b3fa6" || fail "cl01 image is not the verified digest"
 printf '%s\n' "$cl01" | grep -q "name: openbtp-gateway" || fail "cl01 Gateway name drifted"
@@ -125,7 +133,27 @@ printf '%s\n' "$cl01" | grep -q "kind: Certificate" || fail "cl01 Certificate mi
 printf '%s\n' "$cl01" | grep -q "email:" && fail "cl01 Issuer invented an ACME email"
 printf '%s\n' "$cl01" | grep -q "RequestRedirect" && fail "HTTP redirects to HTTPS before the certificate exists"
 printf '%s\n' "$cl01" | grep -q "protocol: HTTPS" && fail "HTTPS listener is attached before the certificate exists"
-printf '%s\n' "$cl01" | grep -q "replicas: 3" || fail "cl01 database is not 3 members"
+printf '%s\n' "$cl01" | grep -q "replicas: 1" || fail "cl01 database is not one member"
+printf '%s\n' "$cl01" | grep -q "replicas: 3" && fail "cl01 still renders three database members"
+printf '%s\n' "$cl01" | grep -q "sst: mariabackup" && fail "cl01 still renders Galera SST"
+printf '%s\n' "$cl01" | grep -q "minAvailable: 2" && fail "cl01 PDB still requires two members"
+printf '%s\n' "$cl01" | grep -q "minAvailable: 0" || fail "cl01 PDB minAvailable is not 0"
+printf '%s\n' "$cl01" | grep -q 'serviceName: "openbtp-mariadb"' || fail "cl01 Connection does not use the base Service"
+printf '%s\n' "$cl01" | grep -q "openbtp-mariadb-primary" && fail "cl01 Connection still targets the primary Service"
+printf '%s\n' "$cl01" | grep -q 'secretName: "openbtp-db-connection"' || fail "connection Secret name changed"
+printf '%s\n' "$cl01" | grep -q "PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK" && fail "standalone migration still disables advisory locks"
+python3 - "$cl01" << 'PY'
+import sys
+text = sys.argv[1]
+start = text.find("kind: MariaDB")
+end = text.find("---", start + 1)
+block = text[start:end if end != -1 else None]
+if "enabled: false" not in block:
+    raise SystemExit("MariaDB Galera is not explicitly disabled")
+if "replicas: 1" not in block:
+    raise SystemExit("MariaDB replicas is not 1")
+print("standalone MariaDB spec selected")
+PY
 printf '%s\n' "$cl01" | grep -q "kind: ClusterIssuer" && fail "ClusterIssuer must not be rendered"
 printf '%s\n' "$cl01" | grep -q "name: letsencrypt" && fail "existing ClusterIssuer name was reused"
 printf '%s\n' "$cl01" | grep -q "cut2d" && fail "cl01 render mentions cut2d"

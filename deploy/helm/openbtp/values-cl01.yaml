@@ -19,6 +19,12 @@ app:
 
 mariadb:
   enabled: true
+  # One standalone member. Operator 26.10.2 rejects replicas 1 while Galera
+  # stays enabled. Both fields change together. Do not delete the MariaDB
+  # object or its PVCs; see DEPLOYMENT.md.
+  replicas: 1
+  galera:
+    enabled: false
 
 gateway:
   enabled: true
