@@ -20,6 +20,8 @@ mariadb:
 
 gateway:
   enabled: true
+  # Live object openbtp/openbtp-gateway, address 57.129.58.97. Do not rename.
+  name: openbtp-gateway
   className: eg
   host: openbtp.cut-api.com
   tls:

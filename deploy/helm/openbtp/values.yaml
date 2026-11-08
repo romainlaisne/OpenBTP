@@ -212,6 +212,9 @@ mariadb:
 # There is no Ingress chart. cl01 has no IngressClass.
 gateway:
   enabled: false
+  # Fixed name. cl01 already has Gateway openbtp/openbtp-gateway and its
+  # load balancer address. A different name would create a second Gateway.
+  name: openbtp-gateway
   className: eg
   host: ""
   annotations: {}

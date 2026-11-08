@@ -19,6 +19,7 @@ persistence:
 
 gateway:
   enabled: true
+  name: openbtp-gateway
   className: eg
   host: openbtp.cut-api.com
   tls:

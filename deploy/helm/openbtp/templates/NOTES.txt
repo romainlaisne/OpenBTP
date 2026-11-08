@@ -2,10 +2,11 @@ OpenBTP release {{ .Release.Name }} in namespace {{ .Release.Namespace }}.
 
 {{- if .Values.gateway.enabled }}
 
-Gateway {{ include "openbtp.fullname" . }}-gateway uses class {{ .Values.gateway.className }} for {{ .Values.gateway.host }}.
-The HTTP listener is the one that can become ready before DNS. Read its address with:
+Gateway {{ .Values.gateway.name }} uses class {{ .Values.gateway.className }} for {{ .Values.gateway.host }}.
+Keep this object. Replacing it allocates a new load balancer address.
+The HTTP listener has no hostname so HTTP-01 can attach. Read the address with:
 
-  kubectl -n {{ .Release.Namespace }} get gateway {{ include "openbtp.fullname" . }}-gateway -o jsonpath='{.status.addresses[0].value}{"\n"}'
+  kubectl -n {{ .Release.Namespace }} get gateway {{ .Values.gateway.name }} -o jsonpath='{.status.addresses[0].value}{"\n"}'
 
 Point DNS for {{ .Values.gateway.host }} at that address. The namespaced ACME Issuer has no copied account email. The certificate stays pending until that DNS record exists.
 {{- if not .Values.gateway.tls.httpsListener }}

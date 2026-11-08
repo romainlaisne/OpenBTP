@@ -106,7 +106,20 @@ echo "== cl01 values enable openbtp.cut-api.com and keep 3 Galera members =="
 cl01=$(helm template openbtp "${CHART}" ${COMMON} \
   --values "${CHART}/values-cl01.yaml" \
   --set image.digest="${DIGEST}")
+printf '%s\n' "$cl01" | grep -q "name: openbtp-gateway" || fail "cl01 Gateway name drifted"
 printf '%s\n' "$cl01" | grep -q "openbtp.cut-api.com" || fail "cl01 host missing"
+python3 - "$cl01" << 'PY'
+import sys
+text = sys.argv[1]
+start = text.find("kind: Gateway")
+end = text.find("---", start + 1)
+block = text[start:end if end != -1 else None]
+if "hostname:" in block:
+    raise SystemExit("HTTP Gateway listener must not set hostname; the live listener has none")
+if "name: http" not in block or "port: 80" not in block:
+    raise SystemExit("HTTP listener on port 80 is missing")
+print("live HTTP listener shape preserved")
+PY
 printf '%s\n' "$cl01" | grep -q 'gatewayClassName: "eg"' || fail "cl01 Gateway class is not eg"
 printf '%s\n' "$cl01" | grep -q "kind: Issuer" || fail "cl01 namespaced Issuer missing"
 printf '%s\n' "$cl01" | grep -q "kind: Certificate" || fail "cl01 Certificate missing"

@@ -96,6 +96,8 @@ Label `openbtp-db-app` with `k8s.mariadb.com/watch=true` only when rotating the 
 
 The public host is `openbtp.cut-api.com`. Capacity for this release, including the Envoy data plane, was accepted. The application Service stays ClusterIP. The Gateway class is `eg`.
 
+Gateway `openbtp/openbtp-gateway` is already Accepted and Programmed. Its load balancer address is `57.129.58.97`. The DNS record is an A record from `openbtp.cut-api.com` to that address. Helm must adopt this object. The release name and namespace are both `openbtp`, which matches the annotations already on it. The chart names the Gateway `openbtp-gateway` and leaves the HTTP listener without a hostname, matching the programmed listener so HTTP-01 can use it. Do not delete the Gateway and do not change its name. That would allocate a new address.
+
 HTTP can become ready before DNS. The HTTPS listener is left off until the certificate exists, because a missing certificate would keep that listener unprogrammed. The namespaced Issuer and Certificate are still created. The Issuer does not set an email: none was verified, and cert-manager 1.21 does not require one. It does not use the ClusterIssuer whose HTTP-01 solver is pinned to another namespace.
 
 Stage 1, no application image and no MariaDB:
