@@ -35,6 +35,7 @@ export async function proxy(req: NextRequest) {
     pathname === '/reset-password' ||
     pathname === '/clear-cache' ||
     pathname.startsWith('/api/auth/') ||
+    pathname.startsWith('/api/health/') ||
     pathname.startsWith('/api/setup') ||
     pathname.startsWith('/api/public/') ||
     pathname.startsWith('/api/contrats/') || // Routes de signature de contrats (publiques)

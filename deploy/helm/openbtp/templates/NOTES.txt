@@ -1,0 +1,31 @@
+OpenBTP release {{ .Release.Name }} in namespace {{ .Release.Namespace }}.
+
+The application Service is ClusterIP only:
+  {{ include "openbtp.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+
+Public URL currently rendered into the application:
+  {{ include "openbtp.publicUrl" . }}
+
+Database: {{ include "openbtp.mariadbName" . }} (3 Galera members, primary Service {{ include "openbtp.mariadbPrimaryService" . }}).
+This chart does not install mariadb-operator and does not touch any other database.
+
+Before pods can start, these Secrets must already exist in {{ .Release.Namespace }}.
+The chart does not create them and this output does not contain their values.
+  {{ .Values.mariadb.user.passwordSecretName }} key {{ .Values.mariadb.user.passwordSecretKey }}
+    Use a URL-safe hex password. The operator copies it into the connection string as-is.
+  {{ .Values.secrets.nextauth.name }} key {{ .Values.secrets.nextauth.key }}
+    At least 32 characters.
+
+The operator generates the MariaDB root password into {{ .Values.mariadb.root.secretName }}
+when that Secret is absent. Do not point it at another application's Secret.
+
+Memory on cl01 was already over capacity when this chart was written.
+Requests added by a default install are about:
+  database  3 x 256Mi plus 3 x 64Mi Galera agent
+  application 512Mi
+A Gateway is off. Turning gateway.enabled on asks Envoy Gateway for another data plane
+(about 544Mi requested on the existing installation). Do not enable it until a hostname
+and the extra memory are both accepted.
+
+Migrations run once in an init container with Prisma advisory locks disabled.
+Galera rejects GET_LOCK. Helm rollback does not undo a migration that already committed.

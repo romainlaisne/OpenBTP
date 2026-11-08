@@ -12,6 +12,7 @@
 
 import { timingSafeEqual } from 'crypto'
 import { prisma } from '@/lib/prisma/client'
+import { publicAppUrl } from '@/lib/public-url'
 
 /** Statuts publiés. A_VENIR est inclus : ce sont les chantiers qui démarrent
  *  bientôt, et le premier jour sur chantier est justement le plus exposé. */
@@ -97,6 +98,6 @@ export async function jetonCheckinValide(jeton: string): Promise<boolean> {
 /** URL publique de la page pour un jeton (null si aucun jeton). */
 export function lienCheckin(jeton: string | null | undefined): string | null {
   if (!jeton) return null
-  const base = (process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || '').replace(/\/$/, '')
+  const base = publicAppUrl()
   return `${base}/checkin/${jeton}`
 }

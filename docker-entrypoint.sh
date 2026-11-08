@@ -1,94 +1,116 @@
 #!/bin/sh
 set -e
 
-echo "🔄 Attente de la base de données..."
-# Extraire les infos de connexion depuis DATABASE_URL
-DB_HOST=$(echo "$DATABASE_URL" | sed 's|mysql://[^:]*:[^@]*@\([^:]*\):.*|\1|')
-DB_PORT=$(echo "$DATABASE_URL" | sed 's|mysql://[^:]*:[^@]*@[^:]*:\([0-9]*\)/.*|\1|')
-DB_USER=$(echo "$DATABASE_URL" | sed 's|mysql://\([^:]*\):.*|\1|')
-DB_PASS=$(echo "$DATABASE_URL" | sed 's|mysql://[^:]*:\([^@]*\)@.*|\1|')
-DB_NAME=$(echo "$DATABASE_URL" | sed 's|.*/\([^?]*\).*|\1|')
+# OPENBTP_RUN_MIGRATIONS=1  apply prisma migrate deploy (default, keeps docker-compose behavior)
+# OPENBTP_RUN_SEED=1        run prisma db seed (default, non-fatal)
+# OPENBTP_START_APP=1       exec the Next.js server (set to 0 for a migration init container)
+# OPENBTP_DB_WAIT_TIMEOUT   seconds to wait for MariaDB (default 900)
+#
+# Galera rejects GET_LOCK(). The chart sets PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK=1
+# on the migration container. Do not unset that when the database is Galera.
 
-until mariadb --skip-ssl -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "SELECT 1" > /dev/null 2>&1; do
+CNF_FILE=/tmp/openbtp-client.cnf
+META_FILE=/tmp/openbtp-db.meta
+cleanup() {
+  rm -f "$CNF_FILE"
+}
+trap cleanup EXIT
+
+node /app/scripts/write-mariadb-client-cnf.mjs "$CNF_FILE" "$META_FILE"
+# Meta file is generated with quoted safe tokens and does not contain the password.
+# shellcheck disable=SC1090
+. "$META_FILE"
+
+echo "Waiting for database ${DB_HOST}:${DB_PORT}/${DB_NAME}..."
+deadline=$(( $(date +%s) + ${OPENBTP_DB_WAIT_TIMEOUT:-900} ))
+until mariadb --defaults-extra-file="$CNF_FILE" --skip-ssl -e "SELECT 1" >/dev/null 2>&1; do
+  if [ "$(date +%s)" -ge "$deadline" ]; then
+    echo "Database was not reachable before the wait timeout." >&2
+    exit 1
+  fi
   sleep 2
 done
+echo "Database is reachable"
 
-echo "✅ Base de données disponible"
+if [ "$(id -u)" = "0" ]; then
+  echo "Adjusting permissions on mounted directories..."
+  mkdir -p \
+    /app/public/uploads \
+    /app/public/uploads/documents \
+    /app/public/uploads/documents/administratifs \
+    /app/public/uploads/documents/ouvriers \
+    /app/public/uploads/documents/sav \
+    /app/public/uploads/metres-plan \
+    /app/public/uploads/choix-clients \
+    /app/public/uploads/rapports \
+    /app/public/chantiers \
+    /app/public/documents \
+    /app/backups || true
+  chown -R nextjs:nodejs /app/public/uploads /app/public/chantiers /app/public/documents /app/backups 2>/dev/null || true
+  chmod -R u+rwX,g+rwX,o+rX /app/public/uploads /app/public/chantiers /app/public/documents /app/backups 2>/dev/null || true
+fi
 
-# ===== Permissions upload / backups =====
-# En Docker, les volumes montés remplacent les dossiers créés pendant la build.
-# Si le dossier public/uploads sur l'hôte n'a pas les bonnes permissions,
-# l'upload échoue avec EACCES.
-echo "🔧 Vérification/ajustement permissions dossiers montés..."
-mkdir -p \
-  /app/public/uploads \
-  /app/public/uploads/documents \
-  /app/public/uploads/documents/administratifs \
-  /app/public/uploads/documents/ouvriers \
-  /app/public/uploads/documents/sav \
-  /app/public/uploads/metres-plan \
-  /app/public/uploads/choix-clients \
-  /app/public/uploads/rapports \
-  /app/public/chantiers \
-  /app/public/documents \
-  /app/backups || true
-chown -R nextjs:nodejs /app/public/uploads /app/public/chantiers /app/public/documents /app/backups 2>/dev/null || true
-chmod -R u+rwX,g+rwX,o+rX /app/public/uploads /app/public/chantiers /app/public/documents /app/backups 2>/dev/null || true
+TABLE_COUNT=$(mariadb --defaults-extra-file="$CNF_FILE" --skip-ssl -sN \
+  -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${DB_NAME}'" 2>/dev/null || true)
 
-# Vérifier si la base est vide (aucune table)
-# -sN = silent (pas de bordures) + no column names → retourne juste la valeur
-TABLE_COUNT=$(mariadb --skip-ssl -sN -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASS" \
-  -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_NAME'" 2>/dev/null)
-
-# Chercher un fichier .sql dans /app/init-db/
 SQL_FILE=""
 for f in /app/init-db/*.sql; do
   [ -f "$f" ] && SQL_FILE="$f" && break
 done
 
 if [ "$TABLE_COUNT" = "0" ] && [ -n "$SQL_FILE" ]; then
-  echo "📥 Base vide détectée — import de $(basename "$SQL_FILE")..."
-  echo "⏳ Cette opération peut prendre plusieurs minutes sur un NAS..."
-  mariadb --skip-ssl -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < "$SQL_FILE"
-  echo "✅ Import SQL terminé"
+  echo "Empty database detected. Importing $(basename "$SQL_FILE")..."
+  mariadb --defaults-extra-file="$CNF_FILE" --skip-ssl "$DB_NAME" < "$SQL_FILE"
+  echo "SQL import finished"
 fi
 
-echo "🔄 Application des migrations Prisma..."
+export PATH="/app/node_modules/.bin:${PATH}"
 
-# Tenter les migrations. Si la base n'est pas vide (P3005 = import SQL existant),
-# faire un baseline automatique puis réessayer.
-migrate_output=$(npx prisma migrate deploy 2>&1) || {
-  if echo "$migrate_output" | grep -q "P3005"; then
-    echo "⚠️  Schéma existant détecté (P3005). Vérification du schéma avant baseline..."
-
-    # Baseline "automatique" = on marque toutes les migrations comme appliquées.
-    # C'est seulement correct si le schéma SQL existant est déjà au bon niveau.
-    # Sinon, on risque de "sauter" des migrations => tables manquantes.
-    HAS_BON_PREPARATION=$(mariadb --skip-ssl -sN -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASS" \
-      -e "SELECT 1 FROM information_schema.tables WHERE table_schema='$DB_NAME' AND table_name='bon_preparation' LIMIT 1" 2>/dev/null || true)
-
-    if [ -z "$HAS_BON_PREPARATION" ]; then
-      echo "❌ Table 'bon_preparation' absente: baseline refusé. Il faut appliquer les migrations correctement."
-      echo "----- prisma output (P3005) -----"
-      echo "$migrate_output"
+if [ "${OPENBTP_RUN_MIGRATIONS:-1}" = "1" ]; then
+  echo "Applying Prisma migrations..."
+  migrate_output=$(prisma migrate deploy 2>&1) || {
+    if echo "$migrate_output" | grep -q "P3005"; then
+      echo "Existing schema detected (P3005). Checking it before baseline..."
+      HAS_BON_PREPARATION=$(mariadb --defaults-extra-file="$CNF_FILE" --skip-ssl -sN \
+        -e "SELECT 1 FROM information_schema.tables WHERE table_schema='${DB_NAME}' AND table_name='bon_preparation' LIMIT 1" 2>/dev/null || true)
+      if [ -z "$HAS_BON_PREPARATION" ]; then
+        echo "Table bon_preparation is absent. Refusing automatic baseline." >&2
+        echo "$migrate_output" >&2
+        exit 1
+      fi
+      echo "Schema looks consistent. Baselining migrations..."
+      for dir in prisma/migrations/*/; do
+        migration_name=$(basename "$dir")
+        prisma migrate resolve --applied "$migration_name" 2>/dev/null || true
+      done
+      echo "Baseline finished. Re-running migrations..."
+      prisma migrate deploy
+    else
+      echo "$migrate_output" >&2
       exit 1
     fi
+  }
+else
+  echo "Skipping Prisma migrations"
+fi
 
-    echo "✅ Schéma semble cohérent (bon_preparation présent) - baseline automatique..."
-    for dir in prisma/migrations/*/; do
-      migration_name=$(basename "$dir")
-      npx prisma migrate resolve --applied "$migration_name" 2>/dev/null || true
-    done
-    echo "✅ Baseline terminé - relance des migrations..."
-    npx prisma migrate deploy
-  else
-    echo "$migrate_output"
-    exit 1
-  fi
-}
+if [ "${OPENBTP_RUN_SEED:-1}" = "1" ]; then
+  echo "Seeding reference data..."
+  prisma db seed 2>&1 || echo "Seed skipped (non-fatal)"
+else
+  echo "Skipping seed"
+fi
 
-echo "🌱 Initialisation des données de référence (seed)..."
-npx prisma db seed 2>&1 || echo "⚠️  Seed ignoré (non bloquant)"
+rm -f "$CNF_FILE"
+trap - EXIT
 
-echo "🚀 Démarrage de l'application..."
-exec su -s /bin/sh -c "npm run start" nextjs
+if [ "${OPENBTP_START_APP:-1}" != "1" ]; then
+  echo "Database init finished. Application start is disabled."
+  exit 0
+fi
+
+echo "Starting application..."
+if [ "$(id -u)" = "0" ]; then
+  exec su -s /bin/sh -c "npm run start" nextjs
+fi
+exec npm run start

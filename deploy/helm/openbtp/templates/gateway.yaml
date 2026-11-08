@@ -1,0 +1,133 @@
+{{- include "openbtp.validate" . -}}
+{{- if .Values.gateway.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ include "openbtp.fullname" . }}-gateway
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+  {{- with .Values.gateway.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  gatewayClassName: {{ .Values.gateway.className | quote }}
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+    {{- if .Values.gateway.tls.enabled }}
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: {{ .Values.gateway.host | quote }}
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: {{ include "openbtp.fullname" . }}-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+    {{- end }}
+---
+{{- if .Values.gateway.tls.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "openbtp.fullname" . }}-acme
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+spec:
+  acme:
+    email: {{ .Values.gateway.tls.email | quote }}
+    server: {{ .Values.gateway.tls.acmeServer | quote }}
+    privateKeySecretRef:
+      name: {{ include "openbtp.fullname" . }}-acme-account
+    solvers:
+      - http01:
+          gatewayHTTPRoute:
+            parentRefs:
+              - group: gateway.networking.k8s.io
+                kind: Gateway
+                name: {{ include "openbtp.fullname" . }}-gateway
+                namespace: {{ .Release.Namespace }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "openbtp.fullname" . }}-tls
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+spec:
+  secretName: {{ include "openbtp.fullname" . }}-tls
+  issuerRef:
+    name: {{ include "openbtp.fullname" . }}-acme
+    kind: Issuer
+    group: cert-manager.io
+  dnsNames:
+    - {{ .Values.gateway.host | quote }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "openbtp.fullname" . }}-https
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ include "openbtp.fullname" . }}-gateway
+      sectionName: https
+  hostnames:
+    - {{ .Values.gateway.host | quote }}
+  rules:
+    - backendRefs:
+        - name: {{ include "openbtp.fullname" . }}
+          port: {{ .Values.service.port }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "openbtp.fullname" . }}-http-redirect
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ include "openbtp.fullname" . }}-gateway
+      sectionName: http
+  hostnames:
+    - {{ .Values.gateway.host | quote }}
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+{{- else }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "openbtp.fullname" . }}-http
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ include "openbtp.fullname" . }}-gateway
+      sectionName: http
+  hostnames:
+    - {{ .Values.gateway.host | quote }}
+  rules:
+    - backendRefs:
+        - name: {{ include "openbtp.fullname" . }}
+          port: {{ .Values.service.port }}
+{{- end }}
+{{- end }}

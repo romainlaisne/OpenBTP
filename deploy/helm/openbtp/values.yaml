@@ -1,0 +1,220 @@
+# Defaults match the cl01 discovery of 8 November 2026.
+# Nothing in this file is a credential. Secrets are referenced by name.
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Install is refused until this is true. cl01 workers were already at
+# 101% / 91% / 81% of allocatable memory (~1976Mi each). A 3-member Galera
+# cluster plus the application does not fit that headroom. Do not set this
+# to hide the warning; set it only after the capacity decision is made.
+capacity:
+  acknowledged: false
+
+image:
+  # Empty until the image has been built and pushed by someone with registry
+  # access. Suggested repository: ghcr.io/romainlaisne/openbtp
+  repository: ""
+  tag: ""
+  # Registry manifest digest, including the sha256: prefix.
+  digest: ""
+  pullPolicy: IfNotPresent
+  # Name of an existing pull Secret in this namespace. Do not reuse a Secret
+  # from another namespace. Leave empty for a public image.
+  existingPullSecret: ""
+
+# One replica. The process starts in-process schedulers (backup, mail, check-in).
+# File volumes are ReadWriteOnce.
+app:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1536Mi
+
+service:
+  type: ClusterIP
+  port: 3000
+
+serviceAccount:
+  create: true
+  name: ""
+
+# Leave publicUrl empty until a hostname is chosen. The chart then uses the
+# in-cluster Service DNS, which is not a public name. Contract and email links
+# will use that internal name until publicUrl is set.
+config:
+  publicUrl: ""
+  logLevel: info
+  timezone: Europe/Brussels
+  pdfServiceUrl: ""
+  pdfServiceProvider: ""
+  ollamaBaseUrl: ""
+  ollamaModel: ""
+  ollamaEmbeddingModel: ""
+  emailHost: ""
+  emailPort: ""
+  emailSecure: ""
+  emailFrom: ""
+  emailFromName: ""
+
+secrets:
+  nextauth:
+    name: openbtp-app
+    key: NEXTAUTH_SECRET
+  # Optional existing Secret whose keys are injected with envFrom.
+  # Use this for EMAIL_PASSWORD, OPENBTP_AGENT_KEYS, and similar values.
+  extraEnvFrom: []
+
+probes:
+  startup:
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 60
+  readiness:
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  liveness:
+    periodSeconds: 20
+    timeoutSeconds: 5
+    failureThreshold: 6
+
+# Direct mounts (no subPath) so fsGroup can make them writable by uid 1001.
+# helm.sh/resource-policy: keep is applied. The storage class reclaim policy
+# is Delete, so deleting one of these PVCs by hand deletes the volume.
+persistence:
+  enabled: true
+  storageClassName: csi-cinder-high-speed-gen2
+  uploads: 20Gi
+  chantiers: 10Gi
+  documents: 10Gi
+  fiches: 10Gi
+  backups: 10Gi
+
+# Optional mirror of subcontractor documents. This chart does not create the
+# volume. Point existingClaim at a claim that already exists in the namespace.
+nas:
+  enabled: false
+  existingClaim: ""
+
+# Optional SQL file imported only when the database has zero tables.
+# The ConfigMap must already exist and contain a .sql key. Do not put a dump
+# from another application in here.
+initSql:
+  existingConfigMap: ""
+
+# Dedicated cluster managed by the operator already installed in mariadb-operator.
+# This chart does not install the operator or any CRD, and it does not select
+# any object outside the release namespace.
+mariadb:
+  enabled: true
+  replicas: 3
+  # Prisma ORM 6 documents MariaDB 10.0+ and 11.0+. It does not document 12.x.
+  # 11.4.13 is the current 11.4 LTS patch and is inside that matrix.
+  # The compose file this application ships with uses the older 10.11 LTS.
+  # 12.3.3 is what another database on cl01 runs; it is not copied here.
+  # Digest observed on Docker Hub for library/mariadb:11.4.13 on 8 November 2026.
+  image: docker.io/library/mariadb:11.4.13@sha256:d1891ede5a559f1086f55053bb8cc1569b0298338c4d72d71725a7f74f6ba620
+  port: 3306
+  # Prisma stores DateTime as UTC. Do not switch this to a local zone.
+  timeZone: UTC
+  database:
+    name: openbtp
+    characterSet: utf8mb4
+    collate: utf8mb4_unicode_ci
+  # SQL account created by a User resource. Not root, and not the operator's
+  # initial ALL PRIVILEGES account (spec.username is left unset on purpose).
+  user:
+    name: openbtp
+    host: "%"
+    maxUserConnections: 40
+    passwordSecretName: openbtp-db-app
+    passwordSecretKey: password
+  root:
+    secretName: openbtp-mariadb-root
+    secretKey: root-password
+    generate: true
+  connection:
+    secretName: openbtp-db-connection
+    databaseUrlKey: DATABASE_URL
+  grant:
+    database: openbtp
+    table: "*"
+    host: "%"
+    grantOption: false
+    # Enough for Prisma migrate deploy, the seed, and the application.
+    # Not a global *.* grant. LOCK TABLES is included because some dump tools
+    # ask for it; the backup runs with --lock-tables=false because Galera
+    # rejects LOCK TABLES.
+    privileges:
+      - SELECT
+      - INSERT
+      - UPDATE
+      - DELETE
+      - CREATE
+      - DROP
+      - REFERENCES
+      - INDEX
+      - ALTER
+      - CREATE TEMPORARY TABLES
+      - LOCK TABLES
+      - CREATE VIEW
+      - SHOW VIEW
+      - TRIGGER
+  storage:
+    size: 10Gi
+    storageClassName: csi-cinder-high-speed-gen2
+    accessMode: ReadWriteOnce
+    whenDeleted: Retain
+    whenScaled: Retain
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+  galera:
+    enabled: true
+    sst: mariabackup
+    agent:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+  tls:
+    enabled: true
+    # Clients, including Prisma, connect without a client certificate.
+    # required stays false so a missing client cert is not a hard failure.
+    required: false
+    galeraSSTEnabled: false
+  podDisruptionBudget:
+    minAvailable: 2
+  # Explicit so a 11.4 server default of utf8mb4_uca1400_ai_ci cannot apply.
+  # Buffer pool stays at the MariaDB default scale: each Pod memory limit is 1Gi.
+  myCnf: |
+    [mysqld]
+    character-set-server=utf8mb4
+    collation-server=utf8mb4_unicode_ci
+    innodb_file_per_table=1
+    innodb_buffer_pool_size=128M
+    max_connections=150
+    log_output=FILE
+
+# Gateway API (Envoy Gateway class "eg"). Off by default: a new Gateway
+# provisions its own Envoy data plane, which requests about 544Mi.
+# There is no Ingress chart. cl01 has no IngressClass.
+gateway:
+  enabled: false
+  className: eg
+  host: ""
+  annotations: {}
+  tls:
+    enabled: false
+    email: ""
+    acmeServer: https://acme-v02.api.letsencrypt.org/directory

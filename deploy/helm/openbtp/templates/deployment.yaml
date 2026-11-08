@@ -1,0 +1,220 @@
+{{- include "openbtp.validate" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "openbtp.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "openbtp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "openbtp.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      serviceAccountName: {{ include "openbtp.serviceAccountName" . }}
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      {{- if .Values.image.existingPullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.existingPullSecret }}
+      {{- end }}
+      initContainers:
+        - name: prepare-data
+          image: {{ include "openbtp.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              mkdir -p \
+                /app/public/uploads/documents/administratifs \
+                /app/public/uploads/documents/ouvriers \
+                /app/public/uploads/documents/sav \
+                /app/public/uploads/metres-plan \
+                /app/public/uploads/choix-clients \
+                /app/public/uploads/rapports \
+                /app/public/uploads/etats-avancement \
+                /app/public/chantiers \
+                /app/public/documents \
+                /app/public/fiches-techniques \
+                /app/backups
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/public/uploads
+            - name: chantiers
+              mountPath: /app/public/chantiers
+            - name: documents
+              mountPath: /app/public/documents
+            - name: fiches
+              mountPath: /app/public/fiches-techniques
+            - name: backups
+              mountPath: /app/backups
+        - name: migrate
+          image: {{ include "openbtp.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mariadb.connection.secretName }}
+                  key: {{ .Values.mariadb.connection.databaseUrlKey }}
+            - name: PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK
+              value: "1"
+            - name: OPENBTP_RUN_MIGRATIONS
+              value: "1"
+            - name: OPENBTP_RUN_SEED
+              value: "1"
+            - name: OPENBTP_START_APP
+              value: "0"
+            - name: OPENBTP_DB_WAIT_TIMEOUT
+              value: "900"
+            - name: HOME
+              value: /tmp
+            - name: NPM_CONFIG_CACHE
+              value: /tmp/npm-cache
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
+          {{- if .Values.initSql.existingConfigMap }}
+          volumeMounts:
+            - name: init-sql
+              mountPath: /app/init-db
+              readOnly: true
+          {{- end }}
+      containers:
+        - name: openbtp
+          image: {{ include "openbtp.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ include "openbtp.fullname" . }}-config
+            {{- range .Values.secrets.extraEnvFrom }}
+            - secretRef:
+                name: {{ . | quote }}
+            {{- end }}
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mariadb.connection.secretName }}
+                  key: {{ .Values.mariadb.connection.databaseUrlKey }}
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.nextauth.name }}
+                  key: {{ .Values.secrets.nextauth.key }}
+            - name: OPENBTP_RUN_MIGRATIONS
+              value: "0"
+            - name: OPENBTP_RUN_SEED
+              value: "0"
+            - name: OPENBTP_START_APP
+              value: "1"
+          startupProbe:
+            httpGet:
+              path: /api/health/live
+              port: http
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /api/health/ready
+              port: http
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /api/health/live
+              port: http
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/public/uploads
+            - name: chantiers
+              mountPath: /app/public/chantiers
+            - name: documents
+              mountPath: /app/public/documents
+            - name: fiches
+              mountPath: /app/public/fiches-techniques
+            - name: backups
+              mountPath: /app/backups
+            {{- if .Values.nas.enabled }}
+            - name: nas-documents
+              mountPath: /app/nas-documents
+            {{- end }}
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: {{ include "openbtp.fullname" . }}-uploads
+        - name: chantiers
+          persistentVolumeClaim:
+            claimName: {{ include "openbtp.fullname" . }}-chantiers
+        - name: documents
+          persistentVolumeClaim:
+            claimName: {{ include "openbtp.fullname" . }}-documents
+        - name: fiches
+          persistentVolumeClaim:
+            claimName: {{ include "openbtp.fullname" . }}-fiches
+        - name: backups
+          persistentVolumeClaim:
+            claimName: {{ include "openbtp.fullname" . }}-backups
+        {{- if .Values.nas.enabled }}
+        - name: nas-documents
+          persistentVolumeClaim:
+            claimName: {{ .Values.nas.existingClaim }}
+        {{- end }}
+        {{- if .Values.initSql.existingConfigMap }}
+        - name: init-sql
+          configMap:
+            name: {{ .Values.initSql.existingConfigMap }}
+        {{- end }}

@@ -6,6 +6,7 @@ import crypto from 'crypto'
 import { writeFile, mkdir, stat } from 'fs/promises'
 import { join } from 'path'
 import { readFile } from 'fs/promises'
+import { publicAppUrl } from '@/lib/public-url'
 
 // Chemin de base pour les documents
 const DOCUMENTS_BASE_PATH = join(process.cwd(), 'public', 'uploads', 'documents')
@@ -92,7 +93,7 @@ export async function generateContratSoustraitance(soustraitantId: string, _user
       // Métadonnées
       referenceContrat: `CT-${Date.now()}`,
       tokenSignature: token,
-      urlSignature: `${process.env.NEXT_PUBLIC_APP_URL}/contrats/${token}`,
+      urlSignature: `${publicAppUrl()}/contrats/${token}`,
       
       // Images en base64
       logoBase64: logoBase64,
@@ -232,7 +233,7 @@ export async function signerContrat(
       // Métadonnées
       referenceContrat: `CT-${contrat.dateGeneration.getTime()}`,
       tokenSignature: token,
-      urlSignature: `${process.env.NEXT_PUBLIC_APP_URL}/contrats/${token}`,
+      urlSignature: `${publicAppUrl()}/contrats/${token}`,
       
       // Images en base64
       logoBase64: logoBase64,

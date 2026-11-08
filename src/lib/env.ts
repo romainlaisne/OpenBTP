@@ -14,6 +14,8 @@ const envSchema = z.object({
 
   // Application
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
+  // Runtime origin (not inlined at image build). Preferred over NEXT_PUBLIC_APP_URL.
+  APP_PUBLIC_URL: z.string().url().optional(),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
   // PDF Service (OPTIONNEL)
@@ -95,6 +97,9 @@ export function logEnvSummary() {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
   console.log(`  🌍 Environnement: ${env.NODE_ENV}`)
   console.log(`  🔗 URL: ${env.NEXTAUTH_URL}`)
+  if (env.APP_PUBLIC_URL) {
+    console.log(`  🔗 URL publique: ${env.APP_PUBLIC_URL}`)
+  }
   console.log(`  🗄️  Base de données: ${env.DATABASE_URL ? '✅ Configurée' : '❌ Manquante'}`)
   console.log(`  🔐 NextAuth: ${env.NEXTAUTH_SECRET ? '✅ Configuré' : '❌ Manquant'}`)
   

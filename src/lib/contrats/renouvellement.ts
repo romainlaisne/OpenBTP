@@ -9,6 +9,7 @@
 // Un récapitulatif est envoyé à l'adresse d'alerte quand il y a du nouveau.
 
 import { prisma } from '@/lib/prisma/client'
+import { publicAppUrl } from '@/lib/public-url'
 import { gabaritEmail, paragraphe, sousTitre, liste } from '@/lib/email/gabarit'
 import { societeEmail } from '@/lib/email/societe'
 import { envoyerEmailRappel } from '@/lib/email-sender'
@@ -173,7 +174,7 @@ async function envoyerRecapitulatif(r: ResultatRenouvellements, destinataire: st
     contenuHtml:
       sections.map((s) => sousTitre(`${e(s.titre)} (${s.lignes.length})`) + liste(s.lignes.map(e))).join('') +
       (r.enAttente ? paragraphe(`${r.enAttente} autre(s) renouvellement(s) en attente de signature (relance automatique après ${RELANCE_JOURS} jours).`) : ''),
-    bouton: { libelle: 'Voir les sous-traitants', url: `${(process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || '').replace(/\/$/, '')}/sous-traitants` },
+    bouton: { libelle: 'Voir les sous-traitants', url: `${publicAppUrl()}/sous-traitants` },
     societe: await societeEmail(),
   })
 

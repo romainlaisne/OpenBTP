@@ -22,11 +22,16 @@ RUN npx prisma generate
 # Copier le worker PDF.js dans public/ (requis pour l'outil Métré sur plan)
 RUN cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.mjs
 
-# Variables nécessaires au build (valeurs fictives, remplacées au runtime)
+# Variables nécessaires au build (valeurs fictives, remplacées au runtime).
+# NEXT_PUBLIC_APP_URL est figée dans le bundle client. Les liens serveur lisent
+# APP_PUBLIC_URL / NEXTAUTH_URL au démarrage, donc l'image n'a pas à connaître
+# le nom public. Laisser vide sauf si un nom est déjà décidé.
 ARG NEXTAUTH_SECRET=build_placeholder_secret
 ARG DATABASE_URL=mysql://build:build@localhost:3306/build
+ARG NEXT_PUBLIC_APP_URL=
 ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 ENV DATABASE_URL=$DATABASE_URL
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 
 # Build Next.js
 RUN NODE_OPTIONS="--max-old-space-size=1536" npm run build
@@ -57,6 +62,8 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/scripts ./scripts
+# Contract templates are read from disk when the server starts.
+COPY templates ./templates
 
 # Dossiers persistants (seront montés via volumes)
 RUN mkdir -p ./public/uploads ./backups && \

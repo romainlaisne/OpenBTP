@@ -1,0 +1,4 @@
+# Test output and editor files. The deployment guide stays in the package.
+*.tgz
+*.log
+.DS_Store
