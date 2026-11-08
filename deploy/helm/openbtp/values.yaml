@@ -181,6 +181,9 @@ mariadb:
       memory: 256Mi
     limits:
       memory: 1Gi
+  # antiAffinityEnabled cannot be changed after create. cl01 is already true.
+  affinity:
+    antiAffinityEnabled: true
   galera:
     enabled: true
     sst: mariabackup

@@ -66,7 +66,8 @@ spec:
     rollingUpdate:
       maxUnavailable: 1
   affinity:
-    antiAffinityEnabled: {{ .Values.mariadb.galera.enabled }}
+    # Immutable on operator 26.10.2. The installed cluster is already true.
+    antiAffinityEnabled: {{ .Values.mariadb.affinity.antiAffinityEnabled }}
   podDisruptionBudget:
     {{- if .Values.mariadb.galera.enabled }}
     minAvailable: {{ .Values.mariadb.podDisruptionBudget.minAvailable }}

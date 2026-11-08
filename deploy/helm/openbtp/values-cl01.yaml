@@ -23,6 +23,9 @@ mariadb:
   # stays enabled. Both fields change together. Do not delete the MariaDB
   # object or its PVCs; see DEPLOYMENT.md.
   replicas: 1
+  # Live value is true and the field is immutable. One member does not need a second node.
+  affinity:
+    antiAffinityEnabled: true
   galera:
     enabled: false
 

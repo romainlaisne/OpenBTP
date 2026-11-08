@@ -138,6 +138,8 @@ printf '%s\n' "$cl01" | grep -q "replicas: 3" && fail "cl01 still renders three 
 printf '%s\n' "$cl01" | grep -q "sst: mariabackup" && fail "cl01 still renders Galera SST"
 printf '%s\n' "$cl01" | grep -q "minAvailable: 2" && fail "cl01 PDB still requires two members"
 printf '%s\n' "$cl01" | grep -q "minAvailable: 0" || fail "cl01 PDB minAvailable is not 0"
+printf '%s\n' "$cl01" | grep -q "antiAffinityEnabled: true" || fail "cl01 dropped immutable antiAffinityEnabled"
+printf '%s\n' "$cl01" | grep -q "antiAffinityEnabled: false" && fail "cl01 sets immutable antiAffinityEnabled to false"
 printf '%s\n' "$cl01" | grep -q 'serviceName: "openbtp-mariadb"' || fail "cl01 Connection does not use the base Service"
 printf '%s\n' "$cl01" | grep -q "openbtp-mariadb-primary" && fail "cl01 Connection still targets the primary Service"
 printf '%s\n' "$cl01" | grep -q 'secretName: "openbtp-db-connection"' || fail "connection Secret name changed"

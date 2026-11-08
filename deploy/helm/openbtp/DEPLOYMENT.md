@@ -158,7 +158,7 @@ This is an in-place update of MariaDB `openbtp-mariadb`. It is not a new cluster
 Operator 26.10.2, checked against the installed webhook and the tagged controller:
 
 - One API update that sets `spec.replicas: 1`, `spec.galera.enabled: false`, and `spec.podDisruptionBudget.minAvailable: 0` is accepted. The same webhook rejects `replicas: 1` while Galera stays enabled.
-- `spec.galera.enabled` and `spec.replicas` are not immutable fields. `spec.storage.storageClassName`, `spec.database`, `spec.timeZone`, and the root password Secret reference are immutable. The chart does not change them.
+- `spec.galera.enabled` and `spec.replicas` are not immutable fields. `spec.affinity.antiAffinityEnabled` is immutable and stays `true`; one member does not require another node. `spec.storage.storageClassName`, `spec.database`, `spec.timeZone`, and the root password Secret reference are also immutable. The chart does not change them.
 - The controller's StatefulSet reconcile patches only `spec.template`, `spec.updateStrategy`, and `spec.replicas`. It does not send `volumeClaimTemplates`. The live templates for `storage` and `galera` therefore stay. Kubernetes would reject a change to those templates; do not delete the StatefulSet to "fix" that, and do not orphan-delete it.
 - `ReplicasFirstPrimaryLast` is stored on the StatefulSet as `OnDelete`. Updating the pod template does not restart member 0. The Galera agent and the wsrep config mount stay on the running pod until that pod is deleted and recreated.
 - With Galera disabled, the new pod template omits the agent container and the mount of the Galera config volume at `/etc/mysql/mariadb.conf.d`. The data volume stays mounted. The `galera-openbtp-mariadb-*` PVCs remain Bound and unused. That is intentional.
@@ -178,7 +178,7 @@ Do all of the following before the upgrade. Stop if any check fails.
 Upgrade with the packaged chart and `values-cl01.yaml`. One Helm upgrade sends replicas and `galera.enabled` together. Do not patch replicas by itself first.
 
 ```sh
-helm upgrade openbtp openbtp-0.1.2.tgz \
+helm upgrade openbtp openbtp-0.1.3.tgz \
   --namespace openbtp \
   --values values-cl01.yaml \
   --timeout 30m
