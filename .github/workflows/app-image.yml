@@ -6,6 +6,17 @@ on:
     branches:
       - cursor/openbtp-helm-cl01-1238
       - main
+    paths:
+      - Dockerfile
+      - docker-entrypoint.sh
+      - package.json
+      - package-lock.json
+      - prisma/**
+      - public/**
+      - scripts/**
+      - src/**
+      - templates/**
+      - .dockerignore
 
 permissions:
   contents: read

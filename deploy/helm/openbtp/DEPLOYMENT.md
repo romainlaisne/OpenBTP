@@ -27,26 +27,13 @@ Limits are higher (1Gi per database member, 1536Mi for the application). Schedul
 
 ## Application image
 
-No application image was built or pushed here. This machine has no container runtime and no registry credentials. Do not reuse the pull secret from another namespace.
+Published and verified on 8 November 2026. GitHub Actions run `42476932656` pushed a public package. An anonymous registry pull returned this digest:
 
-The image is built from the git commit that contains this chart:
+`ghcr.io/romainlaisne/openbtp@sha256:11e34ef46675a1114938d9558ed4093cae70fe9c4519ea6fa5e700e0773b3fa6`
 
-```sh
-IMAGE_REPOSITORY=ghcr.io/romainlaisne/openbtp deploy/docker/build-app-image.sh
-```
+Tag `82562f97a5706e5ecb9206aa321edc3c73e7c244` points at the same manifest. The package visibility is public, so namespace `openbtp` does not need a pull Secret and must not copy one from another namespace. `values-cl01.yaml` pins that digest. The chart still rejects a missing or malformed digest. `example.invalid/openbtp` remains a render fixture only.
 
-That script does not push. After an authorized push, take the registry manifest digest (not the local image id) and put it in a private values file:
-
-```yaml
-capacity:
-  acknowledged: true
-image:
-  repository: ghcr.io/romainlaisne/openbtp
-  digest: sha256:replace-with-the-registry-digest
-  existingPullSecret: ""   # set only if a new pull Secret exists in namespace openbtp
-```
-
-The chart rejects a missing digest and rejects a digest that is not `sha256:` plus 64 hex characters. `example.invalid/openbtp` is a render fixture, not a deployable image.
+The workflow is `.github/workflows/app-image.yml`. It logs in with `GITHUB_TOKEN` and does not receive registry credentials from this environment. Later builds run when the image inputs change. `deploy/docker/build-app-image.sh` still builds locally and does not push.
 
 `NEXT_PUBLIC_APP_URL` is baked into the browser bundle at build time. Server-side links read `APP_PUBLIC_URL`, then `NEXTAUTH_URL`. Leave the build arg empty until a public hostname exists.
 
@@ -111,7 +98,7 @@ The address to use for the DNS A/AAAA record is `status.addresses[0].value`. Tha
 
 After `openbtp.cut-api.com` points at that address, the Certificate can finish HTTP-01. Then set `gateway.tls.httpsListener: true` and `gateway.tls.redirect: true` in `values-cl01.yaml` and upgrade. Until then, HTTP forwards to the Service.
 
-Stage 2 is the full release. Fill `image.digest` in `values-cl01.yaml` only after a registry publish is verified. Create the two Secrets first. The chart still refuses a blank digest.
+Stage 2 is the full release. `values-cl01.yaml` already pins the verified image digest. Create the two Secrets first. The chart still refuses a blank digest.
 
 ```sh
 helm upgrade --install openbtp openbtp-0.1.1.tgz \
@@ -187,7 +174,7 @@ Expect MariaDB `Ready=True` and the application pod passing readiness. Do not re
 
 ## Known gaps
 
-- No published application image digest yet. `.github/workflows/app-image.yml` builds `ghcr.io/romainlaisne/openbtp` and pushes with `GITHUB_TOKEN` when Actions can run. A private package still needs a pull Secret in namespace `openbtp`; this chart does not create one.
+- The published image is public and pinned in `values-cl01.yaml`. Do not add a pull Secret copied from another namespace.
 - Memory headroom was already short. The capacity flag is set in `values-cl01.yaml` because that risk was accepted for this release.
 - HTTPS is pending until DNS for `openbtp.cut-api.com` exists. HTTP is the listener that can become ready before that record.
 - PDF, Ollama, and SMTP are unset. The application runs without them. Add endpoints only when those services are known, and put passwords in an existing Secret.

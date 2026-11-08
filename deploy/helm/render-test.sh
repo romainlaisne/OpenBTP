@@ -103,9 +103,8 @@ set -e
 printf '%s\n' "$gw_missing" | grep -q "gateway.host" || fail "gateway host requirement missing"
 
 echo "== cl01 values enable openbtp.cut-api.com and keep 3 Galera members =="
-cl01=$(helm template openbtp "${CHART}" ${COMMON} \
-  --values "${CHART}/values-cl01.yaml" \
-  --set image.digest="${DIGEST}")
+cl01=$(helm template openbtp "${CHART}" ${COMMON} --values "${CHART}/values-cl01.yaml")
+printf '%s\n' "$cl01" | grep -q "ghcr.io/romainlaisne/openbtp:82562f97a5706e5ecb9206aa321edc3c73e7c244@sha256:11e34ef46675a1114938d9558ed4093cae70fe9c4519ea6fa5e700e0773b3fa6" || fail "cl01 image is not the verified digest"
 printf '%s\n' "$cl01" | grep -q "name: openbtp-gateway" || fail "cl01 Gateway name drifted"
 printf '%s\n' "$cl01" | grep -q "openbtp.cut-api.com" || fail "cl01 host missing"
 python3 - "$cl01" << 'PY'
