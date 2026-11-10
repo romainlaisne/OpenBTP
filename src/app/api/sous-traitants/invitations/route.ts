@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma/client'
 import { sendEmail } from '@/lib/email-sender'
 import { gabaritEmail, paragraphe, encadre, echapperHtml } from '@/lib/email/gabarit'
 import { societeEmail } from '@/lib/email/societe'
+import { publicAppUrl } from '@/lib/public-url'
 
 /**
  * Normalise un numéro de téléphone en format international pour un lien wa.me.
@@ -70,7 +71,7 @@ export async function POST(request: Request) {
       return localizedJson({ error: 'Aucun sous-traitant sélectionné' }, { status: 400 })
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const baseUrl = publicAppUrl() || 'http://localhost:3000'
 
     const [soustraitants, companySettings, pins] = await Promise.all([
       prisma.soustraitant.findMany({

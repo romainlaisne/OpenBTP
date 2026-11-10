@@ -1,0 +1,32 @@
+{{- include "openbtp.validate" . -}}
+{{- if .Values.app.enabled }}
+{{- $root := . -}}
+{{- $volumes := list
+  (dict "name" "uploads" "size" .Values.persistence.uploads)
+  (dict "name" "chantiers" "size" .Values.persistence.chantiers)
+  (dict "name" "documents" "size" .Values.persistence.documents)
+  (dict "name" "fiches" "size" .Values.persistence.fiches)
+  (dict "name" "backups" "size" .Values.persistence.backups)
+-}}
+{{- range $volumes }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "openbtp.fullname" $root }}-{{ .name }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" $root | nindent 4 }}
+    app.kubernetes.io/component: {{ .name }}
+  annotations:
+    helm.sh/resource-policy: keep
+    {{- include "openbtp.releaseAnnotations" $root | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ $root.Values.persistence.storageClassName | quote }}
+  resources:
+    requests:
+      storage: {{ .size }}
+{{- end }}
+{{- end }}

@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer'
 import { gabaritEmail, paragraphe, echapperHtml } from '@/lib/email/gabarit'
 import { societeEmail } from '@/lib/email/societe'
 import { prisma } from '@/lib/prisma/client'
+import { publicAppUrl } from '@/lib/public-url'
 
 // Type pour les paramètres d'email
 interface EmailSettings {
@@ -181,7 +182,7 @@ export async function sendContractSignatureEmail(
   token: string,
   cc?: string
 ): Promise<boolean> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const baseUrl = publicAppUrl() || 'http://localhost:3000'
   const signatureUrl = `${baseUrl}/contrats/${token}`
 
   const subject = `Contrat de sous-traitance à signer - ${nomEntreprise}`

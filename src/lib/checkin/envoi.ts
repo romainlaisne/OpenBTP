@@ -12,6 +12,7 @@
 //  - ACTIF     : envoi réel au représentant de chaque sous-traitant.
 
 import { prisma } from '@/lib/prisma/client'
+import { publicAppUrl } from '@/lib/public-url'
 import { gabaritEmail, paragraphe, sousTitre, liste } from '@/lib/email/gabarit'
 import { societeEmail } from '@/lib/email/societe'
 import { envoyerEmailRappel } from '@/lib/email-sender'
@@ -389,7 +390,7 @@ export async function executerAlerte(maintenant?: Date): Promise<{ envoyee: bool
     contenuHtml:
       paragraphe('Le contrôle du matin a relevé les points suivants :') +
       sections.map((s) => sousTitre(`${e(s.titre)} (${s.lignes.length})`) + liste(s.lignes.map(e))).join(''),
-    bouton: { libelle: 'Ouvrir les réglages', url: `${(process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || '').replace(/\/$/, '')}/configuration` },
+    bouton: { libelle: 'Ouvrir les réglages', url: `${publicAppUrl()}/configuration` },
     societe: await societeEmail(),
   })
 

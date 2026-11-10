@@ -12,6 +12,7 @@
 //     chantiers sans numéro Checkinatwork
 
 import { prisma } from '@/lib/prisma/client'
+import { publicAppUrl } from '@/lib/public-url'
 import { envoyerEmailRappel } from '@/lib/email-sender'
 import { societeEmail } from '@/lib/email/societe'
 import {
@@ -174,7 +175,7 @@ export async function construireRapportHebdo(maintenant = new Date()): Promise<D
 
   const du = dateCourte(ilYa7j)
   const au = dateCourte(maintenant)
-  const lienApp = (process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || '').replace(/\/$/, '')
+  const lienApp = publicAppUrl()
 
   // ── HTML
   const blocs: string[] = []

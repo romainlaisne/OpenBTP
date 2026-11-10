@@ -1,0 +1,175 @@
+{{- include "openbtp.validate" . -}}
+{{- if .Values.mariadb.enabled }}
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: {{ include "openbtp.mariadbName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.mariadb.replicas }}
+  replicasAllowEvenNumber: false
+  image: {{ .Values.mariadb.image | quote }}
+  imagePullPolicy: IfNotPresent
+  port: {{ .Values.mariadb.port }}
+  timeZone: {{ .Values.mariadb.timeZone | quote }}
+  database: {{ .Values.mariadb.database.name | quote }}
+  rootEmptyPassword: false
+  rootPasswordSecretKeyRef:
+    name: {{ .Values.mariadb.root.secretName | quote }}
+    key: {{ .Values.mariadb.root.secretKey | quote }}
+    generate: {{ .Values.mariadb.root.generate }}
+  myCnf: |-
+{{ .Values.mariadb.myCnf | indent 4 }}
+  storage:
+    size: {{ .Values.mariadb.storage.size }}
+    storageClassName: {{ .Values.mariadb.storage.storageClassName | quote }}
+    resizeInUseVolumes: true
+    waitForVolumeResize: true
+    pvcRetentionPolicy:
+      whenDeleted: {{ .Values.mariadb.storage.whenDeleted }}
+      whenScaled: {{ .Values.mariadb.storage.whenScaled }}
+    volumeClaimTemplate:
+      accessModes:
+        - {{ .Values.mariadb.storage.accessMode }}
+      storageClassName: {{ .Values.mariadb.storage.storageClassName | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.mariadb.storage.size }}
+  resources:
+    {{- toYaml .Values.mariadb.resources | nindent 4 }}
+  galera:
+    enabled: {{ .Values.mariadb.galera.enabled }}
+    {{- if .Values.mariadb.galera.enabled }}
+    sst: {{ .Values.mariadb.galera.sst }}
+    availableWhenDonor: false
+    primary:
+      autoFailover: true
+    agent:
+      resources:
+        {{- toYaml .Values.mariadb.galera.agent.resources | nindent 8 }}
+    {{- end }}
+  tls:
+    enabled: {{ .Values.mariadb.tls.enabled }}
+    required: {{ .Values.mariadb.tls.required }}
+    galeraSSTEnabled: {{ .Values.mariadb.tls.galeraSSTEnabled }}
+  service:
+    type: ClusterIP
+  updateStrategy:
+    type: ReplicasFirstPrimaryLast
+    autoUpdateDataPlane: false
+    mariadbAutoUpgradeEnabled: false
+    rollingUpdate:
+      maxUnavailable: 1
+  affinity:
+    # Immutable on operator 26.10.2. The installed cluster is already true.
+    antiAffinityEnabled: {{ .Values.mariadb.affinity.antiAffinityEnabled }}
+  podDisruptionBudget:
+    {{- if .Values.mariadb.galera.enabled }}
+    minAvailable: {{ .Values.mariadb.podDisruptionBudget.minAvailable }}
+    {{- else }}
+    minAvailable: 0
+    {{- end }}
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: {{ include "openbtp.mariadbName" . }}-database
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
+spec:
+  name: {{ .Values.mariadb.database.name | quote }}
+  characterSet: {{ .Values.mariadb.database.characterSet | quote }}
+  collate: {{ .Values.mariadb.database.collate | quote }}
+  cleanupPolicy: Skip
+  mariaDbRef:
+    name: {{ include "openbtp.mariadbName" . }}
+    namespace: {{ .Release.Namespace }}
+    waitForIt: true
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: {{ include "openbtp.mariadbName" . }}-user
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
+spec:
+  name: {{ .Values.mariadb.user.name | quote }}
+  host: {{ .Values.mariadb.user.host | quote }}
+  maxUserConnections: {{ .Values.mariadb.user.maxUserConnections }}
+  cleanupPolicy: Skip
+  passwordSecretKeyRef:
+    name: {{ .Values.mariadb.user.passwordSecretName | quote }}
+    key: {{ .Values.mariadb.user.passwordSecretKey | quote }}
+  mariaDbRef:
+    name: {{ include "openbtp.mariadbName" . }}
+    namespace: {{ .Release.Namespace }}
+    waitForIt: true
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: {{ include "openbtp.mariadbName" . }}-grant
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
+spec:
+  username: {{ .Values.mariadb.user.name | quote }}
+  host: {{ .Values.mariadb.grant.host | quote }}
+  database: {{ .Values.mariadb.grant.database | quote }}
+  table: {{ .Values.mariadb.grant.table | quote }}
+  grantOption: {{ .Values.mariadb.grant.grantOption }}
+  cleanupPolicy: Skip
+  privileges:
+    {{- range .Values.mariadb.grant.privileges }}
+    - {{ . | quote }}
+    {{- end }}
+  mariaDbRef:
+    name: {{ include "openbtp.mariadbName" . }}
+    namespace: {{ .Release.Namespace }}
+    waitForIt: true
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Connection
+metadata:
+  name: {{ include "openbtp.mariadbName" . }}-connection
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
+spec:
+  username: {{ .Values.mariadb.user.name | quote }}
+  database: {{ .Values.mariadb.database.name | quote }}
+  secretName: {{ .Values.mariadb.connection.secretName | quote }}
+  serviceName: {{ include "openbtp.mariadbServiceName" . | quote }}
+  passwordSecretKeyRef:
+    name: {{ .Values.mariadb.user.passwordSecretName | quote }}
+    key: {{ .Values.mariadb.user.passwordSecretKey | quote }}
+  secretTemplate:
+    key: {{ .Values.mariadb.connection.databaseUrlKey | quote }}
+    format: mysql://{{ "{{ .Username }}" }}:{{ "{{ .Password }}" }}@{{ "{{ .Host }}" }}:{{ "{{ .Port }}" }}/{{ "{{ .Database }}" }}
+  healthCheck:
+    interval: 30s
+    retryInterval: 5s
+  mariaDbRef:
+    name: {{ include "openbtp.mariadbName" . }}
+    namespace: {{ .Release.Namespace }}
+    waitForIt: true
+{{- end }}

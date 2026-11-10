@@ -1,0 +1,57 @@
+{{- include "openbtp.validate" . -}}
+{{- if .Values.app.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "openbtp.fullname" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "openbtp.labels" . | nindent 4 }}
+  annotations:
+    {{- include "openbtp.releaseAnnotations" . | nindent 4 }}
+data:
+  NODE_ENV: production
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  TZ: {{ .Values.config.timezone | quote }}
+  NEXTAUTH_URL: {{ include "openbtp.publicUrl" . | quote }}
+  APP_PUBLIC_URL: {{ include "openbtp.publicUrl" . | quote }}
+  NEXT_PUBLIC_APP_URL: {{ include "openbtp.publicUrl" . | quote }}
+  BACKUP_DIR: /app/backups
+  BACKUP_INCLUDE_ROUTINES: "false"
+  DOCUMENTS_ROOT: /app/public/fiches-techniques
+  HOME: /tmp
+  NPM_CONFIG_CACHE: /tmp/npm-cache
+  {{- if .Values.config.pdfServiceUrl }}
+  PDF_SERVICE_URL: {{ .Values.config.pdfServiceUrl | quote }}
+  {{- end }}
+  {{- if .Values.config.pdfServiceProvider }}
+  PDF_SERVICE_PROVIDER: {{ .Values.config.pdfServiceProvider | quote }}
+  {{- end }}
+  {{- if .Values.config.ollamaBaseUrl }}
+  OLLAMA_BASE_URL: {{ .Values.config.ollamaBaseUrl | quote }}
+  {{- end }}
+  {{- if .Values.config.ollamaModel }}
+  OLLAMA_MODEL: {{ .Values.config.ollamaModel | quote }}
+  {{- end }}
+  {{- if .Values.config.ollamaEmbeddingModel }}
+  OLLAMA_EMBEDDING_MODEL: {{ .Values.config.ollamaEmbeddingModel | quote }}
+  {{- end }}
+  {{- if .Values.config.emailHost }}
+  EMAIL_HOST: {{ .Values.config.emailHost | quote }}
+  {{- end }}
+  {{- if .Values.config.emailPort }}
+  EMAIL_PORT: {{ .Values.config.emailPort | quote }}
+  {{- end }}
+  {{- if .Values.config.emailSecure }}
+  EMAIL_SECURE: {{ .Values.config.emailSecure | quote }}
+  {{- end }}
+  {{- if .Values.config.emailFrom }}
+  EMAIL_FROM: {{ .Values.config.emailFrom | quote }}
+  {{- end }}
+  {{- if .Values.config.emailFromName }}
+  EMAIL_FROM_NAME: {{ .Values.config.emailFromName | quote }}
+  {{- end }}
+  {{- if .Values.nas.enabled }}
+  NAS_DOCUMENTS_PATH: /app/nas-documents
+  {{- end }}
+{{- end }}

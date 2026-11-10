@@ -187,18 +187,23 @@ async function backupDatabase(dbConfig) {
     const configContent = `[client]\nhost=${dbConfig.host}\nport=${dbConfig.port}\nuser=${dbConfig.user}\npassword=${dbConfig.password}\n`
     fs.writeFileSync(tempConfigFile, configContent, { mode: 0o600 })
 
+    // Galera rejects LOCK TABLES. --single-transaction is the safe InnoDB path.
+    // Routines and events live outside the application database. A user granted
+    // only on that database cannot dump them; set BACKUP_INCLUDE_ROUTINES=false.
+    const includeRoutines = process.env.BACKUP_INCLUDE_ROUTINES !== 'false'
     const args = [
       `--defaults-file=${tempConfigFile}`,
       '--skip-ssl',
       '--single-transaction',
-      '--routines',
       '--triggers',
-      '--events',
       '--quick',
       '--lock-tables=false',
       '--no-tablespaces',
-      dbConfig.database,
     ]
+    if (includeRoutines) {
+      args.push('--routines', '--events')
+    }
+    args.push(dbConfig.database)
 
     info('Export de la base de données en cours...')
 

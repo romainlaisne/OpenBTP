@@ -11,12 +11,13 @@ import { getServerSession } from 'next-auth'
 import { randomBytes } from 'crypto'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma/client'
+import { publicAppUrl } from '@/lib/public-url'
 
 const ROLES = ['ADMIN', 'MANAGER']
 
 function urlDe(jeton: string | null | undefined): string | null {
   if (!jeton) return null
-  const base = (process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || '').replace(/\/$/, '')
+  const base = publicAppUrl()
   return `${base}/checkin/${jeton}`
 }
 

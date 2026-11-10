@@ -6,6 +6,7 @@ import crypto from 'crypto'
 import { writeFile, mkdir, stat } from 'fs/promises'
 import { join } from 'path'
 import { champsRepresentantManquants, formaterGsm } from '@/lib/soustraitants/representant'
+import { publicAppUrl } from '@/lib/public-url'
 
 // Chemin de base pour les documents
 const DOCUMENTS_BASE_PATH = join(process.cwd(), 'public', 'uploads', 'documents')
@@ -95,7 +96,7 @@ function construireDonneesTemplate(p: {
     referenceContrat: referenceContrat(p.dateGeneration),
     versionContrat: p.templateVersion,
     tokenSignature: p.token,
-    urlSignature: `${process.env.NEXT_PUBLIC_APP_URL}/contrats/${p.token}`,
+    urlSignature: `${publicAppUrl()}/contrats/${p.token}`,
 
     // Images en base64 — signatureBase64 est TOUJOURS celle de l'entreprise
     logoBase64: p.logoBase64,

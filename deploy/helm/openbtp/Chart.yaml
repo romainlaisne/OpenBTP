@@ -1,0 +1,16 @@
+apiVersion: v2
+name: openbtp
+description: OpenBTP and a dedicated 3-member MariaDB Galera cluster for an already installed mariadb-operator.
+type: application
+version: 0.1.3
+appVersion: "0.1.0"
+kubeVersion: ">=1.29.0-0"
+keywords:
+  - openbtp
+  - mariadb
+  - galera
+annotations:
+  openbtp/mariadb-operator: "26.10.2"
+  openbtp/mariadb-api: "k8s.mariadb.com/v1alpha1"
+  openbtp/target-context: "kubernetes-admin@cl01"
+home: https://github.com/romainlaisne/OpenBTP

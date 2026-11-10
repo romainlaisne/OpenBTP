@@ -1,0 +1,42 @@
+# cl01 deploy values. Capacity risk was accepted for this release.
+# No credentials. The image digest is the public GHCR manifest verified
+# on 8 November 2026. Do not replace it with a floating tag.
+capacity:
+  acknowledged: true
+
+config:
+  publicUrl: https://openbtp.cut-api.com
+
+image:
+  repository: ghcr.io/romainlaisne/openbtp
+  tag: "82562f97a5706e5ecb9206aa321edc3c73e7c244"
+  digest: "sha256:11e34ef46675a1114938d9558ed4093cae70fe9c4519ea6fa5e700e0773b3fa6"
+  # Public package. Leave empty. Do not copy a pull Secret from another namespace.
+  existingPullSecret: ""
+
+app:
+  enabled: true
+
+mariadb:
+  enabled: true
+  # One standalone member. Operator 26.10.2 rejects replicas 1 while Galera
+  # stays enabled. Both fields change together. Do not delete the MariaDB
+  # object or its PVCs; see DEPLOYMENT.md.
+  replicas: 1
+  # Live value is true and the field is immutable. One member does not need a second node.
+  affinity:
+    antiAffinityEnabled: true
+  galera:
+    enabled: false
+
+gateway:
+  enabled: true
+  # Live object openbtp/openbtp-gateway, address 57.129.58.97. Do not rename.
+  name: openbtp-gateway
+  className: eg
+  host: openbtp.cut-api.com
+  tls:
+    enabled: true
+    email: ""
+    httpsListener: false
+    redirect: false
