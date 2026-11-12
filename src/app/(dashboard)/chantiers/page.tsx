@@ -115,7 +115,7 @@ function ChantierCard({
               </p>
             )}
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              {chantier.clientNom || 'Client non défini'}
+              {chantier.clientNom || tx('Client non défini')}
             </p>
           </div>
           <div className="status-menu-container relative">
@@ -138,7 +138,7 @@ function ChantierCard({
                 </span>
               ) : (
                 <>
-                  <span>{chantier.etatChantier}</span>
+                  <span>{tx(chantier.etatChantier)}</span>
                   <ChevronDownIcon className="h-3 w-3 opacity-70" />
                 </>
               )}
@@ -158,7 +158,7 @@ function ChantierCard({
                           : 'text-gray-900 dark:text-white'
                       }`}
                     >
-                      <span>{option.label}</span>
+                      <span>{tx(option.label)}</span>
                       {chantier.etatChantier === option.value && (
                         <CheckIcon className="h-4 w-4" />
                       )}
@@ -173,18 +173,18 @@ function ChantierCard({
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <BanknotesIcon className="h-4 w-4 mr-2" />
-            <span>{chantier.budget ? `${chantier.budget.toLocaleString(intlLocale(getActiveLocale()))} €` : 'Non défini'}</span>
+            <span>{chantier.budget ? `${chantier.budget.toLocaleString(intlLocale(getActiveLocale()))} €` : tx('Non défini')}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <CalendarIcon className="h-4 w-4 mr-2" />
-            <span>{chantier.dateCommencement ? new Date(chantier.dateCommencement).toLocaleDateString(intlLocale(getActiveLocale())) : 'Non définie'}</span>
+            <span>{chantier.dateCommencement ? new Date(chantier.dateCommencement).toLocaleDateString(intlLocale(getActiveLocale())) : tx('Non définie')}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 col-span-2">
             <ClockIcon className="h-4 w-4 mr-2" />
             <span>
-              {chantier.dureeEnJours 
-                ? `${chantier.dureeEnJours} jours ${chantier.typeDuree === 'CALENDAIRE' ? 'calendrier' : 'ouvrés'}`
-                : 'Durée non définie'}
+              {chantier.dureeEnJours
+                ? `${chantier.dureeEnJours} ${tx(chantier.typeDuree === 'CALENDAIRE' ? 'jours calendrier' : 'jours ouvrés')}`
+                : tx('Durée non définie')}
             </span>
           </div>
         </div>
@@ -629,7 +629,7 @@ export default function ChantiersPage() {
         <div className="flex items-center gap-2">
           <BanknotesIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
           <div>
-            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">CA</div>
+            <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">{tx('CA')}</div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">
               {new Intl.NumberFormat(intlLocale(getActiveLocale()), { style: 'currency', currency: 'EUR', maximumFractionDigits: 0, notation: 'compact' }).format(stats.chiffreAffaires)}
             </div>
@@ -655,7 +655,7 @@ export default function ChantiersPage() {
           >
             <PlusIcon className="h-4 w-4 mr-1.5" />
             <span className="hidden sm:inline"><UiText>Nouveau chantier</UiText></span>
-            <span className="sm:hidden">Nouveau</span>
+            <span className="sm:hidden">{tx('Nouveau')}</span>
           </Link>
         }
       />
@@ -753,7 +753,7 @@ export default function ChantiersPage() {
                     : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
-                Cartes
+                {tx('Cartes')}
               </button>
               <button
                 onClick={() => setViewMode('table')}
@@ -763,7 +763,7 @@ export default function ChantiersPage() {
                     : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
-                Tableau
+                {tx('Tableau')}
               </button>
             </div>
           </div>
@@ -778,8 +778,8 @@ export default function ChantiersPage() {
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               {filtreNom || filtreEtat || filtreClientId
-                ? 'Essayez de modifier vos critères de recherche.' 
-                : 'Commencez par créer votre premier chantier.'}
+                ? tx('Essayez de modifier vos critères de recherche.')
+                : tx('Commencez par créer votre premier chantier.')}
             </p>
             <Link
               href="/chantiers/nouveau"
@@ -855,7 +855,7 @@ export default function ChantiersPage() {
                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
                           {Object.keys(marges).length > 0 ? (
                             <>
-                              Marge
+                              {tx('Marge')}
                               {Object.values(marges).some((m) => m.matiereIncomplete) && (
                                 <span
                                   className="ml-1 text-xs font-normal text-amber-600 dark:text-amber-400"
@@ -873,7 +873,7 @@ export default function ChantiersPage() {
                               className="text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:opacity-50 dark:text-indigo-400"
                               title={tx("Calcule la marge des chantiers affichés (peut prendre quelques secondes)")}
                             >
-                              {chargementMarges ? 'Calcul…' : 'Marge ▸'}
+                              {chargementMarges ? tx('Calcul…') : `${tx('Marge')} ▸`}
                             </button>
                           )}
                         </th>
@@ -915,7 +915,7 @@ export default function ChantiersPage() {
                                   </span>
                                 ) : (
                                   <>
-                                    <span>{chantier.etatChantier}</span>
+                                    <span>{tx(chantier.etatChantier)}</span>
                                     <ChevronDownIcon className="h-3 w-3 opacity-70" />
                                   </>
                                 )}
@@ -935,7 +935,7 @@ export default function ChantiersPage() {
                                             : 'text-gray-900 dark:text-white'
                                         }`}
                                       >
-                                        <span>{option.label}</span>
+                                        <span>{tx(option.label)}</span>
                                         {chantier.etatChantier === option.value && (
                                           <CheckIcon className="h-4 w-4" />
                                         )}

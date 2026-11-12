@@ -181,8 +181,8 @@ export default function EditDevisPage() {
         // Vérifier que le devis est modifiable
         if (devis.statut !== 'BROUILLON') {
           showConfirmationRef.current({
-            title: 'Modification impossible',
-            message: 'Seuls les devis en brouillon peuvent être modifiés',
+            title: tx('Modification impossible'),
+            message: tx('Seuls les devis en brouillon peuvent être modifiés'),
             type: 'warning',
             confirmText: 'OK',
             showCancel: false,
@@ -216,8 +216,8 @@ export default function EditDevisPage() {
         })))
       } else {
         showConfirmationRef.current({
-          title: 'Erreur',
-          message: 'Erreur lors du chargement du devis',
+          title: tx('Erreur'),
+          message: tx('Erreur lors du chargement du devis'),
           type: 'error',
           confirmText: 'OK',
           showCancel: false,
@@ -229,8 +229,8 @@ export default function EditDevisPage() {
     } catch (error) {
       console.error('Erreur:', error)
       showConfirmationRef.current({
-        title: 'Erreur',
-        message: 'Erreur lors du chargement du devis',
+        title: tx('Erreur'),
+        message: tx('Erreur lors du chargement du devis'),
         type: 'error',
         confirmText: 'OK',
         showCancel: false,
@@ -349,8 +349,8 @@ export default function EditDevisPage() {
     // Validation selon le type
     if (typeDevis === 'DEVIS' && !selectedClientId) {
       showConfirmation({
-        title: 'Client requis',
-        message: 'Veuillez sélectionner un client',
+        title: tx('Client requis'),
+        message: tx('Veuillez sélectionner un client'),
         type: 'warning',
         confirmText: 'OK',
         showCancel: false,
@@ -361,8 +361,8 @@ export default function EditDevisPage() {
 
     if (typeDevis === 'AVENANT' && !selectedChantierId) {
       showConfirmation({
-        title: 'Chantier requis',
-        message: 'Veuillez sélectionner un chantier',
+        title: tx('Chantier requis'),
+        message: tx('Veuillez sélectionner un chantier'),
         type: 'warning',
         confirmText: 'OK',
         showCancel: false,
@@ -373,8 +373,8 @@ export default function EditDevisPage() {
 
     if (lignes.length === 0) {
       showConfirmation({
-        title: 'Lignes requises',
-        message: 'Veuillez ajouter au moins une ligne',
+        title: tx('Lignes requises'),
+        message: tx('Veuillez ajouter au moins une ligne'),
         type: 'warning',
         confirmText: 'OK',
         showCancel: false,
@@ -414,8 +414,8 @@ export default function EditDevisPage() {
       } else {
         const error = await response.json()
         showConfirmation({
-          title: 'Erreur',
-          message: error.error || 'Erreur lors de la mise à jour du devis',
+          title: tx('Erreur'),
+          message: tx(error.error || 'Erreur lors de la mise à jour du devis'),
           type: 'error',
           confirmText: 'OK',
           showCancel: false,
@@ -425,8 +425,8 @@ export default function EditDevisPage() {
     } catch (error) {
       console.error('Erreur:', error)
       showConfirmation({
-        title: 'Erreur',
-        message: 'Erreur lors de la mise à jour du devis',
+        title: tx('Erreur'),
+        message: tx('Erreur lors de la mise à jour du devis'),
         type: 'error',
         confirmText: 'OK',
         showCancel: false,
@@ -487,7 +487,7 @@ export default function EditDevisPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                   </svg>
                   <span className="hidden sm:inline"><UiText>Enregistrer</UiText></span>
-                  <span className="sm:hidden">Sauver</span>
+                  <span className="sm:hidden">{tx('Sauver')}</span>
                 </>
               )}
             </button>
@@ -507,11 +507,11 @@ export default function EditDevisPage() {
         {/* Type de devis : DEVIS ou AVENANT - En lecture seule en édition */}
         <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-600/50 rounded-xl p-4 border border-gray-200/50 dark:border-gray-600/50">
           <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Type de document (non modifiable)
+            {tx('Type de document (non modifiable)')}
           </label>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold shadow-sm bg-gradient-to-r from-orange-100 to-orange-200 dark:from-orange-900/50 dark:to-orange-800/50 text-orange-900 dark:text-orange-300 ring-2 ring-orange-300/50 dark:ring-orange-500/50">
-              {typeDevis === 'DEVIS' ? '📄 Devis' : '📋 Avenant'}
+              {typeDevis === 'DEVIS' ? tx('📄 Devis') : tx('📋 Avenant')}
             </span>
             <p className="text-xs text-gray-600 dark:text-gray-400">
               <UiText>Le type ne peut pas être modifié après création
@@ -541,7 +541,7 @@ export default function EditDevisPage() {
           {typeDevis === 'DEVIS' ? (
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                Client *
+                {tx('Client *')}
               </label>
               <select
                 value={selectedClientId}
@@ -599,7 +599,7 @@ export default function EditDevisPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Remise globale (%)
+              {tx('Remise globale (%)')}
             </label>
             <input
               type="number"
@@ -628,7 +628,7 @@ export default function EditDevisPage() {
 
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            <span className="font-medium">Note :</span> <UiText>Les conditions générales de vente seront automatiquement ajoutées depuis le template configuré dans les paramètres de l'entreprise.
+            <span className="font-medium">{tx('Note :')}</span> <UiText>Les conditions générales de vente seront automatiquement ajoutées depuis le template configuré dans les paramètres de l'entreprise.
           </UiText></p>
         </div>
       </div>
@@ -674,8 +674,8 @@ export default function EditDevisPage() {
                     <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider"><UiText>Description</UiText></th>
                     <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28"><UiText>Unité</UiText></th>
                     <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32"><UiText>Quantité</UiText></th>
-                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Prix Unit.</th>
-                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-24">Remise %</th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">{tx('Prix Unit.')}</th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-24">{tx('Remise %')}</th>
                     <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28">Total</th>
                     <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider w-16"><UiText>Action</UiText></th>
                   </tr>
@@ -743,12 +743,12 @@ export default function EditDevisPage() {
             
             <div className="space-y-3">
               <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Total HT:</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{tx('Total HT:')}</span>
                 <span className="font-semibold text-gray-900 dark:text-white">{totaux.totalHT.toFixed(2)} €</span>
               </div>
               {remiseGlobale > 0 && (
                 <div className="flex justify-between items-center p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                  <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Remise globale ({remiseGlobale}%):</span>
+                  <span className="text-sm font-medium text-orange-700 dark:text-orange-300">{tx('Remise globale')} ({remiseGlobale}%):</span>
                   <span className="font-semibold text-orange-700 dark:text-orange-300">-{totaux.montantRemise.toFixed(2)} €</span>
                 </div>
               )}
@@ -757,11 +757,11 @@ export default function EditDevisPage() {
                 <span className="font-semibold text-gray-900 dark:text-white">{totaux.totalHTApresRemise.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">TVA ({tauxTVA}%):</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{tx('TVA')} ({tauxTVA}%):</span>
                 <span className="font-semibold text-gray-900 dark:text-white">{totaux.totalTVA.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between items-center p-4 bg-gradient-to-br from-orange-600/10 via-orange-700/10 to-red-800/10 dark:from-orange-600/5 dark:via-orange-700/5 dark:to-red-800/5 rounded-lg border border-orange-200 dark:border-orange-800 mt-4">
-                <span className="font-bold text-lg text-gray-900 dark:text-white">Total TTC:</span>
+                <span className="font-bold text-lg text-gray-900 dark:text-white">{tx('Total TTC:')}</span>
                 <span className="font-bold text-2xl text-orange-900 dark:text-white">{totaux.totalTTC.toFixed(2)} €</span>
               </div>
             </div>
@@ -882,7 +882,7 @@ function LigneDevisRow({
                 ? 'text-base font-bold bg-orange-50 dark:bg-orange-900/20' 
                 : 'text-sm font-semibold bg-blue-50 dark:bg-blue-900/20'
             } text-gray-900 dark:text-white`}
-            placeholder={ligne.type === 'TITRE' ? 'Titre de section' : 'Sous-titre'}
+            placeholder={tx(ligne.type === 'TITRE' ? 'Titre de section' : 'Sous-titre')}
           />
         </td>
         <td className="px-3 py-2">
@@ -936,9 +936,9 @@ function LigneDevisRow({
           <option value="Mct">Mct</option>
           <option value="M2">M²</option>
           <option value="M3">M³</option>
-          <option value="Heures">Heures</option>
-          <option value="Pièces"><UiText>Pièces</UiText></option>
-          <option value="Fft">Forfait</option>
+          <option value="Heures">{tx('Heures')}</option>
+          <option value="Pièces">{tx('Pièces')}</option>
+          <option value="Fft">{tx('Forfait')}</option>
         </select>
       </td>
       <td className="px-3 py-2">
