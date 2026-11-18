@@ -1,0 +1,4 @@
+ALTER TABLE `companysettings`
+ADD COLUMN `signature` VARCHAR(191) NULL,
+ADD COLUMN `emailCc` VARCHAR(191) NULL,
+ADD COLUMN `emailBcc` VARCHAR(191) NULL;

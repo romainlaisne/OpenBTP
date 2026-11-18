@@ -35,7 +35,7 @@ export async function POST(req: NextRequest, context: { params: Promise<{ nextau
     
     // Vérifier les cookies dans la réponse
     const setCookieHeaders = response.headers.getSetCookie()
-    console.log('🍪 [NextAuth] Cookies définis dans la réponse:', setCookieHeaders.length > 0 ? setCookieHeaders.map(c => c.split(';')[0]) : 'Aucun cookie')
+    console.log('🍪 [NextAuth] Noms des cookies définis dans la réponse:', setCookieHeaders.length > 0 ? setCookieHeaders.map(c => c.split(';', 1)[0].split('=', 1)[0]) : 'Aucun cookie')
     
     return response
   } catch (error) {
